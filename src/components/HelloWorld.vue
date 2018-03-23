@@ -8,7 +8,7 @@
     <input type="text" placeholder="Name" v-model="name" />
     <input type="text" placeholder="Description" v-model="description" />
     <input type="text" placeholder="Image URL" v-model="imageUrl" />
-    <input type="button" value="Create title" v-on:click="createTitle" />
+    <b-button v-on:click="createTitle">Create title</b-button>
   </div>
 </template>
 
