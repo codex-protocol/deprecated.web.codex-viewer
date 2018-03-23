@@ -1,7 +1,7 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <p>Network: {{ web3.networkId }}</p>
+    <p>Network: {{ web3.network }}</p>
     <p>Account: {{ web3.account }}</p>
     <p>Balance: {{ web3.balance }}</p>
     <p>Input title details here</p>

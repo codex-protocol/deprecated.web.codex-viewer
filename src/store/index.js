@@ -3,6 +3,10 @@ import Vuex from 'vuex';
 import state from './state';
 import getWeb3 from '../util/getWeb3';
 import getContract from '../util/getContract';
+import Networks from '../util/constants/networks';
+
+// TODO: As per the MetaMask documentation, we should add polling to see if the current user account
+//  has changed. See the documentation here: https://github.com/MetaMask/faq/blob/master/DEVELOPERS.md
 
 Vue.use(Vuex);
 const store = new Vuex.Store({
@@ -14,19 +18,17 @@ const store = new Vuex.Store({
       const result = payload;
       const web3State = currentState.web3;
 
-      web3State.web3Instance = result.web3;
-      web3State.networkId = result.networkId;
+      web3State.instance = result.web3;
+      web3State.network = Networks[result.networkId];
       web3State.balance = parseInt(result.balance, 10);
       web3State.account = result.account;
 
-      // eslint-disable-next-line
       currentState.web3 = web3State;
     },
     registerContractInstance(currentState, payload) {
       console.log('registerContractInstance Mutation being executed', payload);
 
-      // eslint-disable-next-line
-      currentState.contractInstance = () => payload;
+      currentState.contractInstance = payload;
     },
   },
   actions: {

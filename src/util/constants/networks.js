@@ -1,4 +1,4 @@
-const NETWORKS = {
+const Networks = {
   1: 'Main Net',
   2: 'Deprecated Morden test network',
   3: 'Ropsten test network',
@@ -8,4 +8,4 @@ const NETWORKS = {
   5777: 'Ganache Blockchain',
 };
 
-export default NETWORKS;
+export default Networks;

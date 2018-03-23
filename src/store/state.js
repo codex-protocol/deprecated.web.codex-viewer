@@ -1,7 +1,7 @@
 const state = {
   web3: {
-    web3Instance: null,
-    networkId: null,
+    instance: null,
+    network: null,
     account: null,
     balance: null,
     error: null,
