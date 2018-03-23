@@ -4,7 +4,11 @@
         <div v-for="columnName in columnNames" v-bind:key="columnName">{{ columnName }}</div>
     </div>
     <div>
-      <title-list-item v-for="title in titles" v-bind:codex-title="title" v-bind:key="title.id" />
+      <title-list-item v-for="title in titles"
+        v-bind:codex-title="title"
+        v-bind:key="title.id"
+        v-on:viewToken="viewTokenId"
+      />
     </div>
   </div>
 </template>
@@ -24,6 +28,11 @@ export default {
       columnNames: ['Title', 'TitleId', 'Action'],
       titles: mockTitlesArray,
     };
+  },
+  methods: {
+    viewTokenId(tokenId) {
+      this.$emit('viewTitleDetail', this.titles[tokenId]);
+    },
   },
 };
 </script>

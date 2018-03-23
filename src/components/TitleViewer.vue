@@ -6,28 +6,35 @@
       <p>Account: {{ web3.account }}</p>
       <p>Balance: {{ web3.balance }}</p>
     </div>
-    <title-list />
-    <b-modal ref="createTitleModalRef"
-      title="Create a new Codex Title"
-      ok-title="Create with MetaMask"
-      @ok="createTitle"
-    >
-      <b-form-group>
-        <b-form-input type="text" class="my-1" placeholder="Name" v-model="name" />
-        <b-form-input type="text" class="my-1" placeholder="Description" v-model="description" />
-        <b-form-input type="text" class="my-1" placeholder="Image URL" v-model="imageUrl" />
-      </b-form-group>
-    </b-modal>
+    <div v-if="!titleDetail">
+      <title-list v-on:viewTitleDetail="updateTitleDetail" />
+      <b-modal ref="createTitleModalRef"
+        title="Create a new Codex Title"
+        ok-title="Create with MetaMask"
+        @ok="createTitle"
+      >
+        <b-form-group>
+          <b-form-input type="text" class="my-1" placeholder="Name" v-model="name" />
+          <b-form-input type="text" class="my-1" placeholder="Description" v-model="description" />
+          <b-form-input type="text" class="my-1" placeholder="Image URL" v-model="imageUrl" />
+        </b-form-group>
+      </b-modal>
+    </div>
+    <div v-if="titleDetail">
+      <title-detail v-bind:codex-title="titleDetail" />
+    </div>
   </div>
 </template>
 
 <script>
+import TitleDetail from './TitleDetail';
 import TitleViewerHeader from './TitleViewerHeader';
 import TitleList from './TitleList';
 
 export default {
   name: 'title-viewer',
   components: {
+    TitleDetail,
     TitleViewerHeader,
     TitleList,
   },
@@ -42,11 +49,15 @@ export default {
       name: null,
       description: null,
       imageUrl: null,
+      titleDetail: null,
     };
   },
   methods: {
     showModal() {
       this.$refs.createTitleModalRef.show();
+    },
+    updateTitleDetail(title) {
+      this.titleDetail = title;
     },
     createTitle(event) {
       event.preventDefault();

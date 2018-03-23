@@ -5,7 +5,7 @@
       <div> {{ codexTitle.name }}</div>
     </div>
     <div> {{ codexTitle.id }}</div>
-    <b-button class="button">View title</b-button>
+    <b-button class="button" v-on:click="viewToken">View title</b-button>
   </div>
 </template>
 
@@ -13,6 +13,11 @@
 export default {
   name: 'title-list-item',
   props: ['codexTitle'],
+  methods: {
+    viewToken() {
+      this.$emit('viewToken', this.codexTitle.id);
+    },
+  },
 };
 </script>
 
