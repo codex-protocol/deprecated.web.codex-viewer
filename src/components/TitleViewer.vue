@@ -21,7 +21,11 @@
       </b-modal>
     </div>
     <div v-if="titleDetail">
-      <title-detail v-bind:codex-title="titleDetail" />
+      <title-detail
+        v-bind:codex-title="titleDetail"
+        v-on:transferTitle="transferTitle"
+        v-on:goBack="clearTitleDetail"
+      />
     </div>
   </div>
 </template>
@@ -59,6 +63,9 @@ export default {
     updateTitleDetail(title) {
       this.titleDetail = title;
     },
+    clearTitleDetail() {
+      this.titleDetail = null;
+    },
     createTitle(event) {
       event.preventDefault();
 
@@ -69,6 +76,10 @@ export default {
             this.$refs.createTitleModalRef.hide();
           });
       });
+    },
+    transferTitle() {
+      // TODO: Need another modal dialog to prompt for transfer details
+      // const account = this.web3.account;
     },
   },
 

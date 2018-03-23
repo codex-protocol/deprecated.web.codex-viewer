@@ -1,6 +1,12 @@
 <template>
   <div class="flex">
-    <img v-bind:src="codexTitle.imageUrl" />
+    <div class="vertical">
+      <img v-bind:src="codexTitle.imageUrl" />
+      <div class="mt-3">
+        <b-button v-on:click="transferTitle">Transfer title</b-button>
+        <b-button v-on:click="goBack">Go back</b-button>
+      </div>
+    </div>
     <div class="top">
       <h1>{{ codexTitle.name }}</h1>
       <div>{{ codexTitle.description }}</div>
@@ -20,6 +26,14 @@ export default {
       imageUrl: '',
     };
   },
+  methods: {
+    transferTitle() {
+      this.$emit('transferTitle');
+    },
+    goBack() {
+      this.$emit('goBack');
+    },
+  },
 };
 </script>
 
@@ -31,6 +45,11 @@ export default {
 }
 .top {
   align-self: flex-start;
+}
+.vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
 }
 img {
   max-height: 400px;
