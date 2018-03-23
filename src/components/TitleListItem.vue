@@ -1,0 +1,39 @@
+<template>
+  <div class="item">
+    <div class="info">
+      <img v-bind:src="codexTitle.imageUrl" />
+      <div> {{ codexTitle.name }}</div>
+    </div>
+    <div> {{ codexTitle.id }}</div>
+    <b-button class="button">View title</b-button>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'title-list-item',
+  props: ['codexTitle'],
+};
+</script>
+
+<style scoped>
+  .item {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-around;
+  }
+
+  .info {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-around;
+  }
+
+  img {
+    max-height: 100px;
+    max-width: 100px;
+    margin-right: 20px;
+  }
+</style>

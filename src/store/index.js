@@ -34,7 +34,7 @@ const store = new Vuex.Store({
     getContractInstance(currentState, payload) {
       console.log('registerContractInstance Mutation being executed', payload);
 
-      currentState.contractInstance = payload;
+      currentState.contractInstance = () => payload;
     },
   },
   actions: {
