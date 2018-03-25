@@ -5,7 +5,7 @@
       <div> {{ codexTitle.name }}</div>
     </div>
     <div> {{ codexTitle.id }}</div>
-    <b-button class="button" v-on:click="viewTitle">View title</b-button>
+    <b-button class="button" v-bind:to="route">View title</b-button>
   </div>
 </template>
 
@@ -13,10 +13,10 @@
 export default {
   name: 'title-list-item',
   props: ['codexTitle'],
-  methods: {
-    viewTitle() {
-      this.$router.push({ name: 'title-detail', params: { titleId: this.codexTitle.id } });
-    },
+  data() {
+    return {
+      route: { name: 'title-detail', params: { titleId: this.codexTitle.id } },
+    };
   },
 };
 </script>
@@ -40,5 +40,9 @@ export default {
     max-height: 100px;
     max-width: 100px;
     margin-right: 20px;
+  }
+
+  .button {
+    background-color: #552B78;
   }
 </style>

@@ -9,6 +9,10 @@
 <script>
 export default {
   name: 'account-details',
-  props: ['web3'],
+  computed: {
+    web3() {
+      return this.$store.state.web3;
+    },
+  },
 };
 </script>

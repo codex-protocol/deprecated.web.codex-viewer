@@ -1,18 +1,47 @@
 <template>
   <div class="container">
     <title-viewer-header button-name="Create title" v-on:showModal="showModal" />
-    <account-details v-bind:web3="web3" />
     <div v-if="typeof titleId !== 'number'">
       <title-list v-bind:titles="titles" />
       <b-modal ref="createTitleModalRef"
-        title="Create a new Codex Title"
+        title="Initialize title"
         ok-title="Create with MetaMask"
-        @ok="createTitle"
+        v-on:shown="focusModal"
+        v-on:ok="createTitle"
       >
-        <b-form-group>
-          <b-form-input type="text" class="my-1" placeholder="Name" v-model="name" />
-          <b-form-input type="text" class="my-1" placeholder="Description" v-model="description" />
-          <b-form-input type="text" class="my-1" placeholder="Image URL" v-model="imageUrl" />
+        <b-form-group
+          label="Image link" label-for="imageUrl" label-size="sm" label-class="text-secondary"
+        >
+          <b-form-input
+            id="imageUrl"
+            type="text"
+            class="mb-4"
+            placeholder="https://site.com/image.png"
+            ref="defaultModalFocus"
+            v-model="imageUrl"
+          />
+        </b-form-group>
+        <b-form-group
+          label="Piece title" label-for="name" label-size="sm" label-class="text-secondary"
+        >
+          <b-form-input
+            id="name"
+            type="text"
+            class="mb-4"
+            placeholder="e.g., Figure with horses"
+            v-model="name"
+          />
+        </b-form-group>
+        <b-form-group
+          label="Description" label-for="description" label-size="sm" label-class="text-secondary"
+        >
+          <b-form-textarea
+            id="description"
+            placeholder="Enter item description"
+            v-bind:rows="3"
+            v-bind:max-rows="10"
+            v-model="description"
+          />
         </b-form-group>
       </b-modal>
     </div>
@@ -22,24 +51,25 @@
         v-on:transferTitle="transferTitle"
       />
     </div>
+    <viewer-footer />
   </div>
 </template>
 
 <script>
-import AccountDetails from './AccountDetails';
 import TitleDetail from './TitleDetail';
 import TitleViewerHeader from './TitleViewerHeader';
 import TitleList from './TitleList';
+import ViewerFooter from './ViewerFooter';
 
 import mockTitlesArray from '../util/constants/mockTitles';
 
 export default {
   name: 'title-viewer',
   components: {
-    AccountDetails,
     TitleDetail,
     TitleViewerHeader,
     TitleList,
+    ViewerFooter,
   },
   beforeCreate() {
     this.$store.dispatch('registerWeb3');
@@ -58,6 +88,9 @@ export default {
   methods: {
     showModal() {
       this.$refs.createTitleModalRef.show();
+    },
+    focusModal() {
+      this.$refs.defaultModalFocus.focus();
     },
     createTitle(event) {
       event.preventDefault();
@@ -92,13 +125,9 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 h1 {
   font-weight: normal;
-}
-a {
-  color: #42b983;
 }
 form {
   display: flex;
