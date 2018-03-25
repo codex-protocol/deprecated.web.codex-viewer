@@ -31,7 +31,11 @@ export default {
       this.$emit('transferTitle');
     },
     goBack() {
-      this.$emit('goBack');
+      if (window.history.length > 1) {
+        this.$router.go(-1);
+      } else {
+        this.$router.push('/');
+      }
     },
   },
 };

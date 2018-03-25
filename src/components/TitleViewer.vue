@@ -1,13 +1,9 @@
 <template>
   <div class="container">
     <title-viewer-header button-name="Create title" v-on:showModal="showModal" />
-    <div>
-      <p>Network: {{ web3.network }}</p>
-      <p>Account: {{ web3.account }}</p>
-      <p>Balance: {{ web3.balance }}</p>
-    </div>
-    <div v-if="!titleDetail">
-      <title-list v-on:viewTitleDetail="updateTitleDetail" />
+    <account-details v-bind:web3="web3" />
+    <div v-if="typeof titleId !== 'number'">
+      <title-list v-bind:titles="titles" />
       <b-modal ref="createTitleModalRef"
         title="Create a new Codex Title"
         ok-title="Create with MetaMask"
@@ -20,24 +16,27 @@
         </b-form-group>
       </b-modal>
     </div>
-    <div v-if="titleDetail">
+    <div v-if="typeof titleId === 'number'">
       <title-detail
-        v-bind:codex-title="titleDetail"
+        v-bind:codex-title="titles[titleId]"
         v-on:transferTitle="transferTitle"
-        v-on:goBack="clearTitleDetail"
       />
     </div>
   </div>
 </template>
 
 <script>
+import AccountDetails from './AccountDetails';
 import TitleDetail from './TitleDetail';
 import TitleViewerHeader from './TitleViewerHeader';
 import TitleList from './TitleList';
 
+import mockTitlesArray from '../util/constants/mockTitles';
+
 export default {
   name: 'title-viewer',
   components: {
+    AccountDetails,
     TitleDetail,
     TitleViewerHeader,
     TitleList,
@@ -53,18 +52,12 @@ export default {
       name: null,
       description: null,
       imageUrl: null,
-      titleDetail: null,
+      titles: mockTitlesArray,
     };
   },
   methods: {
     showModal() {
       this.$refs.createTitleModalRef.show();
-    },
-    updateTitleDetail(title) {
-      this.titleDetail = title;
-    },
-    clearTitleDetail() {
-      this.titleDetail = null;
     },
     createTitle(event) {
       event.preventDefault();
@@ -91,6 +84,9 @@ export default {
     },
     contract() {
       return this.$store.state.contractInstance;
+    },
+    titleId() {
+      return this.$route.params.titleId;
     },
   },
 };

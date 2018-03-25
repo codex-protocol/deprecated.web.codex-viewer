@@ -7,7 +7,6 @@
       <title-list-item v-for="title in titles"
         v-bind:codex-title="title"
         v-bind:key="title.id"
-        v-on:viewToken="viewTokenId"
       />
     </div>
   </div>
@@ -15,24 +14,17 @@
 
 <script>
 import TitleListItem from './TitleListItem';
-import mockTitlesArray from '../util/constants/mockTitles';
 
 export default {
   name: 'title-list',
+  props: ['titles'],
   components: {
     TitleListItem,
   },
   data() {
-    console.log(JSON.stringify(mockTitlesArray));
     return {
       columnNames: ['Title', 'TitleId', 'Action'],
-      titles: mockTitlesArray,
     };
-  },
-  methods: {
-    viewTokenId(tokenId) {
-      this.$emit('viewTitleDetail', this.titles[tokenId]);
-    },
   },
 };
 </script>
