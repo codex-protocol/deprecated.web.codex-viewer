@@ -97,7 +97,7 @@ export default {
 
       const account = this.web3.account;
       this.contract().deployed().then((codexTitle) => {
-        codexTitle.createToken(this.name, this.description, this.imageUrl, { from: account })
+        codexTitle.mint(account, this.name, this.description, this.imageUrl, { from: account })
           .then(() => {
             this.$refs.createTitleModalRef.hide();
           });
