@@ -1,10 +1,9 @@
 <template>
   <div class="flex">
     <div class="vertical">
-      <img v-bind:src="codexTitle.imageUrl" />
+      <img :src="codexTitle.imageUrl" />
       <div class="mt-3">
         <b-button v-on:click="transferTitle">Transfer title</b-button>
-        <b-button v-on:click="goBack">Go back</b-button>
       </div>
     </div>
     <div class="top">
@@ -28,14 +27,6 @@ export default {
   },
   methods: {
     transferTitle() {
-      this.$emit('transferTitle')
-    },
-    goBack() {
-      if (window.history.length > 1) {
-        this.$router.go(-1)
-      } else {
-        this.$router.push('/')
-      }
     },
   },
 }

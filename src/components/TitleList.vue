@@ -1,12 +1,12 @@
 <template>
   <div>
     <div class="list-header">
-        <div v-for="columnName in columnNames" v-bind:key="columnName">{{ columnName }}</div>
+        <div v-for="columnName in columnNames" :key="columnName">{{ columnName }}</div>
     </div>
     <div>
       <title-list-item v-for="title in titles"
-        v-bind:codex-title="title"
-        v-bind:key="title.id"
+        :codex-title="title"
+        :key="title.id"
       />
     </div>
   </div>

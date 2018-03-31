@@ -1,11 +1,11 @@
 <template>
   <div class="item">
     <div class="info">
-      <img v-bind:src="codexTitle.imageUrl" />
+      <img :src="codexTitle.imageUrl" />
       <div> {{ codexTitle.name }}</div>
     </div>
     <div> {{ codexTitle.id }}</div>
-    <b-button class="button" v-bind:to="route">View title</b-button>
+    <b-button class="button" :to="route">View title</b-button>
   </div>
 </template>
 

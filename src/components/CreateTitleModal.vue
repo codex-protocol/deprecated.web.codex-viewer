@@ -35,8 +35,8 @@
       <b-form-textarea
         id="description"
         placeholder="Enter item description"
-        v-bind:rows="3"
-        v-bind:max-rows="10"
+        :rows="3"
+        :max-rows="10"
         v-model="description"
       />
     </b-form-group>

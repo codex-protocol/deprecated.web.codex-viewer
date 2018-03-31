@@ -1,16 +1,9 @@
 <template>
   <div class="container">
-    <title-viewer-header button-name="Create title" />
-    <div v-if="typeof titleId !== 'number'">
-      <title-list v-bind:titles="titles" />
-      <create-title-modal />
-    </div>
-    <div v-if="typeof titleId === 'number'">
-      <title-detail
-        v-bind:codex-title="titles[titleId]"
-        v-on:transferTitle="transferTitle"
-      />
-    </div>
+    <title-viewer-header :showBack="titleId >= 0" />
+    <create-title-modal />
+    <router-view name="list" :titles="titles"  />
+    <router-view name="detail" :codex-title="titles[titleId]" />
     <viewer-footer />
   </div>
 </template>
@@ -45,10 +38,6 @@ export default {
     }
   },
   methods: {
-    transferTitle() {
-      // TODO: Need another modal dialog to prompt for transfer details
-      // const account = this.web3.account;
-    },
   },
   computed: {
     titleId() {
@@ -59,7 +48,4 @@ export default {
 </script>
 
 <style scoped>
-h1 {
-  font-weight: normal;
-}
 </style>
