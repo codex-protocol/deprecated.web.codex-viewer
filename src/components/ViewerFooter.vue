@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import AccountDetails from './AccountDetails';
+import AccountDetails from './AccountDetails'
 
 export default {
   name: 'viewer-footer',
@@ -22,16 +22,16 @@ export default {
   data() {
     return {
       detailsVisible: false,
-    };
+    }
   },
   methods: {
     toggleAccountDetails(event) {
-      event.preventDefault();
+      event.preventDefault()
 
-      this.detailsVisible = !this.detailsVisible;
+      this.detailsVisible = !this.detailsVisible
     },
   },
-};
+}
 </script>
 
 <style scoped>

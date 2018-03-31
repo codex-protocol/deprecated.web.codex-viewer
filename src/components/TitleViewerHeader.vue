@@ -8,7 +8,7 @@
 
     <b-navbar-nav class="ml-auto">
       <b-nav-form>
-        <b-button v-on:click="showModal">{{ buttonName }}</b-button>
+        <b-button v-b-modal.createTitleModal>{{ buttonName }}</b-button>
       </b-nav-form>
     </b-navbar-nav>
 
@@ -20,12 +20,7 @@
 export default {
   name: 'title-viewer-header',
   props: ['buttonName'],
-  methods: {
-    showModal() {
-      this.$emit('showModal');
-    },
-  },
-};
+}
 </script>
 
 <style scoped>

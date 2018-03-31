@@ -6,6 +6,6 @@ const Networks = {
   42: 'Kovan test network',
   4447: 'Truffle Develop Network',
   5777: 'Ganache Blockchain',
-};
+}
 
-export default Networks;
+export default Networks

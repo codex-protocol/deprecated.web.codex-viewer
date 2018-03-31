@@ -11,8 +11,8 @@ export default {
   name: 'account-details',
   computed: {
     web3() {
-      return this.$store.state.web3;
+      return this.$store.state.web3
     },
   },
-};
+}
 </script>

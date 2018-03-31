@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import TitleListItem from './TitleListItem';
+import TitleListItem from './TitleListItem'
 
 export default {
   name: 'title-list',
@@ -24,9 +24,9 @@ export default {
   data() {
     return {
       columnNames: ['Title', 'TitleId', 'Action'],
-    };
+    }
   },
-};
+}
 </script>
 
 <style scoped>

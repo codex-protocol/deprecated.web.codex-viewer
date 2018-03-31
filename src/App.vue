@@ -5,14 +5,14 @@
 </template>
 
 <script>
-import TitleViewer from './components/TitleViewer';
+import TitleViewer from './components/TitleViewer'
 
 export default {
   name: 'App',
   components: {
     TitleViewer,
   },
-};
+}
 </script>
 
 <style>

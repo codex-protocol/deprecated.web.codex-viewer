@@ -16,9 +16,9 @@ export default {
   data() {
     return {
       route: { name: 'title-detail', params: { titleId: this.codexTitle.id } },
-    };
+    }
   },
-};
+}
 </script>
 
 <style scoped>

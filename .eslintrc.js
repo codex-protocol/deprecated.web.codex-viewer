@@ -49,5 +49,6 @@ module.exports = {
     'no-console': 'off',
     'no-param-reassign': 'off',
     'indent': ["error", 2, { "SwitchCase": 1 }],
+    'semi': ["error", "never"],
   }
 }

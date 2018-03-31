@@ -1,10 +1,10 @@
-import Vue from 'vue';
-import Router from 'vue-router';
+import Vue from 'vue'
+import Router from 'vue-router'
 
-import TitleViewer from '../components/TitleViewer';
-import TitleDetail from '../components/TitleDetail';
+import TitleViewer from '../components/TitleViewer'
+import TitleDetail from '../components/TitleDetail'
 
-Vue.use(Router);
+Vue.use(Router)
 
 export default new Router({
   routes: [{
@@ -16,4 +16,4 @@ export default new Router({
     name: 'title-detail',
     component: TitleDetail,
   }],
-});
+})
