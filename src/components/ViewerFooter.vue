@@ -3,7 +3,7 @@
     <div class="links">
       <small>
         <a href="#" @click="toggleMockData" class="text-secondary">
-          Toggle mock title data
+          {{ mockDataString }}
         </a>
         |
         <a href="#" v-on:click="toggleAccountDetails" class="text-secondary">
@@ -27,6 +27,15 @@ export default {
     return {
       detailsVisible: false,
     }
+  },
+  computed: {
+    mockDataString() {
+      const state = this.$store.state.useMockData
+        ? 'ON'
+        : 'OFF'
+
+      return `Toggle mock title data (currently ${state})`
+    },
   },
   methods: {
     toggleAccountDetails(event) {
