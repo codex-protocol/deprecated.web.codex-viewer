@@ -1,3 +1,5 @@
+import mockTitlesArray from '../util/constants/mockTitles'
+
 const state = {
   web3: {
     instance: null,
@@ -7,6 +9,8 @@ const state = {
     error: null,
   },
   contractInstance: null,
+  useMockData: true,
+  titles: mockTitlesArray,
 }
 
 export default state

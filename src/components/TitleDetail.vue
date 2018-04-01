@@ -1,7 +1,7 @@
 <template>
   <div class="flex">
     <div class="vertical">
-      <img :src="codexTitle.imageUrl" />
+      <img :src="codexTitle.imageUri" />
       <div class="mt-3">
         <b-button v-on:click="transferTitle">Transfer title</b-button>
       </div>
@@ -22,7 +22,7 @@ export default {
       id: 0,
       name: '',
       description: '',
-      imageUrl: '',
+      imageUri: '',
     }
   },
   methods: {

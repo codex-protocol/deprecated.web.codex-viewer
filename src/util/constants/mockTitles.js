@@ -1,21 +1,24 @@
 const mockTitlesArray = [
   {
-    id: 0,
+    tokenId: 0,
     name: 'First title',
     description: 'Fancy art from google',
-    imageUrl: 'http://pawprintnews.com/wp-content/uploads/2016/09/Art.jpg',
+    imageUri: 'http://pawprintnews.com/wp-content/uploads/2016/09/Art.jpg',
+    ownerAddress: '0xMockOwnerAddress',
   },
   {
-    id: 1,
+    tokenId: 1,
     name: 'Second title',
     description: 'More fancy art',
-    imageUrl: 'https://www.saci-florence.edu/sites/default/files/img/promo/maria_nissan_923x563.jpg',
+    imageUri: 'https://www.saci-florence.edu/sites/default/files/img/promo/maria_nissan_923x563.jpg',
+    ownerAddress: '0xMockOwnerAddress',
   },
   {
-    id: 2,
+    tokenId: 2,
     name: 'Third title',
     description: 'Who knows',
-    imageUrl: 'https://media.npr.org/assets/img/2017/11/09/trh_how_art_changes_us_artwork-40eb6e2c7a2ffb492687286157d302ba396dcb9e-s1200.jpg',
+    imageUri: 'https://media.npr.org/assets/img/2017/11/09/trh_how_art_changes_us_artwork-40eb6e2c7a2ffb492687286157d302ba396dcb9e-s1200.jpg',
+    ownerAddress: '0xMockOwnerAddress',
   },
 ]
 

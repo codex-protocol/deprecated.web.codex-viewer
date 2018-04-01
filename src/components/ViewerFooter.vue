@@ -2,6 +2,10 @@
   <footer class="mt-5">
     <div class="links">
       <small>
+        <a href="#" @click="toggleMockData" class="text-secondary">
+          Toggle mock title data
+        </a>
+        |
         <a href="#" v-on:click="toggleAccountDetails" class="text-secondary">
           Toggle account details
         </a>
@@ -30,6 +34,11 @@ export default {
 
       this.detailsVisible = !this.detailsVisible
     },
+    toggleMockData(event) {
+      event.preventDefault()
+
+      this.$store.dispatch('toggleMockData')
+    },
   },
 }
 </script>
@@ -37,6 +46,10 @@ export default {
 <style scoped>
 .links {
   text-align: center;
+}
+
+.links a {
+  margin: 0 5px;
 }
 
 a:hover {

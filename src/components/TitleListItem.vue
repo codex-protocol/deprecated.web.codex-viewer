@@ -1,10 +1,10 @@
 <template>
   <div class="item">
     <div class="info">
-      <img :src="codexTitle.imageUrl" />
+      <img :src="codexTitle.imageUri" />
       <div> {{ codexTitle.name }}</div>
     </div>
-    <div> {{ codexTitle.id }}</div>
+    <div> {{ codexTitle.tokenId }}</div>
     <b-button class="button" :to="route">View title</b-button>
   </div>
 </template>
@@ -15,7 +15,7 @@ export default {
   props: ['codexTitle'],
   data() {
     return {
-      route: { name: 'title-detail', params: { titleId: this.codexTitle.id } },
+      route: { name: 'title-detail', params: { titleId: this.codexTitle.tokenId } },
     }
   },
 }

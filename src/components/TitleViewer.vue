@@ -15,8 +15,6 @@ import TitleViewerHeader from './TitleViewerHeader'
 import TitleList from './TitleList'
 import ViewerFooter from './ViewerFooter'
 
-import mockTitlesArray from '../util/constants/mockTitles'
-
 export default {
   name: 'title-viewer',
   components: {
@@ -32,16 +30,14 @@ export default {
   mounted() {
     this.$store.dispatch('getContract')
   },
-  data() {
-    return {
-      titles: mockTitlesArray,
-    }
-  },
   methods: {
   },
   computed: {
     titleId() {
       return this.$route.params.titleId
+    },
+    titles() {
+      return this.$store.state.titles
     },
   },
 }

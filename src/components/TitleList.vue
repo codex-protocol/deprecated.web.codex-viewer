@@ -6,7 +6,7 @@
     <div>
       <title-list-item v-for="title in titles"
         :codex-title="title"
-        :key="title.id"
+        :key="title.tokenId"
       />
     </div>
   </div>

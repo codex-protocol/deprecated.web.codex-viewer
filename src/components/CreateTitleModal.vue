@@ -7,15 +7,15 @@
     v-on:ok="createTitle"
   >
     <b-form-group
-      label="Image link" label-for="imageUrl" label-size="sm" label-class="text-secondary"
+      label="Image link" label-for="imageUri" label-size="sm" label-class="text-secondary"
     >
       <b-form-input
-        id="imageUrl"
+        id="imageUri"
         type="text"
         class="mb-4"
         placeholder="https://site.com/image.png"
         ref="defaultModalFocus"
-        v-model="imageUrl"
+        v-model="imageUri"
       />
     </b-form-group>
     <b-form-group
@@ -50,7 +50,7 @@ export default {
     return {
       name: null,
       description: null,
-      imageUrl: null,
+      imageUri: null,
       modalVisible: false,
     }
   },
@@ -63,7 +63,7 @@ export default {
 
       const account = this.web3.account
       this.contract().deployed().then((codexTitle) => {
-        codexTitle.mint(account, this.name, this.description, this.imageUrl, { from: account })
+        codexTitle.mint(account, this.name, this.description, this.imageUri, { from: account })
           .then(() => {
             this.modalVisible = false
           })
