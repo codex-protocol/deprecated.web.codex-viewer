@@ -45,7 +45,7 @@
 
 <script>
 export default {
-  name: 'create-title-form',
+  name: 'create-title-modal',
   data() {
     return {
       name: null,
@@ -62,8 +62,8 @@ export default {
       event.preventDefault()
 
       const account = this.web3.account
-      this.contract().deployed().then((codexTitle) => {
-        codexTitle.mint(account, this.name, this.description, this.imageUri, { from: account })
+      this.contract().deployed().then((contract) => {
+        contract.mint(account, this.name, this.description, this.imageUri, { from: account })
           .then(() => {
             this.modalVisible = false
           })

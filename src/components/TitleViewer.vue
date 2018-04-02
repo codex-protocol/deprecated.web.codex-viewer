@@ -1,15 +1,20 @@
 <template>
   <div class="container">
     <title-viewer-header :showBack="titleId >= 0" />
-    <create-title-modal />
     <router-view name="list" :titles="titles"  />
     <router-view name="detail" :codex-title="titles[titleId]" />
+
+    <div id="modals">
+      <create-title-modal />
+      <transfer-title-modal :titleId="titleId" />
+    </div>
     <viewer-footer />
   </div>
 </template>
 
 <script>
 import CreateTitleModal from './CreateTitleModal'
+import TransferTitleModal from './TransferTitleModal'
 import TitleDetail from './TitleDetail'
 import TitleViewerHeader from './TitleViewerHeader'
 import TitleList from './TitleList'
@@ -19,6 +24,7 @@ export default {
   name: 'title-viewer',
   components: {
     CreateTitleModal,
+    TransferTitleModal,
     TitleDetail,
     TitleViewerHeader,
     TitleList,

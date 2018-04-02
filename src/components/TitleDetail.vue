@@ -3,7 +3,7 @@
     <div class="vertical">
       <img :src="codexTitle.imageUri" />
       <div class="mt-3">
-        <b-button v-on:click="transferTitle">Transfer title</b-button>
+        <b-button v-if="showTransferButton" v-b-modal.transferTitleModal>Transfer title</b-button>
       </div>
     </div>
     <div class="top">
@@ -17,16 +17,9 @@
 export default {
   name: 'title-detail',
   props: ['codexTitle'],
-  data() {
-    return {
-      id: 0,
-      name: '',
-      description: '',
-      imageUri: '',
-    }
-  },
-  methods: {
-    transferTitle() {
+  computed: {
+    showTransferButton() {
+      return this.$store.state.web3.account === this.codexTitle.ownerAddress
     },
   },
 }
