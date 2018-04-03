@@ -5,6 +5,7 @@
         <img :src="codexTitle.imageUri" />
         <div class="mt-3">
           <b-button v-if="showTransferButton" v-b-modal.transferTitleModal>Transfer title</b-button>
+          <transfer-title-modal :titleId="titleId" />
         </div>
       </div>
       <div class="top">
@@ -26,8 +27,13 @@
 import getTitle from '../util/api/getTitle'
 import mockTitlesArray from '../util/constants/mockTitles'
 
+import TransferTitleModal from './TransferTitleModal'
+
 export default {
   name: 'title-detail',
+  components: {
+    TransferTitleModal,
+  },
   data() {
     return {
       codexTitle: null,

@@ -3,18 +3,13 @@
     <title-viewer-header :showBack="titleId >= 0" />
     <router-view name="list" />
     <router-view name="detail" />
-
-    <div id="modals">
-      <create-title-modal />
-      <transfer-title-modal :titleId="titleId" />
-    </div>
+    <create-title-modal />
     <viewer-footer />
   </div>
 </template>
 
 <script>
 import CreateTitleModal from './CreateTitleModal'
-import TransferTitleModal from './TransferTitleModal'
 import TitleDetail from './TitleDetail'
 import TitleViewerHeader from './TitleViewerHeader'
 import TitleList from './TitleList'
@@ -24,7 +19,6 @@ export default {
   name: 'title-viewer',
   components: {
     CreateTitleModal,
-    TransferTitleModal,
     TitleDetail,
     TitleViewerHeader,
     TitleList,
