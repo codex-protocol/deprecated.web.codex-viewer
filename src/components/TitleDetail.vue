@@ -1,25 +1,78 @@
 <template>
-  <div class="flex">
-    <div class="vertical">
-      <img :src="codexTitle.imageUri" />
-      <div class="mt-3">
-        <b-button v-if="showTransferButton" v-b-modal.transferTitleModal>Transfer title</b-button>
+  <div>
+    <div class="flex" v-if="codexTitle">
+      <div class="vertical">
+        <img :src="codexTitle.imageUri" />
+        <div class="mt-3">
+          <b-button v-if="showTransferButton" v-b-modal.transferTitleModal>Transfer title</b-button>
+        </div>
+      </div>
+      <div class="top">
+        <h1>{{ codexTitle.name }}</h1>
+        <div>{{ codexTitle.description }}</div>
       </div>
     </div>
-    <div class="top">
-      <h1>{{ codexTitle.name }}</h1>
-      <div>{{ codexTitle.description }}</div>
+    <div v-else>
+      <div v-if="error">
+        <p>There was an error loading title with id {{ this.titleId }}</p>
+        <p>{{ this.error }}</p>
+      </div>
+      <div v-else>Loading...</div>
     </div>
   </div>
 </template>
 
 <script>
+import getTitle from '../util/api/getTitle'
+import mockTitlesArray from '../util/constants/mockTitles'
+
 export default {
   name: 'title-detail',
-  props: ['codexTitle'],
+  data() {
+    return {
+      codexTitle: null,
+      error: null,
+    }
+  },
   computed: {
     showTransferButton() {
       return this.$store.state.web3.account === this.codexTitle.ownerAddress
+    },
+    useMockData() {
+      return this.$store.state.useMockData
+    },
+    titleId() {
+      return this.$route.params.titleId
+    },
+  },
+  created() {
+    this.fetchData()
+  },
+  watch: {
+    $route: 'fetchData',
+    useMockData: 'fetchData',
+  },
+  methods: {
+    fetchData() {
+      if (this.useMockData) {
+        this.codexTitle = mockTitlesArray[this.titleId]
+        return
+      }
+
+      const self = this
+      getTitle(this.titleId).then((response) => {
+        if (response.error) {
+          console.log('there was an error calling getTitle', response.error)
+          self.codexTitle = null
+          self.error = response.error
+        } else {
+          self.codexTitle = response.result
+        }
+      }).catch((error) => {
+        console.log('there was an error calling getTitle', error)
+        self.codexTitle = null
+        self.error = error
+      })
     },
   },
 }

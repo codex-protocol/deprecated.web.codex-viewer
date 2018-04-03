@@ -3,11 +3,10 @@ import Vuex from 'vuex'
 
 import state from './state'
 import Networks from '../util/constants/networks'
-import mockTitlesArray from '../util/constants/mockTitles'
-import registerWeb3 from '../util/registerWeb3'
-import pollWeb3 from '../util/pollWeb3'
-import getContract from '../util/getContract'
-import getTitles from '../util/getTitles'
+
+import registerWeb3 from '../util/web3/registerWeb3'
+import pollWeb3 from '../util/web3/pollWeb3'
+import getContract from '../util/web3/getContract'
 
 Vue.use(Vuex)
 const store = new Vuex.Store({
@@ -39,11 +38,6 @@ const store = new Vuex.Store({
 
       currentState.contractInstance = () => payload
     },
-    setTitles(currentState, titles) {
-      console.log('setTitles mutation being executed', titles)
-
-      currentState.titles = titles
-    },
     setMockData(currentState, useMockData) {
       console.log('setMockData mutation being executed', useMockData)
 
@@ -70,28 +64,8 @@ const store = new Vuex.Store({
         console.log('error in action getContractInstance', e)
       })
     },
-    getTitles({ commit }, account) {
-      getTitles(account).then((response) => {
-        if (response.error) {
-          console.log('error in action getTitles', response.error)
-        } else {
-          commit('setTitles', response.result)
-        }
-      }).catch((e) => {
-        console.log('error in action getTitles', e)
-      })
-    },
     toggleMockData(context) {
-      const { commit } = context
-      const useMockData = !state.useMockData
-
-      if (useMockData) {
-        commit('setMockData', true)
-        commit('setTitles', mockTitlesArray)
-      } else {
-        commit('setMockData', false)
-        context.dispatch('getTitles', context.state.web3.account)
-      }
+      context.commit('setMockData', !context.state.useMockData)
     },
   },
 })

@@ -1,4 +1,4 @@
-import store from '../store/'
+import store from '../../store/'
 
 function pollWeb3() {
   const web3 = store.state.web3.instance

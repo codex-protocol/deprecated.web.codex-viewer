@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <title-viewer-header :showBack="titleId >= 0" />
-    <router-view name="list" :titles="titles"  />
-    <router-view name="detail" :codex-title="titles[titleId]" />
+    <router-view name="list" />
+    <router-view name="detail" />
 
     <div id="modals">
       <create-title-modal />
@@ -41,9 +41,6 @@ export default {
   computed: {
     titleId() {
       return this.$route.params.titleId
-    },
-    titles() {
-      return this.$store.state.titles
     },
   },
 }

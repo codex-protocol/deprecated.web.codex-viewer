@@ -1,5 +1,5 @@
 import contract from 'truffle-contract'
-import codexTitleJson from './constants/CodexTitle.json'
+import codexTitleJson from '../constants/CodexTitle.json'
 
 // TODO: Use $store.state.web3.instance instead of window.web3
 const getContract = new Promise(((resolve, reject) => {

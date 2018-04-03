@@ -1,30 +1,68 @@
 <template>
   <div>
-    <div class="list-header">
-        <div v-for="columnName in columnNames" :key="columnName">{{ columnName }}</div>
+    <div v-if="titles.length">
+      <div class="list-header">
+          <div v-for="columnName in columnNames" :key="columnName">{{ columnName }}</div>
+      </div>
+      <div>
+        <title-list-item v-for="title in titles"
+          :codex-title="title"
+          :key="title.tokenId"
+        />
+      </div>
     </div>
-    <div>
-      <title-list-item v-for="title in titles"
-        :codex-title="title"
-        :key="title.tokenId"
-      />
+    <div v-else>
+      Loading...
     </div>
   </div>
 </template>
 
 <script>
+import getTitles from '../util/api/getTitles'
+import mockTitlesArray from '../util/constants/mockTitles'
+
 import TitleListItem from './TitleListItem'
 
 export default {
   name: 'title-list',
-  props: ['titles'],
   components: {
     TitleListItem,
   },
   data() {
     return {
+      titles: [],
       columnNames: ['Title', 'TitleId', 'Action'],
     }
+  },
+  created() {
+    this.fetchData()
+  },
+  computed: {
+    useMockData() {
+      return this.$store.state.useMockData
+    },
+  },
+  watch: {
+    useMockData: 'fetchData',
+  },
+  methods: {
+    fetchData() {
+      if (this.useMockData) {
+        this.titles = mockTitlesArray
+        return
+      }
+
+      const self = this
+      getTitles(this.$store.state.web3.account).then((response) => {
+        if (response.error) {
+          console.log('there was an error calling getTitles', response.error)
+        } else {
+          self.titles = response.result
+        }
+      }).catch((error) => {
+        console.log('there was an error calling getTitles', error)
+      })
+    },
   },
 }
 </script>

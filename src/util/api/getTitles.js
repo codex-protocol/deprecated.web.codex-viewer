@@ -1,4 +1,6 @@
-const getTitles = userAddress => fetch(`http://localhost:3001/user/${userAddress}/titles`, {
+import config from './config'
+
+const getTitles = userAddress => fetch(`${config.apiUrl}/user/${userAddress}/titles`, {
   method: 'GET',
   headers: {
     'content-type': 'application/json',
