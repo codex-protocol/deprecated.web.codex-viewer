@@ -8,6 +8,7 @@ const state = {
   },
   contractInstance: null,
   useMockData: true,
+  authToken: null,
 }
 
 export default state

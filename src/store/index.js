@@ -43,6 +43,11 @@ const store = new Vuex.Store({
 
       currentState.useMockData = useMockData
     },
+    setAuthToken(currentState, authToken) {
+      console.log('setAuthToken mutation being executed', authToken)
+
+      currentState.authToken = authToken
+    },
   },
   actions: {
     registerWeb3({ commit }) {

@@ -1,16 +1,30 @@
 <template>
   <div id="app">
-    <title-viewer />
+    <title-viewer v-if="authToken" />
+    <login v-else />
   </div>
 </template>
 
 <script>
+import Login from './components/Login'
 import TitleViewer from './components/TitleViewer'
 
 export default {
   name: 'App',
   components: {
+    Login,
     TitleViewer,
+  },
+  beforeCreate() {
+    this.$store.dispatch('registerWeb3')
+  },
+  mounted() {
+    this.$store.dispatch('getContract')
+  },
+  computed: {
+    authToken() {
+      return this.$store.state.authToken
+    },
   },
 }
 </script>

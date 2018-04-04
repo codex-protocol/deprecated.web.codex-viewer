@@ -41,6 +41,12 @@ export default {
     useMockData() {
       return this.$store.state.useMockData
     },
+    web3() {
+      return this.$store.state.web3
+    },
+    authToken() {
+      return this.$store.state.authToken
+    },
   },
   watch: {
     useMockData: 'fetchData',
@@ -53,7 +59,7 @@ export default {
       }
 
       const self = this
-      getTitles(this.$store.state.web3.account).then((response) => {
+      getTitles(this.web3.account, this.authToken).then((response) => {
         if (response.error) {
           console.log('there was an error calling getTitles', response.error)
         } else {

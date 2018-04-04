@@ -24,12 +24,6 @@ export default {
     TitleList,
     ViewerFooter,
   },
-  beforeCreate() {
-    this.$store.dispatch('registerWeb3')
-  },
-  mounted() {
-    this.$store.dispatch('getContract')
-  },
   methods: {
   },
   computed: {

@@ -50,6 +50,9 @@ export default {
     titleId() {
       return this.$route.params.titleId
     },
+    authToken() {
+      return this.$store.state.authToken
+    },
   },
   created() {
     this.fetchData()
@@ -66,7 +69,7 @@ export default {
       }
 
       const self = this
-      getTitle(this.titleId).then((response) => {
+      getTitle(this.titleId, this.authToken).then((response) => {
         if (response.error) {
           console.log('there was an error calling getTitle', response.error)
           self.codexTitle = null
