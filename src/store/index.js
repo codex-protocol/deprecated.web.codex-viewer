@@ -47,6 +47,19 @@ const store = new Vuex.Store({
       console.log('setAuthToken mutation being executed', authToken)
 
       currentState.authToken = authToken
+
+      if (authToken) {
+        window.localStorage.setItem('authToken', authToken)
+      } else {
+        window.localStorage.removeItem('authToken')
+      }
+    },
+    clearAuthToken(currentState) {
+      console.log('clearAuthToken mutation being executed')
+
+      currentState.authToken = null
+
+      window.localStorage.removeItem('authToken')
     },
   },
   actions: {
@@ -71,6 +84,25 @@ const store = new Vuex.Store({
     },
     toggleMockData(context) {
       context.commit('setMockData', !context.state.useMockData)
+    },
+    sendAuthRequest({ commit }, payload) {
+      return new Promise((resolve, reject) => {
+        fetch('http://localhost:3001/auth-token', {
+          headers: {
+            'content-type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+          method: 'POST',
+        }).then(response => response.json())
+          .then((response) => {
+            if (response.error) {
+              console.log(response.error)
+              reject(response.error)
+            } else {
+              commit('setAuthToken', response.result.token)
+            }
+          })
+      })
     },
   },
 })

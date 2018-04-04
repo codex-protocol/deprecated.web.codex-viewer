@@ -8,7 +8,7 @@ const state = {
   },
   contractInstance: null,
   useMockData: true,
-  authToken: null,
+  authToken: window.localStorage.getItem('authToken') || null,
 }
 
 export default state
