@@ -23,7 +23,7 @@ export default {
         else {
           console.log(result)
 
-          fetch('http://localhost:3001/auth-token', {
+          fetch('http://ec2-34-238-117-54.compute-1.amazonaws.com:3000//auth-token', {
             headers: {
               'content-type': 'application/json',
             },
