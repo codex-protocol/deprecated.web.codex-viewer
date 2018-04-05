@@ -32,7 +32,7 @@ export default {
   },
   computed: {
     authToken() {
-      return this.$store.state.authToken
+      return this.$store.state.auth.token
     },
     titleId() {
       return this.$route.params.titleId

@@ -9,6 +9,10 @@
         <a href="#" v-on:click="toggleAccountDetails" class="text-secondary">
           Toggle account details
         </a>
+        |
+        <a href="#" @click="logout" class="text-secondary">
+          Logout
+        </a>
       </small>
       <account-details class="mt-5" v-if="detailsVisible" />
     </div>
@@ -30,7 +34,7 @@ export default {
   },
   computed: {
     mockDataString() {
-      const state = this.$store.state.useMockData
+      const state = this.$store.state.web3.useMockData
         ? 'ON'
         : 'OFF'
 
@@ -47,6 +51,12 @@ export default {
       event.preventDefault()
 
       this.$store.dispatch('toggleMockData')
+    },
+    logout(event) {
+      event.preventDefault()
+
+      this.$store.commit('clearAuthToken')
+      this.$router.replace('/')
     },
   },
 }

@@ -39,13 +39,13 @@ export default {
   },
   computed: {
     useMockData() {
-      return this.$store.state.useMockData
+      return this.$store.state.web3.useMockData
     },
     web3() {
       return this.$store.state.web3
     },
     authToken() {
-      return this.$store.state.authToken
+      return this.$store.state.auth.token
     },
   },
   watch: {

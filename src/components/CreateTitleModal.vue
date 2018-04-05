@@ -75,7 +75,7 @@ export default {
       return this.$store.state.web3
     },
     contract() {
-      return this.$store.state.contractInstance
+      return this.$store.state.web3.contractInstance
     },
   },
 }

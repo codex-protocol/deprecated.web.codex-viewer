@@ -45,13 +45,13 @@ export default {
       return this.$store.state.web3.account === this.codexTitle.ownerAddress
     },
     useMockData() {
-      return this.$store.state.useMockData
+      return this.$store.state.web3.useMockData
     },
     titleId() {
       return this.$route.params.titleId
     },
     authToken() {
-      return this.$store.state.authToken
+      return this.$store.state.auth.token
     },
   },
   created() {

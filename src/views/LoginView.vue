@@ -1,6 +1,12 @@
 <template>
   <div>
-    <b-button @click="metamaskLogin">Login with MetaMask</b-button>
+    <b-jumbotron
+      header="Codex Title Viewer"
+      lead="Decentralized application for viewing Codex Titles"
+    >
+      <p>Login with MetaMask to create new titles or view titles in your collection</p>
+      <b-button @click="metamaskLogin">Login with MetaMask</b-button>
+    </b-jumbotron>
   </div>
 </template>
 
@@ -25,7 +31,7 @@ export default {
             userAddress: account,
             signedData: result.result.substr(2),
           }).then(() => {
-            this.$router.push('my-titles')
+            this.$router.replace('my-titles')
           })
         }
       })
