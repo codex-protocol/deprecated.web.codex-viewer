@@ -27,7 +27,7 @@
 import getTitle from '../util/api/getTitle'
 import mockTitlesArray from '../util/constants/mockTitles'
 
-import TransferTitleModal from './TransferTitleModal'
+import TransferTitleModal from '../components/TransferTitleModal'
 
 export default {
   name: 'title-detail',

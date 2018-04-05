@@ -21,7 +21,7 @@
 import getTitles from '../util/api/getTitles'
 import mockTitlesArray from '../util/constants/mockTitles'
 
-import TitleListItem from './TitleListItem'
+import TitleListItem from '../components/TitleListItem'
 
 export default {
   name: 'title-list',

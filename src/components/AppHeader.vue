@@ -19,7 +19,7 @@
 
 <script>
 export default {
-  name: 'title-viewer-header',
+  name: 'app-header',
   props: ['showBack'],
   methods: {
     goBack() {

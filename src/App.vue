@@ -1,19 +1,28 @@
 <template>
   <div id="app">
-    <title-viewer v-if="authToken" />
-    <login v-else />
+    <div class="container" v-if="authToken">
+      <app-header :showBack="titleId >= 0" />
+      <router-view />
+      <create-title-modal />
+      <app-footer />
+    </div>
+    <div class="container" v-else>
+      <router-view />
+    </div>
   </div>
 </template>
 
 <script>
-import Login from './components/Login'
-import TitleViewer from './components/TitleViewer'
+import CreateTitleModal from './components/CreateTitleModal'
+import AppHeader from './components/AppHeader'
+import AppFooter from './components/AppFooter'
 
 export default {
   name: 'App',
   components: {
-    Login,
-    TitleViewer,
+    AppHeader,
+    AppFooter,
+    CreateTitleModal,
   },
   beforeCreate() {
     this.$store.dispatch('registerWeb3')
@@ -24,6 +33,9 @@ export default {
   computed: {
     authToken() {
       return this.$store.state.authToken
+    },
+    titleId() {
+      return this.$route.params.titleId
     },
   },
 }

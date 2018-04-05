@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: 'login',
+  name: 'login-view',
   methods: {
     metamaskLogin() {
       const account = this.web3.account
@@ -21,25 +21,12 @@ export default {
       }, (error, result) => {
         if (error) console.log(error)
         else {
-          console.log(result)
-
-          fetch('http://ec2-34-238-117-54.compute-1.amazonaws.com/auth-token', {
-            headers: {
-              'content-type': 'application/json',
-            },
-            body: JSON.stringify({
-              userAddress: account,
-              signedData: result.result.substr(2),
-            }),
-            method: 'POST',
-          }).then(response => response.json())
-            .then((response) => {
-              if (response.error) console.log(response.error)
-              else {
-                this.$store.commit('setAuthToken', response.result.token)
-                this.$router.push('my-titles')
-              }
-            })
+          this.$store.dispatch('sendAuthRequest', {
+            userAddress: account,
+            signedData: result.result.substr(2),
+          }).then(() => {
+            this.$router.push('my-titles')
+          })
         }
       })
     },

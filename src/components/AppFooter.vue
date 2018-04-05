@@ -19,7 +19,7 @@
 import AccountDetails from './AccountDetails'
 
 export default {
-  name: 'viewer-footer',
+  name: 'app-footer',
   components: {
     AccountDetails,
   },
