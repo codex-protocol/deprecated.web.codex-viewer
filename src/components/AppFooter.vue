@@ -1,16 +1,21 @@
 <template>
-  <footer class="mt-5">
+  <footer class="text-secondary mt-5">
+    <div class="links" v-if="account">
+      <small>
+        Logged in as {{ account }}
+      </small>
+    </div>
     <div class="links">
       <small>
-        <a href="#" @click="toggleMockData" class="text-secondary">
+        <a href="#" @click="toggleMockData">
           {{ mockDataString }}
         </a>
         |
-        <a href="#" v-on:click="toggleAccountDetails" class="text-secondary">
+        <a href="#" v-on:click="toggleAccountDetails">
           Toggle account details
         </a>
         |
-        <a href="#" @click="logout" class="text-secondary">
+        <a href="#" @click="logout">
           Logout
         </a>
       </small>
@@ -39,6 +44,13 @@ export default {
         : 'OFF'
 
       return `Toggle mock title data (currently ${state})`
+    },
+    account() {
+      if (this.$store.state.auth.token) {
+        return this.$store.state.web3.account
+      }
+
+      return null
     },
   },
   methods: {
@@ -69,6 +81,7 @@ export default {
 
 .links a {
   margin: 0 5px;
+  color: inherit;
 }
 
 a:hover {
