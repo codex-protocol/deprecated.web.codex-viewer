@@ -56,7 +56,7 @@ export default {
       event.preventDefault()
 
       this.$store.commit('clearAuthToken')
-      this.$router.replace('/')
+      this.$router.replace('/login')
     },
   },
 }

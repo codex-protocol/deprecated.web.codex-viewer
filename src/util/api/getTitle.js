@@ -1,6 +1,6 @@
 import config from './config'
 
-const getTitle = (titleId, authToken) => fetch(`${config.apiUrl}/title/${titleId}`, {
+const getTitle = (titleId, authToken) => fetch(`${config.apiUrl}/title/${titleId}?include=provenance`, {
   method: 'GET',
   headers: {
     'content-type': 'application/json',

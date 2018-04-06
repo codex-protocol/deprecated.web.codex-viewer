@@ -9,8 +9,11 @@
         </div>
       </div>
       <div class="top">
-        <h1>{{ codexTitle.name }}</h1>
-        <div>{{ codexTitle.description }}</div>
+        <div class="mb-5">
+          <h1>{{ codexTitle.name }}</h1>
+          <div>{{ codexTitle.description }}</div>
+        </div>
+        <title-provenance :provenance="codexTitle.provenance" />
       </div>
     </div>
     <div v-else>
@@ -28,11 +31,13 @@ import getTitle from '../util/api/getTitle'
 import mockTitlesArray from '../util/constants/mockTitles'
 
 import TransferTitleModal from '../components/TransferTitleModal'
+import TitleProvenance from '../components/TitleProvenance'
 
 export default {
   name: 'title-detail',
   components: {
     TransferTitleModal,
+    TitleProvenance,
   },
   data() {
     return {
@@ -75,6 +80,7 @@ export default {
           self.codexTitle = null
           self.error = response.error
         } else {
+          console.log('codexTitle', response.result)
           self.codexTitle = response.result
         }
       }).catch((error) => {
@@ -95,6 +101,7 @@ export default {
 }
 .top {
   align-self: flex-start;
+  width: 100%;
 }
 .vertical {
   display: flex;

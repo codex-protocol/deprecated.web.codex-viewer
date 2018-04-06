@@ -10,7 +10,8 @@ const state = {
   balance: null,
   error: null,
   contractInstance: null,
-  useMockData: true,
+  useMockData: window.localStorage.getItem('useMockData') === 'true'
+    || (typeof window.localStorage.getItem('useMockData') !== 'string' && true),
 }
 
 const getters = {
@@ -37,6 +38,7 @@ const actions = {
     })
   },
   toggleMockData(context) {
+    localStorage.setItem('useMockData', !context.state.useMockData)
     context.commit('setMockData', !context.state.useMockData)
   },
 }
@@ -55,8 +57,8 @@ const mutations = {
   pollWeb3Instance(currentState, payload) {
     console.log('pollWeb3Instance mutation being executed', payload)
 
-    currentState.web3.account = payload.account
-    currentState.web3.balance = payload.balance
+    currentState.account = payload.account
+    currentState.balance = payload.balance
   },
   getContractInstance(currentState, payload) {
     console.log('registerContractInstance mutation being executed', payload)

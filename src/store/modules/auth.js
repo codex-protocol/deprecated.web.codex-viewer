@@ -1,3 +1,5 @@
+import getAuthToken from '../../util/api/getAuthToken'
+
 const state = {
   token: window.localStorage.getItem('authToken') || null,
 }
@@ -9,22 +11,15 @@ const getters = {
 const actions = {
   sendAuthRequest({ commit }, payload) {
     return new Promise((resolve, reject) => {
-      fetch('http://localhost:3001/auth-token', {
-        headers: {
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-        method: 'POST',
-      }).then(response => response.json())
-        .then((response) => {
-          if (response.error) {
-            console.log(response.error)
-            reject(response.error)
-          } else {
-            commit('setAuthToken', response.result.token)
-            resolve()
-          }
-        })
+      getAuthToken(payload).then((response) => {
+        if (response.error) {
+          console.log(response.error)
+          reject(response.error)
+        } else {
+          commit('setAuthToken', response.result.token)
+          resolve()
+        }
+      })
     })
   },
 }

@@ -1,14 +1,19 @@
 <template>
   <div>
-    <div v-if="titles.length">
-      <div class="list-header">
-          <div v-for="columnName in columnNames" :key="columnName">{{ columnName }}</div>
+    <div v-if="titles">
+      <div v-if="titles.length">
+        <div class="list-header">
+            <div v-for="columnName in columnNames" :key="columnName">{{ columnName }}</div>
+        </div>
+        <div>
+          <title-list-item v-for="title in titles"
+            :codex-title="title"
+            :key="title.tokenId"
+          />
+        </div>
       </div>
-      <div>
-        <title-list-item v-for="title in titles"
-          :codex-title="title"
-          :key="title.tokenId"
-        />
+      <div v-else>
+        You have no titles in your wallet!
       </div>
     </div>
     <div v-else>
