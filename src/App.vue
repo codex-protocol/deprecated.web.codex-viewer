@@ -13,6 +13,10 @@
 </template>
 
 <script>
+import axios from 'axios'
+
+import config from './util/config'
+
 import CreateTitleModal from './components/CreateTitleModal'
 import AppHeader from './components/AppHeader'
 import AppFooter from './components/AppFooter'
@@ -27,6 +31,9 @@ export default {
   beforeCreate() {
     this.$store.dispatch('registerWeb3')
   },
+  created() {
+    this.initializeApi()
+  },
   mounted() {
     this.$store.dispatch('getContract')
   },
@@ -36,6 +43,29 @@ export default {
     },
     titleId() {
       return this.$route.params.titleId
+    },
+  },
+  methods: {
+    initializeApi() {
+      axios.defaults.baseURL = config.apiUrl
+      axios.defaults.headers.common['Content-Type'] = 'application/json'
+
+      // TODO: Need to test this by expiring the auth token on the server
+      const authErrorHandler = (response) => {
+        if ((response.error && response.error.status === 401) ||
+        response.status === 401) {
+          this.$store.dispatch('clearAuthToken')
+        }
+
+        return response
+      }
+
+      // TODO: If this route is authenticated we'll want to send the user
+      //  to the /login endpoint
+      axios.interceptors.response.use(
+        authErrorHandler,
+        authErrorHandler,
+      )
     },
   },
 }

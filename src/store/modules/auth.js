@@ -1,7 +1,14 @@
-import getAuthToken from '../../util/api/getAuthToken'
+import axios from 'axios'
+
+const token = window.localStorage.getItem('authToken')
+
+// If a token is present on page load, then add it to all future API requests
+if (token) {
+  axios.defaults.headers.common.Authorization = token
+}
 
 const state = {
-  token: window.localStorage.getItem('authToken') || null,
+  token: token || null,
 }
 
 const getters = {
@@ -11,31 +18,39 @@ const getters = {
 const actions = {
   sendAuthRequest({ commit }, payload) {
     return new Promise((resolve, reject) => {
-      getAuthToken(payload).then((response) => {
-        if (response.error) {
-          console.log(response.error)
-          reject(response.error)
+      axios.post('auth-token', payload).then((response) => {
+        const { result, error } = response.data
+        if (error) {
+          console.log(error)
+          commit('clearAuthToken')
+          reject(error)
         } else {
-          commit('setAuthToken', response.result.token)
+          commit('setAuthToken', result.token)
           resolve()
         }
+      }).catch((error) => {
+        console.log(error)
+        commit('clearAuthToken')
+        reject(error)
       })
     })
   },
 }
 
 const mutations = {
-  setAuthToken(currentState, token) {
-    console.log('setAuthToken mutation being executed', token)
+  setAuthToken(currentState, authToken) {
+    console.log('setAuthToken mutation being executed', authToken)
 
-    currentState.token = token
+    currentState.token = authToken
+    axios.defaults.headers.common.Authorization = authToken
 
-    window.localStorage.setItem('authToken', token)
+    window.localStorage.setItem('authToken', authToken)
   },
   clearAuthToken(currentState) {
     console.log('clearAuthToken mutation being executed')
 
     currentState.token = null
+    delete axios.defaults.headers.common.Authorization
 
     window.localStorage.removeItem('authToken')
   },

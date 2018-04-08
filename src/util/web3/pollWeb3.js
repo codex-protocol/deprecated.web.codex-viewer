@@ -13,6 +13,7 @@ function pollWeb3() {
             if (balanceError) {
               console.log(balanceError)
             } else {
+              // TODO: We should also clear the authToken at this point
               store.dispatch('pollWeb3', {
                 account: accounts[0],
                 balance: parseInt(balance, 10),

@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import getTitle from '../util/api/getTitle'
+import axios from 'axios'
 import mockTitlesArray from '../util/constants/mockTitles'
 
 import TransferTitleModal from '../components/TransferTitleModal'
@@ -73,20 +73,20 @@ export default {
         return
       }
 
-      const self = this
-      getTitle(this.titleId, this.authToken).then((response) => {
-        if (response.error) {
-          console.log('there was an error calling getTitle', response.error)
-          self.codexTitle = null
-          self.error = response.error
+      axios.get(`/title/${this.titleId}?include=provenance`).then((response) => {
+        const { result, error } = response.data
+        if (error) {
+          console.log('there was an error calling getTitle', error)
+          this.codexTitle = null
+          this.error = error
         } else {
-          console.log('codexTitle', response.result)
-          self.codexTitle = response.result
+          console.log('codexTitle', result)
+          this.codexTitle = result
         }
       }).catch((error) => {
         console.log('there was an error calling getTitle', error)
-        self.codexTitle = null
-        self.error = error
+        this.codexTitle = null
+        this.error = error
       })
     },
   },

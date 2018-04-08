@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import getTitles from '../util/api/getTitles'
+import axios from 'axios'
 import mockTitlesArray from '../util/constants/mockTitles'
 
 import TitleListItem from '../components/TitleListItem'
@@ -63,12 +63,12 @@ export default {
         return
       }
 
-      const self = this
-      getTitles(this.web3.account, this.authToken).then((response) => {
-        if (response.error) {
-          console.log('there was an error calling getTitles', response.error)
+      axios.get('/user/titles').then((response) => {
+        const { result, error } = response.data
+        if (error) {
+          console.log('there was an error calling getTitles', error)
         } else {
-          self.titles = response.result
+          this.titles = result
         }
       }).catch((error) => {
         console.log('there was an error calling getTitles', error)

@@ -17,21 +17,27 @@ const ifNotAuthenticated = (to, from, next) => {
   }
 }
 
-const ifAuthenticated = (to, from, next) => {
-  if (store.getters.isAuthenticated) {
-    next()
-  } else {
-    next('/login')
-  }
-}
-
 // TODO: Add some logic to catch unhandled routes and redirect them to / or show some error
 
-export default new Router({
+const router = new Router({
   routes: [
     { path: '/login', component: LoginView, beforeEnter: ifNotAuthenticated },
-    { path: '/my-titles', component: TitleListView, beforeEnter: ifAuthenticated },
+    { path: '/my-titles', component: TitleListView, meta: { requiresAuth: true } },
     { path: '/title/:titleId', name: 'title-detail', component: TitleDetailView },
     { path: '/', redirect: '/my-titles' },
   ],
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!store.getters.isAuthenticated) {
+      next('/login')
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
+})
+
+export default router
