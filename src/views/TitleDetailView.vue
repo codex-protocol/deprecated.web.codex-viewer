@@ -11,7 +11,7 @@
           <div class="vertical" v-if="isOwner">
             <h4>Owner actions</h4>
             <b-button class="mb-3">
-              Modify title information
+              Initiate metadata modification
             </b-button>
 
             <b-button class="mb-3" v-b-modal.transferTitleModal>
@@ -19,9 +19,10 @@
             </b-button>
             <transfer-title-modal :titleId="titleId" />
 
-            <b-button>
+            <b-button v-b-modal.approveTransferModal>
               Initiate transfer approval
             </b-button>
+            <approve-transfer-modal :titleId="titleId" />
           </div>
         </div>
       </div>
@@ -42,12 +43,14 @@
 import axios from 'axios'
 import mockTitlesArray from '../util/constants/mockTitles'
 
-import TransferTitleModal from '../components/TransferTitleModal'
+import ApproveTransferModal from '../components/modals/ApproveTransferModal'
+import TransferTitleModal from '../components/modals/TransferTitleModal'
 import TitleProvenance from '../components/TitleProvenance'
 
 export default {
   name: 'title-detail',
   components: {
+    ApproveTransferModal,
     TransferTitleModal,
     TitleProvenance,
   },
@@ -81,6 +84,9 @@ export default {
         this.codexTitle = mockTitlesArray[this.titleId]
         return
       }
+
+      // TODO: Need to show a section/button for the "approvee"
+      //  So that they can accept title transfer
 
       axios.get(`/title/${this.titleId}?include=provenance`).then((response) => {
         const { result, error } = response.data

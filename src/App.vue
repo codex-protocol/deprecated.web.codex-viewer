@@ -17,7 +17,7 @@ import axios from 'axios'
 
 import config from './util/config'
 
-import CreateTitleModal from './components/CreateTitleModal'
+import CreateTitleModal from './components/modals/CreateTitleModal'
 import AppHeader from './components/AppHeader'
 import AppFooter from './components/AppFooter'
 

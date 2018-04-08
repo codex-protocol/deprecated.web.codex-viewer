@@ -58,9 +58,8 @@ export default {
     transferTitle(event) {
       event.preventDefault()
 
-      const account = this.web3.account
       this.contract().deployed().then((contract) => {
-        contract.transferFrom(account, this.toEthAddress, this.titleId, { from: account })
+        contract.transferFrom(this.account, this.toEthAddress, this.titleId, { from: this.account })
           .then(() => {
             this.modalVisible = false
           })
@@ -68,8 +67,8 @@ export default {
     },
   },
   computed: {
-    web3() {
-      return this.$store.state.web3
+    account() {
+      return this.$store.state.web3.account
     },
     contract() {
       return this.$store.state.web3.contractInstance
