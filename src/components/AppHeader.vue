@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container mb-3">
     <b-navbar>
 
     <b-navbar-brand>
@@ -32,4 +32,8 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  padding-bottom: 8px;
+  border-bottom: 1px solid lightgray;
+}
 </style>

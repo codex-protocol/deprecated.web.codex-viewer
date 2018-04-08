@@ -15,10 +15,6 @@ import timeSince from '../util/timeSince'
 export default {
   name: 'title-provenance',
   props: ['provenance'],
-  mounted() {
-    // TODO: This should get returned from the API in reverse order
-    this.provenance = this.provenance.reverse()
-  },
   methods: {
     getTimeSince(createdAt) {
       return `${timeSince(new Date(createdAt))} ago`
@@ -41,7 +37,7 @@ export default {
 .flex {
   display: flex;
   flex-direction: horizontal;
-  border-bottom: solid 1px lightgrey;
+  border-bottom: solid 1px lightgray;
 }
 
 .flex div {
