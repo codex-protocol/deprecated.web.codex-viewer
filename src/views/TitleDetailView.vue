@@ -1,21 +1,33 @@
 <template>
-  <div>
-    <div class="flex" v-if="codexTitle">
-      <div class="vertical">
-        <img :src="codexTitle.imageUri" />
-        <div class="mt-3">
-          <b-button v-if="showTransferButton" v-b-modal.transferTitleModal>Transfer title</b-button>
-          <transfer-title-modal :titleId="titleId" />
+  <div class="container">
+    <div v-if="codexTitle">
+      <div class="flex mb-5">
+        <img class="mr-5" :src="codexTitle.imageUri" />
+        <div class="top">
+          <div class="mb-4">
+            <h1>{{ codexTitle.name }}</h1>
+            <div>{{ codexTitle.description }}</div>
+          </div>
+          <div class="vertical" v-if="isOwner">
+            <h4>Owner actions</h4>
+            <b-button class="mb-3">
+              Modify title information
+            </b-button>
+
+            <b-button class="mb-3" v-b-modal.transferTitleModal>
+              Initiate one way transfer
+            </b-button>
+            <transfer-title-modal :titleId="titleId" />
+
+            <b-button>
+              Initiate transfer approval
+            </b-button>
+          </div>
         </div>
       </div>
-      <div class="top">
-        <div class="mb-5">
-          <h1>{{ codexTitle.name }}</h1>
-          <div>{{ codexTitle.description }}</div>
-        </div>
-        <title-provenance :provenance="codexTitle.provenance" />
-      </div>
+      <title-provenance :provenance="codexTitle.provenance" />
     </div>
+
     <div v-else>
       <div v-if="error">
         <p>There was an error loading title with id {{ this.titleId }}</p>
@@ -46,7 +58,7 @@ export default {
     }
   },
   computed: {
-    showTransferButton() {
+    isOwner() {
       return this.$store.state.web3.account === this.codexTitle.ownerAddress
     },
     useMockData() {
@@ -54,9 +66,6 @@ export default {
     },
     titleId() {
       return this.$route.params.titleId
-    },
-    authToken() {
-      return this.$store.state.auth.token
     },
   },
   created() {
@@ -108,9 +117,9 @@ export default {
   flex-direction: column;
   align-items: baseline;
 }
+
 img {
-  max-height: 400px;
-  max-width: 400px;
-  margin-right: 30px;
+  max-height: 500px;
+  max-width: 500px;
 }
 </style>
