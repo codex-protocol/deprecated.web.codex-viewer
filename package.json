@@ -11,6 +11,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "@codex-protocol/ethereum-service": "^1.0.2",
     "axios": "^0.18.0",
     "bootstrap": "^4.0.0",
     "bootstrap-vue": "^2.0.0-rc.2",
