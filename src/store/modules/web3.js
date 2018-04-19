@@ -63,7 +63,9 @@ const mutations = {
 
   getContractInstance(currentState, payload) {
     console.log('getContractInstance mutation being executed', payload)
-    currentState.contractInstance = payload
+    currentState.contractInstance = () => {
+      return payload
+    }
   },
 
   setMockData(currentState, useMockData) {

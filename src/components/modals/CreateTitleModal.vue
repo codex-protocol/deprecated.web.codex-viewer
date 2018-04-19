@@ -62,12 +62,10 @@ export default {
       event.preventDefault()
 
       const account = this.web3.account
-      this.contract().deployed().then((contract) => {
-        contract.mint(account, this.name, this.description, this.imageUri, { from: account })
-          .then(() => {
-            this.modalVisible = false
-          })
-      })
+      this.contract.mint(account, this.name, this.description, this.imageUri, { from: account })
+        .then(() => {
+          this.modalVisible = false
+        })
     },
   },
   computed: {
@@ -75,7 +73,7 @@ export default {
       return this.$store.state.web3
     },
     contract() {
-      return this.$store.state.web3.contractInstance
+      return this.$store.state.web3.contractInstance()
     },
   },
 }

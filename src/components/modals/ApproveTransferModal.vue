@@ -58,12 +58,10 @@ export default {
     approveTransfer(event) {
       event.preventDefault()
 
-      this.contract().deployed().then((contract) => {
-        contract.approve(this.toEthAddress, this.titleId, { from: this.account })
-          .then(() => {
-            this.modalVisible = false
-          })
-      })
+      this.contract.approve(this.toEthAddress, this.titleId, { from: this.account })
+        .then(() => {
+          this.modalVisible = false
+        })
     },
   },
   computed: {
@@ -71,7 +69,7 @@ export default {
       return this.$store.state.web3.account
     },
     contract() {
-      return this.$store.state.web3.contractInstance
+      return this.$store.state.web3.contractInstance()
     },
   },
 }
