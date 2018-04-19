@@ -54,20 +54,20 @@ const mutations = {
 
     pollWeb3()
   },
+
   pollWeb3Instance(currentState, payload) {
     console.log('pollWeb3Instance mutation being executed', payload)
-
     currentState.account = payload.account
     currentState.balance = payload.balance
   },
-  getContractInstance(currentState, payload) {
-    console.log('registerContractInstance mutation being executed', payload)
 
-    currentState.contractInstance = () => payload
+  getContractInstance(currentState, payload) {
+    console.log('getContractInstance mutation being executed', payload)
+    currentState.contractInstance = payload
   },
+
   setMockData(currentState, useMockData) {
     console.log('setMockData mutation being executed', useMockData)
-
     currentState.useMockData = useMockData
   },
 }

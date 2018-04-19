@@ -35,6 +35,7 @@ module.exports = {
     'no-param-reassign': ['error', {
       props: true,
       ignorePropertyModificationsFor: [
+        'currentState', // for vuex state
         'state', // for vuex state
         'acc', // for reduce accumulators
         'e' // for e.returnvalue
@@ -46,9 +47,22 @@ module.exports = {
     }],
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-console': 'off',
-    'no-param-reassign': 'off',
-    'indent': ["error", 2, { "SwitchCase": 1 }],
-    'semi': ["error", "never"],
+
+    'max-len': 0,
+    'no-console': 0,
+    'padded-blocks': 0,
+    'no-underscore-dangle': 0,
+    'semi': ['error', 'never'],
+    'semi-style': ['error', 'first'],
+    'newline-per-chained-call': 'off',
+    'no-mixed-spaces-and-tabs': 'error',
+    'arrow-body-style': ['error', 'always'],
+    'indent': ['error', 2, { 'SwitchCase': 1 }],
+    'no-cond-assign': ['error', 'except-parens'],
+    'comma-dangle': ['error', 'always-multiline'],
+    'no-unused-vars': ['error', { 'args': 'none' } ],
+    'function-paren-newline': [ 'error', 'consistent' ],
+    'no-plusplus': ['error', { 'allowForLoopAfterthoughts': true }],
+    'object-curly-newline': ['error', { 'ObjectExpression': { 'multiline': false, 'consistent': true } }]
   }
 }

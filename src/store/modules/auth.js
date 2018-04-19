@@ -12,7 +12,9 @@ const state = {
 }
 
 const getters = {
-  isAuthenticated: currentState => !!currentState.token,
+  isAuthenticated: (currentState) => {
+    return !!currentState.token
+  },
 }
 
 const actions = {
