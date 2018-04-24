@@ -4,7 +4,7 @@
     ok-title="Create with MetaMask"
     v-model="modalVisible"
     v-on:shown="focusModal"
-    v-on:ok="createTitle"
+    v-on:ok="fetchTransactionData"
   >
     <b-form-group
       label="Image link" label-for="imageUri" label-size="sm" label-class="text-secondary"
@@ -44,6 +44,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'create-title-modal',
   data() {
@@ -58,14 +60,43 @@ export default {
     focusModal() {
       this.$refs.defaultModalFocus.focus()
     },
-    createTitle(event) {
+    fetchTransactionData(event) {
       event.preventDefault()
 
+      axios.post('/users/titles/metadata', {
+        name: this.name,
+        description: this.description,
+      }).then((response) => {
+        const { result, error } = response.data
+        if (error) {
+          console.log('there was an error calling getTitle', error)
+          this.codexTitle = null
+          this.error = error
+        } else {
+          console.log('codexTitleMetadata', result)
+          this.createTitle(result)
+        }
+      }).catch((error) => {
+        console.log('there was an error calling getTitle', error)
+        this.codexTitle = null
+        this.error = error
+      })
+    },
+    createTitle(transactionData) {
+      const sha3 = this.web3.instance().sha3
       const account = this.web3.account
-      this.contract.mint(account, this.name, this.description, this.imageUri, { from: account })
-        .then(() => {
-          this.modalVisible = false
-        })
+
+      return this.contract.mint(
+        account,
+        sha3(transactionData.name),
+        sha3(transactionData.description),
+        sha3(transactionData.imageUri),
+        '1', // providerId
+        transactionData.id,
+        { from: account }
+      ).then(() => {
+        this.modalVisible = false
+      })
     },
   },
   computed: {

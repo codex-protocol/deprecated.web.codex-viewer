@@ -63,7 +63,7 @@ export default {
         return
       }
 
-      axios.get('/user/titles').then((response) => {
+      axios.get('/user/titles?include=metadata').then((response) => {
         const { result, error } = response.data
         if (error) {
           console.log('there was an error calling getTitles', error)

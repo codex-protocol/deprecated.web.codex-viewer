@@ -1,7 +1,7 @@
 <template>
   <a href="#" class="item" @click.prevent="viewTitle">
-    <img :src="codexTitle.imageUri" />
-    <div>{{ codexTitle.name }}</div>
+    <img :src="codexTitle.metadata.imageUri" />
+    <div>{{ codexTitle.metadata.name }}</div>
     <div>{{ codexTitle.createdAt }}</div>
   </a>
 </template>
