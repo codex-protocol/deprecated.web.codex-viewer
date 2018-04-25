@@ -2,11 +2,11 @@
   <div class="container">
     <div v-if="codexTitle">
       <div class="flex mb-5">
-        <img class="mr-5" :src="codexTitle.imageUri" />
+        <img class="mr-5" :src="codexTitle.metadata.imageUri" />
         <div class="top">
           <div class="mb-4">
-            <h1>{{ codexTitle.name }}</h1>
-            <div>{{ codexTitle.description }}</div>
+            <h1>{{ codexTitle.metadata.name }}</h1>
+            <div>{{ codexTitle.metadata.description }}</div>
           </div>
           <div class="vertical" v-if="isOwner">
             <h4>Owner actions</h4>
@@ -24,6 +24,22 @@
             </b-button>
             <approve-transfer-modal :titleId="titleId" />
           </div>
+          <div class="vertical" v-if="isApproved">
+            <h4>Approved actions</h4>
+            <b-button @click="acceptTransfer">
+              Accept title transfer
+            </b-button>
+          </div>
+        </div>
+        <div class="vertical">
+          <h4>Details</h4>
+          <p>Current owner: {{ codexTitle.ownerAddress }}</p>
+          <p>Approved owner: {{ codexTitle.approvedAddress }}</p>
+          <p>Last updated: {{ this.formatDate(codexTitle.updatedAt) }}</p>
+          <h5>Metadata</h5>
+          <p>Name hash: {{ codexTitle.nameHash }}</p>
+          <p>Description hash: {{ codexTitle.descriptionHash }}</p>
+          <p>ProviderId: {{ codexTitle.providerId }}</p>
         </div>
       </div>
       <title-provenance :provenance="codexTitle.provenance" />
@@ -61,14 +77,26 @@ export default {
     }
   },
   computed: {
+    web3() {
+      return this.$store.state.web3
+    },
+    account() {
+      return this.web3.account
+    },
     isOwner() {
-      return this.$store.state.web3.account === this.codexTitle.ownerAddress
+      return this.account === this.codexTitle.ownerAddress
+    },
+    isApproved() {
+      return this.account === this.codexTitle.approvedAddress
     },
     useMockData() {
-      return this.$store.state.web3.useMockData
+      return this.web3.useMockData
     },
     titleId() {
       return this.$route.params.titleId
+    },
+    contract() {
+      return this.web3.contractInstance()
     },
   },
   created() {
@@ -88,7 +116,7 @@ export default {
       // TODO: Need to show a section/button for the "approvee"
       //  So that they can accept title transfer
 
-      axios.get(`/title/${this.titleId}?include=provenance`).then((response) => {
+      axios.get(`/title/${this.titleId}?include=metadata&include=provenance`).then((response) => {
         const { result, error } = response.data
         if (error) {
           console.log('there was an error calling getTitle', error)
@@ -96,6 +124,7 @@ export default {
           this.error = error
         } else {
           console.log('codexTitle', result)
+          console.log('metadata', result.metadata)
           this.codexTitle = result
         }
       }).catch((error) => {
@@ -103,6 +132,19 @@ export default {
         this.codexTitle = null
         this.error = error
       })
+    },
+    acceptTransfer() {
+      this.contract.transferFrom(
+        this.codexTitle.ownerAddress,
+        this.account,
+        this.titleId,
+        { from: this.account }
+      ).then(() => {
+        this.modalVisible = false
+      })
+    },
+    formatDate(date) {
+      return (new Date(date)).toLocaleString()
     },
   },
 }
