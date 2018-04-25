@@ -26,8 +26,8 @@ export default {
 <style scoped>
   .item {
     display: flex;
+    align-items: center;
     flex-direction: row;
-    align-items: baseline;
     justify-content: space-around;
   }
 
