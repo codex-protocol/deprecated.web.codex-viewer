@@ -24,7 +24,6 @@
 
 <script>
 import axios from 'axios'
-import mockTitlesArray from '../util/constants/mockTitles'
 
 import TitleListItem from '../components/TitleListItem'
 
@@ -43,9 +42,6 @@ export default {
     this.fetchData()
   },
   computed: {
-    useMockData() {
-      return this.$store.state.web3.useMockData
-    },
     web3() {
       return this.$store.state.web3
     },
@@ -53,16 +49,8 @@ export default {
       return this.$store.state.auth.token
     },
   },
-  watch: {
-    useMockData: 'fetchData',
-  },
   methods: {
     fetchData() {
-      if (this.useMockData) {
-        this.titles = mockTitlesArray
-        return
-      }
-
       axios.get('/user/titles?include=metadata').then((response) => {
         const { result, error } = response.data
         if (error) {

@@ -7,10 +7,6 @@
     </div>
     <div class="links">
       <small>
-        <a href="#" @click="toggleMockData">
-          {{ mockDataString }}
-        </a>
-        |
         <a href="#" v-on:click="toggleAccountDetails">
           Toggle account details
         </a>
@@ -38,13 +34,6 @@ export default {
     }
   },
   computed: {
-    mockDataString() {
-      const state = this.$store.state.web3.useMockData
-        ? 'ON'
-        : 'OFF'
-
-      return `Toggle mock title data (currently ${state})`
-    },
     account() {
       if (this.$store.state.auth.token) {
         return this.$store.state.web3.account
@@ -58,11 +47,6 @@ export default {
       event.preventDefault()
 
       this.detailsVisible = !this.detailsVisible
-    },
-    toggleMockData(event) {
-      event.preventDefault()
-
-      this.$store.dispatch('toggleMockData')
     },
     logout(event) {
       event.preventDefault()

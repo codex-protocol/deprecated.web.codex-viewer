@@ -10,8 +10,6 @@ const state = {
   balance: null,
   error: null,
   contractInstance: null,
-  useMockData: window.localStorage.getItem('useMockData') === 'true'
-    || (typeof window.localStorage.getItem('useMockData') !== 'string' && true),
 }
 
 const getters = {
@@ -36,10 +34,6 @@ const actions = {
     }).catch((e) => {
       console.log('error in action getContractInstance', e)
     })
-  },
-  toggleMockData(context) {
-    localStorage.setItem('useMockData', !context.state.useMockData)
-    context.commit('setMockData', !context.state.useMockData)
   },
 }
 
@@ -66,11 +60,6 @@ const mutations = {
     currentState.contractInstance = () => {
       return payload
     }
-  },
-
-  setMockData(currentState, useMockData) {
-    console.log('setMockData mutation being executed', useMockData)
-    currentState.useMockData = useMockData
   },
 }
 

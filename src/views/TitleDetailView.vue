@@ -57,7 +57,6 @@
 
 <script>
 import axios from 'axios'
-import mockTitlesArray from '../util/constants/mockTitles'
 
 import ApproveTransferModal from '../components/modals/ApproveTransferModal'
 import TransferTitleModal from '../components/modals/TransferTitleModal'
@@ -89,9 +88,6 @@ export default {
     isApproved() {
       return this.account === this.codexTitle.approvedAddress
     },
-    useMockData() {
-      return this.web3.useMockData
-    },
     titleId() {
       return this.$route.params.titleId
     },
@@ -104,18 +100,9 @@ export default {
   },
   watch: {
     $route: 'fetchData',
-    useMockData: 'fetchData',
   },
   methods: {
     fetchData() {
-      if (this.useMockData) {
-        this.codexTitle = mockTitlesArray[this.titleId]
-        return
-      }
-
-      // TODO: Need to show a section/button for the "approvee"
-      //  So that they can accept title transfer
-
       axios.get(`/title/${this.titleId}?include=metadata&include=provenance`).then((response) => {
         const { result, error } = response.data
         if (error) {
