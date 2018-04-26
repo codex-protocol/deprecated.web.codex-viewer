@@ -19,10 +19,14 @@
             </b-button>
             <transfer-title-modal :titleId="titleId" />
 
-            <b-button v-b-modal.approveTransferModal>
+            <b-button class="mb-3" v-b-modal.approveTransferModal>
               Initiate transfer approval
             </b-button>
             <approve-transfer-modal :titleId="titleId" />
+
+            <b-button v-if="codexTitle.approvedAddress">
+              Remove approver
+            </b-button>
           </div>
           <div class="vertical" v-if="isApproved">
             <h4>Approved actions</h4>
