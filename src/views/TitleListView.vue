@@ -1,5 +1,9 @@
 <template>
   <div>
+    <div class="header">
+      <h1>Your wallet</h1>
+      <b-button v-b-modal.createTitleModal>Create title</b-button>
+    </div>
     <div v-if="titles">
       <div v-if="titles.length">
         <div class="title-list">
@@ -65,6 +69,14 @@ export default {
 </script>
 
 <style scoped>
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1em;
+}
+
 .title-list {
   display: flex;
   flex-wrap: wrap;

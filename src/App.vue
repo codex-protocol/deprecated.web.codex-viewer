@@ -1,11 +1,12 @@
 <template>
   <div id="app">
-    <app-side-bar />
-    <div class="container" v-if="authToken">
-      <app-header />
-      <router-view />
-      <create-title-modal />
-      <app-footer />
+    <div v-if="authToken">
+      <app-side-bar />
+      <div class="container">
+        <router-view />
+        <create-title-modal />
+        <app-footer />
+      </div>
     </div>
     <div class="container" v-else>
       <router-view />
