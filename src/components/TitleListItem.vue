@@ -2,7 +2,7 @@
   <a class="item" href="#" @click.prevent="viewTitle">
     <div>
       <div class="image-container">
-        <img :src="codexTitle.metadata.imageUri" />
+        <img :src="codexTitle.metadata.files[0].uri" />
       </div>
     </div>
     <div>{{ codexTitle.metadata.name }}</div>

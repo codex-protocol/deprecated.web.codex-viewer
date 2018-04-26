@@ -2,14 +2,9 @@
   <div class="container">
     <div v-if="codexTitle">
       <div class="flex mb-5">
-        <img class="mr-5" :src="codexTitle.metadata.imageUri" />
-        <div class="top">
-          <div class="mb-4">
-            <h1>{{ codexTitle.metadata.name }}</h1>
-            <div>{{ codexTitle.metadata.description }}</div>
-          </div>
+        <div>
+          <img class="mb-3 mr-5" :src="codexTitle.metadata.files[0].uri" />
           <div class="vertical" v-if="isOwner">
-            <h4>Owner actions</h4>
             <b-button class="mb-3">
               Initiate metadata modification
             </b-button>
@@ -29,13 +24,14 @@
             </b-button>
           </div>
           <div class="vertical" v-if="isApproved">
-            <h4>Approved actions</h4>
             <b-button @click="acceptTransfer">
               Accept title transfer
             </b-button>
           </div>
         </div>
-        <div class="vertical">
+        <div class="top vertical">
+          <h1>{{ codexTitle.metadata.name }}</h1>
+            <div>{{ codexTitle.metadata.description }}</div>
           <h4>Details</h4>
           <p>Current owner: {{ codexTitle.ownerAddress }}</p>
           <p>Approved owner: {{ codexTitle.approvedAddress }}</p>
