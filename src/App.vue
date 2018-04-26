@@ -1,7 +1,8 @@
 <template>
   <div id="app">
+    <app-side-bar />
     <div class="container" v-if="authToken">
-      <app-header :showBack="titleId >= 0" />
+      <app-header />
       <router-view />
       <create-title-modal />
       <app-footer />
@@ -17,15 +18,17 @@ import axios from 'axios'
 
 import config from './util/config'
 
-import CreateTitleModal from './components/modals/CreateTitleModal'
 import AppHeader from './components/AppHeader'
 import AppFooter from './components/AppFooter'
+import AppSideBar from './components/AppSideBar'
+import CreateTitleModal from './components/modals/CreateTitleModal'
 
 export default {
   name: 'App',
   components: {
     AppHeader,
     AppFooter,
+    AppSideBar,
     CreateTitleModal,
   },
   beforeCreate() {
