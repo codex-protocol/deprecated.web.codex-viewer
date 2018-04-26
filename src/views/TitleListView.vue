@@ -2,15 +2,13 @@
   <div>
     <div v-if="titles">
       <div v-if="titles.length">
-        <div class="list-header">
-            <div v-for="columnName in columnNames" :key="columnName">{{ columnName }}</div>
+        <div class="title-list">
+            <div class="list-header" v-for="columnName in columnNames" :key="columnName">{{ columnName }}</div>
         </div>
-        <div>
-          <title-list-item v-for="title in titles"
-            :codex-title="title"
-            :key="title.tokenId"
-          />
-        </div>
+        <title-list-item v-for="title in titles"
+          :codex-title="title"
+          :key="title.tokenId"
+        />
       </div>
       <div v-else>
         You have no titles in your wallet!
@@ -35,7 +33,7 @@ export default {
   data() {
     return {
       titles: [],
-      columnNames: ['', 'Piece title', 'Created at'],
+      columnNames: ['Preview', 'Piece title', 'Created at'],
     }
   },
   created() {
@@ -67,13 +65,24 @@ export default {
 </script>
 
 <style scoped>
-.list-header {
+.title-list {
   display: flex;
-  flex-direction: row;
-  justify-content: space-around;
+  flex-wrap: wrap;
+
+  padding: 0 0.5em;
+  margin-bottom: 20px;
+}
+
+.list-header {
   text-transform: capitalize;
   background-color: #F1F1F1;
-  padding: 0 6px;
-  margin-bottom: 20px;
+  text-align: center;
+  padding: 1em;
+  font-weight: bold;
+  width: 25%;
+}
+
+.list-header:nth-child(2) {
+  width: 50%;
 }
 </style>
