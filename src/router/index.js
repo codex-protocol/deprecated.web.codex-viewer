@@ -4,6 +4,8 @@ import Router from 'vue-router'
 import store from '../store'
 
 import LoginView from '../views/LoginView'
+import OfferListView from '../views/OfferListView'
+import TransferListView from '../views/TransferListView'
 import TitleListView from '../views/TitleListView'
 import TitleDetailView from '../views/TitleDetailView'
 
@@ -22,6 +24,8 @@ const ifNotAuthenticated = (to, from, next) => {
 const router = new Router({
   routes: [
     { path: '/login', component: LoginView, beforeEnter: ifNotAuthenticated },
+    { path: '/my-transfers', component: TransferListView, meta: { requiresAuth: true } },
+    { path: '/my-offers', component: OfferListView, meta: { requiresAuth: true } },
     { path: '/my-titles', component: TitleListView, meta: { requiresAuth: true } },
     { path: '/title/:titleId', name: 'title-detail', component: TitleDetailView },
     { path: '/', redirect: '/my-titles' },
