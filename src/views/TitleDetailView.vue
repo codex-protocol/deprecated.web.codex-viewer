@@ -3,7 +3,7 @@
     <div v-if="codexTitle">
       <div class="flex mb-5">
         <div>
-          <img class="mb-3 mr-5" v-if="!this.isPrivate" :src="codexTitle.metadata.files[0].uri" />
+          <img class="mb-3 mr-5" v-if="isViewable" :src="codexTitle.metadata.files[0].uri" />
           <div class="mb-3 mr-5 private-img" v-else></div>
           <div class="vertical" v-if="isOwner">
             <b-button class="mb-3">
@@ -23,7 +23,7 @@
             <b-button class="mb-3" v-b-modal.titlePrivacySettings>
               Privacy settings
             </b-button>
-            <privacy-settings-modal :titleId="titleId" />
+            <privacy-settings-modal :titleId="titleId" :titleIsPrivate="isPrivate" />
 
             <b-button v-if="codexTitle.approvedAddress">
               Remove approver
@@ -35,10 +35,7 @@
             </b-button>
           </div>
         </div>
-        <div v-if="this.isPrivate" class="top vertical">
-          <h1>This title is private</h1>
-        </div>
-        <div v-else class="top vertical">
+        <div v-if="isViewable" class="top vertical">
           <h1>{{ codexTitle.metadata.name }}</h1>
             <div>{{ codexTitle.metadata.description }}</div>
           <h4>Details</h4>
@@ -49,6 +46,9 @@
           <p>Name hash: {{ codexTitle.nameHash }}</p>
           <p>Description hash: {{ codexTitle.descriptionHash }}</p>
           <p>ProviderId: {{ codexTitle.providerId }}</p>
+        </div>
+        <div v-else class="top vertical">
+          <h1>This title is private</h1>
         </div>
       </div>
       <title-provenance v-if="!this.isPrivate" :provenance="codexTitle.provenance" />
@@ -104,6 +104,10 @@ export default {
     },
     contract() {
       return this.web3.contractInstance()
+    },
+    isViewable() {
+      if (this.isOwner) return true
+      return !this.codexTitle.isPrivate
     },
     isPrivate() {
       return this.codexTitle.isPrivate
