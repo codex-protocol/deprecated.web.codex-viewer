@@ -19,6 +19,11 @@
             </b-button>
             <approve-transfer-modal :titleId="titleId" />
 
+            <b-button class="mb-3" v-b-modal.titlePrivacySettings>
+              Privacy settings
+            </b-button>
+            <privacy-settings-modal :titleId="titleId" />
+
             <b-button v-if="codexTitle.approvedAddress">
               Remove approver
             </b-button>
@@ -59,6 +64,7 @@
 import axios from 'axios'
 
 import ApproveTransferModal from '../components/modals/ApproveTransferModal'
+import PrivacySettingsModal from '../components/modals/PrivacySettingsModal'
 import TransferTitleModal from '../components/modals/TransferTitleModal'
 import TitleProvenance from '../components/TitleProvenance'
 
@@ -66,6 +72,7 @@ export default {
   name: 'title-detail',
   components: {
     ApproveTransferModal,
+    PrivacySettingsModal,
     TransferTitleModal,
     TitleProvenance,
   },
