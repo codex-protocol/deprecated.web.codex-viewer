@@ -36,6 +36,13 @@
             v-model="imageFile"
             @input="displayAndUploadFile"
           />
+          <b-progress
+            class="mt-2"
+            v-if="uploadCounter"
+            :value="uploadCounter"
+            :animated="!!uploadCounterTimer"
+            :variant="progressVariant">
+          </b-progress>
           <b-form-text>
             You can also drag and drop a file onto the picker.
           </b-form-text>
@@ -68,6 +75,9 @@ export default {
       imageFile: null,
       imageStreamUri: null,
       modalVisible: false,
+      uploadCounter: 0,
+      uploadCounterTimer: null,
+      uploadSuccess: false,
     }
   },
   methods: {
@@ -75,13 +85,50 @@ export default {
       this.$refs.defaultModalFocus.focus()
     },
     displayAndUploadFile(file) {
+      this.uploadFile(file)
+
+      // display the file in the dialog box
       const fileReader = new FileReader()
       fileReader.onload = (loadEvent) => {
         this.imageStreamUri = loadEvent.target.result
-        console.log(this.imageStreamUri)
       }
 
       fileReader.readAsDataURL(file)
+    },
+    uploadFile(file) {
+      this.uploadCounterTimer = window.setInterval(() => {
+        this.uploadCounter += 24
+      }, 300)
+      this.uploadCounter = 1
+      this.uploadSuccess = false
+
+      const fileReader = new FileReader()
+      fileReader.onload = (loadEvent) => {
+        const formData = new FormData()
+        formData.append(file.name, loadEvent.target.result)
+
+        axios.post('/users/files', formData, {
+          headers: {
+            'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+          },
+        }).then((response) => {
+          const { result, error } = response.data
+          if (error) {
+          // TODO: display an error
+            console.log('there was an error uploading the file', error)
+          } else {
+            console.log('file uploaded', result)
+
+            this.uploadCounter = 100
+            this.uploadSuccess = true
+          }
+
+          clearInterval(this.uploadCounterTimer)
+          this.uploadCounterTimer = null
+        })
+      }
+
+      fileReader.readAsBinaryString(file)
     },
     fetchTransactionData(event) {
       event.preventDefault()
@@ -128,6 +175,15 @@ export default {
     },
     contract() {
       return this.$store.state.web3.contractInstance()
+    },
+    progressVariant() {
+      if (this.uploadCounterTimer) {
+        return 'primary'
+      } else if (this.uploadSuccess) {
+        return 'success'
+      }
+
+      return 'danger'
     },
   },
 }
