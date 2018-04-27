@@ -1,45 +1,58 @@
 <template>
   <b-modal id="createTitleModal"
-    title="Initialize title"
+    title="Create title"
     ok-title="Create with MetaMask"
+    size="lg"
     v-model="modalVisible"
     v-on:shown="focusModal"
     v-on:ok="fetchTransactionData"
   >
-    <b-form-group
-      label="Image link" label-for="imageUri" label-size="sm" label-class="text-secondary"
-    >
-      <b-form-input
-        id="imageUri"
-        type="text"
-        class="mb-4"
-        placeholder="https://site.com/image.png"
-        ref="defaultModalFocus"
-        v-model="imageUri"
-      />
-    </b-form-group>
-    <b-form-group
-      label="Piece title" label-for="name" label-size="sm" label-class="text-secondary"
-    >
-      <b-form-input
-        id="name"
-        type="text"
-        class="mb-4"
-        placeholder="e.g., Figure with horses"
-        v-model="name"
-      />
-    </b-form-group>
-    <b-form-group
-      label="Description" label-for="description" label-size="sm" label-class="text-secondary"
-    >
-      <b-form-textarea
-        id="description"
-        placeholder="Enter item description"
-        :rows="3"
-        :max-rows="10"
-        v-model="description"
-      />
-    </b-form-group>
+    <div class="flex-container">
+      <div>
+        <div class="image-container" :class="{ 'no-image': !imageStreamUri }">
+          <img :src="imageStreamUri" />
+        </div>
+      </div>
+      <div>
+        <b-form-group
+          label="Piece title" label-for="name" label-size="sm" label-class="text-secondary"
+        >
+          <b-form-input
+            id="name"
+            type="text"
+            class="mb-4"
+            placeholder="e.g., Figure with horses"
+            ref="defaultModalFocus"
+            v-model="name"
+          />
+        </b-form-group>
+        <b-form-group
+          label="Digital image" label-for="imageFile" label-size="sm" label-class="text-secondary"
+        >
+          <b-form-file
+            id="imageFile"
+            accept="image/*"
+            placeholder="Upload an image of the piece"
+            v-model="imageFile"
+            @input="displayAndUploadFile"
+          />
+          <b-form-text>
+            You can also drag and drop a file onto the picker.
+          </b-form-text>
+        </b-form-group>
+        <b-form-group
+          label="Description" label-for="description" label-size="sm" label-class="text-secondary"
+        >
+          <b-form-textarea
+            id="description"
+            placeholder="Enter item description"
+            :rows="3"
+            :max-rows="10"
+            v-model="description"
+          />
+        </b-form-group>
+      </div>
+    </div>
   </b-modal>
 </template>
 
@@ -52,13 +65,23 @@ export default {
     return {
       name: null,
       description: null,
-      imageUri: null,
+      imageFile: null,
+      imageStreamUri: null,
       modalVisible: false,
     }
   },
   methods: {
     focusModal() {
       this.$refs.defaultModalFocus.focus()
+    },
+    displayAndUploadFile(file) {
+      const fileReader = new FileReader()
+      fileReader.onload = (loadEvent) => {
+        this.imageStreamUri = loadEvent.target.result
+        console.log(this.imageStreamUri)
+      }
+
+      fileReader.readAsDataURL(file)
     },
     fetchTransactionData(event) {
       event.preventDefault()
@@ -110,7 +133,30 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.flex-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-container > div {
+  width: 50%;
+}
+
+.image-container {
+  height: 100%;
+  margin: 0 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ced4da;
+  border-radius: 0.25em;
+}
+
+.no-image {
+  background-color: darkgrey;
+}
+
 form {
   display: flex;
   flex-direction: column;
