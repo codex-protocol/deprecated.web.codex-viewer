@@ -1,6 +1,6 @@
 import store from '../../store/'
 
-function pollWeb3() {
+function pollWeb3(router) {
   const web3 = store.state.web3.instance
 
   setInterval(() => {
@@ -13,7 +13,8 @@ function pollWeb3() {
             if (balanceError) {
               console.log(balanceError)
             } else {
-              // TODO: We should also clear the authToken at this point
+              store.dispatch('logout', router, { root: true })
+
               store.dispatch('pollWeb3', {
                 account: accounts[0],
                 balance: parseInt(balance, 10),

@@ -32,10 +32,8 @@ export default {
     AppSideBar,
     CreateTitleModal,
   },
-  beforeCreate() {
-    this.$store.dispatch('registerWeb3')
-  },
   created() {
+    this.$store.dispatch('registerWeb3', this.$router)
     this.initializeApi()
   },
   mounted() {
@@ -58,7 +56,7 @@ export default {
       const authErrorHandler = (response) => {
         if ((response.error && response.error.status === 401) ||
         response.status === 401) {
-          this.$store.dispatch('clearAuthToken')
+          this.$store.commit('clearAuthToken')
         }
 
         return response

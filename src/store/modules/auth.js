@@ -37,6 +37,11 @@ const actions = {
       })
     })
   },
+  logout({ commit }, router) {
+    commit('clearAuthToken')
+
+    router.replace('/login')
+  },
 }
 
 const mutations = {

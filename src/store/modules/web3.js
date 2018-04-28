@@ -16,10 +16,10 @@ const getters = {
 }
 
 const actions = {
-  registerWeb3({ commit }) {
+  registerWeb3({ commit }, router) {
     registerWeb3.then((result) => {
       console.log('committing result to registerWeb3Instance mutation')
-      commit('registerWeb3Instance', result)
+      commit('registerWeb3Instance', { result, router })
     }).catch((e) => {
       console.log('error in action registerWeb3', e)
     })
@@ -39,14 +39,16 @@ const actions = {
 
 const mutations = {
   registerWeb3Instance(currentState, payload) {
-    console.log('registerWeb3instance mutation being executed', payload)
+    const { result, router } = payload
+    console.log('registerWeb3instance mutation being executed', result)
 
-    currentState.account = payload.account
-    currentState.network = Networks[payload.networkId]
-    currentState.balance = parseInt(payload.balance, 10)
-    currentState.instance = payload.web3
 
-    pollWeb3()
+    currentState.account = result.account
+    currentState.network = Networks[result.networkId]
+    currentState.balance = parseInt(result.balance, 10)
+    currentState.instance = result.web3
+
+    pollWeb3(router)
   },
 
   pollWeb3Instance(currentState, payload) {

@@ -51,8 +51,7 @@ export default {
     logout(event) {
       event.preventDefault()
 
-      this.$store.commit('clearAuthToken')
-      this.$router.replace('/login')
+      this.$store.dispatch('logout', this.$router)
     },
   },
 }
