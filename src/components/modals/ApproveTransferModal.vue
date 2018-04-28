@@ -22,6 +22,7 @@
         This is the recommended way of transferring titles.
       </b-form-text>
     </b-form-group>
+    <!--
     <b-form-group
       label="Email address of the wallet owner (optional)"
       label-for="toEmailAddress" label-size="sm" label-class="text-secondary"
@@ -37,6 +38,7 @@
         we will send them an email once they've been approved to accept the title.
       </b-form-text>
     </b-form-group>
+    -->
   </b-modal>
 </template>
 

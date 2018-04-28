@@ -33,6 +33,7 @@
             id="imageFile"
             accept="image/*"
             placeholder="Upload an image of the piece"
+            ref="fileInput"
             @input="displayAndUploadFile"
           />
           <b-progress
@@ -84,6 +85,10 @@ export default {
       this.$refs.defaultModalFocus.focus()
     },
     displayAndUploadFile(file) {
+      if (!file) {
+        return
+      }
+
       this.uploadFile(file)
 
       // display the file in the dialog box
@@ -193,6 +198,7 @@ export default {
     modalVisible(newVisibility) {
       if (!newVisibility) {
         Object.assign(this.$data, this.$options.data.apply(this))
+        this.$refs.fileInput.reset()
       }
     },
   },

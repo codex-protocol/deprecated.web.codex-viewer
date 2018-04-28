@@ -22,6 +22,7 @@
         handle ERC-721 tokens. MetaMask is a great example!
       </b-form-text>
     </b-form-group>
+    <!--
     <b-form-group
       label="Email address of the wallet owner (optional)"
       label-for="toEmailAddress" label-size="sm" label-class="text-secondary"
@@ -37,6 +38,7 @@
         we will send them an email once the transfer has been completed.
       </b-form-text>
     </b-form-group>
+    -->
   </b-modal>
 </template>
 
