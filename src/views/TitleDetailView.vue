@@ -4,7 +4,9 @@
       <div class="flex mb-5">
         <div>
           <img class="mb-3 mr-5" v-if="codexTitle.metadata" :src="codexTitle.metadata.files[0].uri" />
-          <div class="mb-3 mr-5 private-img" v-else></div>
+          <div class="mb-3 mr-5 private-img" v-else>
+            <p>This Codex Title is private</p>
+          </div>
           <div class="vertical" v-if="isOwner">
             <b-button class="mb-3">
               Initiate metadata modification
@@ -35,9 +37,14 @@
             </b-button>
           </div>
         </div>
-        <div v-if="codexTitle.metadata" class="top vertical">
-          <h1>{{ codexTitle.metadata.name }}</h1>
+        <div class="top vertical">
+          <div v-if="codexTitle.metadata">
+            <h1>{{ codexTitle.metadata.name }}</h1>
             <div>{{ codexTitle.metadata.description }}</div>
+          </div>
+          <div v-else>
+            <h1>Codex Title #{{ codexTitle.tokenId }}</h1>
+          </div>
           <h4>Details</h4>
           <p>Current owner: {{ codexTitle.ownerAddress }}</p>
           <p>Approved owner: {{ codexTitle.approvedAddress }}</p>
@@ -46,9 +53,6 @@
           <p>Name hash: {{ codexTitle.nameHash }}</p>
           <p>Description hash: {{ codexTitle.descriptionHash }}</p>
           <p>ProviderId: {{ codexTitle.providerId }}</p>
-        </div>
-        <div v-else class="top vertical">
-          <h1>This title is private</h1>
         </div>
       </div>
       <title-provenance :provenance="codexTitle.provenance" />
@@ -94,10 +98,12 @@ export default {
       return this.web3.account
     },
     isOwner() {
-      return this.account === this.codexTitle.ownerAddress
+      return this.account &&
+        this.account === this.codexTitle.ownerAddress
     },
     isApproved() {
-      return this.account === this.codexTitle.approvedAddress
+      return this.account &&
+        this.account === this.codexTitle.approvedAddress
     },
     titleId() {
       return this.$route.params.titleId
@@ -157,10 +163,12 @@ export default {
   flex-direction: row;
   align-items: baseline;
 }
+
 .top {
   align-self: flex-start;
   width: 100%;
 }
+
 .vertical {
   display: flex;
   flex-direction: column;
@@ -176,5 +184,15 @@ img {
   width: 500px;
   height: 500px;
   background-color: #32194C;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.private-img > p {
+  padding: 2em;
+  font-size: 2rem;
+  color: white;
 }
 </style>

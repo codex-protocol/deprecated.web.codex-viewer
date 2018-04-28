@@ -1,10 +1,15 @@
 <template>
   <div>
     <h1>Provenance</h1>
-    <div class="flex mb-4 pb-1" v-for="row in provenance" :key="row.id">
-      <div>{{ getEventDescription(row.type) }}</div>
-      <div>{{ row.newOwnerAddress }}</div>
-      <div>{{ getTimeSince(row.createdAt) }}</div>
+    <div v-if="provenance.length">
+      <div class="flex mb-4 pb-1" v-for="row in provenance" :key="row.id">
+        <div>{{ getEventDescription(row.type) }}</div>
+        <div>{{ row.newOwnerAddress }}</div>
+        <div>{{ getTimeSince(row.createdAt) }}</div>
+      </div>
+    </div>
+    <div v-else>
+      <p>You must be logged in to view provenance.</p>
     </div>
   </div>
 </template>
