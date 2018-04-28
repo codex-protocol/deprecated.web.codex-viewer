@@ -33,14 +33,13 @@
             id="imageFile"
             accept="image/*"
             placeholder="Upload an image of the piece"
-            v-model="imageFile"
             @input="displayAndUploadFile"
           />
           <b-progress
             class="mt-2"
-            v-if="uploadCounter"
-            :value="uploadCounter"
-            :animated="!!uploadCounterTimer"
+            v-if="progressVisible"
+            :value="100"
+            :animated="!uploadComplete"
             :variant="progressVariant">
           </b-progress>
           <b-form-text>
@@ -72,11 +71,11 @@ export default {
     return {
       name: null,
       description: null,
-      imageFile: null,
+      uploadedFile: null,
       imageStreamUri: null,
       modalVisible: false,
-      uploadCounter: 0,
-      uploadCounterTimer: null,
+      progressVisible: false,
+      uploadComplete: false,
       uploadSuccess: false,
     }
   },
@@ -96,11 +95,9 @@ export default {
       fileReader.readAsDataURL(file)
     },
     uploadFile(file) {
-      this.uploadCounterTimer = window.setInterval(() => {
-        this.uploadCounter += 24
-      }, 300)
-      this.uploadCounter = 1
+      this.progressVisible = true
       this.uploadSuccess = false
+      this.uploadComplete = false
 
       const formData = new FormData()
       formData.append('files', file)
@@ -109,27 +106,35 @@ export default {
         'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
       } }).then((response) => {
         const { result, error } = response.data
+        this.uploadComplete = true
+
         if (error) {
         // TODO: display an error
           console.log('there was an error uploading the file', error)
         } else {
           console.log('file uploaded', result)
 
-          this.uploadCounter = 100
           this.uploadSuccess = true
+          this.uploadedFile = result
         }
+      }).catch((error) => {
+        this.uploadComplete = true
 
-        clearInterval(this.uploadCounterTimer)
-        this.uploadCounterTimer = null
+        // TODO: display an error
+        console.log('there was an error uploading the file', error)
       })
     },
     fetchTransactionData(event) {
       event.preventDefault()
 
-      // TODO: Use the file upload return in this POST request
-      // TODO: Disable the button until the file upload has completed
+      // TODO: Show some better error handling fi these aren't filled in
+      if (!this.name || !this.uploadedFile || !this.description) {
+        return
+      }
+
       axios.post('/users/titles/metadata', {
         name: this.name,
+        files: this.uploadedFile,
         description: this.description,
       }).then((response) => {
         const { result, error } = response.data
@@ -172,9 +177,11 @@ export default {
       return this.$store.state.web3.contractInstance()
     },
     progressVariant() {
-      if (this.uploadCounterTimer) {
+      if (!this.uploadComplete) {
         return 'primary'
-      } else if (this.uploadSuccess) {
+      }
+
+      if (this.uploadSuccess) {
         return 'success'
       }
 
