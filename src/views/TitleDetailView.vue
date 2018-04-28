@@ -3,7 +3,7 @@
     <div v-if="codexTitle">
       <div class="flex mb-5">
         <div>
-          <img class="mb-3 mr-5" v-if="isViewable" :src="codexTitle.metadata.files[0].uri" />
+          <img class="mb-3 mr-5" v-if="codexTitle.metadata" :src="codexTitle.metadata.files[0].uri" />
           <div class="mb-3 mr-5 private-img" v-else></div>
           <div class="vertical" v-if="isOwner">
             <b-button class="mb-3">
@@ -35,7 +35,7 @@
             </b-button>
           </div>
         </div>
-        <div v-if="isViewable" class="top vertical">
+        <div v-if="codexTitle.metadata" class="top vertical">
           <h1>{{ codexTitle.metadata.name }}</h1>
             <div>{{ codexTitle.metadata.description }}</div>
           <h4>Details</h4>
@@ -51,7 +51,7 @@
           <h1>This title is private</h1>
         </div>
       </div>
-      <title-provenance v-if="!this.isPrivate" :provenance="codexTitle.provenance" />
+      <title-provenance :provenance="codexTitle.provenance" />
     </div>
 
     <div v-else>
@@ -104,10 +104,6 @@ export default {
     },
     contract() {
       return this.web3.contractInstance()
-    },
-    isViewable() {
-      if (this.isOwner) return true
-      return !this.codexTitle.isPrivate
     },
     isPrivate() {
       return this.codexTitle.isPrivate
