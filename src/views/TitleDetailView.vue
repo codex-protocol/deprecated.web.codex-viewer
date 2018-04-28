@@ -3,7 +3,8 @@
     <div v-if="codexTitle">
       <div class="flex mb-5">
         <div>
-          <img class="mb-3 mr-5" :src="codexTitle.metadata.files[0].uri" />
+          <img class="mb-3 mr-5" v-if="codexTitle.metadata" :src="codexTitle.metadata.files[0].uri" />
+          <div class="mb-3 mr-5 private-img" v-else></div>
           <div class="vertical" v-if="isOwner">
             <b-button class="mb-3">
               Initiate metadata modification
@@ -19,6 +20,11 @@
             </b-button>
             <approve-transfer-modal :titleId="titleId" />
 
+            <b-button class="mb-3" v-b-modal.titlePrivacySettings>
+              Privacy settings
+            </b-button>
+            <privacy-settings-modal :titleId="titleId" :titleIsPrivate="isPrivate" />
+
             <b-button v-if="codexTitle.approvedAddress">
               Remove approver
             </b-button>
@@ -29,7 +35,7 @@
             </b-button>
           </div>
         </div>
-        <div class="top vertical">
+        <div v-if="codexTitle.metadata" class="top vertical">
           <h1>{{ codexTitle.metadata.name }}</h1>
             <div>{{ codexTitle.metadata.description }}</div>
           <h4>Details</h4>
@@ -40,6 +46,9 @@
           <p>Name hash: {{ codexTitle.nameHash }}</p>
           <p>Description hash: {{ codexTitle.descriptionHash }}</p>
           <p>ProviderId: {{ codexTitle.providerId }}</p>
+        </div>
+        <div v-else class="top vertical">
+          <h1>This title is private</h1>
         </div>
       </div>
       <title-provenance :provenance="codexTitle.provenance" />
@@ -59,6 +68,7 @@
 import axios from 'axios'
 
 import ApproveTransferModal from '../components/modals/ApproveTransferModal'
+import PrivacySettingsModal from '../components/modals/PrivacySettingsModal'
 import TransferTitleModal from '../components/modals/TransferTitleModal'
 import TitleProvenance from '../components/TitleProvenance'
 
@@ -66,6 +76,7 @@ export default {
   name: 'title-detail',
   components: {
     ApproveTransferModal,
+    PrivacySettingsModal,
     TransferTitleModal,
     TitleProvenance,
   },
@@ -93,6 +104,9 @@ export default {
     },
     contract() {
       return this.web3.contractInstance()
+    },
+    isPrivate() {
+      return this.codexTitle.isPrivate
     },
   },
   created() {
@@ -156,5 +170,11 @@ export default {
 img {
   max-height: 500px;
   max-width: 500px;
+}
+
+.private-img {
+  width: 500px;
+  height: 500px;
+  background-color: #32194C;
 }
 </style>
