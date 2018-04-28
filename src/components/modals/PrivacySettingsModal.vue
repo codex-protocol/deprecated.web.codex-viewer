@@ -31,10 +31,9 @@ import axios from 'axios'
 
 export default {
   name: '',
-  props: ['titleId', 'titleIsPrivate'],
+  props: ['titleId', 'isPrivate'],
   data() {
     return {
-      isPrivate: this.titleIsPrivate,
       modalVisible: false,
     }
   },
@@ -57,6 +56,14 @@ export default {
         console.log('there was an error setting title privacy', error)
         this.error = error
       })
+    },
+  },
+  watch: {
+    // When the modal dialog is closed, we reset the component data
+    modalVisible(newVisibility) {
+      if (!newVisibility) {
+        Object.assign(this.$data, this.$options.data.apply(this))
+      }
     },
   },
 }

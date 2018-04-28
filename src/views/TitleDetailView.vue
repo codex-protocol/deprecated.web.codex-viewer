@@ -25,7 +25,7 @@
             <b-button class="mb-3" v-b-modal.titlePrivacySettings>
               Privacy settings
             </b-button>
-            <privacy-settings-modal :titleId="titleId" :titleIsPrivate="isPrivate" />
+            <privacy-settings-modal :titleId="titleId" :isPrivate="isPrivate" />
 
             <b-button v-if="codexTitle.approvedAddress">
               Remove approver

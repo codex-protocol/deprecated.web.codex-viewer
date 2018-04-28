@@ -188,6 +188,14 @@ export default {
       return 'danger'
     },
   },
+  watch: {
+    // When the modal dialog is closed, we reset the component data
+    modalVisible(newVisibility) {
+      if (!newVisibility) {
+        Object.assign(this.$data, this.$options.data.apply(this))
+      }
+    },
+  },
 }
 </script>
 

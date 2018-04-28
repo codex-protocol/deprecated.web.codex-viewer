@@ -72,6 +72,14 @@ export default {
       return this.$store.state.web3.contractInstance()
     },
   },
+  watch: {
+    // When the modal dialog is closed, we reset the component data
+    modalVisible(newVisibility) {
+      if (!newVisibility) {
+        Object.assign(this.$data, this.$options.data.apply(this))
+      }
+    },
+  },
 }
 </script>
 
