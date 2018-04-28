@@ -102,37 +102,32 @@ export default {
       this.uploadCounter = 1
       this.uploadSuccess = false
 
-      const fileReader = new FileReader()
-      fileReader.onload = (loadEvent) => {
-        const formData = new FormData()
-        formData.append(file.name, loadEvent.target.result)
+      const formData = new FormData()
+      formData.append('files', file)
 
-        axios.post('/users/files', formData, {
-          headers: {
-            'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
-          },
-        }).then((response) => {
-          const { result, error } = response.data
-          if (error) {
-          // TODO: display an error
-            console.log('there was an error uploading the file', error)
-          } else {
-            console.log('file uploaded', result)
+      axios.post('/users/files', formData, { headers: {
+        'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+      } }).then((response) => {
+        const { result, error } = response.data
+        if (error) {
+        // TODO: display an error
+          console.log('there was an error uploading the file', error)
+        } else {
+          console.log('file uploaded', result)
 
-            this.uploadCounter = 100
-            this.uploadSuccess = true
-          }
+          this.uploadCounter = 100
+          this.uploadSuccess = true
+        }
 
-          clearInterval(this.uploadCounterTimer)
-          this.uploadCounterTimer = null
-        })
-      }
-
-      fileReader.readAsBinaryString(file)
+        clearInterval(this.uploadCounterTimer)
+        this.uploadCounterTimer = null
+      })
     },
     fetchTransactionData(event) {
       event.preventDefault()
 
+      // TODO: Use the file upload return in this POST request
+      // TODO: Disable the button until the file upload has completed
       axios.post('/users/titles/metadata', {
         name: this.name,
         description: this.description,
