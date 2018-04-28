@@ -71,6 +71,8 @@
 <script>
 import axios from 'axios'
 
+import callContract from '../util/web3/callContract'
+
 import ApproveTransferModal from '../components/modals/ApproveTransferModal'
 import PrivacySettingsModal from '../components/modals/PrivacySettingsModal'
 import TransferTitleModal from '../components/modals/TransferTitleModal'
@@ -141,14 +143,19 @@ export default {
       })
     },
     acceptTransfer() {
-      this.contract.transferFrom(
+      const input = [
         this.codexTitle.ownerAddress,
         this.account,
         this.titleId,
-        { from: this.account }
-      ).then(() => {
-        this.modalVisible = false
-      })
+      ]
+
+      callContract(this.contract.transferFrom, input, this.web3)
+        .then(() => {
+          this.modalVisible = false
+        })
+        .catch((error) => {
+          console.log('There was an error accepting the transfer', error)
+        })
     },
     formatDate(date) {
       return (new Date(date)).toLocaleString()

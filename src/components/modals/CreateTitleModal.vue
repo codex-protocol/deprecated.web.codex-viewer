@@ -65,6 +65,7 @@
 
 <script>
 import axios from 'axios'
+import callContract from '../../util/web3/callContract'
 
 export default {
   name: 'create-title-modal',
@@ -160,18 +161,22 @@ export default {
     createTitle(transactionData) {
       const sha3 = this.web3.instance().sha3
       const account = this.web3.account
-
-      return this.contract.mint(
+      const input = [
         account,
         sha3(transactionData.name),
         sha3(transactionData.description),
         sha3(transactionData.imageUri),
         '1', // providerId
         transactionData.id,
-        { from: account }
-      ).then(() => {
-        this.modalVisible = false
-      })
+      ]
+
+      callContract(this.contract.mint, input, this.web3)
+        .then(() => {
+          this.modalVisible = false
+        })
+        .catch((error) => {
+          console.log('There was an error creating the title', error)
+        })
     },
   },
   computed: {

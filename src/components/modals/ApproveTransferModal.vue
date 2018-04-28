@@ -43,6 +43,8 @@
 </template>
 
 <script>
+import callContract from '../../util/web3/callContract'
+
 export default {
   name: 'approve-transfer-modal',
   props: ['titleId'],
@@ -60,18 +62,22 @@ export default {
     approveTransfer(event) {
       event.preventDefault()
 
-      this.contract.approve(this.toEthAddress, this.titleId, { from: this.account })
+      const input = [this.toEthAddress, this.titleId]
+      callContract(this.contract.approve, input, this.web3)
         .then(() => {
           this.modalVisible = false
+        })
+        .catch((error) => {
+          console.log('There was an error approving the transfer', error)
         })
     },
   },
   computed: {
-    account() {
-      return this.$store.state.web3.account
+    web3() {
+      return this.$store.state.web3
     },
     contract() {
-      return this.$store.state.web3.contractInstance()
+      return this.web3.contractInstance()
     },
   },
   watch: {
