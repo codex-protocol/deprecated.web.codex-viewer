@@ -1,25 +1,21 @@
 <template>
   <div>
     <div class="header">
-      <h1>Your wallet</h1>
-      <b-button v-b-modal.createTitleModal>Create title</b-button>
+      <div>
+        <h1>Your collection</h1>
+        <h2 class="spacer"></h2>
+        <span><small>{{ web3.account }} ({{ web3.network }})</small></span>
+      </div>
+      <b-button v-b-modal.createTitleModal>Add new item</b-button>
     </div>
-    <div v-if="titles">
-      <div v-if="titles.length">
-        <div class="title-list">
-            <div class="list-header" v-for="columnName in columnNames" :key="columnName">{{ columnName }}</div>
-        </div>
-        <title-list-item v-for="title in titles"
-          :codex-title="title"
-          :key="title.tokenId"
-        />
-      </div>
-      <div v-else>
-        You have no titles in your wallet!
-      </div>
+    <div class="title-list" v-if="titles.length">
+      <title-list-item v-for="title in titles"
+        :codex-title="title"
+        :key="title.tokenId"
+      />
     </div>
     <div v-else>
-      Loading...
+      You have no items in your collection!
     </div>
   </div>
 </template>
@@ -77,12 +73,21 @@ export default {
   margin-bottom: 1em;
 }
 
+h1, h2 {
+  display: inline;
+}
+
+.spacer {
+  border-left: 1px solid black;
+  margin: 0 0.25em;
+}
+
 .title-list {
   display: flex;
   flex-wrap: wrap;
-
-  padding: 0 0.5em;
-  margin-bottom: 20px;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
 }
 
 .list-header {

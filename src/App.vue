@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div v-if="authToken">
-      <app-side-bar />
+      <!-- <app-side-bar /> -->
       <div class="container">
         <router-view />
         <create-title-modal />

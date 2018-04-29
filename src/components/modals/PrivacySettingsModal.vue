@@ -69,7 +69,7 @@ export default {
 }
 </script>
 
-<style scope>
+<style scoped>
 form {
   display: flex;
   flex-direction: column;

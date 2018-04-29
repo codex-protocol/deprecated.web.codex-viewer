@@ -1,12 +1,12 @@
 <template>
-  <a class="item" href="#" @click.prevent="viewTitle">
-    <div>
-      <div class="image-container">
-        <img :src="codexTitle.metadata.files[0].uri" />
-      </div>
-    </div>
-    <div>{{ codexTitle.metadata.name }}</div>
-    <div>{{ codexTitle.createdAt }}</div>
+  <a href="#" @click.prevent="viewTitle">
+    <b-card
+      :img-src="codexTitle.metadata.files[0].uri"
+      img-top
+    >
+      <p>{{ codexTitle.metadata.name }}</p>
+    </b-card>
+
   </a>
 </template>
 
@@ -28,21 +28,6 @@ export default {
 </script>
 
 <style scoped>
-.item {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.item > div {
-  text-align: center;
-  width: 25%;
-}
-
-.item > div:nth-child(2) {
-  width: 50%;
-}
-
 .image-container {
   height: 80px;
   width: 80px;
@@ -51,14 +36,13 @@ export default {
 }
 
 img {
-  max-height: 80px;
-  max-width: 80px;
+  max-width: 15em;
 }
 
 a {
-  padding: 10px;
   color: inherit;
   border: 1px solid white;
+  margin: 0.5em;
 }
 
 a:hover {
