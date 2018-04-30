@@ -4,7 +4,7 @@
       <div>
         <h1>Your collection</h1>
         <h2 class="spacer"></h2>
-        <span><small>{{ web3.account }} ({{ web3.network }})</small></span>
+        <span>{{ web3.account }} ({{ web3.network }})</span>
       </div>
       <b-button v-b-modal.createTitleModal>Add new item</b-button>
     </div>
@@ -65,6 +65,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+@import "../assets/variables.styl"
+
 .header
   display flex
   flex-direction row
@@ -76,7 +78,7 @@ h1, h2
   display inline
 
 .spacer
-  border-left 1px solid black
+  border-left 1px solid color-secondary
   margin 0 0.25em
 
 .title-list
@@ -85,15 +87,4 @@ h1, h2
   flex-direction row
   align-items flex-start
   justify-content space-between
-
-.list-header
-  text-transform capitalize
-  background-color #F1F1F1
-  text-align center
-  padding 1em
-  font-weight bold
-  width 25%
-
-.list-header:nth-child(2)
-  width 50%
 </style>

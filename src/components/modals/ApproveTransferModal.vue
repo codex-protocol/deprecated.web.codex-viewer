@@ -90,10 +90,3 @@ export default {
   },
 }
 </script>
-
-<style lang="stylus" scoped>
-form
-  display flex
-  flex-direction column
-  justify-content space-around
-</style>

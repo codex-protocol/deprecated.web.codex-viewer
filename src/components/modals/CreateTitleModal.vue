@@ -229,9 +229,4 @@ export default {
 
 .no-image
   background-color darkgrey
-
-form
-  display flex
-  flex-direction column
-  justify-content space-around
 </style>

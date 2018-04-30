@@ -28,22 +28,16 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.image-container
-  height 80px
-  width 80px
-  background-color #5f697a
-  margin 0 auto
+@import "../assets/variables.styl"
 
 img
   max-width 15em
 
 a
-  color inherit
-  border 1px solid white
+  color color-black
+  font-weight bold
   margin 0.5em
 
-a:hover
-  text-decoration none
-  border 1px solid lightgray
-
+  &:hover
+    text-decoration none
 </style>
