@@ -38,18 +38,15 @@ export default {
 }
 </script>
 
-<style scoped>
-.flex {
-  display: flex;
-  flex-direction: horizontal;
-  border-bottom: solid 1px lightgray;
-}
+<style lang="stylus" scoped>
+.flex
+  display flex
+  flex-direction horizontal
+  border-bottom solid 1px lightgray
 
-.flex div {
-  flex: 1;
-}
+.flex div
+  flex 1
 
-.flex div:nth-child(2) {
-  flex: 2;
-}
+.flex div:nth-child(2)
+  flex 2
 </style>

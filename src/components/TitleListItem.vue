@@ -27,26 +27,23 @@ export default {
 }
 </script>
 
-<style scoped>
-.image-container {
-  height: 80px;
-  width: 80px;
-  background-color: #5f697a;
-  margin: 0 auto;
-}
+<style lang="stylus" scoped>
+.image-container
+  height 80px
+  width 80px
+  background-color #5f697a
+  margin 0 auto
 
-img {
-  max-width: 15em;
-}
+img
+  max-width 15em
 
-a {
-  color: inherit;
-  border: 1px solid white;
-  margin: 0.5em;
-}
+a
+  color inherit
+  border 1px solid white
+  margin 0.5em
 
-a:hover {
-  text-decoration: none;
-  border: 1px solid lightgray;
-}
+a:hover
+  text-decoration none
+  border 1px solid lightgray
+
 </style>

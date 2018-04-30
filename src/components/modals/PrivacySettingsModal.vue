@@ -69,10 +69,9 @@ export default {
 }
 </script>
 
-<style scoped>
-form {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-}
+<style lang="stylus" scoped>
+form
+  display flex
+  flex-direction column
+  justify-content space-around
 </style>

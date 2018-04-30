@@ -57,17 +57,14 @@ export default {
 }
 </script>
 
-<style scoped>
-.links {
-  text-align: center;
-}
+<style lang="stylus" scoped>
+.links
+  text-align center
 
-.links a {
-  margin: 0 5px;
-  color: inherit;
-}
+.links a
+  margin 0 5px
+  color inherit
 
-a:hover {
-  text-decoration: none;
-}
+a:hover
+  text-decoration none
 </style>

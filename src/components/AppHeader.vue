@@ -15,9 +15,8 @@ export default {
 }
 </script>
 
-<style scoped>
-.container {
-  padding-bottom: 8px;
-  border-bottom: 1px solid lightgray;
-}
+<style lang="stylus" scoped>
+.container
+  padding-bottom 8px
+  border-bottom 1px solid lightgray
 </style>

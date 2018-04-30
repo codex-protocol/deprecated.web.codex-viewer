@@ -64,42 +64,36 @@ export default {
 }
 </script>
 
-<style scoped>
-.header {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1em;
-}
+<style lang="stylus" scoped>
+.header
+  display flex
+  flex-direction row
+  justify-content space-between
+  align-items center
+  margin-bottom 1em
 
-h1, h2 {
-  display: inline;
-}
+h1, h2
+  display inline
 
-.spacer {
-  border-left: 1px solid black;
-  margin: 0 0.25em;
-}
+.spacer
+  border-left 1px solid black
+  margin 0 0.25em
 
-.title-list {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: space-between;
-}
+.title-list
+  display flex
+  flex-wrap wrap
+  flex-direction row
+  align-items flex-start
+  justify-content space-between
 
-.list-header {
-  text-transform: capitalize;
-  background-color: #F1F1F1;
-  text-align: center;
-  padding: 1em;
-  font-weight: bold;
-  width: 25%;
-}
+.list-header
+  text-transform capitalize
+  background-color #F1F1F1
+  text-align center
+  padding 1em
+  font-weight bold
+  width 25%
 
-.list-header:nth-child(2) {
-  width: 50%;
-}
+.list-header:nth-child(2)
+  width 50%
 </style>
