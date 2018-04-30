@@ -212,21 +212,21 @@ export default {
 
 <style lang="stylus" scoped>
 .flex-container
-  display flex
-  flex-direction row
+  display: flex
+  flex-direction: row
 
 .flex-container > div
-  width 50%
+  width: 50%
 
 .image-container
-  height 100%
-  margin 0 1em
-  display flex
-  align-items center
-  justify-content center
-  border 1px solid #ced4da
-  border-radius 0.25em
+  height: 100%
+  margin: 0 1em
+  display: flex
+  align-items: center
+  justify-content: center
+  border: 1px solid #ced4da
+  border-radius: 0.25em
 
 .no-image
-  background-color darkgrey
+  background-color: darkgrey
 </style>

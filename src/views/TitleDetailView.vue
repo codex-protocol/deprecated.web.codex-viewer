@@ -166,34 +166,34 @@ export default {
 
 <style lang="stylus" scoped>
 .flex
-  display flex
-  flex-direction row
-  align-items baseline
+  display: flex
+  flex-direction: row
+  align-items: baseline
 
 .top
-  align-self flex-start
-  width 100%
+  align-self: flex-start
+  width: 100%
 
 .vertical
-  display flex
-  flex-direction column
-  align-items baseline
+  display: flex
+  flex-direction: column
+  align-items: baseline
 
 img
-  max-height 500px
-  max-width 500px
+  max-height: 500px
+  max-width: 500px
 
 .private-img
-  width 500px
-  height 500px
-  background-color #32194C
-  display flex
-  justify-content center
-  align-items center
-  text-align center
+  width: 500px
+  height: 500px
+  background-color: #32194C
+  display: flex
+  justify-content: center
+  align-items: center
+  text-align: center
 
-.private-img > p
-  padding 2em
-  font-size 2rem
-  color white
+  > p
+    padding: 2em
+    font-size: 2rem
+    color: white
 </style>

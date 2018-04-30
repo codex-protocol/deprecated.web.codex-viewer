@@ -68,23 +68,23 @@ export default {
 @import "../assets/variables.styl"
 
 .header
-  display flex
-  flex-direction row
-  justify-content space-between
-  align-items center
-  margin-bottom 1em
+  display: flex
+  flex-direction: row
+  justify-content: space-between
+  align-items: center
+  margin-bottom: 1em
 
 h1, h2
-  display inline
+  display: inline
 
 .spacer
-  border-left 1px solid color-secondary
-  margin 0 0.25em
+  border-left: 1px solid $color-secondary
+  margin: 0 0.25em
 
 .title-list
-  display flex
-  flex-wrap wrap
-  flex-direction row
-  align-items flex-start
-  justify-content space-between
+  display: flex
+  flex-wrap: wrap
+  flex-direction: row
+  align-items: flex-start
+  justify-content: space-between
 </style>

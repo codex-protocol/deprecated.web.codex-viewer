@@ -25,28 +25,28 @@ export default {
 @import "../assets/variables.styl"
 
 nav
-  height 100%
-  position fixed
-  top 0
-  left 0
-  background-color #09091F
-  padding-top 2em
-  border-right 2px solid #09091F
+  height: 100%
+  position: fixed
+  top: 0
+  left: 0
+  background-color: #09091F
+  padding-top: 2em
+  border-right: 2px solid #09091F
 
 a
-  padding 1em
-  padding-left 2em
-  color color-white
-  display block
-  font-weight bold
-  box-sizing border-box
+  padding: 1em
+  padding-left: 2em
+  color: $color-white
+  display: block
+  font-weight: bold
+  box-sizing: border-box
 
   &:hover
-    text-decoration none
-    background-color #5f697a // TODO: move to pallette
+    text-decoration: none
+    background-color: #5f697a // TODO: move to pallette
 
 .image-container
-  width 100%
-  padding 2em 1em
-  background-color color-white
+  width: 100%
+  padding: 2em 1em
+  background-color: $color-white
 </style>

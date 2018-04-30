@@ -72,75 +72,75 @@ export default {
 @import "./assets/variables.styl"
 
 body
-  font-family 'Avenir', Helvetica, Arial, sans-serif
-  -webkit-font-smoothing antialiased
-  -moz-osx-font-smoothing grayscale
-  background-color color-black
-  color color-secondary
+  font-family: 'Avenir', Helvetica, Arial, sans-serif
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+  background-color: $color-black
+  color: $color-secondary
 
 #app
-  padding-top 3em
-  margin-bottom 3em
+  padding-top: 3em
+  margin-bottom: 3em
 
 // Buttons
 .btn-secondary
-  padding 0.5em 2em
-  font-weight bold
-  color color-primary
-  background-color color-secondary
+  padding: 0.5em 2em
+  font-weight: bold
+  color: $color-primary
+  background-color: $color-secondary
 
 // CSS Checkbox toggle
 // <input type="checkbox"> toggle
 // https//danklammer.com/articles/simple-css-toggle-switch/
 .toggle-checkbox
-  padding-left 0
+  padding-left: 0
 
   label
-    display none
+    display: none
 
   input
-    opacity 1
-    z-index 0
-    -webkit-appearance none
-    appearance none
-    width 62px
-    height 32px
-    display inline-block
-    position relative
-    border-radius 50px
-    overflow hidden
-    outline none
-    border none
-    cursor pointer
-    background-color #707070 // TODO: Update using our pallete
-    transition background-color ease 0.3s
+    opacity: 1
+    z-index: 0
+    -webkit-appearance: none
+    appearance: none
+    width: 62px
+    height: 32px
+    display: inline-block
+    position: relative
+    border-radius: 50px
+    overflow: hidden
+    outline: none
+    border: none
+    cursor: pointer
+    background-color: #707070 // TODO: Update using our pallete
+    transition: background-color ease 0.3s
 
     &:before
-      content "on off"
-      display block
-      position absolute
-      z-index 2
-      width 28px
-      height 28px
-      background color-white
-      left 2px
-      top 2px
-      border-radius 50%
-      font 10px/28px Helvetica
-      text-transform uppercase
-      font-weight bold
-      text-indent -22px
-      word-spacing 37px
-      color color-white
-      text-shadow -1px -1px rgba(0,0,0,0.15)
-      white-space nowrap
-      box-shadow 0 1px 2px rgba(0,0,0,0.2)
-      transition all cubic-bezier(0.3, 1.5, 0.7, 1) 0.3s
+      content: "on off"
+      display: block
+      position: absolute
+      z-index: 2
+      width: 28px
+      height: 28px
+      background: color-white
+      left: 2px
+      top: 2px
+      border-radius: 50%
+      font: 10px/28px Helvetica
+      text-transform: uppercase
+      font-weight: bold
+      text-indent: -22px
+      word-spacing: 37px
+      color: $color-white
+      text-shadow: -1px -1px rgba(0,0,0,0.15)
+      white-space: nowrap
+      box-shadow: 0 1px 2px rgba(0,0,0,0.2)
+      transition: all cubic-bezier(0.3, 1.5, 0.7, 1) 0.3s
 
     &:checked
-      background-color #32194C
+      background-color: #32194C
 
       &:before
-        left 32px
+        left: 32px
 // End CSS Checkbox toggle
 </style>

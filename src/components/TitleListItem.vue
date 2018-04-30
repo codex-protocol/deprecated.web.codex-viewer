@@ -31,13 +31,13 @@ export default {
 @import "../assets/variables.styl"
 
 img
-  max-width 15em
+  max-width: 15em
 
 a
-  color color-black
-  font-weight bold
-  margin 0.5em
+  color: $color-black
+  font-weight: bold
+  margin: 0.5em
 
   &:hover
-    text-decoration none
+    text-decoration: none
 </style>
