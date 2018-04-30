@@ -34,7 +34,7 @@ img
   max-width: 15em
 
 a
-  color: $color-black
+  color: $color-dark
   font-weight: bold
   margin: 0.5em
 

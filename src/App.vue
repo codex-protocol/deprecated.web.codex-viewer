@@ -75,19 +75,10 @@ body
   font-family: 'Avenir', Helvetica, Arial, sans-serif
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
-  background-color: $color-black
-  color: $color-secondary
 
 #app
-  padding-top: 3em
-  margin-bottom: 3em
-
-// Buttons
-.btn-secondary
-  padding: 0.5em 2em
-  font-weight: bold
-  color: $color-primary
-  background-color: $color-secondary
+  padding-top: 3rem
+  margin-bottom: 3rem
 
 // CSS Checkbox toggle
 // <input type="checkbox"> toggle
@@ -131,7 +122,7 @@ body
       font-weight: bold
       text-indent: -22px
       word-spacing: 37px
-      color: $color-white
+      color: $color-light
       text-shadow: -1px -1px rgba(0,0,0,0.15)
       white-space: nowrap
       box-shadow: 0 1px 2px rgba(0,0,0,0.2)

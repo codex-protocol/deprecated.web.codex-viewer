@@ -36,7 +36,7 @@ nav
 a
   padding: 1em
   padding-left: 2em
-  color: $color-white
+  color: $color-light
   display: block
   font-weight: bold
   box-sizing: border-box
@@ -48,5 +48,5 @@ a
 .image-container
   width: 100%
   padding: 2em 1em
-  background-color: $color-white
+  background-color: $color-light
 </style>
