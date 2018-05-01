@@ -10,7 +10,6 @@
       label="Share Title Publicly"
       label-for="togglePrivacy"
       label-size="sm"
-      label-class="text-secondary"
     >
       <b-form-checkbox
         class="toggle-checkbox"

@@ -8,7 +8,7 @@
   >
     <b-form-group
       label="Type or paste wallet address"
-      label-for="toEthAddress" label-size="sm" label-class="text-secondary"
+      label-for="toEthAddress" label-size="sm"
     >
       <b-form-input
         id="toEthAddress"
@@ -25,7 +25,7 @@
     <!--
     <b-form-group
       label="Email address of the wallet owner (optional)"
-      label-for="toEmailAddress" label-size="sm" label-class="text-secondary"
+      label-for="toEmailAddress" label-size="sm"
     >
       <b-form-input
         id="toEmailAddress"

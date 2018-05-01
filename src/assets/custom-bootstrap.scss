@@ -25,9 +25,15 @@ $body-color: $color-secondary;
 $enable-rounded: false;
 
 // Modal overrides
-$modal-inner-padding:               2rem;
+$modal-inner-padding:               0 2rem 2rem 2rem;
+$modal-header-padding:              2rem;
 $modal-content-bg:                  $color-dark;
+$modal-content-border-width:        0;
+
+$close-color:                       $color-light;
 
 @import "node_modules/bootstrap/scss/bootstrap";
 
-
+.modal-dialog {
+  color: $color-light;
+}

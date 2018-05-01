@@ -15,7 +15,7 @@
       </div>
       <div>
         <b-form-group
-          label="Piece title" label-for="name" label-size="sm" label-class="text-secondary"
+          label="Piece title" label-for="name" label-size="sm"
         >
           <b-form-input
             id="name"
@@ -27,7 +27,7 @@
           />
         </b-form-group>
         <b-form-group
-          label="Digital image" label-for="imageFile" label-size="sm" label-class="text-secondary"
+          label="Digital image" label-for="imageFile" label-size="sm"
         >
           <b-form-file
             id="imageFile"
@@ -48,7 +48,7 @@
           </b-form-text>
         </b-form-group>
         <b-form-group
-          label="Description" label-for="description" label-size="sm" label-class="text-secondary"
+          label="Description" label-for="description" label-size="sm"
         >
           <b-form-textarea
             id="description"
