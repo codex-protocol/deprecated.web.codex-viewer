@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import timeSince from '../util/timeSince'
+import { timeSince } from '../util/dateHelpers'
 
 export default {
   name: 'title-provenance',

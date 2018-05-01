@@ -6,7 +6,7 @@
         <h2 class="spacer"></h2>
         <span>{{ web3.account }} ({{ web3.network }})</span>
       </div>
-      <b-button v-b-modal.createTitleModal>Add new item</b-button>
+      <b-button variant="primary" v-b-modal.createTitleModal>Add new item</b-button>
     </div>
     <div class="title-list" v-if="titles.length">
       <title-list-item v-for="title in titles"

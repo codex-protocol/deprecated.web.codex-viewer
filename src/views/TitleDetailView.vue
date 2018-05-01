@@ -1,40 +1,11 @@
 <template>
-  <div class="container">
+  <div>
     <div v-if="codexTitle">
       <div class="flex mb-5">
         <div>
           <img class="mb-3 mr-5" v-if="codexTitle.metadata" :src="codexTitle.metadata.files[0].uri" />
           <div class="mb-3 mr-5 private-img" v-else>
             <p>This Codex Title is private</p>
-          </div>
-          <div class="vertical" v-if="isOwner">
-            <b-button class="mb-3">
-              Initiate metadata modification
-            </b-button>
-
-            <b-button class="mb-3" v-b-modal.transferTitleModal>
-              Initiate one way transfer
-            </b-button>
-            <transfer-title-modal :titleId="titleId" />
-
-            <b-button class="mb-3" v-b-modal.approveTransferModal>
-              Initiate transfer approval
-            </b-button>
-            <approve-transfer-modal :titleId="titleId" />
-
-            <b-button class="mb-3" v-b-modal.titlePrivacySettings>
-              Privacy settings
-            </b-button>
-            <privacy-settings-modal :titleId="titleId" :isPrivate="isPrivate" />
-
-            <b-button v-if="codexTitle.approvedAddress">
-              Remove approver
-            </b-button>
-          </div>
-          <div class="vertical" v-if="isApproved">
-            <b-button @click="acceptTransfer">
-              Accept title transfer
-            </b-button>
           </div>
         </div>
         <div class="top vertical">
@@ -45,14 +16,33 @@
           <div v-else>
             <h1>Codex Title #{{ codexTitle.tokenId }}</h1>
           </div>
-          <h4>Details</h4>
-          <p>Current owner: {{ codexTitle.ownerAddress }}</p>
-          <p>Approved owner: {{ codexTitle.approvedAddress }}</p>
-          <p>Last updated: {{ this.formatDate(codexTitle.updatedAt) }}</p>
-          <h5>Metadata</h5>
-          <p>Name hash: {{ codexTitle.nameHash }}</p>
-          <p>Description hash: {{ codexTitle.descriptionHash }}</p>
-          <p>ProviderId: {{ codexTitle.providerId }}</p>
+          <a href="#" @click.prevent="toggleShowDetails">Toggle details</a>
+          <title-blockchain-details v-if="showDetails" :codexTitle="codexTitle" />
+          <div class="mt-3" v-if="isOwner">
+            <b-button class="mr-3" variant="primary">
+              Modify
+            </b-button>
+
+            <b-button class="mr-3" variant="primary" v-b-modal.approveTransferModal>
+              Transfer
+            </b-button>
+
+            <b-button class="mr-3" variant="primary" v-b-modal.titlePrivacySettings>
+              Settings
+            </b-button>
+
+            <b-button variant="primary" v-if="codexTitle.approvedAddress">
+              Remove Approver
+            </b-button>
+
+            <approve-transfer-modal :titleId="titleId" />
+            <privacy-settings-modal :titleId="titleId" :isPrivate="isPrivate" />
+          </div>
+          <div class="mt-3" v-if="isApproved">
+            <b-button @click="acceptTransfer">
+              Accept title transfer
+            </b-button>
+          </div>
         </div>
       </div>
       <title-provenance :provenance="codexTitle.provenance" />
@@ -75,21 +65,22 @@ import callContract from '../util/web3/callContract'
 
 import ApproveTransferModal from '../components/modals/ApproveTransferModal'
 import PrivacySettingsModal from '../components/modals/PrivacySettingsModal'
-import TransferTitleModal from '../components/modals/TransferTitleModal'
 import TitleProvenance from '../components/TitleProvenance'
+import TitleBlockchainDetails from '../components/TitleBlockchainDetails'
 
 export default {
   name: 'title-detail',
   components: {
     ApproveTransferModal,
     PrivacySettingsModal,
-    TransferTitleModal,
     TitleProvenance,
+    TitleBlockchainDetails,
   },
   data() {
     return {
       codexTitle: null,
       error: null,
+      showDetails: false,
     }
   },
   computed: {
@@ -157,8 +148,8 @@ export default {
           console.log('There was an error accepting the transfer', error)
         })
     },
-    formatDate(date) {
-      return (new Date(date)).toLocaleString()
+    toggleShowDetails() {
+      this.showDetails = !this.showDetails
     },
   },
 }
@@ -180,8 +171,7 @@ export default {
   align-items: baseline
 
 img
-  max-height: 500px
-  max-width: 500px
+  max-height: 30rem
 
 .private-img
   width: 500px

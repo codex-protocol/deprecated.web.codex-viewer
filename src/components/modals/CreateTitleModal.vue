@@ -220,12 +220,11 @@ export default {
 
 .image-container
   height: 100%
-  margin: 0 1em
+  margin: 0 1rem
   display: flex
   align-items: center
   justify-content: center
   border: 1px solid #ced4da
-  border-radius: 0.25em
 
 .no-image
   background-color: darkgrey

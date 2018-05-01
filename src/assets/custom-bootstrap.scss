@@ -1,7 +1,7 @@
 // Colors
 // Sync with variables.styl (for Stylus use in components)
-$color-primary: #32194C;
-$color-secondary: #D6BD76;
+$color-primary: #D6BD76;
+$color-secondary: #32194C;
 $color-active: #8557B5;
 $color-success: #46C37F;
 $color-warning: #EDB615;
@@ -19,10 +19,14 @@ $theme-colors: (
   "dark": $color-dark
 );
 
-$body-bg: $color-dark;
-$body-color: $color-secondary;
+$body-bg:                           $color-dark;
+$body-color:                        $color-primary;
 
-$enable-rounded: false;
+$enable-rounded:                    false;
+
+// Button overrides
+$input-btn-padding-x:               1.75rem;
+$btn-font-weight:                   bold;
 
 // Modal overrides
 $modal-inner-padding:               0 2rem 2rem 2rem;

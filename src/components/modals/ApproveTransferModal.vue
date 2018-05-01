@@ -1,7 +1,7 @@
 <template>
   <b-modal id="approveTransferModal"
-    title="Approve title transfer"
-    ok-title="Approve transfer with MetaMask"
+    title="Start title transfer"
+    ok-title="Start transfer"
     v-model="modalVisible"
     v-on:shown="focusModal"
     v-on:ok="approveTransfer"
