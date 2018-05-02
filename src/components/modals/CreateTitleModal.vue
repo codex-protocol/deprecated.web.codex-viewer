@@ -1,5 +1,6 @@
 <template>
-  <b-modal id="createTitleModal"
+  <b-modal
+    id="createTitleModal"
     title="Create title"
     ok-title="Create with MetaMask"
     size="lg"

@@ -16,20 +16,15 @@ if (process.env.NODE_ENV === 'production') {
 }
 /* eslint-enable */
 
-// TODO: Use $store.state.web3.instance instead of window.web3
-const getContract = new Promise((resolve, reject) => {
+const getContract = (web3) => {
+  return new Promise((resolve, reject) => {
 
-  if (!window.web3) {
-    reject(new Error('Unable to connect to Metamask'))
-    return
-  }
+    const codexTitle = contract(codexTitleJson)
 
-  const codexTitle = contract(codexTitleJson)
+    codexTitle.setProvider(web3.currentProvider)
 
-  codexTitle.setProvider(window.web3.currentProvider)
-
-  resolve(codexTitle.at(tokenProxyJson.address))
-
-})
+    resolve(codexTitle.at(tokenProxyJson.address))
+  })
+}
 
 export default getContract

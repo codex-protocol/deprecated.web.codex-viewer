@@ -4,6 +4,7 @@
     <div class="main-content">
       <router-view />
     </div>
+    <meta-mask-modal />
   </div>
 </template>
 
@@ -12,18 +13,17 @@ import axios from 'axios'
 
 import config from './util/config'
 import AppSideBar from './components/AppSideBar'
+import MetaMaskModal from './components/modals/MetaMaskModal'
 
 export default {
   name: 'App',
   components: {
     AppSideBar,
+    MetaMaskModal,
   },
   created() {
     this.$store.dispatch('registerWeb3', this.$router)
     this.initializeApi()
-  },
-  mounted() {
-    this.$store.dispatch('getContract')
   },
   computed: {
     authToken() {
