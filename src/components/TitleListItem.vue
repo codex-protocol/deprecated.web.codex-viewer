@@ -33,6 +33,7 @@ export default {
 
 .title-card
   width: 25%
+  max-width: 16rem;
   margin-bottom: 2em
 
   .card
