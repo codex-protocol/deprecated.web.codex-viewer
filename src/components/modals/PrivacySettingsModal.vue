@@ -11,13 +11,11 @@
       label-for="togglePrivacy"
       label-size="sm"
     >
-      <b-form-checkbox
+      <input
+        type="checkbox"
         class="toggle-checkbox"
-        v-model="isPrivate"
-        value=false
-        unchecked-value=true
-      >
-      </b-form-checkbox>
+        v-model="titleIsPublic"
+      />
       <b-form-text>
         By making your title public, everyone can view the title, description and image of this title.
       </b-form-text>
@@ -34,6 +32,7 @@ export default {
   data() {
     return {
       modalVisible: false,
+      titleIsPublic: !this.isPrivate,
     }
   },
   methods: {
@@ -42,18 +41,22 @@ export default {
 
       const url = `/users/titles/${this.titleId}`
       axios.put(url, {
-        isPrivate: this.isPrivate,
+        isPrivate: !this.titleIsPublic,
       }).then((response) => {
         const { error } = response.data
         if (error) {
           console.log('there was an error setting title privacy', error)
-          this.error = error
+          // @TODO: better error messaging
+          // Reset toggle on error
+          this.titleIsPublic = !this.titleIsPublic
         } else {
           this.modalVisible = false
         }
       }).catch((error) => {
         console.log('there was an error setting title privacy', error)
-        this.error = error
+        // @TODO: better error messaging
+        // Reset toggle on error
+        this.titleIsPublic = !this.titleIsPublic
       })
     },
   },

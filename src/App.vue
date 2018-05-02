@@ -82,14 +82,8 @@ body
 
 // CSS Checkbox toggle
 // <input type="checkbox"> toggle
-// https//danklammer.com/articles/simple-css-toggle-switch/
+// https://danklammer.com/articles/simple-css-toggle-switch/
 .toggle-checkbox
-  padding-left: 0
-
-  label
-    display: none
-
-  input
     opacity: 1
     z-index: 0
     -webkit-appearance: none
@@ -101,19 +95,19 @@ body
     border-radius: 50px
     overflow: hidden
     outline: none
-    border: none
+    border: 3px solid $color-gray
     cursor: pointer
-    background-color: #707070 // TODO: Update using our pallete
-    transition: background-color ease 0.3s
+    background-color: transparent
+    transition: border-color ease 0.3s
 
     &:before
-      content: "on off"
+      content: ""
       display: block
       position: absolute
       z-index: 2
-      width: 28px
-      height: 28px
-      background: color-white
+      width: 22px
+      height: 22px
+      background: $color-gray
       left: 2px
       top: 2px
       border-radius: 50%
@@ -129,9 +123,11 @@ body
       transition: all cubic-bezier(0.3, 1.5, 0.7, 1) 0.3s
 
     &:checked
-      background-color: #32194C
+      background-color: $color-white
+      border-color: $color-success
 
       &:before
         left: 32px
+        background: $color-success
 // End CSS Checkbox toggle
 </style>

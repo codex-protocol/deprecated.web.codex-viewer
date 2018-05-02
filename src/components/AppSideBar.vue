@@ -6,6 +6,7 @@
     <b-link to="/my-titles">Wallet</b-link>
     <b-link to="/my-transfers">Transfers</b-link>
     <b-link to="/my-offers">Offers</b-link>
+    <b-link to="/settings">Settings</b-link>
     <a href="#" @click.prevent="logout">Logout</a>
   </nav>
 </template>

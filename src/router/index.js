@@ -8,6 +8,7 @@ import OfferListView from '../views/OfferListView'
 import TransferListView from '../views/TransferListView'
 import TitleListView from '../views/TitleListView'
 import TitleDetailView from '../views/TitleDetailView'
+import SettingsView from '../views/SettingsView'
 
 Vue.use(Router)
 
@@ -27,6 +28,7 @@ const router = new Router({
     { path: '/my-transfers', component: TransferListView, meta: { requiresAuth: true } },
     { path: '/my-offers', component: OfferListView, meta: { requiresAuth: true } },
     { path: '/my-titles', component: TitleListView, meta: { requiresAuth: true } },
+    { path: '/settings', component: SettingsView, meta: { requiresAuth: true } },
     { path: '/title/:titleId', name: 'title-detail', component: TitleDetailView },
     { path: '/', redirect: '/my-titles' },
   ],

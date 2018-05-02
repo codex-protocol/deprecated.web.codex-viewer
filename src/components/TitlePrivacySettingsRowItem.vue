@@ -1,0 +1,93 @@
+<template>
+  <b-container class="title-settings-row">
+      <b-row>
+          <b-col class="image"><img :src="codexTitle.metadata.files[0].uri"/></b-col>
+          <b-col class="name">
+            <a href="#" @click.prevent="viewTitle">
+              {{ codexTitle.metadata.name }}
+            </a>
+          </b-col>
+          <b-col class="toggle">
+            <input
+              type="checkbox"
+              class="toggle-checkbox"
+              v-model="titleIsPublic"
+              @change="savePrivacySetting"
+            />
+          </b-col>
+      </b-row>
+  </b-container>
+</template>
+
+<script>
+import axios from 'axios'
+
+export default {
+  name: 'title-privacy-settings-row-item',
+  props: ['codexTitle', 'isPrivate'],
+  data() {
+    return {
+      titleIsPublic: !this.isPrivate,
+      route: { name: 'title-detail', params: { titleId: this.codexTitle.tokenId } },
+    }
+  },
+  methods: {
+    viewTitle() {
+      this.$router.push(this.route)
+    },
+    savePrivacySetting() {
+      const url = `/users/titles/${this.codexTitle.tokenId}`
+      axios.put(url, {
+        isPrivate: !this.titleIsPublic,
+      }).then((response) => {
+        const { error } = response.data
+        if (error) {
+          console.log('there was an error setting title privacy', error)
+          // @TODO: better error messaging
+          // Reset toggle on error
+          this.titleIsPublic = !this.titleIsPublic
+        }
+      }).catch((error) => {
+        console.log('there was an error setting title privacy', error)
+        // @TODO: better error messaging
+        // Reset toggle on error
+        this.titleIsPublic = !this.titleIsPublic
+      })
+    },
+  },
+}
+</script>
+
+<style lang="stylus" scoped>
+@import "../assets/variables.styl"
+
+.title-settings-row
+  background-color: $color-white
+  height: 6rem
+  border-bottom: 1px solid $color-light-gray
+
+  &:last-of-type
+    border: none
+
+.row
+  display: flex
+  align-items: center
+  height: 6rem
+
+.name
+  flex-grow: 5
+  font-weight: 300
+  text-transform: uppercase
+
+.toggle
+  text-align: center
+
+img
+  max-width: 5rem
+
+a
+  color: $color-primary
+
+  &:hover
+    text-decoration: none
+</style>
