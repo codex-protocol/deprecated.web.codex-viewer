@@ -123,7 +123,7 @@ body
       transition: all cubic-bezier(0.3, 1.5, 0.7, 1) 0.3s
 
     &:checked
-      background-color: $color-white
+      background-color: $color-light
       border-color: $color-success
 
       &:before

@@ -93,7 +93,7 @@ h1, h2
   font-family: 'Montserrat', sans-serif
 
 .title-settings-row
-  background-color: $color-white
+  background-color: $color-light
   height: 3.5rem
   font-size: 0.875rem
   font-weight: 600
