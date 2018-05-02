@@ -1,20 +1,21 @@
 <template>
   <b-container class="title-settings-row">
-      <b-row>
-          <b-col class="image"><img :src="codexTitle.metadata.files[0].uri"/></b-col>
-          <b-col class="name">
-            <a href="#" @click.prevent="viewTitle">
-              {{ codexTitle.metadata.name }}
-            </a>
-          </b-col>
-          <b-col class="toggle">
-            <input
-              type="checkbox"
-              class="toggle-checkbox"
-              v-model="titleIsPublic"
-              @change="savePrivacySetting"
-            />
-          </b-col>
+      <!-- TODO: Better handling of title w/ no metadata -->
+      <b-row v-if="codexTitle.metadata">
+        <b-col class="image"><img :src="codexTitle.metadata.files[0].uri"/></b-col>
+        <b-col class="name">
+          <a href="#" @click.prevent="viewTitle">
+            {{ codexTitle.metadata.name }}
+          </a>
+        </b-col>
+        <b-col class="toggle">
+          <input
+            type="checkbox"
+            class="toggle-checkbox"
+            v-model="titleIsPublic"
+            @change="savePrivacySetting"
+          />
+        </b-col>
       </b-row>
   </b-container>
 </template>
