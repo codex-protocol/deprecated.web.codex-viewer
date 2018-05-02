@@ -1,11 +1,9 @@
 <template>
   <div>
     <div class="header">
-      <div>
-        <h1>Settings and Privacy</h1>
-        <h2 class="spacer"></h2>
-        <span>{{ web3.account }} ({{ web3.network }})</span>
-      </div>
+      <h1>Settings & Privacy</h1>
+      <div class="network-details">{{ web3.account }} ({{ web3.network }})</div>
+      <div class="spacer"></div>
     </div>
     <div class="title-list" v-if="titles.length">
       <b-container class="title-settings-row">
@@ -71,18 +69,26 @@ export default {
 @import "../assets/variables.styl"
 
 .header
+  height: 2.5rem
+  font-size: 2.5rem
+  margin-bottom: 2rem
+
   display: flex
-  flex-direction: row
-  justify-content: space-between
   align-items: center
-  margin-bottom: 1rem
 
-h1, h2
-  display: inline
+  h1
+    font-size: 1em
+    line-height: 1em
 
-.spacer
-  border-left: 1px solid $color-secondary
-  margin: 0 0.5rem
+    margin: 0 .5em 0 0
+    padding-right: .5em
+    border-right: 1px solid $color-secondary
+
+  .network-details
+    font-size: .3em
+
+  .spacer
+    flex-grow: 1
 
 .title-list
   display: flex

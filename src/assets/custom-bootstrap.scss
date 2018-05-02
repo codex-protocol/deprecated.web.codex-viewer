@@ -7,7 +7,7 @@ $color-success: #46C37F;
 $color-warning: #EDB615;
 $color-danger: #D14F51;
 $color-light: #FFFFFF;
-$color-dark: #1D0F31;
+$color-dark: #1A0D2A;
 
 $theme-colors: (
   "primary": $color-primary,
@@ -35,6 +35,8 @@ $modal-content-bg:                  $color-dark;
 $modal-content-border-width:        0;
 
 $close-color:                       $color-light;
+
+$grid-gutter-width:                 2rem;
 
 @import "node_modules/bootstrap/scss/bootstrap";
 

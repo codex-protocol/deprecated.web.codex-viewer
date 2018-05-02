@@ -1,5 +1,5 @@
 <template>
-  <a href="#" @click.prevent="viewTitle">
+  <a class="title-card" href="#" @click.prevent="viewTitle">
     <b-card
       :img-src="codexTitle.metadata.files[0].uri"
       img-top
@@ -28,16 +28,26 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+
 @import "../assets/variables.styl"
 
-img
-  max-width: 15em
+.title-card
+  width: 25%
+  margin-bottom: 2em
 
-a
-  color: $color-dark
-  font-weight: bold
-  margin: 0.5em
+  .card
+    border: none
 
-  &:hover
-    text-decoration: none
+  img
+    max-width: 100%
+    max-height: 100%
+    object-fit: contain
+
+  a
+    font-weight: bold
+    color: $color-dark
+
+    &:hover
+      text-decoration: none
+
 </style>

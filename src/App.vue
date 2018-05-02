@@ -1,13 +1,7 @@
 <template>
   <div id="app">
-    <div v-if="authToken">
-      <app-side-bar />
-      <div class="container">
-        <router-view />
-        <create-title-modal />
-      </div>
-    </div>
-    <div class="container" v-else>
+    <app-side-bar v-if="authToken" />
+    <div class="main-content">
       <router-view />
     </div>
   </div>
@@ -17,15 +11,12 @@
 import axios from 'axios'
 
 import config from './util/config'
-
 import AppSideBar from './components/AppSideBar'
-import CreateTitleModal from './components/modals/CreateTitleModal'
 
 export default {
   name: 'App',
   components: {
     AppSideBar,
-    CreateTitleModal,
   },
   created() {
     this.$store.dispatch('registerWeb3', this.$router)
@@ -69,16 +60,37 @@ export default {
 </script>
 
 <style lang="stylus">
+
 @import "./assets/variables.styl"
 
+html
+  font-size 16px
+
+html
 body
-  font-family: 'Avenir', Helvetica, Arial, sans-serif
+  margin: 0
+  padding: 0
+  width: 100%
+  height: 100%
+
+body
+  font-size: 1em
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
+  font-family: 'Avenir', Helvetica, Arial, sans-serif
 
 #app
-  padding-top: 3rem
-  margin-bottom: 3rem
+  width: 100%
+  height: 100%
+  display: flex
+
+.main-content
+  width: 100%
+  height: 100%
+  flex-grow: 1
+  padding: 2rem
+  overflow: scroll
+  min-width: 40rem
 
 // CSS Checkbox toggle
 // <input type="checkbox"> toggle

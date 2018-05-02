@@ -1,22 +1,21 @@
 <template>
   <div>
     <div class="header">
-      <div>
-        <h1>Your collection</h1>
-        <h2 class="spacer"></h2>
-        <span>{{ web3.account }} ({{ web3.network }})</span>
-      </div>
+      <h1>Collection</h1>
+      <div class="network-details">{{ web3.account }} ({{ web3.network }})</div>
+      <div class="spacer"></div>
       <b-button variant="primary" v-b-modal.createTitleModal>Add new item</b-button>
     </div>
-    <div class="title-list" v-if="titles.length">
+    <b-card-group deck class="title-list" v-if="titles.length">
       <title-list-item v-for="title in titles"
         :codex-title="title"
         :key="title.tokenId"
       />
-    </div>
+    </b-card-group>
     <div v-else>
       You have no items in your collection!
     </div>
+    <create-title-modal />
   </div>
 </template>
 
@@ -24,11 +23,13 @@
 import axios from 'axios'
 
 import TitleListItem from '../components/TitleListItem'
+import CreateTitleModal from '../components/modals/CreateTitleModal'
 
 export default {
   name: 'title-list',
   components: {
     TitleListItem,
+    CreateTitleModal,
   },
   data() {
     return {
@@ -68,23 +69,33 @@ export default {
 @import "../assets/variables.styl"
 
 .header
+  height: 2.5rem
+  font-size: 2.5rem
+  margin-bottom: 2rem
+
   display: flex
-  flex-direction: row
-  justify-content: space-between
   align-items: center
-  margin-bottom: 1em
 
-h1, h2
-  display: inline
+  h1
+    font-size: 1em
+    line-height: 1em
 
-.spacer
-  border-left: 1px solid $color-secondary
-  margin: 0 0.25em
+    margin: 0 .5em 0 0
+    padding-right: .5em
+    border-right: 1px solid $color-secondary
+
+  .network-details
+    font-size: .3em
+    word-break: break-word
+
+  .spacer
+    flex-grow: 1
+
+  button
+    margin-left: 1em
 
 .title-list
   display: flex
   flex-wrap: wrap
-  flex-direction: row
-  align-items: flex-start
-  justify-content: space-between
+
 </style>
