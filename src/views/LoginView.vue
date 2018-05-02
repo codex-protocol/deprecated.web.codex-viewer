@@ -25,8 +25,15 @@ export default {
           this.web3.instance().toHex(personalMessageToSign),
         ],
       }, (error, result) => {
-        if (error) console.log(error)
-        else {
+        if (error) {
+          console.log(error)
+        } else {
+          // This will be populated if the user rejects the signature prompt
+          if (result.error) {
+            console.log(result.error)
+            return
+          }
+
           this.$store.dispatch('sendAuthRequest', {
             userAddress: account,
             signedData: result.result.substr(2),

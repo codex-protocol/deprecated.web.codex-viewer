@@ -7,11 +7,11 @@
     </div>
     <div class="title-list" v-if="titles.length">
       <b-container class="title-settings-row">
-          <b-row>
-              <b-col class="image"><span class="text">Image</span></b-col>
-              <b-col class="name"><span class="text">Asset Name</span></b-col>
-              <b-col class="toggle"><span class="text">Details Public</span></b-col>
-          </b-row>
+        <b-row>
+            <b-col class="image"><span class="text">Image</span></b-col>
+            <b-col class="name"><span class="text">Asset Name</span></b-col>
+            <b-col class="toggle"><span class="text">Details Public</span></b-col>
+        </b-row>
       </b-container>
       <title-privacy-settings-row-item v-for="title in titles"
         :codex-title="title"

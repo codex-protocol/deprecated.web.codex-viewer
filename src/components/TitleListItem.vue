@@ -1,6 +1,7 @@
 <template>
   <a class="title-card" href="#" @click.prevent="viewTitle">
     <b-card
+      v-if="codexTitle.metadata"
       :img-src="codexTitle.metadata.files[0].uri"
       img-top
     >
@@ -15,6 +16,12 @@ export default {
   name: 'title-list-item',
   props: ['codexTitle'],
   data() {
+
+    // TODO: Need a way to render titles in collection w/ no metadata (e.g., one was created in a different Provider)
+    if (!this.codexTitle.metadata) {
+      console.log(JSON.stringify(this.codexTitle))
+    }
+
     return {
       route: { name: 'title-detail', params: { titleId: this.codexTitle.tokenId } },
     }

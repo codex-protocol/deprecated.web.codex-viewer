@@ -34,7 +34,6 @@ export default {
   data() {
     return {
       titles: [],
-      columnNames: ['Preview', 'Piece title', 'Created at'],
     }
   },
   created() {
