@@ -104,6 +104,7 @@ export default {
   font-size: 0.875rem
   font-weight: 600
   color: $color-primary
+  max-width: 100%
 
   .text
     opacity: 0.5

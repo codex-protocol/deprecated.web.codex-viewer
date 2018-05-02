@@ -62,12 +62,10 @@ export default {
 @import "../assets/variables.styl"
 
 .title-settings-row
-  background-color: $color-light
   height: 6rem
-  border-bottom: 1px solid $color-light-gray
 
-  &:last-of-type
-    border: none
+  +.title-settings-row
+    border-top: 1px solid $color-light-gray
 
 .row
   display: flex
