@@ -8,9 +8,9 @@
     <div class="title-list" v-if="titles.length">
       <b-container class="title-settings-row">
         <b-row>
-            <b-col class="image"><span class="text">Image</span></b-col>
-            <b-col class="name"><span class="text">Asset Name</span></b-col>
-            <b-col class="toggle"><span class="text">Details Public</span></b-col>
+            <b-col class="image">Image</b-col>
+            <b-col class="name">Asset Name</b-col>
+            <b-col class="toggle">Details Public</b-col>
         </b-row>
       </b-container>
       <title-privacy-settings-row-item v-for="title in titles"
@@ -72,6 +72,7 @@ export default {
   height: 2.5rem
   font-size: 2.5rem
   margin-bottom: 2rem
+  color: $color-primary
 
   display: flex
   align-items: center
@@ -82,7 +83,7 @@ export default {
 
     margin: 0 .5em 0 0
     padding-right: .5em
-    border-right: 1px solid $color-secondary
+    border-right: 1px solid $color-primary
 
   .network-details
     font-size: .3em
@@ -96,23 +97,21 @@ export default {
   flex-direction: row
   align-items: flex-start
   justify-content: space-between
+
+  background-color: white
   font-family: 'Montserrat', sans-serif
 
 .title-settings-row
-  background-color: $color-light
   height: 3.5rem
-  font-size: 0.875rem
-  font-weight: 600
-  color: $color-primary
   max-width: 100%
-
-  .text
-    opacity: 0.5
+  font-weight: 600
+  color: $color-gray
+  font-size: 0.875rem
 
   .row
     display: flex
-    align-items: center
     height: 3.5rem
+    align-items: center
 
   .name
     flex-grow: 5

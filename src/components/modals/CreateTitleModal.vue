@@ -221,12 +221,16 @@ export default {
 
 .image-container
   height: 100%
-  margin: 0 1rem
   display: flex
+  margin: 0 1rem
   align-items: center
   justify-content: center
-  border: 1px solid #ced4da
+  background-color: rgba(white, .1)
+  border: 1px solid rgba(white, .25)
 
-.no-image
-  background-color: darkgrey
+  img
+    max-width: 100%
+    max-height: 100%
+    object-fit: contain
+
 </style>

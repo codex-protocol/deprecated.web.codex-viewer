@@ -1,14 +1,19 @@
 <template>
-  <a class="title-card" href="#" @click.prevent="viewTitle">
+  <div class="title-card" @click.prevent="viewTitle">
     <b-card
       v-if="codexTitle.metadata"
       :img-src="codexTitle.metadata.files[0].uri"
       img-top
     >
-      <p>{{ codexTitle.metadata.name }}</p>
+      <p>
+        <a href="#" @click.prevent="viewTitle">
+          {{ codexTitle.metadata.name }}
+        </a>
+      </p>
+      <small>#{{ codexTitle.tokenId }}</small>
     </b-card>
 
-  </a>
+  </div>
 </template>
 
 <script>
@@ -40,22 +45,27 @@ export default {
 
 .title-card
   width: 25%
-  max-width: 16rem;
+  max-width: 32rem
   margin-bottom: 2em
 
   .card
     border: none
+    cursor: pointer
+    border-radius: 0 0 .25rem .25rem
 
-  img
-    max-width: 100%
-    max-height: 100%
-    object-fit: contain
+  .card-body
+    border-top: 1px solid rgba(black, .1)
 
-  a
-    font-weight: bold
-    color: $color-dark
+    img
+      max-width: 100%
+      max-height: 100%
+      object-fit: contain
 
-    &:hover
-      text-decoration: none
+    a
+      font-weight: bold
+      color: $color-dark
+
+    small
+      color: $color-light-gray
 
 </style>

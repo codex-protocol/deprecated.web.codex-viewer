@@ -6,8 +6,11 @@ $color-active: #8557B5;
 $color-success: #46C37F;
 $color-warning: #EDB615;
 $color-danger: #D14F51;
-$color-light: #FFFFFF;
 $color-dark: #1A0D2A;
+
+// fucking sass calculates `lighten($color-primary, 50%)` as pure white
+//  instead of #ebdebb like stylus so we'll just hardcode the value ಠ_ಠ
+$color-light: #ebdebb; // lighten($color-primary, 50%);
 
 $theme-colors: (
   "primary": $color-primary,
@@ -19,8 +22,12 @@ $theme-colors: (
   "dark": $color-dark
 );
 
+$headings-color:                    $color-primary;
+$font-family-serif:                 "Playfair Display", Georgia, "Times New Roman", Times, serif;
+$font-family-sans-serif:            "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
 $body-bg:                           $color-dark;
-$body-color:                        $color-primary;
+$body-color:                        $color-light;
 
 $enable-rounded:                    false;
 
@@ -42,4 +49,25 @@ $grid-gutter-width:                 2rem;
 
 .modal-dialog {
   color: $color-light;
+}
+
+.form-control,
+.custom-file-label {
+  border: none;
+  padding: .5rem;
+  overflow: hidden;
+  border-radius: .25em;
+  background-color: rgba(white, .1);
+}
+
+.form-control:focus {
+  color: $color-light;
+  background-color: rgba(white, .2);
+}
+
+.custom-file-label::after {
+  height: 100%;
+  border: none;
+  color: $color-secondary;
+  background-color: rgba(white, .5);
 }

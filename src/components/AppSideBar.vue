@@ -1,6 +1,6 @@
 <template>
   <nav>
-    <div class="image-container">
+    <div class="logo">
       <img src="../assets/logos/codex/gold.svg">
     </div>
     <b-link to="/my-titles">
@@ -42,8 +42,8 @@ nav
   height: 100%
   min-width: @width
   max-width: @width
+  overflow-y: scroll
   background-color: rgba(white, .05)
-  border-right: 2px solid rgba(black, .25)
 
   display: flex
   flex-direction: column
@@ -55,20 +55,24 @@ a
   padding: 1rem
   display: block
   line-height: 1rem
-  font-weight: bold
+  color: $color-light
   box-sizing: border-box
-  color: lighten($color-secondary, 50%)
+
+  img
+    margin-right: .5rem
 
   &:hover
     text-decoration: none
     background-color: rgba(white, .1)
 
-  img
-    margin-right: .5rem
+  &.active
+    font-weight: bold
+    background-color: rgba(white, .25)
 
-.image-container
-  padding: 1rem
-  height: 2.5rem
+.logo
+  height: 4rem
+  padding: 1em 0
+  text-align: center
   box-sizing: content-box
 
   img

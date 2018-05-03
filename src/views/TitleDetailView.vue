@@ -176,14 +176,14 @@ img
 .private-img
   width: 500px
   height: 500px
-  background-color: #32194C
   display: flex
-  justify-content: center
-  align-items: center
   text-align: center
+  align-items: center
+  justify-content: center
+  background-color: #32194C
 
-  > p
+  >p
+    color: white
     padding: 2em
     font-size: 2rem
-    color: white
 </style>

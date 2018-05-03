@@ -85,7 +85,7 @@ img
   max-width: 5rem
 
 a
-  color: $color-primary
+  color: $color-secondary
 
   &:hover
     text-decoration: none

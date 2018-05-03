@@ -4,7 +4,7 @@
       <h1>Collection</h1>
       <div class="network-details">{{ web3.account }} ({{ web3.network }})</div>
       <div class="spacer"></div>
-      <b-button variant="primary" v-b-modal.createTitleModal>Add new item</b-button>
+      <b-button variant="primary" v-b-modal.createTitleModal>Add New Asset</b-button>
     </div>
     <b-card-group deck class="title-list" v-if="titles.length">
       <title-list-item v-for="title in titles"
@@ -71,6 +71,7 @@ export default {
   height: 2.5rem
   font-size: 2.5rem
   margin-bottom: 2rem
+  color: $color-primary
 
   display: flex
   align-items: center
@@ -81,7 +82,7 @@ export default {
 
     margin: 0 .5em 0 0
     padding-right: .5em
-    border-right: 1px solid $color-secondary
+    border-right: 1px solid $color-primary
 
   .network-details
     font-size: .3em
