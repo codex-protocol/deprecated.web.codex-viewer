@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="header">
-      <h1>Settings & Privacy</h1>
+      <h1>Settings &amp; Privacy</h1>
       <div class="network-details">{{ web3.account }} ({{ web3.network }})</div>
       <div class="spacer"></div>
     </div>
