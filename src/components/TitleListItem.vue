@@ -1,6 +1,7 @@
 <template>
-  <div class="title-card" @click.prevent="viewTitle">
+  <div class="title-card">
     <b-card
+      @click.prevent="viewTitle"
       v-if="codexTitle.metadata"
       :img-src="codexTitle.metadata.files[0].uri"
       img-top
@@ -53,17 +54,23 @@ export default {
     cursor: pointer
     border-radius: 0 0 .25rem .25rem
 
+  img
+    width: 100%
+    max-height: 25vw // good enough ¯\_(ツ)_/¯
+    object-fit: contain
+
   .card-body
     border-top: 1px solid rgba(black, .1)
-
-    img
-      max-width: 100%
-      max-height: 100%
-      object-fit: contain
 
     a
       font-weight: bold
       color: $color-dark
+
+      // uncomment to keep title name on a single line?
+      // display: block
+      // overflow: hidden
+      // white-space: nowrap
+      // text-overflow: ellipsis
 
     small
       color: $color-light-gray

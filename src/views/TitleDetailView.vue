@@ -2,9 +2,9 @@
   <div>
     <div v-if="codexTitle">
       <div class="flex mb-5">
-        <div>
-          <img class="mb-3 mr-5" v-if="codexTitle.metadata" :src="codexTitle.metadata.files[0].uri" />
-          <div class="mb-3 mr-5 private-img" v-else>
+        <div class="title-image">
+          <img v-if="codexTitle.metadata" :src="codexTitle.metadata.files[0].uri" />
+          <div class="private-img" v-else>
             <p>This Codex Title is private</p>
           </div>
         </div>
@@ -162,16 +162,23 @@ export default {
   align-items: baseline
 
 .top
+  flex-grow: 1
   align-self: flex-start
-  width: 100%
 
 .vertical
   display: flex
   flex-direction: column
   align-items: baseline
 
-img
-  max-height: 30rem
+.title-image
+  height: 50vh
+  max-width: 50%
+  margin: 0 2rem 2rem 0
+
+  img
+    max-width: 100%
+    max-height: 100%
+    object-fit: contain
 
 .private-img
   width: 500px

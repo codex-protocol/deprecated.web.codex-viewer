@@ -69,9 +69,10 @@ export default {
     border-top: 1px solid $color-light-gray
 
 .row
+  height: 100%
   display: flex
+  padding: 1rem 0
   align-items: center
-  height: 6rem
 
 .name
   flex-grow: 5
@@ -81,8 +82,12 @@ export default {
 .toggle
   text-align: center
 
-img
-  max-width: 5rem
+.image
+  height: 100%
+
+  img
+    max-width: 5rem
+    max-height: 100%
 
 a
   color: $color-secondary
