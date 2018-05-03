@@ -5,7 +5,7 @@ import store from '../store'
 
 import LoginView from '../views/LoginView'
 import OfferListView from '../views/OfferListView'
-import TransferListView from '../views/TransferListView'
+import TransferIncomingListView from '../views/TransferIncomingListView'
 import TitleListView from '../views/TitleListView'
 import TitleDetailView from '../views/TitleDetailView'
 import SettingsView from '../views/SettingsView'
@@ -25,12 +25,14 @@ const ifNotAuthenticated = (to, from, next) => {
 const router = new Router({
   routes: [
     { path: '/login', component: LoginView, beforeEnter: ifNotAuthenticated },
-    { path: '/my-transfers', component: TransferListView, meta: { requiresAuth: true } },
+    { path: '/transfers', redirect: '/transfers/incoming', meta: { requiresAuth: true } },
+    { path: '/transfers/incoming', component: TransferIncomingListView, meta: { requiresAuth: true } },
     { path: '/my-offers', component: OfferListView, meta: { requiresAuth: true } },
-    { path: '/my-titles', component: TitleListView, meta: { requiresAuth: true } },
+    { path: '/settings', component: SettingsView, meta: { requiresAuth: true } },
+    { path: '/collection', component: TitleListView, meta: { requiresAuth: true } },
     { path: '/settings', component: SettingsView, meta: { requiresAuth: true } },
     { path: '/title/:titleId', name: 'title-detail', component: TitleDetailView },
-    { path: '/', redirect: '/my-titles' },
+    { path: '/', redirect: '/collection' },
   ],
 })
 

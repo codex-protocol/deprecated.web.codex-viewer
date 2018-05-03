@@ -31,9 +31,11 @@
               Settings
             </b-button>
 
-            <b-button variant="primary" v-if="codexTitle.approvedAddress">
+            <!-- @FIXME: Not wired up yet
+            <b-button variant="primary" v-if="this.isAwaitingApproval">
               Remove Approver
             </b-button>
+            -->
 
             <approve-transfer-modal :titleId="titleId" />
             <privacy-settings-modal :titleId="titleId" :isPrivate="isPrivate" />
@@ -107,6 +109,10 @@ export default {
     isPrivate() {
       return this.codexTitle.isPrivate
     },
+    isAwaitingApproval() {
+      return this.codexTitle.approvedAddress !== null &&
+        this.codexTitle.approvedAddress !== '0x0000000000000000000000000000000000000000' // @TODO: store this in config or similar
+    },
   },
   created() {
     this.fetchData()
@@ -123,8 +129,6 @@ export default {
           this.codexTitle = null
           this.error = error
         } else {
-          console.log('codexTitle', result)
-          console.log('metadata', result.metadata)
           this.codexTitle = result
         }
       }).catch((error) => {
@@ -140,9 +144,8 @@ export default {
         this.titleId,
       ]
 
-      callContract(this.contract.transferFrom, input, this.web3)
+      callContract(this.contract.safeTransferFrom, input, this.web3)
         .then(() => {
-          this.modalVisible = false
         })
         .catch((error) => {
           console.log('There was an error accepting the transfer', error)

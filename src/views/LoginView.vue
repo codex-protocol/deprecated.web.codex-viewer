@@ -38,7 +38,7 @@ export default {
             userAddress: account,
             signedData: result.result.substr(2),
           }).then(() => {
-            this.$router.replace('my-titles')
+            this.$router.replace('collection')
           })
         }
       })

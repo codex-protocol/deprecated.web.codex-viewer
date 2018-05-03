@@ -3,10 +3,10 @@
     <div class="logo">
       <img src="../assets/logos/codex/gold.svg">
     </div>
-    <b-link to="/my-titles">
+    <b-link to="/collection">
       <img src="../assets/icons/collection.svg">Collection
     </b-link>
-    <b-link to="/my-transfers">
+    <b-link to="/transfers">
       <img src="../assets/icons/transfers.svg">Transfers
     </b-link>
     <b-link to="/my-offers">
