@@ -24,14 +24,13 @@ const ifNotAuthenticated = (to, from, next) => {
 
 const router = new Router({
   routes: [
-    { path: '/login', component: LoginView, beforeEnter: ifNotAuthenticated },
-    { path: '/transfers', redirect: '/transfers/incoming', meta: { requiresAuth: true } },
-    { path: '/transfers/incoming', component: TransferIncomingListView, meta: { requiresAuth: true } },
-    { path: '/my-offers', component: OfferListView, meta: { requiresAuth: true } },
-    { path: '/settings', component: SettingsView, meta: { requiresAuth: true } },
-    { path: '/collection', component: TitleListView, meta: { requiresAuth: true } },
-    { path: '/settings', component: SettingsView, meta: { requiresAuth: true } },
-    { path: '/title/:titleId', name: 'title-detail', component: TitleDetailView },
+    { name: 'login', path: '/login', component: LoginView, beforeEnter: ifNotAuthenticated },
+    { name: 'transfers', path: '/transfers', redirect: '/transfers/incoming', meta: { requiresAuth: true } },
+    { name: 'incoming-transfers', path: '/transfers/incoming', component: TransferIncomingListView, meta: { requiresAuth: true } },
+    { name: 'offers', path: '/offers', component: OfferListView, meta: { requiresAuth: true } },
+    { name: 'settings', path: '/settings', component: SettingsView, meta: { requiresAuth: true } },
+    { name: 'collection', path: '/collection', component: TitleListView, meta: { requiresAuth: true } },
+    { name: 'title-detail', path: '/title/:titleId', component: TitleDetailView },
     { path: '/', redirect: '/collection' },
   ],
 })
