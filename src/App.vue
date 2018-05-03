@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <app-side-bar v-if="authToken" />
-    <div class="main-content">
+    <div class="main-content" :class="{ 'with-background': this.$route.name === 'login' }">
       <router-view />
     </div>
     <meta-mask-modal />
@@ -91,6 +91,9 @@ body
   padding: 2rem
   overflow: scroll
   min-width: 40rem
+
+  &.with-background
+    background: url(assets/images/pattern-dark.jpeg)
 
 // CSS Checkbox toggle
 // <input type="checkbox"> toggle
