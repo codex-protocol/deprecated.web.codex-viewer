@@ -42,7 +42,7 @@ export default {
 .flex
   display: flex
   flex-direction: horizontal
-  border-bottom: solid 1px lightgray
+  border-bottom: solid 1px rgba(white, .1)
 
 .flex div
   flex: 1
