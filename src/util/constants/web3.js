@@ -2,7 +2,7 @@
 let ExpectedNetworkId
 
 if (process.env.NODE_ENV === 'production') {
-  ExpectedNetworkId = '1'
+  ExpectedNetworkId = '4' // TODO: change this back to 1 when staging config is done
 } else if (process.env.NODE_ENV === 'staging') {
   ExpectedNetworkId = '4'
 } else {
