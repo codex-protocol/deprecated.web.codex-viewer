@@ -65,6 +65,11 @@ $grid-gutter-width:                 2rem;
   background-color: rgba(white, .2);
 }
 
+.form-control::placeholder,
+.custom-file-label {
+  color: rgba($color-light, .5);
+}
+
 .custom-file-label::after {
   height: 100%;
   border: none;

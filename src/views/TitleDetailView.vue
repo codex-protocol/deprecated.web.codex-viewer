@@ -184,8 +184,8 @@ export default {
     object-fit: contain
 
 .private-img
-  width: 500px
-  height: 500px
+  width: 320px
+  height: 320px
   display: flex
   text-align: center
   align-items: center

@@ -77,15 +77,17 @@ export default {
   align-items: center
 
   h1
-    font-size: 1em
-    line-height: 1em
+    font-family: $font-family-serif
+    font-size: 2.25rem
+    font-weight: bold
+    line-height: 3.375rem
 
     margin: 0 .5em 0 0
     padding-right: .5em
     border-right: 1px solid $color-primary
 
   .network-details
-    font-size: .3em
+    font-size: 1.25rem
     word-break: break-word
 
   .spacer

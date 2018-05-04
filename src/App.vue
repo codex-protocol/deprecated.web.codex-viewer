@@ -77,7 +77,7 @@ body
   font-size: 1em
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
-  font-family: 'Avenir', Helvetica, Arial, sans-serif
+  font-family: $font-family-sans-serif
 
 #app
   width: 100%
@@ -138,7 +138,7 @@ body
       transition: all cubic-bezier(0.3, 1.5, 0.7, 1) 0.3s
 
     &:checked
-      background-color: $color-light
+      background-color: transparent
       border-color: $color-success
 
       &:before

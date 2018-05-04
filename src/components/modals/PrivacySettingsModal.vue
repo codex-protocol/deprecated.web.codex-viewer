@@ -3,6 +3,7 @@
     id="titlePrivacySettings"
     title="Title Privacy Settings"
     ok-title="Save"
+    cancel-variant="outline-primary"
     v-model="modalVisible"
     v-on:ok="saveSettings"
   >

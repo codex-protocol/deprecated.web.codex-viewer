@@ -2,6 +2,7 @@
   <b-modal id="approveTransferModal"
     title="Start title transfer"
     ok-title="Start transfer"
+    cancel-variant="outline-primary"
     v-model="modalVisible"
     v-on:shown="focusModal"
     v-on:ok="approveTransfer"
@@ -16,6 +17,7 @@
         placeholder="e.g., 0x627306090aba..."
         ref="defaultModalFocus"
         v-model="toEthAddress"
+        spellcheck="false"
       />
       <b-form-text>
         After approving a transfer, the owner of the Ethereum address will have to accept the title.

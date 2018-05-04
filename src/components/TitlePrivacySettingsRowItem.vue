@@ -2,7 +2,11 @@
   <b-container class="title-settings-row">
       <!-- TODO: Better handling of title w/ no metadata -->
       <b-row v-if="codexTitle.metadata">
-        <b-col class="image"><img :src="codexTitle.metadata.files[0].uri"/></b-col>
+        <b-col class="image">
+          <a href="#" @click.prevent="viewTitle">
+            <img :src="codexTitle.metadata.files[0].uri"/>
+          </a>
+        </b-col>
         <b-col class="name">
           <a href="#" @click.prevent="viewTitle">
             {{ codexTitle.metadata.name }}
