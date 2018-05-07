@@ -50,15 +50,15 @@ export default {
   },
   methods: {
     fetchData() {
-      axios.get('/user/approved-titles?include=metadata').then((response) => {
+      axios.get('/user/transfers/incoming?include=metadata').then((response) => {
         const { result, error } = response.data
         if (error) {
-          console.log('there was an error fetching approved transfered titles', error)
+          console.log('there was an error fetching incoming transfers', error)
         } else {
           this.titles = result
         }
       }).catch((error) => {
-        console.log('there was an error fetching approved transfered titles', error)
+        console.log('there was an error fetching incoming transfers', error)
       })
     },
   },
