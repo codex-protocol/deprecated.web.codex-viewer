@@ -96,6 +96,8 @@ export default {
       font-weight: 600
 
   img
+    max-width: 100%
+    max-height: 100%
     width: 100%
     object-fit: contain
 

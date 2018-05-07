@@ -83,8 +83,8 @@ export default {
     font-weight: bold
     line-height: 3.375rem
 
-    margin: 0 .5em 0 0
-    padding-right: .5em
+    margin: 0 1.125rem 0 0
+    padding-right: 1.125rem
     border-right: 1px solid $color-primary
 
   .network-details
