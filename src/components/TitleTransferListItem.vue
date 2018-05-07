@@ -1,6 +1,6 @@
 <template>
+  <div class="title-card">
     <b-card
-      class="title-card"
       :img-src="codexTitle.metadata.files[0].uri"
       img-top
     >
@@ -17,6 +17,7 @@
         -->
       </p>
     </b-card>
+  </div>
 </template>
 
 <script>
@@ -72,10 +73,12 @@ export default {
 
 .title-card
   width: 25%
+  max-width: 32rem
   margin-bottom: 2em
 
-  &.card
+  .card
     border: none
+    border-radius: 0 0 .25rem .25rem
 
   .approved-overlay
     display: flex
@@ -93,8 +96,9 @@ export default {
       font-weight: 600
 
   img
-    max-width: 100%
-    max-height: 100%
+    width: 100%
+    max-height: 25vw // good enough ¯\_(ツ)_/¯
+    min-height: 25vh // good enough ¯\_(ツ)_/¯
     object-fit: contain
 
   a
@@ -105,7 +109,6 @@ export default {
       text-decoration: none
 
   p
-    font-family: 'Montserrat', sans-serif
     color: $color-secondary
 
     &.name

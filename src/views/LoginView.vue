@@ -78,12 +78,11 @@ export default {
     margin-bottom: 2.5rem
 
   h1
-    font-family: 'Playfair Display', serif;
+    font-family: $font-family-serif
     font-weight: bold
     font-size: 3rem
 
   .lead
-    font-family: 'Montserrat', sans-serif
     font-weight: 400
     font-size: 1.25rem
     margin-bottom: 3.125rem

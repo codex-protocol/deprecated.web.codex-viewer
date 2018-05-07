@@ -12,12 +12,12 @@
         <span><b-link to="/transfers/completed">Completed</b-link></span>
       -->
     </div>
-    <div class="title-list" v-if="titles.length">
+    <b-card-group deck class="title-list" v-if="titles.length">
       <title-transfer-list-item v-for="title in titles"
         :codex-title="title"
         :key="title.tokenId"
       />
-    </div>
+    </b-card-group>
     <div v-else>
       You have no incoming transfers.
     </div>
@@ -71,7 +71,7 @@ export default {
 .header
   height: 2.5rem
   font-size: 2.5rem
-  margin-bottom: 1rem
+  margin-bottom: 2rem
   color: $color-primary
 
   display: flex
@@ -79,18 +79,19 @@ export default {
 
   h1
     font-size: 1em
+    font-weight: bold
     line-height: 1em
+    font-family: $font-family-serif
 
     margin: 0 .5em 0 0
     padding-right: .5em
     border-right: 1px solid $color-primary
 
   .network-details
-    font-size: .3em
+    font-size: .4em
     word-break: break-word
 
 .sub-heading
-  font-family: 'Montserrat', sans-serif
   font-weight: 300
   margin-bottom: 1rem
 
@@ -106,14 +107,8 @@ export default {
 h1, h2
   display: inline
 
-.spacer
-  border-left: 1px solid $color-secondary
-  margin: 0 0.25em
-
 .title-list
   display: flex
   flex-wrap: wrap
-  flex-direction: row
-  align-items: flex-start
-  justify-content: space-between
+
 </style>

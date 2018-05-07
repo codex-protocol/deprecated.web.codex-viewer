@@ -3,6 +3,7 @@
     id="createTitleModal"
     title="Create title"
     ok-title="Create with MetaMask"
+    cancel-variant="outline-primary"
     size="lg"
     v-model="modalVisible"
     v-on:shown="focusModal"
