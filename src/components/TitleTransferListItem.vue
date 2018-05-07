@@ -96,9 +96,9 @@ export default {
       font-weight: 600
 
   img
-    max-width: 100%
-    max-height: 100%
     width: 100%
+    max-height: 25vw // good enough ¯\_(ツ)_/¯
+    min-height: 25vh // good enough ¯\_(ツ)_/¯
     object-fit: contain
 
   a

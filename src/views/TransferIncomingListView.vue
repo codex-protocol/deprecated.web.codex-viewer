@@ -71,24 +71,24 @@ export default {
 .header
   height: 2.5rem
   font-size: 2.5rem
-  margin-bottom: 1rem
+  margin-bottom: 2rem
   color: $color-primary
 
   display: flex
   align-items: center
 
   h1
-    font-family: $font-family-serif
-    font-size: 2.25rem
+    font-size: 1em
     font-weight: bold
-    line-height: 3.375rem
+    line-height: 1em
+    font-family: $font-family-serif
 
-    margin: 0 1.125rem 0 0
-    padding-right: 1.125rem
+    margin: 0 .5em 0 0
+    padding-right: .5em
     border-right: 1px solid $color-primary
 
   .network-details
-    font-size: 1.25rem
+    font-size: .4em
     word-break: break-word
 
 .sub-heading
