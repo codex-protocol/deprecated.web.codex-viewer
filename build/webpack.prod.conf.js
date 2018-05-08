@@ -14,12 +14,14 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 let env
 switch (process.env.TARGET_ENV) {
   case 'production':
-  default:
     env = require('../config/prod.env')
     break
   case 'staging':
     env = require('../config/staging.env')
     break
+  default:
+    // just gracefully exit if a development TARGET_ENV is specified on codeship
+    process.exit(0)
 }
 
 const webpackConfig = merge(baseWebpackConfig, {
