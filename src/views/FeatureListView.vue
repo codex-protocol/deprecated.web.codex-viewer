@@ -1,15 +1,16 @@
 <template>
   <div>
-    <app-header title="Coming soon" />
+    <app-header title="Coming Soon" />
+    <h5 class="mb-5">Upcoming partnerships and features</h5>
     <b-card-group deck>
       <div class="feature-card" v-for="feature in features" :key="feature.title">
-        <b-card
-          :title="feature.title"
-          :img-src="feature.image"
-          img-top
-        >
-          <p class="card-text">{{ feature.description }}</p>
-        </b-card>
+        <a :href="feature.url" target="_blank">
+          <b-card
+          >
+            <img :src="feature.image" />
+            <p class="card-text" slot="footer">{{ feature.description }}</p>
+          </b-card>
+        </a>
       </div>
     </b-card-group>
   </div>
@@ -18,7 +19,12 @@
 <script>
 import AppHeader from '../components/AppHeader'
 
-import toshi from '../assets/images/features/toshi.png'
+import laLogo from '../assets/images/features/la-logo.png'
+import amLogo from '../assets/images/features/am-logo.png'
+import vmsLogo from '../assets/images/features/vms-logo.png'
+import clLogo from '../assets/images/features/cl-logo.png'
+import oilPainting from '../assets/images/features/oil-painting.png'
+import maecenas from '../assets/images/features/maecenas.png'
 
 export default {
   name: 'features-view',
@@ -29,49 +35,34 @@ export default {
     return {
       features: [
         {
-          title: 'Live Auctioneers',
-          description: 'Automatically fill your collection with pieces purchased online from LiveAuctioneers.com',
-          image: '',
+          description: 'Automatically fill your collection with pieces purchased through Live Auctioneers',
+          image: laLogo,
           url: 'https://liveauctioneers.com',
         },
         {
-          title: 'Value My Stuff',
-          description: 'Get appraisals for individual pieces or for your entire collection',
-          image: '',
-          url: 'https://valuemystuff.com',
+          description: 'Get appraisals for individual pieces or for your entire collection from the experts at Value My Stuff',
+          image: vmsLogo,
+          url: 'https://www.valuemystuff.com',
         },
         {
-          title: 'Auction Mobility',
-          description: 'Automatically fill your collection with pieces purchased online from auction houses using Auction Mobility software',
-          image: '',
+          description: 'Automatically fill your collection with pieces purchased from auction houses using Auction Mobility software',
+          image: amLogo,
           url: 'https://auctionmobility.com',
         },
         {
-          title: 'Maecenas',
-          description: 'Democratize your collection',
-          image: '',
+          description: 'Democratize your collection using Maecenas\' cutting edge blockchain technology',
+          image: maecenas,
           url: 'https://www.maecenas.co/',
         },
         {
-          title: 'The Clarion List',
-          description: 'Discover top rated art service companies',
-          image: '',
+          description: 'Discover top rated art service companies with the Clarion List',
+          image: clLogo,
           url: 'https://www.clarionlist.com/',
         },
         {
-          title: 'Mobile experience',
-          description: 'Site optimized for mobile dapp browsers like Cipher & Toshi',
-          image: toshi,
-        },
-        {
-          title: 'Hardware wallets',
-          description: 'Authenticate to the viewer with hardware wallets like Ledger',
-          image: '',
-        },
-        {
           title: 'Identity management',
-          description: 'Manage your art collection without having to learn the complexities of the blockchain technology behind the platform',
-          image: '',
+          description: 'Manage your art collection natively on Codex Viewer without having to setup your online blockchain wallet',
+          image: oilPainting,
         },
       ],
     }
@@ -83,19 +74,27 @@ export default {
 @import "../assets/variables.styl"
 
 .feature-card
-  width: 25%
-  max-width: 32rem
-  margin-bottom: 2em
+  width: 30%
+  margin-bottom: 2rem
   font-weight: bold
   color: $color-dark
+
+  a
+    text-decoration: none
+    cursor: pointer
+    color: $color-dark
 
 .card-title
   color: $color-dark
 
 .card
-  align-items: center
+  min-height: 30rem
 
-.card-img-top
-  width: auto
-  margin-top: 1rem
+.card-body
+  display: flex
+  flex-direction: column
+  justify-content: center
+
+img
+  width: 100%
 </style>
