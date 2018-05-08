@@ -3,7 +3,7 @@
     <app-header title="Coming Soon" />
     <h5 class="mb-5">Upcoming partnerships and features</h5>
     <b-card-group deck>
-      <div class="feature-card" v-for="feature in features" :key="feature.title">
+      <div class="feature-card" v-for="feature in features" :key="feature.description">
         <a :href="feature.url" target="_blank">
           <b-card
           >
@@ -60,7 +60,6 @@ export default {
           url: 'https://www.clarionlist.com/',
         },
         {
-          title: 'Identity management',
           description: 'Manage your art collection natively on Codex Viewer without having to setup your online blockchain wallet',
           image: oilPainting,
         },

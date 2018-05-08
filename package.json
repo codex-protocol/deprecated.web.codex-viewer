@@ -1,9 +1,10 @@
 {
   "name": "codex-title-viewer",
   "version": "1.0.0",
-  "description": "A Vue.js project",
-  "author": "John Forrest <johnhforrest@outlook.com>",
+  "description": "Codex Viewer dApp",
+  "author": "Codex Protocol <contact@codexprotocol.com>",
   "private": true,
+  "license": "AGPLv3",
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
