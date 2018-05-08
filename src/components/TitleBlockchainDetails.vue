@@ -19,7 +19,7 @@ export default {
   props: ['codexTitle'],
   methods: {
     formatDate(date) {
-      formatDate(date)
+      return formatDate(date)
     },
   },
 }
