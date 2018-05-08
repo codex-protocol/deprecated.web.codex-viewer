@@ -4,7 +4,7 @@ const apiUrl = (() => {
 
   switch (process.env.TARGET_ENV) {
     case 'production':
-      return 'http://ec2-34-238-117-54.compute-1.amazonaws.com'
+      return 'https://codex-title-api.codexprotocol.com'
 
     case 'staging':
       return 'http://codex-title-api.codexprotocol-staging.com'

@@ -7,7 +7,7 @@ const path = require('path')
 const chalk = require('chalk')
 const webpack = require('webpack')
 const config = require('../config')
-const webpackConfig = require('./webpack.prod.conf') // Loads production or staging config based on TARGET_ENV
+const webpackConfig = require('./webpack.conf')
 
 const spinner = ora(`building for ${process.env.TARGET_ENV}...`)
 spinner.start()
