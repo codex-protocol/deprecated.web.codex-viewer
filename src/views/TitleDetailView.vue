@@ -19,9 +19,11 @@
           <a href="#" @click.prevent="toggleShowDetails">Toggle details</a>
           <title-blockchain-details v-if="showDetails" :codexTitle="codexTitle" />
           <div class="mt-3" v-if="isOwner">
+            <!-- @FIXME: Not wired up yet
             <b-button class="mr-3" variant="primary">
               Modify
             </b-button>
+            -->
 
             <b-button class="mr-3" variant="primary" v-b-modal.approveTransferModal>
               Transfer
