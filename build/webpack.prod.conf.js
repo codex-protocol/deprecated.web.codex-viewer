@@ -11,7 +11,16 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
-const env = require('../config/prod.env')
+let env
+switch (process.env.TARGET_ENV) {
+  case 'production':
+  default:
+    env = require('../config/prod.env')
+    break
+  case 'staging':
+    env = require('../config/staging.env')
+    break
+}
 
 const webpackConfig = merge(baseWebpackConfig, {
   module: {

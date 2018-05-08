@@ -4,11 +4,10 @@ let codexTitleJson
 let tokenProxyJson
 
 /* eslint-disable global-require */
-if (process.env.NODE_ENV === 'production') {
-  // TODO: change this back to 1 when staging config is done
-  codexTitleJson = require('@codex-protocol/ethereum-service/static/contracts/4/CodexTitle.json')
-  tokenProxyJson = require('@codex-protocol/ethereum-service/static/contracts/4/TokenProxy.json')
-} else if (process.env.NODE_ENV === 'staging') {
+if (process.env.TARGET_ENV === 'production') {
+  codexTitleJson = require('@codex-protocol/ethereum-service/static/contracts/1/CodexTitle.json')
+  tokenProxyJson = require('@codex-protocol/ethereum-service/static/contracts/1/TokenProxy.json')
+} else if (process.env.TARGET_ENV === 'staging') {
   codexTitleJson = require('@codex-protocol/ethereum-service/static/contracts/4/CodexTitle.json')
   tokenProxyJson = require('@codex-protocol/ethereum-service/static/contracts/4/TokenProxy.json')
 } else {
