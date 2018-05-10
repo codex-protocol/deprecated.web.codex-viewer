@@ -2,21 +2,21 @@
   <div>
     <app-header title="Transfers" />
     <div class="sub-heading">
-      <span class="active">Incoming</span>
-      <span><b-link to="/transfers/outgoing">Outgoing</b-link></span>
+      <span><b-link to="/transfers/incoming">Incoming</b-link></span>
+        <span class="active">Outgoing</span>
       <!--
         // @TODO: Add at a later point.
         <span><b-link to="/transfers/completed">Completed</b-link></span>
       -->
     </div>
     <b-card-group deck class="title-list" v-if="titles.length">
-      <title-transfer-list-item v-for="title in titles"
+      <title-transfer-outgoing-list-item v-for="title in titles"
         :codex-title="title"
         :key="title.tokenId"
       />
     </b-card-group>
     <div v-else>
-      You have no incoming transfers.
+      You have no outgoing transfers.
     </div>
   </div>
 </template>
@@ -25,13 +25,13 @@
 import axios from 'axios'
 
 import AppHeader from '../components/AppHeader'
-import TitleTransferListItem from '../components/TitleTransferListItem'
+import TitleTransferOutgoingListItem from '../components/TitleTransferOutgoingListItem'
 
 export default {
   name: 'title-list',
   components: {
     AppHeader,
-    TitleTransferListItem,
+    TitleTransferOutgoingListItem,
   },
   data() {
     return {
@@ -49,15 +49,15 @@ export default {
   },
   methods: {
     fetchData() {
-      axios.get('/user/transfers/incoming?include=metadata').then((response) => {
+      axios.get('/user/transfers/outgoing?include=metadata').then((response) => {
         const { result, error } = response.data
         if (error) {
-          console.log('there was an error fetching incoming transfers', error)
+          console.log('there was an error fetching outgoing transfers', error)
         } else {
           this.titles = result
         }
       }).catch((error) => {
-        console.log('there was an error fetching incoming transfers', error)
+        console.log('there was an error fetching outgoing transfers', error)
       })
     },
   },
