@@ -41,13 +41,9 @@ export default {
       this.$router.push(this.route)
     },
     cancelTransfer() {
-      const input = [
-        this.codexTitle.ownerAddress,
-        '0x0000000000000000000000000000000000000000',
-        this.codexTitle.tokenId,
-      ]
+      const input = ['0x0000000000000000000000000000000000000000', this.codexTitle.tokenId]
 
-      callContract(this.contract.safeTransferFrom, input, this.web3)
+      callContract(this.contract.approve, input, this.web3)
         .then(() => {
           this.cancelApproved = true
         })
