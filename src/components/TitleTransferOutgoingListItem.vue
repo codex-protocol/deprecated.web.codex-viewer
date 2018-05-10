@@ -4,7 +4,14 @@
       :img-src="codexTitle.metadata.files[0].uri"
       img-top
     >
+      <div class="approved-overlay" v-if="this.cancelApproved">
+        <p>Transfer Cancelled</p>
+        <b-button variant="secondary" @click.prevent="viewTitle">View Asset</b-button>
+      </div>
       <p class="name"><a href="#" @click.prevent="viewTitle">{{ codexTitle.metadata.name }}</a></p>
+      <p class="action-buttons">
+        <b-button variant="outline-primary" @click.prevent="cancelTransfer">Cancel</b-button>
+      </p>
     </b-card>
   </div>
 </template>
@@ -18,7 +25,7 @@ export default {
   data() {
     return {
       route: { name: 'title-detail', params: { titleId: this.codexTitle.tokenId } },
-      transferApproved: false,
+      cancelApproved: false,
     }
   },
   computed: {
@@ -33,19 +40,19 @@ export default {
     viewTitle() {
       this.$router.push(this.route)
     },
-    acceptTransfer() {
+    cancelTransfer() {
       const input = [
         this.codexTitle.ownerAddress,
-        this.web3.account,
+        '0x0000000000000000000000000000000000000000',
         this.codexTitle.tokenId,
       ]
 
       callContract(this.contract.safeTransferFrom, input, this.web3)
         .then(() => {
-          this.transferApproved = true
+          this.cancelApproved = true
         })
         .catch((error) => {
-          console.log('There was an error approving the transfer', error)
+          console.log('There was an error cancelling the transfer', error)
         })
     },
     ignoreTransfer() {
@@ -69,6 +76,21 @@ export default {
     border: none
     border-radius: 0 0 .25rem .25rem
 
+  .approved-overlay
+    display: flex
+    align-items: center
+    justify-content: center
+    flex-direction: column
+    position: absolute
+    width: 100%
+    height: 100%
+    top: 0
+    left: 0
+    background-color: $color-primary
+
+    p
+      font-weight: 600
+
   img
     width: 100%
     max-height: 25vw // good enough ¯\_(ツ)_/¯
@@ -87,5 +109,9 @@ export default {
 
     &.name
       font-weight: 600
+
+  .action-buttons
+    display: flex
+    justify-content: space-between
 
 </style>
