@@ -1,14 +1,7 @@
 <template>
   <div>
     <app-header title="Transfers" />
-    <div class="sub-heading">
-      <span><b-link to="/transfers/incoming">Incoming</b-link></span>
-        <span class="active">Outgoing</span>
-      <!--
-        // @TODO: Add at a later point.
-        <span><b-link to="/transfers/completed">Completed</b-link></span>
-      -->
-    </div>
+    <app-sub-header activeTab="outgoing" />
     <b-card-group deck class="title-list" v-if="titles.length">
       <title-transfer-outgoing-list-item v-for="title in titles"
         :codex-title="title"
@@ -25,12 +18,14 @@
 import axios from 'axios'
 
 import AppHeader from '../components/AppHeader'
+import AppSubHeader from '../components/AppSubHeader'
 import TitleTransferOutgoingListItem from '../components/TitleTransferOutgoingListItem'
 
 export default {
   name: 'title-list',
   components: {
     AppHeader,
+    AppSubHeader,
     TitleTransferOutgoingListItem,
   },
   data() {
@@ -88,19 +83,6 @@ export default {
   .network-details
     font-size: .4em
     word-break: break-word
-
-.sub-heading
-  font-weight: 300
-  margin-bottom: 1rem
-
-  span
-    display: inline-block
-    padding: 0 .25rem
-
-  .active
-    color: $color-secondary-accent
-    font-weight: 600
-    border-bottom: 3px solid $color-secondary-accent
 
 h1, h2
   display: inline
