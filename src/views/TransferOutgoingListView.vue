@@ -1,15 +1,15 @@
 <template>
   <div>
     <app-header title="Transfers" />
-    <app-sub-header activeTab="incoming" />
+    <app-sub-header activeTab="outgoing" />
     <b-card-group deck class="title-list" v-if="titles.length">
-      <title-transfer-list-item v-for="title in titles"
+      <title-transfer-outgoing-list-item v-for="title in titles"
         :codex-title="title"
         :key="title.tokenId"
       />
     </b-card-group>
     <div v-else>
-      You have no incoming transfers.
+      You have no outgoing transfers.
     </div>
   </div>
 </template>
@@ -19,14 +19,14 @@ import axios from 'axios'
 
 import AppHeader from '../components/AppHeader'
 import AppSubHeader from '../components/AppSubHeader'
-import TitleTransferListItem from '../components/TitleTransferListItem'
+import TitleTransferOutgoingListItem from '../components/TitleTransferOutgoingListItem'
 
 export default {
   name: 'title-list',
   components: {
     AppHeader,
     AppSubHeader,
-    TitleTransferListItem,
+    TitleTransferOutgoingListItem,
   },
   data() {
     return {
@@ -43,15 +43,15 @@ export default {
   },
   methods: {
     fetchData() {
-      axios.get('/user/transfers/incoming?include=metadata').then((response) => {
+      axios.get('/user/transfers/outgoing?include=metadata').then((response) => {
         const { result, error } = response.data
         if (error) {
-          console.log('there was an error fetching incoming transfers', error)
+          console.log('there was an error fetching outgoing transfers', error)
         } else {
           this.titles = result
         }
       }).catch((error) => {
-        console.log('there was an error fetching incoming transfers', error)
+        console.log('there was an error fetching outgoing transfers', error)
       })
     },
   },
