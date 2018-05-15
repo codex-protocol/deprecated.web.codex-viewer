@@ -136,14 +136,14 @@ export default {
       event.preventDefault()
 
       // TODO: Show some better error handling fi these aren't filled in
-      if (!this.name || !this.uploadedFile || !this.description) {
+      if (!this.name || !this.uploadedFile) {
         return
       }
 
       axios.post('/users/title-metadata', {
         name: this.name,
         files: this.uploadedFile,
-        description: this.description,
+        description: this.description || null,
       }).then((response) => {
         const { result, error } = response.data
         if (error) {
