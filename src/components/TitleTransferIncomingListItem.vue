@@ -24,7 +24,7 @@
 import callContract from '../util/web3/callContract'
 
 export default {
-  name: 'title-transfer-list-item',
+  name: 'title-transfer-incoming-list-item',
   props: ['codexTitle'],
   data() {
     return {

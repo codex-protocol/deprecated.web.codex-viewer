@@ -1,15 +1,26 @@
 <template>
   <div>
     <app-header title="Transfers" />
-    <app-sub-header activeTab="outgoing" />
+    <app-sub-header
+      v-bind:transferDirection="transferDirection"
+      v-bind:fetchData="this.fetchData"
+    />
     <b-card-group deck class="title-list" v-if="titles.length">
-      <title-transfer-outgoing-list-item v-for="title in titles"
+      <title-transfer-incoming-list-item
+        v-for="title in titles"
         :codex-title="title"
         :key="title.tokenId"
+        v-if="transferDirection === 'incoming'"
+      />
+      <title-transfer-outgoing-list-item
+        v-for="title in titles"
+        :codex-title="title"
+        :key="title.tokenId"
+        v-if="transferDirection === 'outgoing'"
       />
     </b-card-group>
     <div v-else>
-      You have no outgoing transfers.
+      You have no {{ transferDirection }} transfers.
     </div>
   </div>
 </template>
@@ -19,13 +30,16 @@ import axios from 'axios'
 
 import AppHeader from '../components/AppHeader'
 import AppSubHeader from '../components/AppSubHeader'
+import TitleTransferIncomingListItem from '../components/TitleTransferIncomingListItem'
 import TitleTransferOutgoingListItem from '../components/TitleTransferOutgoingListItem'
 
 export default {
   name: 'title-list',
+  props: ['transferDirection'],
   components: {
     AppHeader,
     AppSubHeader,
+    TitleTransferIncomingListItem,
     TitleTransferOutgoingListItem,
   },
   data() {
@@ -34,7 +48,7 @@ export default {
     }
   },
   created() {
-    this.fetchData()
+    this.fetchData(this.transferDirection)
   },
   computed: {
     web3() {
@@ -42,16 +56,18 @@ export default {
     },
   },
   methods: {
-    fetchData() {
-      axios.get('/user/transfers/outgoing?include=metadata').then((response) => {
+    fetchData(transferDirection) {
+      const url = `/user/transfers/${transferDirection}?include=metadata`
+      const errorMsg = `there was an error fetching ${transferDirection} transfers`
+      axios.get(url).then((response) => {
         const { result, error } = response.data
         if (error) {
-          console.log('there was an error fetching outgoing transfers', error)
+          console.error(errorMsg, error)
         } else {
           this.titles = result
         }
       }).catch((error) => {
-        console.log('there was an error fetching outgoing transfers', error)
+        console.error(errorMsg, error)
       })
     },
   },

@@ -1,11 +1,21 @@
 <template>
     <div class="sub-heading">
-      <span :class="{ 'active': activeTab === 'incoming' }">
-          <b-link to="/transfers/incoming" v-if="activeTab !== 'incoming'">Incoming</b-link>
-          <span v-else>Incoming</span>
+      <span :class="{ 'active': transferDirection === 'incoming' }">
+        <b-link
+          to="/transfers/incoming"
+          v-if="transferDirection !== 'incoming'"
+          @click="fetchData('incoming')">
+          Incoming
+        </b-link>
+        <span v-else>Incoming</span>
       </span>
-      <span :class="{ 'active': activeTab === 'outgoing' }">
-        <b-link to="/transfers/outgoing" v-if="activeTab !== 'outgoing'">Outgoing</b-link>
+      <span :class="{ 'active': transferDirection === 'outgoing' }">
+        <b-link
+          to="/transfers/outgoing"
+          v-if="transferDirection !== 'outgoing'"
+          @click="fetchData('outgoing')">
+          Outgoing
+        </b-link>
         <span v-else>Outgoing</span>
       </span>
       <!--
@@ -18,7 +28,7 @@
 <script>
 export default {
   name: 'app-sub-header',
-  props: ['activeTab'],
+  props: ['transferDirection', 'fetchData'],
 }
 </script>
 
