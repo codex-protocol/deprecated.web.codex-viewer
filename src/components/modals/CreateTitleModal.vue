@@ -7,7 +7,7 @@
     size="lg"
     v-model="modalVisible"
     v-on:shown="focusModal"
-    v-on:ok="fetchTransactionData"
+    v-on:ok="createMetaData"
   >
     <div class="flex-container">
       <div>
@@ -132,7 +132,7 @@ export default {
         console.log('there was an error uploading the file', error)
       })
     },
-    fetchTransactionData(event) {
+    createMetaData(event) {
       event.preventDefault()
 
       // TODO: Show some better error handling fi these aren't filled in
