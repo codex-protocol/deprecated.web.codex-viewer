@@ -140,7 +140,7 @@ export default {
         return
       }
 
-      axios.post('/users/titles/metadata', {
+      axios.post('/users/title-metadata', {
         name: this.name,
         files: this.uploadedFile,
         description: this.description,
