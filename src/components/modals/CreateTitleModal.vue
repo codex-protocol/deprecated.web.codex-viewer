@@ -135,7 +135,7 @@ export default {
     createMetaData(event) {
       event.preventDefault()
 
-      // TODO: Show some better error handling fi these aren't filled in
+      // TODO: Show some better error handling if these aren't filled in
       if (!this.name || !this.uploadedFile) {
         return
       }
