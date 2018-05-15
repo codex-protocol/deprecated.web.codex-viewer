@@ -20,6 +20,7 @@
           label="Piece title" label-for="name" label-size="sm"
         >
           <b-form-input
+            required
             id="name"
             type="text"
             class="mb-4"
@@ -32,6 +33,7 @@
           label="Digital image" label-for="imageFile" label-size="sm"
         >
           <b-form-file
+            required
             id="imageFile"
             accept="image/*"
             placeholder="Upload an image of the piece"
