@@ -39,17 +39,18 @@ export default {
   font-weight: 600
   margin-bottom: 1rem
 
-  span
+  >span+span
+    margin-left: 1rem
+
   a
+  span
     display: inline-block
 
+  a:hover
   .active
-  a:hover
-    color: $color-secondary-accent
     font-weight: 600
-    border-bottom: 3px solid $color-secondary-accent
     text-decoration: none
+    color: $color-secondary-accent
+    border-bottom: 3px solid $color-secondary-accent
 
-  a:hover
-    cursor: pointer
 </style>
