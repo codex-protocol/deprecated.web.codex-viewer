@@ -1,26 +1,30 @@
 <template>
-  <div class="title-card">
+  <div
+    class="title-card"
+    v-if="!codexTitle.isIgnored"
+    :class="{ 'is-loading': this.isLoading }"
+  >
     <b-card
       :img-src="codexTitle.metadata.files[0].uri"
       img-top
     >
-      <div class="approved-overlay" v-if="this.transferApproved">
+      <div class="accepted-overlay" v-if="this.transferAccepted">
         <p>Transfer Accepted</p>
         <b-button variant="secondary" @click.prevent="viewTitle">View Asset</b-button>
       </div>
       <p class="name"><a href="#" @click.prevent="viewTitle">{{ codexTitle.metadata.name }}</a></p>
-      <p class="owner-address">Sent from {{ codexTitle.ownerAddress }}</p>
+      <p class="address">Sent from {{ codexTitle.ownerAddress }}</p>
       <p class="action-buttons">
         <b-button variant="secondary" @click.prevent="acceptTransfer">Accept</b-button>
-        <!-- @TODO: implement ignore once API allows it
-        <b-button variant="secondary" @click.prevent="ignoreTransfer">Ignore</b-button>
-        -->
+        <b-button variant="outline-primary" @click.prevent="ignoreTransfer">Ignore</b-button>
       </p>
     </b-card>
   </div>
 </template>
 
 <script>
+
+import axios from 'axios'
 import callContract from '../util/web3/callContract'
 
 export default {
@@ -29,7 +33,8 @@ export default {
   data() {
     return {
       route: { name: 'title-detail', params: { titleId: this.codexTitle.tokenId } },
-      transferApproved: false,
+      transferAccepted: false,
+      isLoading: false,
     }
   },
   computed: {
@@ -53,15 +58,48 @@ export default {
 
       callContract(this.contract.safeTransferFrom, input, this.web3)
         .then(() => {
-          this.transferApproved = true
+          this.transferAccepted = true
         })
         .catch((error) => {
-          console.log('There was an error approving the transfer', error)
+          console.log('There was an error accepting the transfer', error)
         })
     },
     ignoreTransfer() {
-      // @TODO: Implement ignoring transfer
-      console.log('ignore transfer')
+
+      const requestOptions = {
+
+        method: 'put',
+        url: `/user/transfers/incoming/${this.codexTitle.tokenId}`,
+
+        data: {
+          isIgnored: true,
+        },
+      }
+
+      this.isLoading = true
+
+      axios(requestOptions)
+        .then((response) => {
+
+          if (response instanceof Error) {
+            throw response
+          }
+
+          const { error, result } = response.data
+
+          if (error) {
+            throw error
+          }
+
+          this.codexTitle.isIgnored = result.isIgnored
+
+        })
+        .catch((error) => {
+          console.error('there was an error ignoring this transfer', error)
+        })
+        .finally(() => {
+          this.isLoading = false
+        })
     },
   },
 }
@@ -76,11 +114,14 @@ export default {
   max-width: 32rem
   margin-bottom: 2em
 
+  &.is-loading
+    opacity: .5
+
   .card
     border: none
     border-radius: 0 0 .25rem .25rem
 
-  .approved-overlay
+  .accepted-overlay
     display: flex
     align-items: center
     justify-content: center
@@ -114,11 +155,14 @@ export default {
     &.name
       font-weight: 600
 
-    &.owner-address
+    &.address
       font-weight: 300
 
   .action-buttons
-    display: flex
-    justify-content: space-between
+    button
+      width: 100%
+
+      &+button
+        margin-top: 1rem
 
 </style>

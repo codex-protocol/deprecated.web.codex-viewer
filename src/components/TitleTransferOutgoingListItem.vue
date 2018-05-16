@@ -9,6 +9,7 @@
         <b-button variant="secondary" @click.prevent="viewTitle">View Asset</b-button>
       </div>
       <p class="name"><a href="#" @click.prevent="viewTitle">{{ codexTitle.metadata.name }}</a></p>
+      <p class="address">Sent to {{ codexTitle.approvedAddress }}</p>
       <p class="action-buttons">
         <b-button variant="outline-primary" @click.prevent="cancelTransfer">Cancel</b-button>
       </p>
@@ -50,10 +51,6 @@ export default {
         .catch((error) => {
           console.log('There was an error cancelling the transfer', error)
         })
-    },
-    ignoreTransfer() {
-      // @TODO: Implement ignoring transfer
-      console.log('ignore transfer')
     },
   },
 }
@@ -106,8 +103,14 @@ export default {
     &.name
       font-weight: 600
 
+    &.address
+      font-weight: 300
+
   .action-buttons
-    display: flex
-    justify-content: space-between
+    button
+      width: 100%
+
+      &+button
+        margin-top: 1rem
 
 </style>

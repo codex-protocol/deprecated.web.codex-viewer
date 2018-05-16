@@ -18,6 +18,7 @@
         :key="title.tokenId"
         v-if="transferDirection === 'outgoing'"
       />
+      <!-- TODO: add an "ignored" tab? idk probably not super necessary really -->
     </b-card-group>
     <div v-else>
       You have no {{ transferDirection }} transfers.
@@ -57,18 +58,39 @@ export default {
   },
   methods: {
     fetchData(transferDirection) {
-      const url = `/user/transfers/${transferDirection}?include=metadata`
-      const errorMsg = `there was an error fetching ${transferDirection} transfers`
-      axios.get(url).then((response) => {
-        const { result, error } = response.data
-        if (error) {
-          console.error(errorMsg, error)
-        } else {
+
+      const requestOptions = {
+
+        method: 'get',
+        url: `/user/transfers/${transferDirection}`,
+
+        params: {
+          filters: {},
+          include: [
+            'metadata',
+          ],
+        },
+      }
+
+      if (transferDirection === 'incoming') {
+        requestOptions.params.filters.isIgnored = false
+      }
+
+      axios(requestOptions)
+        .then((response) => {
+
+          const { error, result } = response.data
+
+          if (error) {
+            throw error
+          }
+
           this.titles = result
-        }
-      }).catch((error) => {
-        console.error(errorMsg, error)
-      })
+
+        })
+        .catch((error) => {
+          console.error(`there was an error fetching ${transferDirection} transfers`, error)
+        })
     },
   },
 }
