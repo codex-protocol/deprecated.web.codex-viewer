@@ -21,7 +21,7 @@ export default {
   methods: {
     metamaskLogin() {
       const { account } = this.web3
-      const personalMessageToSign = 'Please sign this message to authenticate with the Codex Title Registry.'
+      const personalMessageToSign = 'Please sign this message to authenticate with the Codex Registry.'
 
       this.web3.instance().currentProvider.sendAsync({
         method: 'personal_sign',
