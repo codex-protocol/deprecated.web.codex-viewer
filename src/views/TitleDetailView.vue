@@ -3,7 +3,7 @@
     <div v-if="codexTitle">
       <div class="flex mb-5">
         <div class="title-image">
-          <img v-if="codexTitle.metadata" :src="codexTitle.metadata.files[0].uri" />
+          <img v-if="codexTitle.metadata" :src="codexTitle.metadata.mainImage.uri" />
           <div class="private-img" v-else>
             <p>This Codex Title is private</p>
           </div>

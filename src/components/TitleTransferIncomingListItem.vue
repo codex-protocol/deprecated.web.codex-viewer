@@ -5,7 +5,7 @@
     :class="{ 'is-loading': this.isLoading }"
   >
     <b-card
-      :img-src="codexTitle.metadata.files[0].uri"
+      :img-src="codexTitle.metadata.mainImage.uri"
       img-top
     >
       <div class="accepted-overlay" v-if="this.transferAccepted">

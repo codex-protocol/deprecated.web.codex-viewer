@@ -1,7 +1,7 @@
 <template>
   <div class="title-card">
     <b-card
-      :img-src="codexTitle.metadata.files[0].uri"
+      :img-src="codexTitle.metadata.mainImage.uri"
       img-top
     >
       <div class="approved-overlay" v-if="this.cancelApproved">

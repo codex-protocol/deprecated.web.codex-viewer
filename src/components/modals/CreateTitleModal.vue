@@ -48,7 +48,7 @@
             :variant="progressVariant">
           </b-progress>
           <b-form-text>
-            You can also drag and drop a file onto the picker.
+            You can also drag and drop an image onto the picker.
           </b-form-text>
         </b-form-group>
         <b-form-group
@@ -122,10 +122,10 @@ export default {
         // TODO: display an error
           console.log('there was an error uploading the file', error)
         } else {
-          console.log('file uploaded', result)
+          console.log('file uploaded', result[0])
 
           this.uploadSuccess = true
-          this.uploadedFile = result
+          this.uploadedFile = result[0]
         }
       }).catch((error) => {
         this.uploadComplete = true
@@ -144,7 +144,7 @@ export default {
 
       axios.post('/users/title-metadata', {
         name: this.name,
-        files: this.uploadedFile,
+        mainImage: this.uploadedFile,
         description: this.description || null,
       }).then((response) => {
         const { result, error } = response.data
