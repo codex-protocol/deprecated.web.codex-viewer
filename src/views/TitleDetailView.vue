@@ -40,7 +40,11 @@
             -->
 
             <approve-transfer-modal :titleId="titleId" />
-            <privacy-settings-modal :titleId="titleId" :isPrivate="isPrivate" />
+            <privacy-settings-modal
+              :titleId="titleId"
+              :isPrivate="isPrivate"
+              :whitelistedAddresses="whitelistedAddresses"
+            />
           </div>
           <div class="mt-3" v-if="isApproved">
             <b-button @click="acceptTransfer">
@@ -110,6 +114,9 @@ export default {
     },
     isPrivate() {
       return this.codexTitle.isPrivate
+    },
+    whitelistedAddresses() {
+      return this.codexTitle.whitelistedAddresses
     },
     isAwaitingApproval() {
       return this.codexTitle.approvedAddress !== null &&
