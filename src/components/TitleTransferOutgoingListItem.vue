@@ -33,8 +33,8 @@ export default {
     web3() {
       return this.$store.state.web3
     },
-    contract() {
-      return this.web3.contractInstance()
+    titleContract() {
+      return this.web3.titleContractInstance()
     },
   },
   methods: {
@@ -44,7 +44,7 @@ export default {
     cancelTransfer() {
       const input = ['0x0000000000000000000000000000000000000000', this.codexTitle.tokenId]
 
-      callContract(this.contract.approve, input, this.web3)
+      callContract(this.titleContract.approve, input, this.web3)
         .then(() => {
           this.cancelApproved = true
         })

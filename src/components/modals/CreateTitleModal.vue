@@ -200,7 +200,7 @@ export default {
         metadata.id,
       ]
 
-      callContract(this.contract.mint, input, this.web3)
+      callContract(this.titleContract.mint, input, this.web3)
         .then(() => {
           this.modalVisible = false
         })
@@ -213,8 +213,8 @@ export default {
     web3() {
       return this.$store.state.web3
     },
-    contract() {
-      return this.$store.state.web3.contractInstance()
+    titleContract() {
+      return this.$store.state.web3.titleContractInstance()
     },
     progressVariant() {
       if (!this.uploadComplete) {

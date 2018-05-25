@@ -109,8 +109,8 @@ export default {
     titleId() {
       return this.$route.params.titleId
     },
-    contract() {
-      return this.web3.contractInstance()
+    titleContract() {
+      return this.web3.titleContractInstance()
     },
     isPrivate() {
       return this.codexTitle.isPrivate
@@ -153,7 +153,7 @@ export default {
         this.titleId,
       ]
 
-      callContract(this.contract.safeTransferFrom, input, this.web3)
+      callContract(this.titleContract.safeTransferFrom, input, this.web3)
         .then(() => {
         })
         .catch((error) => {
