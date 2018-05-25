@@ -3,6 +3,7 @@
     id="createTitleModal"
     title="Create title"
     ok-title="Create with MetaMask"
+    :ok-disabled="!canSubmit()"
     cancel-variant="outline-primary"
     size="lg"
     v-model="modalVisible"
@@ -78,6 +79,7 @@ export default {
       name: null,
       description: null,
       uploadedFile: null,
+      uploadedFileHash: null,
       imageStreamUri: null,
       modalVisible: false,
       progressVisible: false,
@@ -89,6 +91,9 @@ export default {
     focusModal() {
       this.$refs.defaultModalFocus.focus()
     },
+    canSubmit() {
+      return this.name && this.uploadedFileHash && this.uploadedFile
+    },
     displayAndUploadFile(file) {
       if (!file) {
         return
@@ -98,11 +103,22 @@ export default {
 
       // display the file in the dialog box
       const fileReader = new FileReader()
-      fileReader.onload = (loadEvent) => {
-        this.imageStreamUri = loadEvent.target.result
-      }
+
+      fileReader.addEventListener('loadend', () => {
+        this.imageStreamUri = fileReader.result
+      })
 
       fileReader.readAsDataURL(file)
+
+      // hash the file's binary data
+      const binaryFileReader = new FileReader()
+
+      binaryFileReader.addEventListener('loadend', () => {
+        this.uploadedFileHash = this.web3.instance().sha3(binaryFileReader.result)
+      })
+
+      binaryFileReader.readAsBinaryString(file)
+
     },
     uploadFile(file) {
       this.progressVisible = true
@@ -126,6 +142,7 @@ export default {
 
           this.uploadSuccess = true
           this.uploadedFile = result[0]
+
         }
       }).catch((error) => {
         this.uploadComplete = true
@@ -138,7 +155,7 @@ export default {
       event.preventDefault()
 
       // TODO: Show some better error handling if these aren't filled in
-      if (!this.name || !this.uploadedFile) {
+      if (!this.name || !this.uploadedFile || !this.uploadedFileHash) {
         return
       }
 
@@ -147,14 +164,24 @@ export default {
         mainImage: this.uploadedFile,
         description: this.description || null,
       }).then((response) => {
-        const { result, error } = response.data
+        const { result: metadata, error } = response.data
         if (error) {
           console.log('there was an error calling getTitle', error)
           this.codexTitle = null
           this.error = error
         } else {
-          console.log('codexTitleMetadata', result)
-          this.createTitle(result)
+          console.log('metadata', metadata)
+
+          const { sha3 } = this.web3.instance()
+
+          // TODO: maybe show somewhere that the locally-calculated hashes match
+          //  the server-side-calculated hashes? e.g.:
+          //
+          // metadata.nameHash === sha3(metadata.name)
+          // metadata.mainImage.hash === this.uploadedFileHash
+          // metadata.descriptionHash === (metadata.description ? sha3(metadata.description) : null)
+
+          this.createTitle(metadata)
         }
       }).catch((error) => {
         console.log('there was an error calling getTitle', error)
@@ -162,16 +189,16 @@ export default {
         this.error = error
       })
     },
-    createTitle(transactionData) {
+    createTitle(metadata) {
       const { sha3 } = this.web3.instance()
       const { account } = this.web3
       const input = [
         account,
-        sha3(transactionData.name),
-        sha3(transactionData.description),
-        sha3(transactionData.imageUri), // TODO: calculate hash of binary data here instead
+        sha3(metadata.name),
+        metadata.description ? sha3(metadata.description) : '',
+        this.uploadedFileHash,
         '1', // providerId
-        transactionData.id,
+        metadata.id,
       ]
 
       callContract(this.contract.mint, input, this.web3)
