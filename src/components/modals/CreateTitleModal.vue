@@ -172,10 +172,9 @@ export default {
         } else {
           console.log('metadata', metadata)
 
-          const { sha3 } = this.web3.instance()
-
           // TODO: maybe show somewhere that the locally-calculated hashes match
           //  the server-side-calculated hashes? e.g.:
+          // const { sha3 } = this.web3.instance()
           //
           // metadata.nameHash === sha3(metadata.name)
           // metadata.mainImage.hash === this.uploadedFileHash
