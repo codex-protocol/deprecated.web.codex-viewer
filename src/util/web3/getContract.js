@@ -20,6 +20,9 @@ if (process.env.TARGET_ENV === 'production') {
 }
 /* eslint-enable */
 
+// Exporting the address directly so it can be used without waiting for the promises to resolve
+const codexRegistryContractAddress = codexTitleProxyJson.address
+
 let codexTitle
 const getCodexTitleContract = (web3) => {
   return new Promise((resolve, reject) => {
@@ -48,4 +51,8 @@ const getCodexTokenContract = (web3) => {
   })
 }
 
-export { getCodexTitleContract, getCodexTokenContract }
+export {
+  getCodexTitleContract,
+  getCodexTokenContract,
+  codexRegistryContractAddress,
+}

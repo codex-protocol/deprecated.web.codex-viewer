@@ -1,16 +1,18 @@
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
 
-const token = window.localStorage.getItem('authToken')
-
 // If a token is present on page load, then add it to all future API requests
+let token = window.localStorage.getItem('authToken')
 if (token) {
   axios.defaults.headers.common.Authorization = token
 }
 
-const state = {
-  token: token || null,
-  balance: new BigNumber(0),
+const initialState = () => {
+  return {
+    token: token || null,
+    balance: new BigNumber(0),
+    contractApproved: false,
+  }
 }
 
 const getters = {
@@ -20,27 +22,46 @@ const getters = {
 }
 
 const actions = {
-  sendAuthRequest({ commit }, payload) {
+  sendAuthRequest({ commit, dispatch }, payload) {
     return new Promise((resolve, reject) => {
       axios.post('auth-token', payload).then((response) => {
         const { result, error } = response.data
         if (error) {
           console.log(error)
-          commit('clearAuthToken')
+          commit('clearUserState')
           reject(error)
         } else {
-          commit('setAuthToken', result.token)
+          dispatch('updateUserState', result.token)
           resolve()
         }
       }).catch((error) => {
         console.log(error)
-        commit('clearAuthToken')
+        commit('clearUserState')
         reject(error)
       })
     })
   },
+
+  updateUserState({ commit, rootState }, authToken) {
+    const { web3 } = rootState
+    const tokenContract = web3.tokenContractInstance()
+    const registryContract = web3.titleContractInstance()
+
+    tokenContract.allowance(web3.account, registryContract.address).then((allowance) => {
+      commit('updateApprovalStatus', allowance)
+    })
+
+    tokenContract.balanceOf(web3.account).then((balance) => {
+      commit('updateBalance', balance)
+    })
+
+    if (authToken) {
+      commit('setAuthToken', authToken)
+    }
+  },
+
   logout({ commit }, router) {
-    commit('clearAuthToken')
+    commit('clearUserState')
 
     router.replace('/login')
   },
@@ -56,13 +77,18 @@ const mutations = {
     window.localStorage.setItem('authToken', authToken)
   },
 
-  clearAuthToken(currentState) {
-    console.log('clearAuthToken mutation being executed')
+  clearUserState(currentState) {
+    console.log('clearUserState mutation being executed')
 
-    currentState.token = null
+    token = null
     delete axios.defaults.headers.common.Authorization
-
     window.localStorage.removeItem('authToken')
+
+    // Reset state to its initial values
+    const originalState = initialState()
+    Object.keys(originalState).forEach((key) => {
+      currentState[key] = originalState[key]
+    })
   },
 
   updateBalance(currentState, newBalance) {
@@ -70,10 +96,22 @@ const mutations = {
 
     currentState.balance = newBalance
   },
+
+  updateApprovalStatus(currentState, allowance) {
+    console.log('updateApprovalStatus mutation being executed')
+
+    // The approval exposed in the UI is not a binary operation, but it does
+    //  approve the contract's allowance to a high value (2^255).
+    // Here we check to see if it's greater than 1 token, and if so assume that
+    //  approval has taken place.
+    // If somehow the user has used so many tokens that their allowance is now low,
+    //  they'll need to re-approve the contract for more.
+    currentState.contractApproved = allowance.greaterThan(new BigNumber('10e18'))
+  },
 }
 
 export default {
-  state,
+  state: initialState(),
   getters,
   actions,
   mutations,

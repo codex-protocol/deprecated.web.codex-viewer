@@ -34,10 +34,11 @@ export default {
     approveTokens(event) {
       event.preventDefault()
 
-      const amount = new (this.web3.instance()).BigNumber(2).pow(255).toFixed()
-      const input = [this.titleContract.address, amount]
+      const amount = new (this.web3.instance()).BigNumber(2).pow(255)
+      const input = [this.titleContract.address, amount.toFixed()]
       callContract(this.tokenContract.approve, input, this.web3)
         .then(() => {
+          this.$store.commit('updateApprovalStatus', amount)
           this.modalVisible = false
         })
         .catch((error) => {
@@ -47,8 +48,10 @@ export default {
     checkAllowance() {
       const input = [this.web3.account, this.titleContract.address]
       callContract(this.tokenContract.allowance, input, this.web3)
-        .then((value) => {
-          console.log('Amount of CODX the Codex Viewer has permission to spend on your behalf (may be higher than your balance):', value.toNumber())
+        .then((allowance) => {
+          console.log('Amount of CODX the Codex Viewer has permission to spend on your behalf (may be higher than your balance):', allowance.toString())
+
+
         })
         .catch((error) => {
           console.log('There was an error approving the transfer', error)
@@ -77,7 +80,6 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-
 .token-icon
   width: 8rem
   margin-bottom: 2rem

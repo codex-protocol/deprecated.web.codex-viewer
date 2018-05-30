@@ -1,9 +1,10 @@
-/* eslint-disable */
-
 import { Networks, Web3Errors } from '../../util/constants/web3'
 import registerWeb3 from '../../util/web3/registerWeb3'
 import pollWeb3 from '../../util/web3/pollWeb3'
-import { getCodexTitleContract, getCodexTokenContract } from '../../util/web3/getContract'
+import {
+  getCodexTitleContract,
+  getCodexTokenContract,
+} from '../../util/web3/getContract'
 
 const state = {
   instance: null,
@@ -21,39 +22,52 @@ const actions = {
   registerWeb3({ commit, dispatch }, router) {
     console.log('registerWeb3 action being executed')
 
-    registerWeb3().then((result) => {
+    return registerWeb3().then((result) => {
       commit('registerWeb3Instance', { result, router })
 
-      dispatch('getCodexTitleContract', result.web3())
-      dispatch('getCodexTokenContract', result.web3())
+      const web3 = result.web3()
+
+      return Promise.all([
+        dispatch('getCodexTitleContract', web3),
+        dispatch('getCodexTokenContract', web3),
+      ])
+
     }).catch((error) => {
       commit('setWeb3Error', { message: 'Unable to register web3', error })
     })
   },
+
   pollWeb3({ commit }, payload) {
     console.log('pollWeb3 action being executed')
     commit('pollWeb3Instance', payload)
   },
+
   getCodexTitleContract({ commit }, web3) {
     console.log('getCodexTitleContract action being executed')
 
-    getCodexTitleContract(web3).then((result) => {
-      commit('getCodexTitleContractInstance', result)
-    }).catch((error) => {
-      commit('setWeb3Error', { message: 'Unable to register the contract', error })
+    return new Promise((resolve, reject) => {
+      getCodexTitleContract(web3).then((result) => {
+        commit('getCodexTitleContractInstance', result)
+        resolve()
+      }).catch((error) => {
+        commit('setWeb3Error', { message: 'Unable to register the contract', error })
+        reject()
+      })
     })
+
   },
+
   getCodexTokenContract({ commit }, web3) {
     console.log('getCodexTokenContract action being executed')
 
-    getCodexTokenContract(web3).then((result) => {
-      commit('getCodexTokenContractInstance', result)
-
-      result.balanceOf(state.account, { from: state.account }).then((balance) => {
-        commit('updateBalance', balance, { root: true })
+    return new Promise((resolve, reject) => {
+      getCodexTokenContract(web3).then((result) => {
+        commit('getCodexTokenContractInstance', result)
+        resolve()
+      }).catch((error) => {
+        commit('setWeb3Error', { message: 'Unable to register the contract', error })
+        reject()
       })
-    }).catch((error) => {
-      commit('setWeb3Error', { message: 'Unable to register the contract', error })
     })
   },
 }

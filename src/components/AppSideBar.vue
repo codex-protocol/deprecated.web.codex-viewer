@@ -12,46 +12,22 @@
     <b-link to="/settings">
       <img src="../assets/icons/settings.svg">Settings
     </b-link>
+    <b-link to="manage-tokens">
+      <img src="../assets/icons/codx-token.svg">Manage Tokens
+    </b-link>
     <b-link to="/coming-soon">
       <img src="../assets/icons/star.svg">Coming Soon
     </b-link>
     <span class="spacer"></span>
-    <span class="item">{{ balance.toString() }} Tokens</span>
-    <b-link v-b-modal.faucetModal v-if="shouldShowFaucetButton" v-once>
-      <img src="../assets/icons/codx-token.svg">Get Tokens
-    </b-link>
-    <b-link v-b-modal.approveTokenModal v-if="shouldShowFaucetButton" v-once>
-      <img src="../assets/icons/codx-token.svg">Approve Tokens
-    </b-link>
     <b-link @click.prevent="logout">
       <img src="../assets/icons/logout.svg">Logout
     </b-link>
-    <faucet-modal/>
-    <approve-token-modal/>
   </nav>
 </template>
 
 <script>
-
-import FaucetModal from './modals/FaucetModal'
-import ApproveTokenModal from './modals/ApproveTokenModal'
-
 export default {
   name: 'app-side-bar',
-  components: {
-    FaucetModal,
-    ApproveTokenModal,
-  },
-  data: () => {
-    return {
-      shouldShowFaucetButton: process.env.TARGET_ENV !== 'production',
-    }
-  },
-  computed: {
-    balance() {
-      return this.$store.state.auth.balance
-    },
-  },
   methods: {
     logout() {
       this.$store.dispatch('logout', this.$router)
@@ -61,11 +37,10 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-
 @import "../assets/variables.styl"
 
 nav
-  width: 12rem
+  width: 14rem
   height: 100%
   min-width: @width
   max-width: @width
@@ -78,15 +53,12 @@ nav
 .spacer
   flex-grow: 1
 
-.item
+a
   padding: 1rem
   display: block
   line-height: 1rem
   color: $color-light
   box-sizing: border-box
-
-a
-  @extend .item
 
   img
     margin-right: .5rem
