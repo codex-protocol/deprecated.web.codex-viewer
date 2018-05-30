@@ -16,6 +16,7 @@
       <img src="../assets/icons/star.svg">Coming Soon
     </b-link>
     <span class="spacer"></span>
+    <span class="item">{{ balance.toString() }} Tokens</span>
     <b-link v-b-modal.faucetModal v-if="shouldShowFaucetButton" v-once>
       <img src="../assets/icons/codx-token.svg">Get Tokens
     </b-link>
@@ -46,6 +47,11 @@ export default {
       shouldShowFaucetButton: process.env.TARGET_ENV !== 'production',
     }
   },
+  computed: {
+    balance() {
+      return this.$store.state.auth.balance
+    },
+  },
   methods: {
     logout() {
       this.$store.dispatch('logout', this.$router)
@@ -72,12 +78,15 @@ nav
 .spacer
   flex-grow: 1
 
-a
+.item
   padding: 1rem
   display: block
   line-height: 1rem
   color: $color-light
   box-sizing: border-box
+
+a
+  @extend .item
 
   img
     margin-right: .5rem

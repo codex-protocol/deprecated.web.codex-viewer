@@ -1,4 +1,5 @@
 import axios from 'axios'
+import BigNumber from 'bignumber.js'
 
 const token = window.localStorage.getItem('authToken')
 
@@ -9,6 +10,7 @@ if (token) {
 
 const state = {
   token: token || null,
+  balance: new BigNumber(0),
 }
 
 const getters = {
@@ -53,6 +55,7 @@ const mutations = {
 
     window.localStorage.setItem('authToken', authToken)
   },
+
   clearAuthToken(currentState) {
     console.log('clearAuthToken mutation being executed')
 
@@ -60,6 +63,12 @@ const mutations = {
     delete axios.defaults.headers.common.Authorization
 
     window.localStorage.removeItem('authToken')
+  },
+
+  updateBalance(currentState, newBalance) {
+    console.log('updateBalance mutation being executed')
+
+    currentState.balance = newBalance
   },
 }
 

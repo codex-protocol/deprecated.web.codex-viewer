@@ -48,6 +48,10 @@ const actions = {
 
     getCodexTokenContract(web3).then((result) => {
       commit('getCodexTokenContractInstance', result)
+
+      result.balanceOf(state.account, { from: state.account }).then((balance) => {
+        commit('updateBalance', balance, { root: true })
+      })
     }).catch((error) => {
       commit('setWeb3Error', { message: 'Unable to register the contract', error })
     })
