@@ -42,22 +42,29 @@ const actions = {
     })
   },
 
-  updateUserState({ commit, rootState }, authToken) {
+  updateUserState({ commit, dispatch, rootState }, authToken) {
     const { web3 } = rootState
     const tokenContract = web3.tokenContractInstance()
     const registryContract = web3.titleContractInstance()
+
+    dispatch('getLatestBalance')
 
     tokenContract.allowance(web3.account, registryContract.address).then((allowance) => {
       commit('updateApprovalStatus', allowance)
     })
 
-    tokenContract.balanceOf(web3.account).then((balance) => {
-      commit('updateBalance', balance)
-    })
-
     if (authToken) {
       commit('setAuthToken', authToken)
     }
+  },
+
+  getLatestBalance({ commit, rootState }) {
+    const { web3 } = rootState
+    const tokenContract = web3.tokenContractInstance()
+
+    tokenContract.balanceOf(web3.account).then((balance) => {
+      commit('updateBalance', balance)
+    })
   },
 
   logout({ commit }, router) {

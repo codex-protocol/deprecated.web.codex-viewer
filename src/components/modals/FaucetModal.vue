@@ -45,8 +45,8 @@ export default {
             throw error
           }
 
-          // TODO: update their local token count and / or show notification here?
-
+          // @TODO: Need to watch for a Transfer event on the CodexToken contract to track
+          //  when the balance has been updated
         })
         .catch((error) => {
           console.error('there was an error requesting tokens', error)
