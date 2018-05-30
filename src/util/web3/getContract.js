@@ -20,25 +20,31 @@ if (process.env.TARGET_ENV === 'production') {
 }
 /* eslint-enable */
 
+let codexTitle
 const getCodexTitleContract = (web3) => {
   return new Promise((resolve, reject) => {
 
-    const codexTitle = contract(codexTitleJson)
+    if (!codexTitle) {
+      const contractInstance = contract(codexTitleJson)
+      contractInstance.setProvider(web3.currentProvider)
+      codexTitle = contractInstance.at(codexTitleProxyJson.address)
+    }
 
-    codexTitle.setProvider(web3.currentProvider)
-
-    resolve(codexTitle.at(codexTitleProxyJson.address))
+    resolve(codexTitle)
   })
 }
 
+let codexToken
 const getCodexTokenContract = (web3) => {
   return new Promise((resolve, reject) => {
 
-    const codexToken = contract(codexTokenJson)
+    if (!codexToken) {
+      const contractInstance = contract(codexTokenJson)
+      contractInstance.setProvider(web3.currentProvider)
+      codexToken = contractInstance.at(codexTokenJson.address)
+    }
 
-    codexToken.setProvider(web3.currentProvider)
-
-    resolve(codexToken.at(codexTokenJson.address))
+    resolve(codexToken)
   })
 }
 

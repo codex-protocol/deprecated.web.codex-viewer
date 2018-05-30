@@ -39,7 +39,7 @@ const actions = {
 
     getCodexTitleContract(web3).then((result) => {
       commit('getCodexTitleContractInstance', result)
-    }).catch((e) => {
+    }).catch((error) => {
       commit('setWeb3Error', { message: 'Unable to register the contract', error })
     })
   },
@@ -48,7 +48,7 @@ const actions = {
 
     getCodexTokenContract(web3).then((result) => {
       commit('getCodexTokenContractInstance', result)
-    }).catch((e) => {
+    }).catch((error) => {
       commit('setWeb3Error', { message: 'Unable to register the contract', error })
     })
   },
