@@ -195,7 +195,7 @@ export default {
         account,
         sha3(metadata.name),
         metadata.description ? sha3(metadata.description) : '',
-        this.uploadedFileHash,
+        [this.uploadedFileHash],
         '1', // providerId
         metadata.id,
       ]
