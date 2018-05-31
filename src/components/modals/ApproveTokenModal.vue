@@ -50,8 +50,6 @@ export default {
       callContract(this.tokenContract.allowance, input, this.web3)
         .then((allowance) => {
           console.log('Amount of CODX the Codex Viewer has permission to spend on your behalf (may be higher than your balance):', allowance.toString())
-
-
         })
         .catch((error) => {
           console.log('There was an error approving the transfer', error)

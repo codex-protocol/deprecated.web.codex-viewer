@@ -3,6 +3,7 @@ import contract from 'truffle-contract'
 let codexTitleJson
 let codexTitleProxyJson
 let codexTokenJson
+let stakeContainerJson
 
 /* eslint-disable global-require */
 if (process.env.TARGET_ENV === 'production') {
@@ -13,46 +14,62 @@ if (process.env.TARGET_ENV === 'production') {
   codexTitleJson = require('@codex-protocol/ethereum-service/static/contracts/4/CodexTitle.json')
   codexTitleProxyJson = require('@codex-protocol/ethereum-service/static/contracts/4/CodexTitleProxy.json')
   codexTokenJson = require('@codex-protocol/ethereum-service/static/contracts/4/CodexToken.json')
+  // stakeContainerJson = require('@codex-protocol/ethereum-service/static/contracts/4/ERC900BasicStakeContainer.json')
 } else {
   codexTitleJson = require('@codex-protocol/ethereum-service/static/contracts/5777/CodexTitle.json')
   codexTitleProxyJson = require('@codex-protocol/ethereum-service/static/contracts/5777/CodexTitleProxy.json')
   codexTokenJson = require('@codex-protocol/ethereum-service/static/contracts/5777/CodexToken.json')
+  stakeContainerJson = require('@codex-protocol/ethereum-service/static/contracts/5777/ERC900BasicStakeContainer.json')
 }
 /* eslint-enable */
 
-// Exporting the address directly so it can be used without waiting for the promises to resolve
-const codexRegistryContractAddress = codexTitleProxyJson.address
+const contracts = {
+  codexTitle: null,
+  codexToken: null,
+  stakeContainer: null,
+}
 
-let codexTitle
-const getCodexTitleContract = (web3) => {
+const getContract = (contractProperty, json, address, provider) => {
   return new Promise((resolve, reject) => {
-
-    if (!codexTitle) {
-      const contractInstance = contract(codexTitleJson)
-      contractInstance.setProvider(web3.currentProvider)
-      codexTitle = contractInstance.at(codexTitleProxyJson.address)
+    if (!contracts[contractProperty]) {
+      const contractAbstraction = contract(json)
+      contractAbstraction.setProvider(provider)
+      contracts[contractProperty] = contractAbstraction.at(address)
     }
 
-    resolve(codexTitle)
+    resolve(contracts[contractProperty])
   })
 }
 
-let codexToken
+const getCodexTitleContract = (web3) => {
+  return getContract(
+    'codexTitle',
+    codexTitleJson,
+    codexTitleProxyJson.address,
+    web3.currentProvider
+  )
+}
+
 const getCodexTokenContract = (web3) => {
-  return new Promise((resolve, reject) => {
+  return getContract(
+    'codexToken',
+    codexTokenJson,
+    codexTokenJson.address,
+    web3.currentProvider
+  )
+}
 
-    if (!codexToken) {
-      const contractInstance = contract(codexTokenJson)
-      contractInstance.setProvider(web3.currentProvider)
-      codexToken = contractInstance.at(codexTokenJson.address)
-    }
-
-    resolve(codexToken)
-  })
+const getStakeContainerContract = (web3) => {
+  return getContract(
+    'stakeContainer',
+    stakeContainerJson,
+    stakeContainerJson.address,
+    web3.currentProvider
+  )
 }
 
 export {
   getCodexTitleContract,
   getCodexTokenContract,
-  codexRegistryContractAddress,
+  getStakeContainerContract,
 }
