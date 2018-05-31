@@ -4,9 +4,16 @@
     <h5 class="mb-5">Get CODX from the faucet & stake CODX for discounts!</h5>
 
     <div class="item">
-      <p>Contract approved? {{ contractApproved ? 'Yes!' : 'No' }}</p>
-      <b-button variant="primary" v-b-modal.approveTokenModal :disabled="contractApproved">
-        Approve the CodexRecord contract
+      <p>Registry contract approved? {{ registryContractApproved ? 'Yes!' : 'No' }}</p>
+      <b-button variant="primary" v-b-modal.approveRegistryModal :disabled="registryContractApproved">
+        Approve the registry contract
+      </b-button>
+    </div>
+
+    <div class="item">
+      <p>Stake contract approved? {{ stakeContractApproved ? 'Yes!' : 'No' }}</p>
+      <b-button variant="primary" v-b-modal.approveStakeModal :disabled="stakeContractApproved">
+        Approve the staking contract
       </b-button>
     </div>
 
@@ -28,21 +35,28 @@
     </div>
 
     <faucet-modal />
-    <approve-token-modal />
+
+    <approve-contract-modal id="approveRegistryModal" :contractInstance="titleContract" stateProperty="registryContractApproved">
+      This will grant the Codex Viewer permission to spend CODX on your behalf.
+    </approve-contract-modal>
+
+    <approve-contract-modal id="approveStakeModal" :contractInstance="stakeContract" stateProperty="stakeContractApproved">
+      This will allow you to stake CODX.
+    </approve-contract-modal>
   </div>
 </template>
 
 <script>
 import AppHeader from '../components/AppHeader'
 import FaucetModal from '../components/modals/FaucetModal'
-import ApproveTokenModal from '../components/modals/ApproveTokenModal'
+import ApproveContractModal from '../components/modals/ApproveContractModal'
 
 export default {
   name: 'manage-tokens-view',
   components: {
     AppHeader,
     FaucetModal,
-    ApproveTokenModal,
+    ApproveContractModal,
   },
   data: () => {
     return {
@@ -50,11 +64,20 @@ export default {
     }
   },
   computed: {
-    contractApproved() {
-      return this.$store.state.auth.contractApproved
+    registryContractApproved() {
+      return this.$store.state.auth.registryContractApproved
+    },
+    stakeContractApproved() {
+      return this.$store.state.auth.stakeContractApproved
     },
     balance() {
       return this.$store.state.auth.balance
+    },
+    stakeContract() {
+      return this.$store.state.web3.stakeContainerContractInstance()
+    },
+    titleContract() {
+      return this.$store.state.web3.titleContractInstance()
     },
   },
   methods: {

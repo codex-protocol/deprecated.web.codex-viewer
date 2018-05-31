@@ -11,7 +11,8 @@ const initialState = () => {
   return {
     token: token || null,
     balance: new BigNumber(0),
-    contractApproved: false,
+    registryContractApproved: false,
+    stakeContractApproved: false,
   }
 }
 
@@ -46,11 +47,22 @@ const actions = {
     const { web3 } = rootState
     const tokenContract = web3.tokenContractInstance()
     const registryContract = web3.titleContractInstance()
+    const stakeContract = web3.stakeContainerContractInstance()
 
     dispatch('getLatestBalance')
 
     tokenContract.allowance(web3.account, registryContract.address).then((allowance) => {
-      commit('updateApprovalStatus', allowance)
+      commit('updateApprovalStatus', {
+        allowance,
+        stateProperty: 'registryContractApproved',
+      })
+    })
+
+    tokenContract.allowance(web3.account, stakeContract.address).then((allowance) => {
+      commit('updateApprovalStatus', {
+        allowance,
+        stateProperty: 'stakeContractApproved',
+      })
     })
 
     if (authToken) {
@@ -104,8 +116,13 @@ const mutations = {
     currentState.balance = newBalance
   },
 
-  updateApprovalStatus(currentState, allowance) {
-    console.log('updateApprovalStatus mutation being executed')
+  updateApprovalStatus(currentState, payload) {
+    const {
+      allowance,
+      stateProperty,
+    } = payload
+
+    console.log('updateApprovalStatus mutation being executed for', stateProperty)
 
     // The approval exposed in the UI is not a binary operation, but it does
     //  approve the contract's allowance to a high value (2^255).
@@ -113,7 +130,7 @@ const mutations = {
     //  approval has taken place.
     // If somehow the user has used so many tokens that their allowance is now low,
     //  they'll need to re-approve the contract for more.
-    currentState.contractApproved = allowance.greaterThan(new BigNumber('10e18'))
+    currentState[stateProperty] = allowance.greaterThan(new BigNumber('10e18'))
   },
 }
 

@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="approveTokenModal"
+    :id="id"
     title="Approve Tokens"
     ok-title="Approve"
     cancel-variant="outline-primary"
@@ -10,9 +10,7 @@
     <div class="text-center">
       <img class="token-icon" src="../../assets/icons/codx-token.svg">
     </div>
-    <p>
-      This will grant the Codex Viewer permission to spend CODX on your behalf.
-    </p>
+    <slot></slot>
   </b-modal>
 </template>
 
@@ -21,7 +19,7 @@ import callContract from '../../util/web3/callContract'
 
 export default {
   name: 'approve-token-modal',
-  props: ['titleId'],
+  props: ['id', 'contractInstance', 'stateProperty'],
   data() {
     return {
       modalVisible: false,
@@ -35,21 +33,15 @@ export default {
       event.preventDefault()
 
       const amount = new (this.web3.instance()).BigNumber(2).pow(255)
-      const input = [this.titleContract.address, amount.toFixed()]
+      const input = [this.contractInstance.address, amount.toFixed()]
+
       callContract(this.tokenContract.approve, input, this.web3)
         .then(() => {
-          this.$store.commit('updateApprovalStatus', amount)
+          this.$store.commit('updateApprovalStatus', {
+            allowance: amount,
+            stateProperty: this.stateProperty,
+          })
           this.modalVisible = false
-        })
-        .catch((error) => {
-          console.log('There was an error approving the transfer', error)
-        })
-    },
-    checkAllowance() {
-      const input = [this.web3.account, this.titleContract.address]
-      callContract(this.tokenContract.allowance, input, this.web3)
-        .then((allowance) => {
-          console.log('Amount of CODX the Codex Viewer has permission to spend on your behalf (may be higher than your balance):', allowance.toString())
         })
         .catch((error) => {
           console.log('There was an error approving the transfer', error)
@@ -60,18 +52,8 @@ export default {
     web3() {
       return this.$store.state.web3
     },
-    titleContract() {
-      return this.web3.titleContractInstance()
-    },
     tokenContract() {
       return this.web3.tokenContractInstance()
-    },
-  },
-  watch: {
-    modalVisible(newVisibility) {
-      if (newVisibility) {
-        this.checkAllowance()
-      }
     },
   },
 }
