@@ -29,7 +29,6 @@ export default {
   },
   methods: {
     requestTokens(event) {
-
       event.preventDefault()
 
       axios.get('/user/faucet')

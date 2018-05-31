@@ -26,9 +26,6 @@ export default {
     }
   },
   methods: {
-    focusModal() {
-      this.$refs.defaultModalFocus.focus()
-    },
     approveTokens(event) {
       event.preventDefault()
 
@@ -44,7 +41,7 @@ export default {
           this.modalVisible = false
         })
         .catch((error) => {
-          console.log('There was an error approving the transfer', error)
+          console.log('There was an error approving the contract', error)
         })
     },
   },

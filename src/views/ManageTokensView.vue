@@ -26,7 +26,7 @@
 
     <div class="item">
       <p>Tokens you've staked: </p>
-      <b-button variant="primary">
+      <b-button variant="primary" v-b-modal.stakeModal>
         Stake more CODX
       </b-button>
       <b-button variant="outline-primary">
@@ -43,20 +43,24 @@
     <approve-contract-modal id="approveStakeModal" :contractInstance="stakeContract" stateProperty="stakeContractApproved">
       This will allow you to stake CODX.
     </approve-contract-modal>
+
+    <stake-tokens-modal />
   </div>
 </template>
 
 <script>
 import AppHeader from '../components/AppHeader'
-import FaucetModal from '../components/modals/FaucetModal'
 import ApproveContractModal from '../components/modals/ApproveContractModal'
+import FaucetModal from '../components/modals/FaucetModal'
+import StakeTokensModal from '../components/modals/StakeTokensModal'
 
 export default {
   name: 'manage-tokens-view',
   components: {
     AppHeader,
-    FaucetModal,
     ApproveContractModal,
+    FaucetModal,
+    StakeTokensModal,
   },
   data: () => {
     return {

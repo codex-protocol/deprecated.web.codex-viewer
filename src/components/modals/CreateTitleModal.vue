@@ -1,8 +1,8 @@
 <template>
   <b-modal
     id="createTitleModal"
-    title="Create title"
-    ok-title="Create with MetaMask"
+    title="Create record"
+    ok-title="Create"
     :ok-disabled="!canSubmit()"
     cancel-variant="outline-primary"
     size="lg"
