@@ -1,7 +1,7 @@
 <template>
   <div>
     <app-header title="Manage Tokens" />
-    <h5 class="mb-5">Get CODX from the faucet & stake CODX for discounts!</h5>
+    <h5 class="mb-5">Get CODX from the faucet &amp; stake CODX for discounts!</h5>
 
     <div class="item">
       <p>Registry contract approved? {{ registryContractApproved ? 'Yes!' : 'No' }}</p>
@@ -18,18 +18,21 @@
     </div>
 
     <div class="item">
-      <p>Your balance: {{ balance.toString() }} CODX</p>
+      <p>Your balance: {{ formatTokenAmount(userState.balance) }} CODX</p>
       <b-button variant="primary" v-b-modal.faucetModal v-if="shouldShowFaucetButton" v-once>
         Get more CODX
       </b-button>
     </div>
 
     <div class="item">
-      <p>Tokens you've staked: </p>
-      <b-button variant="primary" v-b-modal.stakeModal>
+      <p v-if="!stakeContractApproved">Before you can stake CODX, you have to approve the contract above</p>
+      <p>Personal stake: {{ formatTokenAmount(userState.personalStakeAmount) }} CODX</p>
+      <p v-if="userState.personalStake">Staked for: {{ userState.personalStakeFor }}</p>
+      <p>Total tokens staked for you (including your own): {{ formatTokenAmount(userState.totalStakedFor) }} CODX</p>
+      <b-button variant="primary" v-b-modal.stakeModal :disabled="!stakeContractApproved">
         Stake more CODX
       </b-button>
-      <b-button variant="outline-primary">
+      <b-button variant="outline-primary" :disabled="!stakeContractApproved">
         Unstake CODX
       </b-button>
     </div>
@@ -68,14 +71,17 @@ export default {
     }
   },
   computed: {
+    web3() {
+      return this.$store.state.web3.instance()
+    },
+    userState() {
+      return this.$store.state.auth
+    },
     registryContractApproved() {
-      return this.$store.state.auth.registryContractApproved
+      return this.userState.registryContractApproved
     },
     stakeContractApproved() {
-      return this.$store.state.auth.stakeContractApproved
-    },
-    balance() {
-      return this.$store.state.auth.balance
+      return this.userState.stakeContractApproved
     },
     stakeContract() {
       return this.$store.state.web3.stakeContainerContractInstance()
@@ -87,6 +93,9 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch('logout', this.$router)
+    },
+    formatTokenAmount(rawAmount) {
+      return this.web3.fromWei(rawAmount, 'ether').toFixed(3)
     },
   },
 }

@@ -11,6 +11,9 @@ const initialState = () => {
   return {
     token: token || null,
     balance: new BigNumber(0),
+    totalStakedFor: new BigNumber(0),
+    personalStakeAmount: new BigNumber(0),
+    personalStakeFor: null,
     registryContractApproved: false,
     stakeContractApproved: false,
   }
@@ -24,45 +27,41 @@ const getters = {
 
 const actions = {
   sendAuthRequest({ commit, dispatch }, payload) {
-    return new Promise((resolve, reject) => {
-      axios.post('auth-token', payload).then((response) => {
-        const { result, error } = response.data
-        if (error) {
-          console.log(error)
-          commit('clearUserState')
-          reject(error)
-        } else {
-          dispatch('updateUserState', result.token)
-          resolve()
-        }
-      }).catch((error) => {
-        console.log(error)
-        commit('clearUserState')
-        reject(error)
-      })
+    return axios.post('auth-token', payload).then((response) => {
+      const { result, error } = response.data
+      if (response.data.error) {
+        throw new Error(error)
+      }
+
+      dispatch('updateUserState', result.token)
+    }).catch((error) => {
+      console.log(error)
+      commit('clearUserState')
     })
   },
 
   updateUserState({ commit, dispatch, rootState }, authToken) {
     const { web3 } = rootState
+    const { account } = web3
     const tokenContract = web3.tokenContractInstance()
     const registryContract = web3.titleContractInstance()
     const stakeContract = web3.stakeContainerContractInstance()
 
-    dispatch('getLatestBalance')
-
-    tokenContract.allowance(web3.account, registryContract.address).then((allowance) => {
-      commit('updateApprovalStatus', {
-        allowance,
-        stateProperty: 'registryContractApproved',
-      })
+    dispatch('getTokenBalance', {
+      account,
+      tokenContract,
     })
 
-    tokenContract.allowance(web3.account, stakeContract.address).then((allowance) => {
-      commit('updateApprovalStatus', {
-        allowance,
-        stateProperty: 'stakeContractApproved',
-      })
+    dispatch('getStakeBalances', {
+      account,
+      stakeContract,
+    })
+
+    dispatch('getApprovalStatus', {
+      account,
+      tokenContract,
+      registryContractAddress: registryContract.address,
+      stakeContractAddress: stakeContract.address,
     })
 
     if (authToken) {
@@ -70,12 +69,56 @@ const actions = {
     }
   },
 
-  getLatestBalance({ commit, rootState }) {
-    const { web3 } = rootState
-    const tokenContract = web3.tokenContractInstance()
+  getTokenBalance({ commit }, payload) {
+    const {
+      account,
+      tokenContract,
+    } = payload
 
-    tokenContract.balanceOf(web3.account).then((balance) => {
-      commit('updateBalance', balance)
+    tokenContract.balanceOf(account).then((balance) => {
+      commit('updateTokenBalance', balance)
+    })
+  },
+
+  getStakeBalances({ commit }, payload) {
+    const {
+      account,
+      stakeContract,
+    } = payload
+
+    stakeContract.getPersonalStakeAmount(account).then((amount) => {
+      commit('updatePersonalStakeAmount', amount)
+    })
+
+    stakeContract.getPersonalStakeFor(account).then((stakeFor) => {
+      commit('updatePersonalStakeFor', stakeFor)
+    })
+
+    stakeContract.totalStakedFor(account).then((stake) => {
+      commit('updateTotalStakedFor', stake)
+    })
+  },
+
+  getApprovalStatus({ commit }, payload) {
+    const {
+      account,
+      tokenContract,
+      registryContractAddress,
+      stakeContractAddress,
+    } = payload
+
+    tokenContract.allowance(account, registryContractAddress).then((allowance) => {
+      commit('updateApprovalStatus', {
+        allowance,
+        stateProperty: 'registryContractApproved',
+      })
+    })
+
+    tokenContract.allowance(account, stakeContractAddress).then((allowance) => {
+      commit('updateApprovalStatus', {
+        allowance,
+        stateProperty: 'stakeContractApproved',
+      })
     })
   },
 
@@ -86,9 +129,14 @@ const actions = {
   },
 }
 
+// @TODO: Only log for debug mode
+const logMutation = (mutationName, payload) => {
+  console.log(`${mutationName} mutation being executed`, payload)
+}
+
 const mutations = {
   setAuthToken(currentState, authToken) {
-    console.log('setAuthToken mutation being executed', authToken)
+    logMutation('setAuthToken', authToken)
 
     currentState.token = authToken
     axios.defaults.headers.common.Authorization = authToken
@@ -97,7 +145,7 @@ const mutations = {
   },
 
   clearUserState(currentState) {
-    console.log('clearUserState mutation being executed')
+    logMutation('clearUserState')
 
     token = null
     delete axios.defaults.headers.common.Authorization
@@ -110,10 +158,28 @@ const mutations = {
     })
   },
 
-  updateBalance(currentState, newBalance) {
-    console.log('updateBalance mutation being executed')
+  updateTokenBalance(currentState, newBalance) {
+    logMutation('updateTokenBalance', newBalance)
 
     currentState.balance = newBalance
+  },
+
+  updatePersonalStakeAmount(currentState, newAmount) {
+    logMutation('updatePersonalStakeAmount', newAmount)
+
+    currentState.personalStakeAmount = newAmount
+  },
+
+  updatePersonalStakeFor(currentState, newStakeFor) {
+    logMutation('updatePersonalStakeFor', newStakeFor)
+
+    currentState.personalStakeFor = newStakeFor
+  },
+
+  updateTotalStakedFor(currentState, newStake) {
+    logMutation('updateTotalStakedFor', newStake)
+
+    currentState.totalStakedFor = newStake
   },
 
   updateApprovalStatus(currentState, payload) {
@@ -122,7 +188,7 @@ const mutations = {
       stateProperty,
     } = payload
 
-    console.log('updateApprovalStatus mutation being executed for', stateProperty)
+    logMutation('updateApprovalStatus', payload)
 
     // The approval exposed in the UI is not a binary operation, but it does
     //  approve the contract's allowance to a high value (2^255).

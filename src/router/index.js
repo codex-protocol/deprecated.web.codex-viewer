@@ -39,7 +39,7 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some((record) => { return !record.meta.allowUnauthenticatedUsers })) {
+  if (to.matched.some((route) => { return !route.meta.allowUnauthenticatedUsers })) {
     if (!store.getters.isAuthenticated) {
       next('/login')
     } else {

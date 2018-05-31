@@ -66,18 +66,13 @@ const actions = {
 
     console.log('registerContract action being executed for contract', registrationFunction.name)
 
-    return new Promise((resolve, reject) => {
-      registrationFunction(web3).then((result) => {
-        commit('registerContractInstance', {
-          propertyName,
-          contractInstance: result,
-        })
-
-        resolve()
-      }).catch((error) => {
-        commit('setWeb3Error', { message: 'Unable to register the contract', error })
-        reject()
+    return registrationFunction(web3).then((result) => {
+      commit('registerContractInstance', {
+        propertyName,
+        contractInstance: result,
       })
+    }).catch((error) => {
+      commit('setWeb3Error', { message: 'Unable to register the contract', error })
     })
   },
 }

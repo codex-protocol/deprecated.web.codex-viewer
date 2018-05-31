@@ -25,7 +25,7 @@ export default {
     this.$store.dispatch('registerWeb3', this.$router)
       .then(() => {
         if (this.authToken) {
-          this.$store.dispatch('updateUserState', this.web3)
+          this.$store.dispatch('updateUserState')
         }
       })
 

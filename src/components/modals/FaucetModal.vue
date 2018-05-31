@@ -1,8 +1,8 @@
 <template>
   <b-modal
     id="faucetModal"
-    title="Get CODX Tokens"
-    ok-title="Request Tokens"
+    title="Get CODX tokens"
+    ok-title="Request tokens"
     cancel-variant="outline-primary"
     v-model="modalVisible"
     v-on:ok="requestTokens"

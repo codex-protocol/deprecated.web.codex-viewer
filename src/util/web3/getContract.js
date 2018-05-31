@@ -30,15 +30,13 @@ const contracts = {
 }
 
 const getContract = (contractProperty, json, address, provider) => {
-  return new Promise((resolve, reject) => {
-    if (!contracts[contractProperty]) {
-      const contractAbstraction = contract(json)
-      contractAbstraction.setProvider(provider)
-      contracts[contractProperty] = contractAbstraction.at(address)
-    }
+  if (!contracts[contractProperty]) {
+    const contractAbstraction = contract(json)
+    contractAbstraction.setProvider(provider)
+    contracts[contractProperty] = contractAbstraction.at(address)
+  }
 
-    resolve(contracts[contractProperty])
-  })
+  return contracts[contractProperty]
 }
 
 const getCodexTitleContract = (web3) => {

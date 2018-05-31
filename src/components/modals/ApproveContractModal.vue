@@ -1,7 +1,7 @@
 <template>
   <b-modal
     :id="id"
-    title="Approve Tokens"
+    title="Approve tokens"
     ok-title="Approve"
     cancel-variant="outline-primary"
     v-model="modalVisible"
@@ -18,7 +18,7 @@
 import callContract from '../../util/web3/callContract'
 
 export default {
-  name: 'approve-token-modal',
+  name: 'approve-contract-modal',
   props: ['id', 'contractInstance', 'stateProperty'],
   data() {
     return {

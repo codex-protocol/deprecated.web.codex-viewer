@@ -1,7 +1,7 @@
 <template>
   <b-modal
     id="stakeModal"
-    title="Stake Tokens"
+    title="Stake tokens"
     ok-title="Stake"
     :ok-disabled="!canSubmit()"
     cancel-variant="outline-primary"
