@@ -1,12 +1,12 @@
 <template>
   <b-modal
-    id="unstakeModal"
+    id="unstakeTokensModal"
     title="Unstake tokens"
     ok-title="Unstake"
     :ok-disabled="!canSubmit()"
     cancel-variant="outline-primary"
     v-model="modalVisible"
-    v-on:ok="stakeTokens"
+    v-on:ok="unstakeTokens"
   >
     <div class="text-center">
       <img class="token-icon" src="../../assets/icons/codx-token.svg">
@@ -48,7 +48,7 @@ export default {
     focusModal() {
       this.$refs.defaultModalFocus.focus()
     },
-    stakeTokens(event) {
+    unstakeTokens(event) {
       event.preventDefault()
 
       const input = [this.web3.instance().toWei(this.unstakeAmount, 'ether'), '0x0']

@@ -31,10 +31,10 @@
       <p>Total tokens staked for you (including your own): {{ formatTokenAmount(userState.totalStakedFor) }} CODX</p>
 
       <!-- NOTE: Right now the smart contract only allows you to have a single stake at a time -->
-      <b-button variant="primary" v-b-modal.stakeModal :disabled="!stakeContractApproved">
+      <b-button variant="primary" v-b-modal.stakeTokensModal :disabled="!stakeContractApproved">
         Stake more CODX
       </b-button>
-      <b-button variant="outline-primary" v-b-modal.unstakeModal :disabled="!stakeContractApproved">
+      <b-button variant="outline-primary" v-b-modal.unstakeTokensModal :disabled="!stakeContractApproved">
         Unstake CODX
       </b-button>
     </div>
