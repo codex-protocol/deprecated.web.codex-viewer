@@ -101,7 +101,7 @@ export default {
       this.$store.dispatch('logout', this.$router)
     },
     formatTokenAmount(rawAmount) {
-      return this.web3.fromWei(rawAmount, 'ether').toFixed(3)
+      return rawAmount.div('1e18').toFixed(3)
     },
   },
 }
