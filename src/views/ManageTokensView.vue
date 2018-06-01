@@ -29,10 +29,12 @@
       <p>Personal stake: {{ formatTokenAmount(userState.personalStakeAmount) }} CODX</p>
       <p v-if="userState.personalStake">Staked for: {{ userState.personalStakeFor }}</p>
       <p>Total tokens staked for you (including your own): {{ formatTokenAmount(userState.totalStakedFor) }} CODX</p>
+
+      <!-- NOTE: Right now the smart contract only allows you to have a single stake at a time -->
       <b-button variant="primary" v-b-modal.stakeModal :disabled="!stakeContractApproved">
         Stake more CODX
       </b-button>
-      <b-button variant="outline-primary" :disabled="!stakeContractApproved">
+      <b-button variant="outline-primary" v-b-modal.unstakeModal :disabled="!stakeContractApproved">
         Unstake CODX
       </b-button>
     </div>
@@ -48,6 +50,8 @@
     </approve-contract-modal>
 
     <stake-tokens-modal />
+
+    <unstake-tokens-modal :unstake="true" :currentStake="formatTokenAmount(userState.personalStakeAmount)" />
   </div>
 </template>
 
@@ -56,6 +60,7 @@ import AppHeader from '../components/AppHeader'
 import ApproveContractModal from '../components/modals/ApproveContractModal'
 import FaucetModal from '../components/modals/FaucetModal'
 import StakeTokensModal from '../components/modals/StakeTokensModal'
+import UnstakeTokensModal from '../components/modals/UnstakeTokensModal'
 
 export default {
   name: 'manage-tokens-view',
@@ -64,6 +69,7 @@ export default {
     ApproveContractModal,
     FaucetModal,
     StakeTokensModal,
+    UnstakeTokensModal,
   },
   data: () => {
     return {

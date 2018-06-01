@@ -43,9 +43,6 @@ export default {
           if (error) {
             throw error
           }
-
-          // @TODO: Need to watch for a Transfer event on the CodexToken contract to track
-          //  when the balance has been updated
         })
         .catch((error) => {
           console.error('there was an error requesting tokens', error)
