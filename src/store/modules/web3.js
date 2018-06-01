@@ -3,7 +3,7 @@ import registerWeb3 from '../../util/web3/registerWeb3'
 import pollWeb3 from '../../util/web3/pollWeb3'
 import {
   getCodexTitleContract,
-  getCodexTokenContract,
+  getCodexCoinContract,
   getStakeContainerContract,
 } from '../../util/web3/getContract'
 
@@ -37,7 +37,7 @@ const actions = {
         }),
         dispatch('registerContract', {
           web3,
-          registrationFunction: getCodexTokenContract,
+          registrationFunction: getCodexCoinContract,
           propertyName: 'tokenContractInstance',
         }),
         dispatch('registerContract', {

@@ -48,7 +48,7 @@ const actions = {
     const stakeContract = web3.stakeContainerContractInstance()
 
 
-    // @TODO: Need to watch the CodexToken contract and the ERC900BasicStakeContainer contract
+    // @TODO: Need to watch the CodexCoin contract and the ERC900BasicStakeContainer contract
     //  to get events on when balances/stakes change. (We can update it on the UI optimistically
     //  but that has its own set of challenges)
 
