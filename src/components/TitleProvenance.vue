@@ -4,8 +4,10 @@
     <div v-if="provenance.length">
       <div class="flex mb-4 pb-1" v-for="row in provenance" :key="row.id">
         <div>{{ getEventDescription(row.type) }}</div>
-        <div>{{ row.newOwnerAddress }}</div>
+        <div>{{ getEventAddress(row) }}</div>
         <div>{{ getTimeSince(row.createdAt) }}</div>
+        <!-- TODO: add button to lauch "details" modal here, which can use the flags in row.codexTitleModifiedEvent.changedData -->
+        <!-- TODO: add etherscan link here -->
       </div>
     </div>
     <div v-else>
@@ -28,8 +30,30 @@ export default {
       switch (eventType) {
         case 'create':
           return 'Created by'
+
+        case 'destroy':
+          return 'Destroyed by'
+
         case 'transfer':
           return 'Transferred to'
+
+        case 'modified':
+          return 'Modified by'
+
+        default:
+          return null
+      }
+    },
+    getEventAddress(row) {
+      switch (row.type) {
+        case 'create':
+        case 'destroy':
+        case 'transfer':
+          return row.newOwnerAddress
+
+        case 'modified':
+          return row.codexTitleModifiedEvent.modifierAddress
+
         default:
           return null
       }
