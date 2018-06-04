@@ -1,23 +1,23 @@
 <template>
   <div>
-    <div v-if="codexTitle">
+    <div v-if="codexRecord">
       <div class="flex mb-5">
         <div class="title-image">
-          <img v-if="codexTitle.metadata" :src="codexTitle.metadata.mainImage.uri" />
+          <img v-if="codexRecord.metadata" :src="codexRecord.metadata.mainImage.uri" />
           <div class="private-img" v-else>
             <p>This Codex Title is private</p>
           </div>
         </div>
         <div class="top vertical">
-          <div v-if="codexTitle.metadata">
-            <h1>{{ codexTitle.metadata.name }}</h1>
-            <div class="description">{{ codexTitle.metadata.description }}</div>
+          <div v-if="codexRecord.metadata">
+            <h1>{{ codexRecord.metadata.name }}</h1>
+            <div class="description">{{ codexRecord.metadata.description }}</div>
           </div>
           <div v-else>
-            <h1>Codex Title #{{ codexTitle.tokenId }}</h1>
+            <h1>Codex Title #{{ codexRecord.tokenId }}</h1>
           </div>
           <a href="#" @click.prevent="toggleShowDetails">Toggle details</a>
-          <title-blockchain-details v-if="showDetails" :codexTitle="codexTitle" />
+          <title-blockchain-details v-if="showDetails" :codexRecord="codexRecord" />
           <div class="mt-3" v-if="isOwner">
             <!-- @FIXME: Not wired up yet
             <b-button class="mr-3" variant="primary">
@@ -53,7 +53,7 @@
           </div>
         </div>
       </div>
-      <title-provenance :provenance="codexTitle.provenance" />
+      <title-provenance :provenance="codexRecord.provenance" />
     </div>
 
     <div v-else>
@@ -86,7 +86,7 @@ export default {
   },
   data() {
     return {
-      codexTitle: null,
+      codexRecord: null,
       error: null,
       showDetails: false,
     }
@@ -100,11 +100,11 @@ export default {
     },
     isOwner() {
       return this.account &&
-        this.account === this.codexTitle.ownerAddress
+        this.account === this.codexRecord.ownerAddress
     },
     isApproved() {
       return this.account &&
-        this.account === this.codexTitle.approvedAddress
+        this.account === this.codexRecord.approvedAddress
     },
     titleId() {
       return this.$route.params.titleId
@@ -113,14 +113,14 @@ export default {
       return this.web3.titleContractInstance()
     },
     isPrivate() {
-      return this.codexTitle.isPrivate
+      return this.codexRecord.isPrivate
     },
     whitelistedAddresses() {
-      return this.codexTitle.whitelistedAddresses
+      return this.codexRecord.whitelistedAddresses
     },
     isAwaitingApproval() {
-      return this.codexTitle.approvedAddress !== null &&
-        this.codexTitle.approvedAddress !== '0x0000000000000000000000000000000000000000' // @TODO: store this in config or similar
+      return this.codexRecord.approvedAddress !== null &&
+        this.codexRecord.approvedAddress !== '0x0000000000000000000000000000000000000000' // @TODO: store this in config or similar
     },
   },
   created() {
@@ -135,20 +135,20 @@ export default {
         const { result, error } = response.data
         if (error) {
           console.log('there was an error calling getTitle', error)
-          this.codexTitle = null
+          this.codexRecord = null
           this.error = error
         } else {
-          this.codexTitle = result
+          this.codexRecord = result
         }
       }).catch((error) => {
         console.log('there was an error calling getTitle', error)
-        this.codexTitle = null
+        this.codexRecord = null
         this.error = error
       })
     },
     acceptTransfer() {
       const input = [
-        this.codexTitle.ownerAddress,
+        this.codexRecord.ownerAddress,
         this.account,
         this.titleId,
       ]

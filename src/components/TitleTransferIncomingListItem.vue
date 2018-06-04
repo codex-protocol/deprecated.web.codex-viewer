@@ -1,19 +1,19 @@
 <template>
   <div
     class="title-card"
-    v-if="!codexTitle.isIgnored"
+    v-if="!codexRecord.isIgnored"
     :class="{ 'is-loading': this.isLoading }"
   >
     <b-card
-      :img-src="codexTitle.metadata.mainImage.uri"
+      :img-src="codexRecord.metadata.mainImage.uri"
       img-top
     >
       <div class="accepted-overlay" v-if="this.transferAccepted">
         <p>Transfer Accepted</p>
         <b-button variant="secondary" @click.prevent="viewTitle">View Asset</b-button>
       </div>
-      <p class="name"><a href="#" @click.prevent="viewTitle">{{ codexTitle.metadata.name }}</a></p>
-      <p class="address">Sent from {{ codexTitle.ownerAddress }}</p>
+      <p class="name"><a href="#" @click.prevent="viewTitle">{{ codexRecord.metadata.name }}</a></p>
+      <p class="address">Sent from {{ codexRecord.ownerAddress }}</p>
       <p class="action-buttons">
         <b-button variant="secondary" @click.prevent="acceptTransfer">Accept</b-button>
         <b-button variant="outline-primary" @click.prevent="ignoreTransfer">Ignore</b-button>
@@ -29,10 +29,10 @@ import callContract from '../util/web3/callContract'
 
 export default {
   name: 'title-transfer-incoming-list-item',
-  props: ['codexTitle'],
+  props: ['codexRecord'],
   data() {
     return {
-      route: { name: 'title-detail', params: { titleId: this.codexTitle.tokenId } },
+      route: { name: 'title-detail', params: { titleId: this.codexRecord.tokenId } },
       transferAccepted: false,
       isLoading: false,
     }
@@ -51,9 +51,9 @@ export default {
     },
     acceptTransfer() {
       const input = [
-        this.codexTitle.ownerAddress,
+        this.codexRecord.ownerAddress,
         this.web3.account,
-        this.codexTitle.tokenId,
+        this.codexRecord.tokenId,
       ]
 
       callContract(this.titleContract.safeTransferFrom, input, this.web3)
@@ -69,7 +69,7 @@ export default {
       const requestOptions = {
 
         method: 'put',
-        url: `/user/transfers/incoming/${this.codexTitle.tokenId}`,
+        url: `/user/transfers/incoming/${this.codexRecord.tokenId}`,
 
         data: {
           isIgnored: true,
@@ -91,7 +91,7 @@ export default {
             throw error
           }
 
-          this.codexTitle.isIgnored = result.isIgnored
+          this.codexRecord.isIgnored = result.isIgnored
 
         })
         .catch((error) => {

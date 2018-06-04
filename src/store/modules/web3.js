@@ -2,7 +2,7 @@ import { Networks, Web3Errors } from '../../util/constants/web3'
 import registerWeb3 from '../../util/web3/registerWeb3'
 import pollWeb3 from '../../util/web3/pollWeb3'
 import {
-  getCodexTitleContract,
+  getCodexRecordContract,
   getCodexCoinContract,
   getStakeContainerContract,
 } from '../../util/web3/getContract'
@@ -32,7 +32,7 @@ const actions = {
       return Promise.all([
         dispatch('registerContract', {
           web3,
-          registrationFunction: getCodexTitleContract,
+          registrationFunction: getCodexRecordContract,
           propertyName: 'titleContractInstance',
         }),
         dispatch('registerContract', {

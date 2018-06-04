@@ -1,15 +1,15 @@
 <template>
   <div class="title-card">
     <b-card
-      :img-src="codexTitle.metadata.mainImage.uri"
+      :img-src="codexRecord.metadata.mainImage.uri"
       img-top
     >
       <div class="approved-overlay" v-if="this.cancelApproved">
         <p>Transfer Cancelled</p>
         <b-button variant="secondary" @click.prevent="viewTitle">View Asset</b-button>
       </div>
-      <p class="name"><a href="#" @click.prevent="viewTitle">{{ codexTitle.metadata.name }}</a></p>
-      <p class="address">Sent to {{ codexTitle.approvedAddress }}</p>
+      <p class="name"><a href="#" @click.prevent="viewTitle">{{ codexRecord.metadata.name }}</a></p>
+      <p class="address">Sent to {{ codexRecord.approvedAddress }}</p>
       <p class="action-buttons">
         <b-button variant="outline-primary" @click.prevent="cancelTransfer">Cancel</b-button>
       </p>
@@ -22,10 +22,10 @@ import callContract from '../util/web3/callContract'
 
 export default {
   name: 'title-transfer-outgoing-list-item',
-  props: ['codexTitle'],
+  props: ['codexRecord'],
   data() {
     return {
-      route: { name: 'title-detail', params: { titleId: this.codexTitle.tokenId } },
+      route: { name: 'title-detail', params: { titleId: this.codexRecord.tokenId } },
       cancelApproved: false,
     }
   },
@@ -42,7 +42,7 @@ export default {
       this.$router.push(this.route)
     },
     cancelTransfer() {
-      const input = ['0x0000000000000000000000000000000000000000', this.codexTitle.tokenId]
+      const input = ['0x0000000000000000000000000000000000000000', this.codexRecord.tokenId]
 
       callContract(this.titleContract.approve, input, this.web3)
         .then(() => {

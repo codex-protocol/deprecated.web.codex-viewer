@@ -167,7 +167,7 @@ export default {
         const { result: metadata, error } = response.data
         if (error) {
           console.log('there was an error calling getTitle', error)
-          this.codexTitle = null
+          this.codexRecord = null
           this.error = error
         } else {
           console.log('metadata', metadata)
@@ -184,7 +184,7 @@ export default {
         }
       }).catch((error) => {
         console.log('there was an error calling getTitle', error)
-        this.codexTitle = null
+        this.codexRecord = null
         this.error = error
       })
     },

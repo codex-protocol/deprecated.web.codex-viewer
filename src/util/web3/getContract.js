@@ -1,30 +1,30 @@
 import contract from 'truffle-contract'
 
-let codexTitleJson
-let codexTitleProxyJson
+let codexRecordJson
+let codexRecordProxyJson
 let codexCoinJson
 let stakeContainerJson
 
 /* eslint-disable global-require */
 if (process.env.TARGET_ENV === 'production') {
-  // codexTitleJson = require('@codex-protocol/ethereum-service/static/contracts/1/CodexTitle.json') // eslint-disable-line import/no-unresolved
-  // codexTitleProxyJson = require('@codex-protocol/ethereum-service/static/contracts/1/CodexTitleProxy.json') // eslint-disable-line import/no-unresolved
+  // codexRecordJson = require('@codex-protocol/ethereum-service/static/contracts/1/CodexRecord.json') // eslint-disable-line import/no-unresolved
+  // codexRecordProxyJson = require('@codex-protocol/ethereum-service/static/contracts/1/CodexRecordProxy.json') // eslint-disable-line import/no-unresolved
   // codexCoinJson = require('@codex-protocol/ethereum-service/static/contracts/1/CodexCoin.json') // eslint-disable-line import/no-unresolved
 } else if (process.env.TARGET_ENV === 'staging') {
-  codexTitleJson = require('@codex-protocol/ethereum-service/static/contracts/4/CodexTitle.json')
-  codexTitleProxyJson = require('@codex-protocol/ethereum-service/static/contracts/4/CodexTitleProxy.json')
+  // codexRecordJson = require('@codex-protocol/ethereum-service/static/contracts/4/CodexRecord.json')
+  // codexRecordProxyJson = require('@codex-protocol/ethereum-service/static/contracts/4/CodexRecordProxy.json')
   codexCoinJson = require('@codex-protocol/ethereum-service/static/contracts/4/CodexCoin.json')
   stakeContainerJson = require('@codex-protocol/ethereum-service/static/contracts/4/ERC900BasicStakeContainer.json')
 } else {
-  codexTitleJson = require('@codex-protocol/ethereum-service/static/contracts/5777/CodexTitle.json')
-  codexTitleProxyJson = require('@codex-protocol/ethereum-service/static/contracts/5777/CodexTitleProxy.json')
+  codexRecordJson = require('@codex-protocol/ethereum-service/static/contracts/5777/CodexRecord.json')
+  codexRecordProxyJson = require('@codex-protocol/ethereum-service/static/contracts/5777/CodexRecordProxy.json')
   codexCoinJson = require('@codex-protocol/ethereum-service/static/contracts/5777/CodexCoin.json')
   stakeContainerJson = require('@codex-protocol/ethereum-service/static/contracts/5777/ERC900BasicStakeContainer.json')
 }
 /* eslint-enable */
 
 const contracts = {
-  codexTitle: null,
+  codexRecord: null,
   codexCoin: null,
   stakeContainer: null,
 }
@@ -39,11 +39,11 @@ const getContract = (contractProperty, json, address, provider) => {
   return contracts[contractProperty]
 }
 
-const getCodexTitleContract = (web3) => {
+const getCodexRecordContract = (web3) => {
   return getContract(
-    'codexTitle',
-    codexTitleJson,
-    codexTitleProxyJson.address,
+    'codexRecord',
+    codexRecordJson,
+    codexRecordProxyJson.address,
     web3.currentProvider
   )
 }
@@ -67,7 +67,7 @@ const getStakeContainerContract = (web3) => {
 }
 
 export {
-  getCodexTitleContract,
+  getCodexRecordContract,
   getCodexCoinContract,
   getStakeContainerContract,
 }

@@ -1,15 +1,15 @@
 <template>
   <b-container class="title-settings-row">
       <!-- TODO: Better handling of title w/ no metadata -->
-      <b-row v-if="codexTitle.metadata">
+      <b-row v-if="codexRecord.metadata">
         <b-col class="image">
           <a href="#" @click.prevent="viewTitle">
-            <img :src="codexTitle.metadata.mainImage.uri"/>
+            <img :src="codexRecord.metadata.mainImage.uri"/>
           </a>
         </b-col>
         <b-col class="name">
           <a href="#" @click.prevent="viewTitle">
-            {{ codexTitle.metadata.name }}
+            {{ codexRecord.metadata.name }}
           </a>
         </b-col>
         <b-col class="toggle">
@@ -29,11 +29,11 @@ import axios from 'axios'
 
 export default {
   name: 'title-privacy-settings-row-item',
-  props: ['codexTitle', 'isPrivate'],
+  props: ['codexRecord', 'isPrivate'],
   data() {
     return {
       titleIsPublic: !this.isPrivate,
-      route: { name: 'title-detail', params: { titleId: this.codexTitle.tokenId } },
+      route: { name: 'title-detail', params: { titleId: this.codexRecord.tokenId } },
     }
   },
   methods: {
@@ -41,7 +41,7 @@ export default {
       this.$router.push(this.route)
     },
     savePrivacySetting() {
-      const url = `/users/titles/${this.codexTitle.tokenId}`
+      const url = `/users/titles/${this.codexRecord.tokenId}`
       axios.put(url, {
         isPrivate: !this.titleIsPublic,
       }).then((response) => {

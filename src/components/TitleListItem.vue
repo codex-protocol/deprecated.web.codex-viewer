@@ -1,16 +1,16 @@
 <template>
-  <div class="title-card" v-if="codexTitle.metadata">
+  <div class="title-card" v-if="codexRecord.metadata">
     <b-card
       @click.prevent="viewTitle"
-      :img-src="codexTitle.metadata.mainImage.uri"
+      :img-src="codexRecord.metadata.mainImage.uri"
       img-top
     >
       <p>
         <a href="#" @click.prevent="viewTitle">
-          {{ codexTitle.metadata.name }}
+          {{ codexRecord.metadata.name }}
         </a>
       </p>
-      <small>#{{ codexTitle.tokenId }}</small>
+      <small>#{{ codexRecord.tokenId }}</small>
     </b-card>
   </div>
 </template>
@@ -18,16 +18,16 @@
 <script>
 export default {
   name: 'title-list-item',
-  props: ['codexTitle'],
+  props: ['codexRecord'],
   data() {
 
     // TODO: Need a way to render titles in collection w/ no metadata (e.g., one was created in a different Provider)
-    if (!this.codexTitle.metadata) {
-      console.log('found title with no metadata', this.codexTitle)
+    if (!this.codexRecord.metadata) {
+      console.log('found title with no metadata', this.codexRecord)
     }
 
     return {
-      route: { name: 'title-detail', params: { titleId: this.codexTitle.tokenId } },
+      route: { name: 'title-detail', params: { titleId: this.codexRecord.tokenId } },
     }
   },
   methods: {

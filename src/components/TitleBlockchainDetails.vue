@@ -1,15 +1,15 @@
 <template>
   <div>
     <h4>Details</h4>
-    <p>Current owner: {{ codexTitle.ownerAddress }}</p>
-    <p>Approved owner: {{ codexTitle.approvedAddress }}</p>
+    <p>Current owner: {{ codexRecord.ownerAddress }}</p>
+    <p>Approved owner: {{ codexRecord.approvedAddress }}</p>
     <!-- @FIXME: Hiding until we bring back Modify option
-      <p>Last updated: {{ this.formatDate(codexTitle.updatedAt) }}</p>
+      <p>Last updated: {{ this.formatDate(codexRecord.updatedAt) }}</p>
     -->
     <h5>Metadata</h5>
-    <p>Name hash: {{ codexTitle.nameHash }}</p>
-    <p>Description hash: {{ codexTitle.descriptionHash }}</p>
-    <p>ProviderId: {{ codexTitle.providerId }}</p>
+    <p>Name hash: {{ codexRecord.nameHash }}</p>
+    <p>Description hash: {{ codexRecord.descriptionHash }}</p>
+    <p>ProviderId: {{ codexRecord.providerId }}</p>
   </div>
 </template>
 
@@ -18,7 +18,7 @@ import { formatDate } from '../util/dateHelpers'
 
 export default {
   name: 'title-blockchain-details',
-  props: ['codexTitle'],
+  props: ['codexRecord'],
   methods: {
     formatDate(date) {
       return formatDate(date)
