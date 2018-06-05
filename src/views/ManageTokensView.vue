@@ -41,7 +41,7 @@
 
     <faucet-modal />
 
-    <approve-contract-modal id="approveRegistryModal" :contractInstance="titleContract" stateProperty="registryContractApproved">
+    <approve-contract-modal id="approveRegistryModal" :contractInstance="recordContract" stateProperty="registryContractApproved">
       This will grant the Codex Viewer permission to spend CODX on your behalf.
     </approve-contract-modal>
 
@@ -92,8 +92,8 @@ export default {
     stakeContract() {
       return this.$store.state.web3.stakeContainerContractInstance()
     },
-    titleContract() {
-      return this.$store.state.web3.titleContractInstance()
+    recordContract() {
+      return this.$store.state.web3.recordContractInstance()
     },
   },
   methods: {

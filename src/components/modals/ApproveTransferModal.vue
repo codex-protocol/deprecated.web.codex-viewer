@@ -1,6 +1,6 @@
 <template>
   <b-modal id="approveTransferModal"
-    title="Start title transfer"
+    title="Start Record transfer"
     ok-title="Start transfer"
     cancel-variant="outline-primary"
     v-model="modalVisible"
@@ -20,8 +20,8 @@
         spellcheck="false"
       />
       <b-form-text>
-        After approving a transfer, the owner of the Ethereum address will have to accept the title.
-        This is the recommended way of transferring titles.
+        After approving a transfer, the owner of the Ethereum address will have to accept the Record.
+        This is the recommended way of transferring Records.
       </b-form-text>
     </b-form-group>
     <!--
@@ -37,7 +37,7 @@
       />
       <b-form-text>
         If you know the email address of the person you are approving,
-        we will send them an email once they've been approved to accept the title.
+        we will send them an email once they've been approved to accept the Record.
       </b-form-text>
     </b-form-group>
     -->
@@ -49,7 +49,7 @@ import callContract from '../../util/web3/callContract'
 
 export default {
   name: 'approve-transfer-modal',
-  props: ['titleId'],
+  props: ['recordId'],
   data() {
     return {
       toEthAddress: null,
@@ -64,8 +64,8 @@ export default {
     approveTransfer(event) {
       event.preventDefault()
 
-      const input = [this.toEthAddress, this.titleId]
-      callContract(this.titleContract.approve, input, this.web3)
+      const input = [this.toEthAddress, this.recordId]
+      callContract(this.recordContract.approve, input, this.web3)
         .then(() => {
           this.modalVisible = false
         })
@@ -78,8 +78,8 @@ export default {
     web3() {
       return this.$store.state.web3
     },
-    titleContract() {
-      return this.web3.titleContractInstance()
+    recordContract() {
+      return this.web3.recordContractInstance()
     },
   },
   watch: {

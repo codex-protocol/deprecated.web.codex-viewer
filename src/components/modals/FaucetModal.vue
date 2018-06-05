@@ -11,7 +11,7 @@
       <img class="token-icon" src="../../assets/icons/codx-token.svg">
     </div>
     <p>
-      To perform certain actions like creating new titles, a small fee in the form of CODX tokens is necessary. You may request free tokens to help facilitate testing by clicking the button below!
+      To perform certain actions like creating new Records, a small fee in the form of CODX tokens is necessary. You may request free tokens to help facilitate testing by clicking the button below!
     </p>
   </b-modal>
 </template>

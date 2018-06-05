@@ -12,7 +12,7 @@ const state = {
   network: null,
   account: null,
   error: Web3Errors.None,
-  titleContractInstance: null,
+  recordContractInstance: null,
   tokenContractInstance: null,
   stakeContainerContractInstance: null,
 }
@@ -33,7 +33,7 @@ const actions = {
         dispatch('registerContract', {
           web3,
           registrationFunction: getCodexRecordContract,
-          propertyName: 'titleContractInstance',
+          propertyName: 'recordContractInstance',
         }),
         dispatch('registerContract', {
           web3,

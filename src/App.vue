@@ -35,8 +35,8 @@ export default {
     authToken() {
       return this.$store.state.auth.token
     },
-    titleId() {
-      return this.$route.params.titleId
+    recordId() {
+      return this.$route.params.recordId
     },
     web3() {
       return this.$store.state.web3

@@ -1,7 +1,7 @@
 <template>
   <b-modal
-    id="createTitleModal"
-    title="Create record"
+    id="createRecordModal"
+    title="Create Record"
     ok-title="Create"
     :ok-disabled="!canSubmit()"
     cancel-variant="outline-primary"
@@ -18,7 +18,7 @@
       </div>
       <div>
         <b-form-group
-          label="Piece title" label-for="name" label-size="sm"
+          label="Name" label-for="name" label-size="sm"
         >
           <b-form-input
             required
@@ -31,7 +31,7 @@
           />
         </b-form-group>
         <b-form-group
-          label="Digital image" label-for="imageFile" label-size="sm"
+          label="Image" label-for="imageFile" label-size="sm"
         >
           <b-form-file
             required
@@ -73,7 +73,7 @@ import axios from 'axios'
 import callContract from '../../util/web3/callContract'
 
 export default {
-  name: 'create-title-modal',
+  name: 'create-record-modal',
   data() {
     return {
       name: null,
@@ -159,14 +159,14 @@ export default {
         return
       }
 
-      axios.post('/users/title-metadata', {
+      axios.post('/users/record-metadata', {
         name: this.name,
         mainImage: this.uploadedFile,
         description: this.description || null,
       }).then((response) => {
         const { result: metadata, error } = response.data
         if (error) {
-          console.log('there was an error calling getTitle', error)
+          console.log('there was an error calling createMetaData', error)
           this.codexRecord = null
           this.error = error
         } else {
@@ -180,15 +180,15 @@ export default {
           // metadata.mainImage.hash === this.uploadedFileHash
           // metadata.descriptionHash === (metadata.description ? sha3(metadata.description) : null)
 
-          this.createTitle(metadata)
+          this.createRecord(metadata)
         }
       }).catch((error) => {
-        console.log('there was an error calling getTitle', error)
+        console.log('there was an error calling createMetaData', error)
         this.codexRecord = null
         this.error = error
       })
     },
-    createTitle(metadata) {
+    createRecord(metadata) {
       const { sha3 } = this.web3.instance()
       const { account } = this.web3
       const input = [
@@ -200,12 +200,12 @@ export default {
         metadata.id,
       ]
 
-      callContract(this.titleContract.mint, input, this.web3)
+      callContract(this.recordContract.mint, input, this.web3)
         .then(() => {
           this.modalVisible = false
         })
         .catch((error) => {
-          console.log('There was an error creating the title', error)
+          console.log('There was an error creating the Record', error)
         })
     },
   },
@@ -213,8 +213,8 @@ export default {
     web3() {
       return this.$store.state.web3
     },
-    titleContract() {
-      return this.$store.state.web3.titleContractInstance()
+    recordContract() {
+      return this.$store.state.web3.recordContractInstance()
     },
     progressVariant() {
       if (!this.uploadComplete) {

@@ -1,24 +1,24 @@
 <template>
   <b-modal
-    id="titlePrivacySettings"
-    title="Title privacy settings"
+    id="recordPrivacySettings"
+    title="Record privacy settings"
     ok-title="Save"
     cancel-variant="outline-primary"
     v-model="modalVisible"
     v-on:ok="saveSettings"
   >
     <b-form-group
-      label="Share Title Publicly"
+      label="Share Record Publicly"
       label-for="togglePrivacy"
       label-size="sm"
     >
       <input
         type="checkbox"
         class="toggle-checkbox"
-        v-model="titleIsPublic"
+        v-model="recordIsPublic"
       />
       <b-form-text>
-        By making your title public, everyone can view the title, description and image of this title.
+        By making your Record public, everyone can view the Record, description and image of this Record.
       </b-form-text>
     </b-form-group>
     <b-form-group
@@ -58,11 +58,11 @@ import axios from 'axios'
 
 export default {
   name: 'privacy-settings-modal',
-  props: ['titleId', 'isPrivate', 'whitelistedAddresses'],
+  props: ['recordId', 'isPrivate', 'whitelistedAddresses'],
   data() {
     return {
       modalVisible: false,
-      titleIsPublic: !this.isPrivate,
+      recordIsPublic: !this.isPrivate,
       newWhitelistedAddress: null,
       sharedAddresses: this.whitelistedAddresses,
     }
@@ -78,7 +78,7 @@ export default {
         return sharedAddress !== address
       })
 
-      const url = `/users/titles/${this.titleId}`
+      const url = `/users/records/${this.recordId}`
       axios.put(url, {
         whitelistedAddresses: sharedAddresses,
       }).then((response) => {
@@ -107,27 +107,27 @@ export default {
         this.sharedAddresses.push(this.newWhitelistedAddress)
       }
 
-      const url = `/users/titles/${this.titleId}`
+      const url = `/users/records/${this.recordId}`
       axios.put(url, {
-        isPrivate: !this.titleIsPublic,
+        isPrivate: !this.recordIsPublic,
         whitelistedAddresses: this.sharedAddresses,
       }).then((response) => {
         const { error } = response.data
         if (error) {
-          console.log('there was an error setting title privacy', error)
+          console.log('there was an error setting Record privacy', error)
           // @TODO: better error messaging
           // Reset toggle on error
-          this.titleIsPublic = !this.titleIsPublic
+          this.recordIsPublic = !this.recordIsPublic
           this.newWhitelistedAddress = null
         } else {
           this.modalVisible = false
           this.newWhitelistedAddress = null
         }
       }).catch((error) => {
-        console.log('there was an error setting title privacy', error)
+        console.log('there was an error setting Record privacy', error)
         // @TODO: better error messaging
         // Reset toggle on error
-        this.titleIsPublic = !this.titleIsPublic
+        this.recordIsPublic = !this.recordIsPublic
         this.newWhitelistedAddress = null
       })
     },

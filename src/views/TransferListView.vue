@@ -5,17 +5,17 @@
       v-bind:transferDirection="transferDirection"
       v-bind:fetchData="this.fetchData"
     />
-    <b-card-group deck class="title-list" v-if="titles.length">
-      <title-transfer-incoming-list-item
-        v-for="title in titles"
-        :codex-title="title"
-        :key="title.tokenId"
+    <b-card-group deck class="record-list" v-if="records.length">
+      <record-transfer-incoming-list-item
+        v-for="record in records"
+        :codex-record="record"
+        :key="record.tokenId"
         v-if="transferDirection === 'incoming'"
       />
-      <title-transfer-outgoing-list-item
-        v-for="title in titles"
-        :codex-title="title"
-        :key="title.tokenId"
+      <record-transfer-outgoing-list-item
+        v-for="record in records"
+        :codex-record="record"
+        :key="record.tokenId"
         v-if="transferDirection === 'outgoing'"
       />
       <!-- TODO: add an "ignored" tab? idk probably not super necessary really -->
@@ -31,21 +31,21 @@ import axios from 'axios'
 
 import AppHeader from '../components/AppHeader'
 import AppSubHeader from '../components/AppSubHeader'
-import TitleTransferIncomingListItem from '../components/TitleTransferIncomingListItem'
-import TitleTransferOutgoingListItem from '../components/TitleTransferOutgoingListItem'
+import RecordTransferIncomingListItem from '../components/RecordTransferIncomingListItem'
+import RecordTransferOutgoingListItem from '../components/RecordTransferOutgoingListItem'
 
 export default {
-  name: 'title-list',
+  name: 'record-list',
   props: ['transferDirection'],
   components: {
     AppHeader,
     AppSubHeader,
-    TitleTransferIncomingListItem,
-    TitleTransferOutgoingListItem,
+    RecordTransferIncomingListItem,
+    RecordTransferOutgoingListItem,
   },
   data() {
     return {
-      titles: [],
+      records: [],
     }
   },
   created() {
@@ -85,7 +85,7 @@ export default {
             throw error
           }
 
-          this.titles = result
+          this.records = result
 
         })
         .catch((error) => {
@@ -125,7 +125,7 @@ export default {
 h1, h2
   display: inline
 
-.title-list
+.record-list
   display: flex
   flex-wrap: wrap
 

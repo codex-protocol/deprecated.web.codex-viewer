@@ -1,14 +1,14 @@
 <template>
-  <b-container class="title-settings-row">
-      <!-- TODO: Better handling of title w/ no metadata -->
+  <b-container class="record-settings-row">
+      <!-- TODO: Better handling of record w/ no metadata -->
       <b-row v-if="codexRecord.metadata">
         <b-col class="image">
-          <a href="#" @click.prevent="viewTitle">
+          <a href="#" @click.prevent="viewRecord">
             <img :src="codexRecord.metadata.mainImage.uri"/>
           </a>
         </b-col>
         <b-col class="name">
-          <a href="#" @click.prevent="viewTitle">
+          <a href="#" @click.prevent="viewRecord">
             {{ codexRecord.metadata.name }}
           </a>
         </b-col>
@@ -16,7 +16,7 @@
           <input
             type="checkbox"
             class="toggle-checkbox"
-            v-model="titleIsPublic"
+            v-model="recordIsPublic"
             @change="savePrivacySetting"
           />
         </b-col>
@@ -28,35 +28,35 @@
 import axios from 'axios'
 
 export default {
-  name: 'title-privacy-settings-row-item',
+  name: 'record-privacy-settings-row-item',
   props: ['codexRecord', 'isPrivate'],
   data() {
     return {
-      titleIsPublic: !this.isPrivate,
-      route: { name: 'title-detail', params: { titleId: this.codexRecord.tokenId } },
+      recordIsPublic: !this.isPrivate,
+      route: { name: 'record-detail', params: { recordId: this.codexRecord.tokenId } },
     }
   },
   methods: {
-    viewTitle() {
+    viewRecord() {
       this.$router.push(this.route)
     },
     savePrivacySetting() {
-      const url = `/users/titles/${this.codexRecord.tokenId}`
+      const url = `/users/records/${this.codexRecord.tokenId}`
       axios.put(url, {
-        isPrivate: !this.titleIsPublic,
+        isPrivate: !this.recordIsPublic,
       }).then((response) => {
         const { error } = response.data
         if (error) {
-          console.log('there was an error setting title privacy', error)
+          console.log('there was an error setting Record privacy', error)
           // @TODO: better error messaging
           // Reset toggle on error
-          this.titleIsPublic = !this.titleIsPublic
+          this.recordIsPublic = !this.recordIsPublic
         }
       }).catch((error) => {
-        console.log('there was an error setting title privacy', error)
+        console.log('there was an error setting Record privacy', error)
         // @TODO: better error messaging
         // Reset toggle on error
-        this.titleIsPublic = !this.titleIsPublic
+        this.recordIsPublic = !this.recordIsPublic
       })
     },
   },
@@ -66,10 +66,10 @@ export default {
 <style lang="stylus" scoped>
 @import "../assets/variables.styl"
 
-.title-settings-row
+.record-settings-row
   height: 6rem
 
-  +.title-settings-row
+  +.record-settings-row
     border-top: 1px solid $color-light-gray
 
 .row

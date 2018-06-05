@@ -6,7 +6,7 @@
         <div>{{ getEventDescription(row.type) }}</div>
         <div>{{ getEventAddress(row) }}</div>
         <div>{{ getTimeSince(row.createdAt) }}</div>
-        <!-- TODO: add button to lauch "details" modal here, which can use the flags in row.codexTitleModifiedEvent.changedData -->
+        <!-- TODO: add button to lauch "details" modal here, which can use the flags in row.codexRecordModifiedEvent.changedData -->
         <!-- TODO: add etherscan link here -->
       </div>
     </div>
@@ -20,7 +20,7 @@
 import { timeSince } from '../util/dateHelpers'
 
 export default {
-  name: 'title-provenance',
+  name: 'record-provenance',
   props: ['provenance'],
   methods: {
     getTimeSince(createdAt) {
@@ -52,7 +52,7 @@ export default {
           return row.newOwnerAddress
 
         case 'modified':
-          return row.codexTitleModifiedEvent.modifierAddress
+          return row.codexRecordModifiedEvent.modifierAddress
 
         default:
           return null

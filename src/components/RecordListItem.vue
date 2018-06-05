@@ -1,12 +1,12 @@
 <template>
-  <div class="title-card" v-if="codexRecord.metadata">
+  <div class="record-card" v-if="codexRecord.metadata">
     <b-card
-      @click.prevent="viewTitle"
+      @click.prevent="viewRecord"
       :img-src="codexRecord.metadata.mainImage.uri"
       img-top
     >
       <p>
-        <a href="#" @click.prevent="viewTitle">
+        <a href="#" @click.prevent="viewRecord">
           {{ codexRecord.metadata.name }}
         </a>
       </p>
@@ -17,21 +17,21 @@
 
 <script>
 export default {
-  name: 'title-list-item',
+  name: 'record-list-item',
   props: ['codexRecord'],
   data() {
 
-    // TODO: Need a way to render titles in collection w/ no metadata (e.g., one was created in a different Provider)
+    // TODO: Need a way to render records in collection w/ no metadata (e.g., one was created in a different Provider)
     if (!this.codexRecord.metadata) {
-      console.log('found title with no metadata', this.codexRecord)
+      console.log('found Record with no metadata', this.codexRecord)
     }
 
     return {
-      route: { name: 'title-detail', params: { titleId: this.codexRecord.tokenId } },
+      route: { name: 'record-detail', params: { recordId: this.codexRecord.tokenId } },
     }
   },
   methods: {
-    viewTitle() {
+    viewRecord() {
       this.$router.push(this.route)
     },
   },
@@ -41,7 +41,7 @@ export default {
 <style lang="stylus" scoped>
 @import "../assets/variables.styl"
 
-.title-card
+.record-card
   width: 25%
   max-width: 32rem
   margin-bottom: 2em
@@ -64,7 +64,7 @@ export default {
       font-weight: bold
       color: $color-dark
 
-      // uncomment to keep title name on a single line?
+      // uncomment to keep record name on a single line?
       // display: block
       // overflow: hidden
       // white-space: nowrap

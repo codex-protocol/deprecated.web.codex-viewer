@@ -44,7 +44,7 @@ const actions = {
     const { web3 } = rootState
     const { account } = web3
     const tokenContract = web3.tokenContractInstance()
-    const registryContract = web3.titleContractInstance()
+    const registryContract = web3.recordContractInstance()
     const stakeContract = web3.stakeContainerContractInstance()
 
 

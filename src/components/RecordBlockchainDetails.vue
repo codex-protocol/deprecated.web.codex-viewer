@@ -17,7 +17,7 @@
 import { formatDate } from '../util/dateHelpers'
 
 export default {
-  name: 'title-blockchain-details',
+  name: 'record-blockchain-details',
   props: ['codexRecord'],
   methods: {
     formatDate(date) {
