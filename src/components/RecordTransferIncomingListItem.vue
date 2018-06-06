@@ -5,7 +5,7 @@
     :class="{ 'is-loading': this.isLoading }"
   >
     <b-card
-      :img-src="codexRecord.metadata.mainImage.uri"
+      :img-src="codexRecord.metadata.mainImage ? codexRecord.metadata.mainImage.uri : missingImage"
       img-top
     >
       <div class="accepted-overlay" v-if="this.transferAccepted">
@@ -25,7 +25,9 @@
 <script>
 
 import axios from 'axios'
+
 import callContract from '../util/web3/callContract'
+import missingImage from '../assets/images/missing-image.png'
 
 export default {
   name: 'record-transfer-incoming-list-item',
@@ -35,6 +37,7 @@ export default {
       route: { name: 'record-detail', params: { recordId: this.codexRecord.tokenId } },
       transferAccepted: false,
       isLoading: false,
+      missingImage,
     }
   },
   computed: {

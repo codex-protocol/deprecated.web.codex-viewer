@@ -4,7 +4,7 @@
       <b-row v-if="codexRecord.metadata">
         <b-col class="image">
           <a href="#" @click.prevent="viewRecord">
-            <img :src="codexRecord.metadata.mainImage.uri"/>
+            <img :src="codexRecord.metadata.mainImage ? codexRecord.metadata.mainImage.uri : missingImage" />
           </a>
         </b-col>
         <b-col class="name">
@@ -27,11 +27,14 @@
 <script>
 import axios from 'axios'
 
+import missingImage from '../assets/images/missing-image.png'
+
 export default {
   name: 'record-privacy-settings-row-item',
   props: ['codexRecord', 'isPrivate'],
   data() {
     return {
+      missingImage,
       recordIsPublic: !this.isPrivate,
       route: { name: 'record-detail', params: { recordId: this.codexRecord.tokenId } },
     }

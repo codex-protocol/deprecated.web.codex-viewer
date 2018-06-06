@@ -2,7 +2,7 @@
   <div class="record-card" v-if="codexRecord.metadata">
     <b-card
       @click.prevent="viewRecord"
-      :img-src="codexRecord.metadata.mainImage.uri"
+      :img-src="codexRecord.metadata.mainImage ? codexRecord.metadata.mainImage.uri : missingImage"
       img-top
     >
       <p>
@@ -16,6 +16,9 @@
 </template>
 
 <script>
+
+import missingImage from '../assets/images/missing-image.png'
+
 export default {
   name: 'record-list-item',
   props: ['codexRecord'],
@@ -28,6 +31,7 @@ export default {
 
     return {
       route: { name: 'record-detail', params: { recordId: this.codexRecord.tokenId } },
+      missingImage,
     }
   },
   methods: {

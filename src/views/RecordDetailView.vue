@@ -3,7 +3,7 @@
     <div v-if="codexRecord">
       <div class="flex mb-5">
         <div class="record-image">
-          <img v-if="codexRecord.metadata" :src="codexRecord.metadata.mainImage.uri" />
+          <img v-if="codexRecord.metadata" :src="codexRecord.metadata.mainImage ? codexRecord.metadata.mainImage.uri : missingImage" />
           <div class="private-img" v-else>
             <p>This Codex Record is private</p>
           </div>
@@ -71,9 +71,10 @@ import axios from 'axios'
 
 import callContract from '../util/web3/callContract'
 
+import missingImage from '../assets/images/missing-image.png'
+import RecordProvenance from '../components/RecordProvenance'
 import ApproveTransferModal from '../components/modals/ApproveTransferModal'
 import PrivacySettingsModal from '../components/modals/PrivacySettingsModal'
-import RecordProvenance from '../components/RecordProvenance'
 import RecordBlockchainDetails from '../components/RecordBlockchainDetails'
 
 export default {
@@ -86,9 +87,10 @@ export default {
   },
   data() {
     return {
+      showDetails: false,
       codexRecord: null,
       error: null,
-      showDetails: false,
+      missingImage,
     }
   },
   computed: {
