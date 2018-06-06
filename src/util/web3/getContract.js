@@ -1,27 +1,24 @@
 import contract from 'truffle-contract'
 
-let codexRecordJson
-let codexRecordProxyJson
-let codexCoinJson
-let stakeContainerJson
+/* eslint-disable global-require, import/no-unresolved, import/no-dynamic-require */
 
-/* eslint-disable global-require */
-if (process.env.TARGET_ENV === 'production') {
-  // codexRecordJson = require('@codex-protocol/ethereum-service/static/contracts/1/CodexRecord.json') // eslint-disable-line import/no-unresolved
-  // codexRecordProxyJson = require('@codex-protocol/ethereum-service/static/contracts/1/CodexRecordProxy.json') // eslint-disable-line import/no-unresolved
-  // codexCoinJson = require('@codex-protocol/ethereum-service/static/contracts/1/CodexCoin.json') // eslint-disable-line import/no-unresolved
-} else if (process.env.TARGET_ENV === 'staging') {
-  // codexRecordJson = require('@codex-protocol/ethereum-service/static/contracts/4/CodexRecord.json')
-  // codexRecordProxyJson = require('@codex-protocol/ethereum-service/static/contracts/4/CodexRecordProxy.json')
-  codexCoinJson = require('@codex-protocol/ethereum-service/static/contracts/4/CodexCoin.json')
-  stakeContainerJson = require('@codex-protocol/ethereum-service/static/contracts/4/ERC900BasicStakeContainer.json')
-} else {
-  codexRecordJson = require('@codex-protocol/ethereum-service/static/contracts/5777/CodexRecord.json')
-  codexRecordProxyJson = require('@codex-protocol/ethereum-service/static/contracts/5777/CodexRecordProxy.json')
-  codexCoinJson = require('@codex-protocol/ethereum-service/static/contracts/5777/CodexCoin.json')
-  stakeContainerJson = require('@codex-protocol/ethereum-service/static/contracts/5777/ERC900BasicStakeContainer.json')
-}
-/* eslint-enable */
+// @NOTE: trying to import this from src/util/constants/web3.js doesn't seem to
+//  work with the dynamic imports (probably a conflict in how webpack is
+//  ordering the imports or something), so we'll just duplicate that logic here
+const expectedNetworkId = (() => {
+  switch (process.env.TARGET_ENV) {
+    case 'production': return '1'
+    case 'staging': return '4'
+    default: return '5777'
+  }
+})()
+
+const codexCoinJson = require(`@codex-protocol/ethereum-service/static/contracts/${expectedNetworkId}/CodexCoin.json`)
+const codexRecordJson = require(`@codex-protocol/ethereum-service/static/contracts/${expectedNetworkId}/CodexRecord.json`)
+const codexRecordProxyJson = require(`@codex-protocol/ethereum-service/static/contracts/${expectedNetworkId}/CodexRecordProxy.json`)
+const stakeContainerJson = require(`@codex-protocol/ethereum-service/static/contracts/${expectedNetworkId}/CodexStakeContainer.json`)
+
+/* eslint-enable global-require, import/no-unresolved, import/no-dynamic-require */
 
 const contracts = {
   codexRecord: null,
