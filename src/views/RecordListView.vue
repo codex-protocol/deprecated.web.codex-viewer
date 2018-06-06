@@ -38,11 +38,6 @@ export default {
   created() {
     this.getRecords()
   },
-  computed: {
-    authToken() {
-      return this.$store.state.auth.token
-    },
-  },
   methods: {
     getRecords() {
       axios.get('/user/records?include=metadata').then((response) => {
