@@ -22,18 +22,21 @@ export default {
     MetaMaskModal,
   },
   created() {
+    this.initializeApi()
+
     this.$store.dispatch('registerWeb3', this.$router)
       .then(() => {
         if (this.authToken) {
-          this.$store.dispatch('updateUserState')
+          this.$store.dispatch('updateUserState', this.authToken)
         }
       })
-
-    this.initializeApi()
   },
   computed: {
+    user() {
+      return this.$store.state.auth.user
+    },
     authToken() {
-      return this.$store.state.auth.token
+      return this.$store.state.auth.authToken
     },
     recordId() {
       return this.$route.params.recordId
