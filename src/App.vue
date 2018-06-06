@@ -50,20 +50,16 @@ export default {
       axios.defaults.baseURL = config.apiUrl
       axios.defaults.headers.common['Content-Type'] = 'application/json'
 
-      // TODO: Need to test this by expiring the auth token on the server
-      const authErrorHandler = (response) => {
-        if ((response.error && response.error.status === 401) ||
-        response.status === 401) {
-          this.$store.commit('clearUserState')
+      const authErrorHandler = (error) => {
+        if (error.response && error.response.status === 401) {
+          this.$store.dispatch('logout', this.$router)
         }
 
-        return response
+        return Promise.reject(error)
       }
 
-      // TODO: If this route is authenticated we'll want to send the user
-      //  to the /login endpoint
       axios.interceptors.response.use(
-        authErrorHandler,
+        (response) => { return response }, // NOTE: use a no-op here since we're only interested in intercepting errors
         authErrorHandler
       )
     },
