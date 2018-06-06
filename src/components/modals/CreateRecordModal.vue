@@ -1,14 +1,15 @@
 <template>
-  <b-modal
+  <meta-mask-notification-modal
     id="createRecordModal"
     title="Create Record"
     ok-title="Create"
     :ok-disabled="!canSubmit()"
     cancel-variant="outline-primary"
     size="lg"
-    v-model="modalVisible"
-    v-on:shown="focusModal"
-    v-on:ok="createMetaData"
+    :on-shown="focusModal"
+    :ok-method="createMetaData"
+    :on-clear="clearModal"
+    :clear-data=true
   >
     <div class="flex-container">
       <div>
@@ -65,15 +66,19 @@
         </b-form-group>
       </div>
     </div>
-  </b-modal>
+  </meta-mask-notification-modal>
 </template>
 
 <script>
 import axios from 'axios'
 import callContract from '../../util/web3/callContract'
+import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
 export default {
   name: 'create-record-modal',
+  components: {
+    MetaMaskNotificationModal,
+  },
   data() {
     return {
       name: null,
@@ -81,7 +86,6 @@ export default {
       uploadedFile: null,
       uploadedFileHash: null,
       imageStreamUri: null,
-      modalVisible: false,
       progressVisible: false,
       uploadComplete: false,
       uploadSuccess: false,
@@ -90,6 +94,10 @@ export default {
   methods: {
     focusModal() {
       this.$refs.defaultModalFocus.focus()
+    },
+    clearModal() {
+      Object.assign(this.$data, this.$options.data.apply(this))
+      this.$refs.fileInput.reset()
     },
     canSubmit() {
       return this.name && this.uploadedFileHash && this.uploadedFile
@@ -156,10 +164,10 @@ export default {
 
       // TODO: Show some better error handling if these aren't filled in
       if (!this.name || !this.uploadedFile || !this.uploadedFileHash) {
-        return
+        return false
       }
 
-      axios.post('/users/record-metadata', {
+      return axios.post('/users/record-metadata', {
         name: this.name,
         mainImage: this.uploadedFile,
         description: this.description || null,
@@ -200,13 +208,7 @@ export default {
         metadata.id,
       ]
 
-      callContract(this.recordContract.mint, input, this.web3)
-        .then(() => {
-          this.modalVisible = false
-        })
-        .catch((error) => {
-          console.log('There was an error creating the Record', error)
-        })
+      return callContract(this.recordContract.mint, input, this.web3)
     },
   },
   computed: {
@@ -226,15 +228,6 @@ export default {
       }
 
       return 'danger'
-    },
-  },
-  watch: {
-    // When the modal dialog is closed, we reset the component data
-    modalVisible(newVisibility) {
-      if (!newVisibility) {
-        Object.assign(this.$data, this.$options.data.apply(this))
-        this.$refs.fileInput.reset()
-      }
     },
   },
 }

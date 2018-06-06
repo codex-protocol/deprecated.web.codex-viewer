@@ -1,29 +1,27 @@
 <template>
-  <b-modal
+  <meta-mask-notification-modal
     :id="id"
     title="Approve tokens"
     ok-title="Approve"
     cancel-variant="outline-primary"
-    v-model="modalVisible"
-    v-on:ok="approveTokens"
+    :ok-method="approveTokens"
   >
     <div class="text-center">
       <img class="token-icon" src="../../assets/icons/codx-token.svg">
     </div>
     <slot></slot>
-  </b-modal>
+  </meta-mask-notification-modal>
 </template>
 
 <script>
 import callContract from '../../util/web3/callContract'
+import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
 export default {
   name: 'approve-contract-modal',
   props: ['id', 'contractInstance', 'stateProperty'],
-  data() {
-    return {
-      modalVisible: false,
-    }
+  components: {
+    MetaMaskNotificationModal,
   },
   methods: {
     approveTokens(event) {
@@ -32,16 +30,12 @@ export default {
       const amount = new (this.web3.instance()).BigNumber(2).pow(255)
       const input = [this.contractInstance.address, amount.toFixed()]
 
-      callContract(this.tokenContract.approve, input, this.web3)
+      return callContract(this.tokenContract.approve, input, this.web3)
         .then(() => {
           this.$store.commit('updateApprovalStatus', {
             allowance: amount,
             stateProperty: this.stateProperty,
           })
-          this.modalVisible = false
-        })
-        .catch((error) => {
-          console.log('There was an error approving the contract', error)
         })
     },
   },

@@ -1,11 +1,13 @@
 <template>
-  <b-modal id="approveTransferModal"
+  <meta-mask-notification-modal
+    id="approveTransferModal"
     title="Start Record transfer"
     ok-title="Start transfer"
     cancel-variant="outline-primary"
-    v-model="modalVisible"
-    v-on:shown="focusModal"
-    v-on:ok="approveTransfer"
+    :ok-method="approveTransfer"
+    :on-shown="focusModal"
+    :on-clear="clearModal"
+    :clear-data=true
   >
     <b-form-group
       label="Type or paste wallet address"
@@ -41,37 +43,37 @@
       </b-form-text>
     </b-form-group>
     -->
-  </b-modal>
+  </meta-mask-notification-modal>
 </template>
 
 <script>
 import callContract from '../../util/web3/callContract'
+import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
 export default {
   name: 'approve-transfer-modal',
   props: ['recordId'],
+  components: {
+    MetaMaskNotificationModal,
+  },
   data() {
     return {
       toEthAddress: null,
       toEmailAddress: null,
-      modalVisible: false,
     }
   },
   methods: {
     focusModal() {
       this.$refs.defaultModalFocus.focus()
     },
+    clearModal() {
+      Object.assign(this.$data, this.$options.data.apply(this))
+    },
     approveTransfer(event) {
       event.preventDefault()
 
       const input = [this.toEthAddress, this.recordId]
-      callContract(this.recordContract.approve, input, this.web3)
-        .then(() => {
-          this.modalVisible = false
-        })
-        .catch((error) => {
-          console.log('There was an error approving the transfer', error)
-        })
+      return callContract(this.recordContract.approve, input, this.web3)
     },
   },
   computed: {
@@ -80,14 +82,6 @@ export default {
     },
     recordContract() {
       return this.web3.recordContractInstance()
-    },
-  },
-  watch: {
-    // When the modal dialog is closed, we reset the component data
-    modalVisible(newVisibility) {
-      if (!newVisibility) {
-        Object.assign(this.$data, this.$options.data.apply(this))
-      }
     },
   },
 }

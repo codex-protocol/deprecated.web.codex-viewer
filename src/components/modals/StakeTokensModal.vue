@@ -1,12 +1,11 @@
 <template>
-  <b-modal
+  <meta-mask-notification-modal
     id="stakeTokensModal"
     title="Stake tokens"
     ok-title="Stake"
     :ok-disabled="!canSubmit()"
     cancel-variant="outline-primary"
-    v-model="modalVisible"
-    v-on:ok="stakeTokens"
+    :ok-method="stakeTokens"
   >
     <div class="text-center">
       <img class="token-icon" src="../../assets/icons/codx-token.svg">
@@ -24,14 +23,18 @@
         v-model="stakeAmount"
       />
     </b-form-group>
-  </b-modal>
+  </meta-mask-notification-modal>
 </template>
 
 <script>
 import callContract from '../../util/web3/callContract'
+import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
 export default {
   name: 'stake-tokens-modal',
+  components: {
+    MetaMaskNotificationModal,
+  },
   data() {
     return {
       stakeAmount: null,
@@ -49,13 +52,7 @@ export default {
       event.preventDefault()
 
       const input = [this.web3.instance().toWei(this.stakeAmount, 'ether'), '0x0']
-      callContract(this.stakeContract.stake, input, this.web3)
-        .then(() => {
-          this.modalVisible = false
-        })
-        .catch((error) => {
-          console.log('There was an error staking tokens', error)
-        })
+      return callContract(this.stakeContract.stake, input, this.web3)
     },
   },
   computed: {

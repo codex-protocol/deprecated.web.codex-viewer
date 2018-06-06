@@ -1,12 +1,12 @@
 <template>
-  <b-modal
+  <meta-mask-notification-modal
     id="unstakeTokensModal"
     title="Unstake tokens"
     ok-title="Unstake"
     :ok-disabled="!canSubmit()"
     cancel-variant="outline-primary"
-    v-model="modalVisible"
-    v-on:ok="unstakeTokens"
+    :ok-method="unstakeTokens"
+    :on-shown="focusModal"
   >
     <div class="text-center">
       <img class="token-icon" src="../../assets/icons/codx-token.svg">
@@ -26,19 +26,22 @@
         v-model="unstakeAmount"
       />
     </b-form-group>
-  </b-modal>
+  </meta-mask-notification-modal>
 </template>
 
 <script>
 import callContract from '../../util/web3/callContract'
+import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
 export default {
   name: 'unstake-tokens-modal',
   props: ['currentStake'],
+  components: {
+    MetaMaskNotificationModal,
+  },
   data() {
     return {
       unstakeAmount: null,
-      modalVisible: false,
     }
   },
   methods: {
@@ -52,13 +55,7 @@ export default {
       event.preventDefault()
 
       const input = [this.web3.instance().toWei(this.unstakeAmount, 'ether'), '0x0']
-      callContract(this.stakeContract.unstake, input, this.web3)
-        .then(() => {
-          this.modalVisible = false
-        })
-        .catch((error) => {
-          console.log('There was an error unstaking tokens', error)
-        })
+      return callContract(this.stakeContract.unstake, input, this.web3)
     },
   },
   computed: {
