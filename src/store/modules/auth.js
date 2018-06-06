@@ -48,9 +48,9 @@ const actions = {
     const stakeContract = web3.stakeContainerContractInstance()
 
 
-    // @TODO: Need to watch the CodexCoin contract and the ERC900BasicStakeContainer contract
-    //  to get events on when balances/stakes change. (We can update it on the UI optimistically
-    //  but that has its own set of challenges)
+    // @TODO: Need to watch the CodexCoin contract and the CodexStakeContainer
+    //  contract to get events on when balances/stakes change. (We can update it
+    //  on the UI optimistically but that has its own set of challenges)
 
     dispatch('getTokenBalance', {
       account,
@@ -86,22 +86,22 @@ const actions = {
   },
 
   getStakeBalances({ commit }, payload) {
-    const {
-      account,
-      stakeContract,
-    } = payload
-
-    stakeContract.getPersonalStakeAmount(account).then((amount) => {
-      commit('updatePersonalStakeAmount', amount)
-    })
-
-    stakeContract.getPersonalStakeFor(account).then((stakeFor) => {
-      commit('updatePersonalStakeFor', stakeFor)
-    })
-
-    stakeContract.totalStakedFor(account).then((stake) => {
-      commit('updateTotalStakedFor', stake)
-    })
+    // const {
+    //   account,
+    //   stakeContract,
+    // } = payload
+    //
+    // stakeContract.getPersonalStakeAmounts(account).then((amount) => {
+    //   commit('updatePersonalStakeAmount', amount)
+    // })
+    //
+    // stakeContract.getPersonalStakeForAddress(account).then((stakeFor) => {
+    //   commit('updatePersonalStakeFor', stakeFor)
+    // })
+    //
+    // stakeContract.totalStakedFor(account).then((stake) => {
+    //   commit('updateTotalStakedFor', stake)
+    // })
   },
 
   getApprovalStatus({ commit }, payload) {
