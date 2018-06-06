@@ -64,7 +64,7 @@ export default {
       modalVisible: false,
       recordIsPublic: !this.isPrivate,
       newWhitelistedAddress: null,
-      sharedAddresses: this.whitelistedAddresses,
+      sharedAddresses: this.whitelistedAddresses || [],
     }
   },
   computed: {

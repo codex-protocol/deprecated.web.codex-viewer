@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Provenance</h1>
-    <div v-if="provenance.length">
+    <div v-if="provenance">
       <div class="flex mb-4 pb-1" v-for="row in provenance" :key="row.id">
         <div>{{ getEventDescription(row.type) }}</div>
         <div>{{ getEventAddress(row) }}</div>
