@@ -49,7 +49,7 @@
             Your transaction has been submitted!
           </p>
           <p class="text-center">
-            It will take a few minutes for your transaction to be mined, but may now close this dialog.
+            It will take a few minutes for your transaction to be mined, but you may now close this dialog.
           </p>
         </div>
       </div>
