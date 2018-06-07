@@ -55,6 +55,13 @@ export default {
     unstakeTokens() {
       const input = [this.web3.instance().toWei(this.unstakeAmount, 'ether'), '0x0']
       return callContract(this.stakeContract.unstake, input, this.web3)
+        .catch((error) => {
+          console.log('there was an error calling unstakeTokens', error)
+
+          // @NOTE: we must throw the error here so the MetaMaskNotificationModal
+          //  can catch() it too
+          throw error
+        })
     },
     clearModal() {
       Object.assign(this.$data, this.$options.data.apply(this))

@@ -194,8 +194,8 @@ export default {
         this.codexRecord = null
         this.error = error
 
-        // we need to throw the error here so the MetaMaskNotificationModal can
-        //  catch() it too
+        // @NOTE: we must throw the error here so the MetaMaskNotificationModal
+        //  can catch() it too
         throw error
       })
     },
@@ -212,6 +212,13 @@ export default {
       ]
 
       return callContract(this.recordContract.mint, input, this.web3)
+        .catch((error) => {
+          console.log('there was an error calling createRecord', error)
+
+          // @NOTE: we must throw the error here so the MetaMaskNotificationModal
+          //  can catch() it too
+          throw error
+        })
     },
   },
   computed: {

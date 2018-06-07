@@ -71,6 +71,13 @@ export default {
     approveTransfer() {
       const input = [this.toEthAddress, this.recordId]
       return callContract(this.recordContract.approve, input, this.web3)
+        .catch((error) => {
+          console.log('there was an error calling approveTransfer', error)
+
+          // @NOTE: we must throw the error here so the MetaMaskNotificationModal
+          //  can catch() it too
+          throw error
+        })
     },
   },
   computed: {

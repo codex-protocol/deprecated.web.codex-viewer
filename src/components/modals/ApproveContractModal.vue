@@ -36,6 +36,13 @@ export default {
             stateProperty: this.stateProperty,
           })
         })
+        .catch((error) => {
+          console.log('there was an error calling approveTokens', error)
+
+          // @NOTE: we must throw the error here so the MetaMaskNotificationModal
+          //  can catch() it too
+          throw error
+        })
     },
   },
   computed: {
