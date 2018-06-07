@@ -10,7 +10,7 @@
     :size="modalSize"
     v-model="modalVisible"
     v-on:shown="shown"
-    v-on:ok="goToStep(currentStep + 1, $event)"
+    v-on:ok.prevent="goToStep(currentStep + 1)"
 
     :no-close-on-esc="preventClose"
     :hide-header-close="preventClose"
@@ -81,9 +81,7 @@ export default {
     }
   },
   methods: {
-    goToStep(newCurrentStep, event) {
-
-      if (event) event.preventDefault()
+    goToStep(newCurrentStep) {
 
       switch (newCurrentStep) {
 
