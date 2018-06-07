@@ -3,7 +3,7 @@
     id="stakeTokensModal"
     title="Stake tokens"
     ok-title="Stake"
-    :ok-disabled="!canSubmit()"
+    :ok-disabled="!canSubmit"
     cancel-variant="outline-primary"
     :ok-method="stakeTokens"
     :on-clear="clearModal"
@@ -45,9 +45,6 @@ export default {
     }
   },
   methods: {
-    canSubmit() {
-      return this.stakeAmount
-    },
     focusModal() {
       this.$refs.stakeAmount.focus()
     },
@@ -69,6 +66,9 @@ export default {
   computed: {
     web3() {
       return this.$store.state.web3
+    },
+    canSubmit() {
+      return this.stakeAmount
     },
     stakeContract() {
       return this.web3.stakeContainerContractInstance()

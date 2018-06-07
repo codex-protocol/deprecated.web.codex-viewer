@@ -3,7 +3,7 @@
     id="unstakeTokensModal"
     title="Unstake tokens"
     ok-title="Unstake"
-    :ok-disabled="!canSubmit()"
+    :ok-disabled="!canSubmit"
     cancel-variant="outline-primary"
     :ok-method="unstakeTokens"
     :on-shown="focusModal"
@@ -46,9 +46,6 @@ export default {
     }
   },
   methods: {
-    canSubmit() {
-      return this.unstakeAmount
-    },
     focusModal() {
       this.$refs.unstakeAmount.focus()
     },
@@ -70,6 +67,9 @@ export default {
   computed: {
     web3() {
       return this.$store.state.web3
+    },
+    canSubmit() {
+      return this.unstakeAmount
     },
     stakeContract() {
       return this.web3.stakeContainerContractInstance()
