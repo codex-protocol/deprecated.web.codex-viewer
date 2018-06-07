@@ -24,32 +24,34 @@
         <img class="icon" src="../../assets/images/metamask.png" />
       </div>
 
-      <div v-if="currentStep === 1 && !metamaskError">
-        <p class="text-center">
-          You are about to use Metamask.
-        </p>
-      </div>
-
-      <div v-else-if="currentStep === 2 && !metamaskError">
-        <p class="text-center">
-          Please wait while your transaction is sent by MetaMask...
-        </p>
-      </div>
-
-      <div v-else-if="currentStep === 3 && !metamaskError">
-        <p class="text-center">
-          Your transaction has been submitted!
-        </p>
-        <p class="text-center">
-          It will take a few minutes for your transaction to be mined, but may now close this dialog.
-        </p>
-      </div>
-
       <div v-if="metamaskError">
         <p class="text-center">
           There was a problem sending your transaction:
         </p>
         <pre class="text-center metamask-error">{{metamaskError}}</pre>
+      </div>
+
+      <div v-else>
+        <div v-if="currentStep === 1">
+          <p class="text-center">
+            You are about to use Metamask.
+          </p>
+        </div>
+
+        <div v-else-if="currentStep === 2">
+          <p class="text-center">
+            Please wait while your transaction is sent by MetaMask...
+          </p>
+        </div>
+
+        <div v-else-if="currentStep === 3">
+          <p class="text-center">
+            Your transaction has been submitted!
+          </p>
+          <p class="text-center">
+            It will take a few minutes for your transaction to be mined, but may now close this dialog.
+          </p>
+        </div>
       </div>
 
     </div>
