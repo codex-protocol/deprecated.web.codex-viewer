@@ -1,16 +1,18 @@
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
 
-// If a token is present on page load, then add it to all future API requests
-let token = window.localStorage.getItem('authToken')
-if (token) {
-  axios.defaults.headers.common.Authorization = token
+// If an auth token is present on page load, then add it to all future API requests
+let cachedAuthToken = window.localStorage.getItem('authToken')
+
+if (cachedAuthToken) {
+  axios.defaults.headers.common.Authorization = cachedAuthToken
 }
 
 const initialState = () => {
   return {
-    token: token || null,
+    user: null,
     balance: new BigNumber(0),
+    authToken: cachedAuthToken,
     totalStakedFor: new BigNumber(0),
     personalStakeAmount: new BigNumber(0),
     personalStakeFor: null,
@@ -21,7 +23,7 @@ const initialState = () => {
 
 const getters = {
   isAuthenticated: (currentState) => {
-    return !!currentState.token
+    return !!currentState.authToken
   },
 }
 
@@ -33,14 +35,16 @@ const actions = {
         throw new Error(error)
       }
 
-      dispatch('updateUserState', result.token)
+      dispatch('updateUserState', result.token, result.user)
+
     }).catch((error) => {
       console.log(error)
       commit('clearUserState')
     })
   },
 
-  updateUserState({ commit, dispatch, rootState }, authToken) {
+  updateUserState({ commit, dispatch, rootState }, newAuthToken, newUser) {
+
     const { web3 } = rootState
     const { account } = web3
     const tokenContract = web3.tokenContractInstance()
@@ -69,8 +73,31 @@ const actions = {
       stakeContractAddress: stakeContract.address,
     })
 
-    if (authToken) {
-      commit('setAuthToken', authToken)
+    if (newAuthToken) {
+      commit('setAuthToken', newAuthToken)
+
+      if (newUser) {
+        commit('setUser', newUser)
+
+      } else {
+        axios.get('user')
+          .then((response) => {
+
+            const { result, error } = response.data
+
+            if (response.data.error) {
+              throw new Error(error)
+            }
+
+            commit('setUser', result)
+
+          })
+          .catch((error) => {
+            console.log(error)
+            commit('clearUserState')
+          })
+      }
+
     }
   },
 
@@ -140,27 +167,29 @@ const logMutation = (mutationName, payload) => {
 }
 
 const mutations = {
-  setAuthToken(currentState, authToken) {
-    logMutation('setAuthToken', authToken)
+  setAuthToken(currentState, newAuthToken) {
+    logMutation('setAuthToken', newAuthToken)
 
-    currentState.token = authToken
-    axios.defaults.headers.common.Authorization = authToken
+    currentState.authToken = newAuthToken
+    axios.defaults.headers.common.Authorization = newAuthToken
 
-    window.localStorage.setItem('authToken', authToken)
+    window.localStorage.setItem('authToken', newAuthToken)
+  },
+
+  setUser(currentState, newUser) {
+    logMutation('setUser', newUser)
+    currentState.user = newUser
   },
 
   clearUserState(currentState) {
     logMutation('clearUserState')
 
-    token = null
-    delete axios.defaults.headers.common.Authorization
+    cachedAuthToken = null
     window.localStorage.removeItem('authToken')
+    delete axios.defaults.headers.common.Authorization
 
     // Reset state to its initial values
-    const originalState = initialState()
-    Object.keys(originalState).forEach((key) => {
-      currentState[key] = originalState[key]
-    })
+    Object.assign(currentState, initialState())
   },
 
   updateTokenBalance(currentState, newBalance) {
