@@ -3,10 +3,11 @@
     id="unstakeTokensModal"
     title="Unstake tokens"
     ok-title="Unstake"
-    :ok-disabled="!canSubmit()"
+    :ok-disabled="!canSubmit"
     cancel-variant="outline-primary"
     :ok-method="unstakeTokens"
     :on-shown="focusModal"
+    :on-clear="clearModal"
   >
     <div class="text-center">
       <img class="token-icon" src="../../assets/icons/codx-token.svg">
@@ -19,10 +20,10 @@
       <b-form-input
         required
         id="unstakeAmount"
-        type="text"
+        ref="unstakeAmount"
+        type="number"
         class="mb-4"
         placeholder="Number of tokens"
-        ref="defaultModalFocus"
         v-model="unstakeAmount"
       />
     </b-form-group>
@@ -45,22 +46,30 @@ export default {
     }
   },
   methods: {
-    canSubmit() {
-      return this.unstakeAmount
-    },
     focusModal() {
-      this.$refs.defaultModalFocus.focus()
+      this.$refs.unstakeAmount.focus()
     },
-    unstakeTokens(event) {
-      event.preventDefault()
-
+    unstakeTokens() {
       const input = [this.web3.instance().toWei(this.unstakeAmount, 'ether'), '0x0']
       return callContract(this.stakeContract.unstake, input, this.web3)
+        .catch((error) => {
+          console.log('there was an error calling unstakeTokens', error)
+
+          // @NOTE: we must throw the error here so the MetaMaskNotificationModal
+          //  can catch() it too
+          throw error
+        })
+    },
+    clearModal() {
+      Object.assign(this.$data, this.$options.data.apply(this))
     },
   },
   computed: {
     web3() {
       return this.$store.state.web3
+    },
+    canSubmit() {
+      return this.unstakeAmount
     },
     stakeContract() {
       return this.web3.stakeContainerContractInstance()

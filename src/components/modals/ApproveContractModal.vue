@@ -24,8 +24,7 @@ export default {
     MetaMaskNotificationModal,
   },
   methods: {
-    approveTokens(event) {
-      event.preventDefault()
+    approveTokens() {
 
       const amount = new (this.web3.instance()).BigNumber(2).pow(255)
       const input = [this.contractInstance.address, amount.toFixed()]
@@ -36,6 +35,13 @@ export default {
             allowance: amount,
             stateProperty: this.stateProperty,
           })
+        })
+        .catch((error) => {
+          console.log('there was an error calling approveTokens', error)
+
+          // @NOTE: we must throw the error here so the MetaMaskNotificationModal
+          //  can catch() it too
+          throw error
         })
     },
   },

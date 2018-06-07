@@ -3,13 +3,12 @@
     id="createRecordModal"
     title="Create Record"
     ok-title="Create"
-    :ok-disabled="!canSubmit()"
+    :ok-disabled="!canSubmit"
     cancel-variant="outline-primary"
     size="lg"
     :on-shown="focusModal"
     :ok-method="createMetaData"
     :on-clear="clearModal"
-    :clear-data=true
   >
     <div class="flex-container">
       <div>
@@ -97,10 +96,12 @@ export default {
     },
     clearModal() {
       Object.assign(this.$data, this.$options.data.apply(this))
-      this.$refs.fileInput.reset()
-    },
-    canSubmit() {
-      return this.name && this.uploadedFileHash && this.uploadedFile
+
+      // @TODO: explain why this is necessary (only exists when slot is filled
+      //  in MMNM)
+      if (this.$refs.fileInput) {
+        this.$refs.fileInput.reset()
+      }
     },
     displayAndUploadFile(file) {
       if (!file) {
@@ -159,12 +160,11 @@ export default {
         console.log('there was an error uploading the file', error)
       })
     },
-    createMetaData(event) {
-      event.preventDefault()
+    createMetaData() {
 
       // TODO: Show some better error handling if these aren't filled in
-      if (!this.name || !this.uploadedFile || !this.uploadedFileHash) {
-        return false
+      if (!this.canSubmit) {
+        throw new Error('missing required fields')
       }
 
       return axios.post('/users/record-metadata', {
@@ -172,28 +172,31 @@ export default {
         mainImage: this.uploadedFile,
         description: this.description || null,
       }).then((response) => {
+
         const { result: metadata, error } = response.data
+
         if (error) {
-          console.log('there was an error calling createMetaData', error)
-          this.codexRecord = null
-          this.error = error
-        } else {
-          console.log('metadata', metadata)
-
-          // TODO: maybe show somewhere that the locally-calculated hashes match
-          //  the server-side-calculated hashes? e.g.:
-          // const { sha3 } = this.web3.instance()
-          //
-          // metadata.nameHash === sha3(metadata.name)
-          // metadata.mainImage.hash === this.uploadedFileHash
-          // metadata.descriptionHash === (metadata.description ? sha3(metadata.description) : null)
-
-          this.createRecord(metadata)
+          throw error
         }
+
+        // TODO: maybe show somewhere that the locally-calculated hashes match
+        //  the server-side-calculated hashes? e.g.:
+        // const { sha3 } = this.web3.instance()
+        //
+        // metadata.nameHash === sha3(metadata.name)
+        // metadata.mainImage.hash === this.uploadedFileHash
+        // metadata.descriptionHash === (metadata.description ? sha3(metadata.description) : null)
+
+        return this.createRecord(metadata)
+
       }).catch((error) => {
         console.log('there was an error calling createMetaData', error)
         this.codexRecord = null
         this.error = error
+
+        // @NOTE: we must throw the error here so the MetaMaskNotificationModal
+        //  can catch() it too
+        throw error
       })
     },
     createRecord(metadata) {
@@ -209,11 +212,21 @@ export default {
       ]
 
       return callContract(this.recordContract.mint, input, this.web3)
+        .catch((error) => {
+          console.log('there was an error calling createRecord', error)
+
+          // @NOTE: we must throw the error here so the MetaMaskNotificationModal
+          //  can catch() it too
+          throw error
+        })
     },
   },
   computed: {
     web3() {
       return this.$store.state.web3
+    },
+    canSubmit() {
+      return this.name && this.uploadedFileHash && this.uploadedFile
     },
     recordContract() {
       return this.$store.state.web3.recordContractInstance()
