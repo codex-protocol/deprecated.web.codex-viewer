@@ -6,20 +6,23 @@
     :ok-disabled="!canSubmit()"
     cancel-variant="outline-primary"
     :ok-method="stakeTokens"
+    :on-clear="clearModal"
   >
     <div class="text-center">
       <img class="token-icon" src="../../assets/icons/codx-token.svg">
     </div>
     <b-form-group
-      label="Number of tokens to stake" label-for="stakeAmount" label-size="sm"
+      label-size="sm"
+      label-for="stakeAmount"
+      label="Number of tokens to stake"
     >
       <b-form-input
         required
         id="stakeAmount"
-        type="text"
+        ref="stakeAmount"
+        type="number"
         class="mb-4"
         placeholder="Number of tokens"
-        ref="defaultModalFocus"
         v-model="stakeAmount"
       />
     </b-form-group>
@@ -46,13 +49,14 @@ export default {
       return this.stakeAmount
     },
     focusModal() {
-      this.$refs.defaultModalFocus.focus()
+      this.$refs.stakeAmount.focus()
     },
-    stakeTokens(event) {
-      event.preventDefault()
-
+    stakeTokens() {
       const input = [this.web3.instance().toWei(this.stakeAmount, 'ether'), '0x0']
       return callContract(this.stakeContract.stake, input, this.web3)
+    },
+    clearModal() {
+      Object.assign(this.$data, this.$options.data.apply(this))
     },
   },
   computed: {

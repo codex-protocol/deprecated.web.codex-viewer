@@ -24,8 +24,7 @@ export default {
     MetaMaskNotificationModal,
   },
   methods: {
-    approveTokens(event) {
-      event.preventDefault()
+    approveTokens() {
 
       const amount = new (this.web3.instance()).BigNumber(2).pow(255)
       const input = [this.contractInstance.address, amount.toFixed()]

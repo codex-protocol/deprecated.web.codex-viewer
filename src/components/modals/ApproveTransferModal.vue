@@ -7,7 +7,6 @@
     :ok-method="approveTransfer"
     :on-shown="focusModal"
     :on-clear="clearModal"
-    :clear-data=true
   >
     <b-form-group
       label="Type or paste wallet address"
@@ -69,9 +68,7 @@ export default {
     clearModal() {
       Object.assign(this.$data, this.$options.data.apply(this))
     },
-    approveTransfer(event) {
-      event.preventDefault()
-
+    approveTransfer() {
       const input = [this.toEthAddress, this.recordId]
       return callContract(this.recordContract.approve, input, this.web3)
     },

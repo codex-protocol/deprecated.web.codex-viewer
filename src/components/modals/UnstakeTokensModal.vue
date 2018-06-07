@@ -7,6 +7,7 @@
     cancel-variant="outline-primary"
     :ok-method="unstakeTokens"
     :on-shown="focusModal"
+    :on-clear="clearModal"
   >
     <div class="text-center">
       <img class="token-icon" src="../../assets/icons/codx-token.svg">
@@ -19,10 +20,10 @@
       <b-form-input
         required
         id="unstakeAmount"
-        type="text"
+        ref="unstakeAmount"
+        type="number"
         class="mb-4"
         placeholder="Number of tokens"
-        ref="defaultModalFocus"
         v-model="unstakeAmount"
       />
     </b-form-group>
@@ -49,13 +50,14 @@ export default {
       return this.unstakeAmount
     },
     focusModal() {
-      this.$refs.defaultModalFocus.focus()
+      this.$refs.unstakeAmount.focus()
     },
-    unstakeTokens(event) {
-      event.preventDefault()
-
+    unstakeTokens() {
       const input = [this.web3.instance().toWei(this.unstakeAmount, 'ether'), '0x0']
       return callContract(this.stakeContract.unstake, input, this.web3)
+    },
+    clearModal() {
+      Object.assign(this.$data, this.$options.data.apply(this))
     },
   },
   computed: {
