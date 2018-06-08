@@ -15,6 +15,20 @@ const apiUrl = (() => {
 
 })()
 
-export default {
+const etherScanUrl = (() => {
+  switch (process.env.TARGET_ENV) {
+    case 'production':
+      return 'https://etherscan.io/'
+
+    case 'staging':
+      return 'https://rinkeby.etherscan.io/'
+
+    default:
+      return 'https://rinkeby.etherscan.io/'
+  }
+})()
+
+export {
   apiUrl,
+  etherScanUrl,
 }
