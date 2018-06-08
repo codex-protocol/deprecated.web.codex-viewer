@@ -37,6 +37,7 @@ export default {
     }
   },
   created() {
+    this.getRecords()
     EventBus.$emit('events:view-collection-page')
   },
   methods: {
