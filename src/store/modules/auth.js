@@ -16,8 +16,7 @@ const initialState = () => {
     balance: new BigNumber(0),
     authToken: cachedAuthToken,
     totalStakedFor: new BigNumber(0),
-    personalStakeAmount: new BigNumber(0),
-    personalStakeFor: null,
+    personalStakes: [],
     registryContractApproved: false,
     stakeContractApproved: false,
   }
@@ -112,22 +111,18 @@ const actions = {
   },
 
   getStakeBalances({ commit }, payload) {
-    // const {
-    //   account,
-    //   stakeContract,
-    // } = payload
-    //
-    // stakeContract.getPersonalStakeAmounts(account).then((amount) => {
-    //   commit('updatePersonalStakeAmount', amount)
-    // })
-    //
-    // stakeContract.getPersonalStakeForAddress(account).then((stakeFor) => {
-    //   commit('updatePersonalStakeFor', stakeFor)
-    // })
-    //
-    // stakeContract.totalStakedFor(account).then((stake) => {
-    //   commit('updateTotalStakedFor', stake)
-    // })
+    const {
+      account,
+      stakeContract,
+    } = payload
+
+    stakeContract.getPersonalStakes(account).then((personalStakes) => {
+      commit('updatePersonalStakes', personalStakes)
+    })
+
+    stakeContract.totalStakedFor(account).then((stake) => {
+      commit('updateTotalStakedFor', stake)
+    })
   },
 
   getApprovalStatus({ commit }, payload) {
@@ -197,16 +192,10 @@ const mutations = {
     currentState.balance = newBalance
   },
 
-  updatePersonalStakeAmount(currentState, newAmount) {
-    logMutation('updatePersonalStakeAmount', newAmount)
+  updatePersonalStakes(currentState, newPersonalStakes) {
+    logMutation('updatePersonalStakes', newPersonalStakes)
 
-    currentState.personalStakeAmount = newAmount
-  },
-
-  updatePersonalStakeFor(currentState, newStakeFor) {
-    logMutation('updatePersonalStakeFor', newStakeFor)
-
-    currentState.personalStakeFor = newStakeFor
+    currentState.personalStakes = newPersonalStakes
   },
 
   updateTotalStakedFor(currentState, newStake) {
