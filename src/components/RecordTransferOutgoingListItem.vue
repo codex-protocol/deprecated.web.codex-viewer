@@ -19,6 +19,7 @@
 
 <script>
 import EventBus from '../util/eventBus'
+import { ZeroAddress } from '../util/constants/web3'
 import callContract from '../util/web3/callContract'
 import missingImage from '../assets/images/missing-image.png'
 
@@ -46,7 +47,7 @@ export default {
     },
     cancelTransfer() {
       EventBus.$emit('events:click-cancel-transfer')
-      const input = ['0x0000000000000000000000000000000000000000', this.codexRecord.tokenId]
+      const input = [ZeroAddress, this.codexRecord.tokenId]
 
       callContract(this.recordContract.approve, input, this.web3)
         .then(() => {

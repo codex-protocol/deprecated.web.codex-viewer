@@ -78,9 +78,7 @@ export default {
 
 .flex div
   flex: 1
-
-  &:first-child
-    margin-left: 5rem
+  text-align: center
 
   &:nth-child(2)
     flex: 3
