@@ -7,7 +7,11 @@
         <div>{{ getEventAddress(row) }}</div>
         <div>{{ getTimeSince(row.createdAt) }}</div>
         <!-- TODO: add button to lauch "details" modal here, which can use the flags in row.codexRecordModifiedEvent.changedData -->
-        <!-- TODO: add etherscan link here -->
+        <div>
+          <a :href="getTransactionUrl(row.transactionHash)" target="_blank">
+            <img src="../assets/icons/share.svg">
+          </a>
+        </div>
       </div>
     </div>
     <div v-else>
@@ -18,6 +22,7 @@
 
 <script>
 import { timeSince } from '../util/dateHelpers'
+import getTxUrl from '../util/web3/getTxUrl'
 
 export default {
   name: 'record-provenance',
@@ -58,6 +63,9 @@ export default {
           return null
       }
     },
+    getTransactionUrl(txHash) {
+      return getTxUrl(txHash)
+    },
   },
 }
 </script>
@@ -70,7 +78,8 @@ export default {
 
 .flex div
   flex: 1
+  text-align: center
 
-.flex div:nth-child(2)
-  flex: 2
+  &:nth-child(2)
+    flex: 3
 </style>

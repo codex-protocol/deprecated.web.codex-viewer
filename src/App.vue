@@ -11,7 +11,7 @@
 <script>
 import axios from 'axios'
 
-import config from './util/config'
+import { apiUrl } from './util/config'
 import AppSideBar from './components/AppSideBar'
 import MetaMaskModal from './components/modals/MetaMaskModal'
 
@@ -49,7 +49,7 @@ export default {
   },
   methods: {
     initializeApi() {
-      axios.defaults.baseURL = config.apiUrl
+      axios.defaults.baseURL = apiUrl
       axios.defaults.headers.common['Content-Type'] = 'application/json'
 
       const authErrorHandler = (error) => {

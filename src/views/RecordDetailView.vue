@@ -69,6 +69,7 @@
 <script>
 import axios from 'axios'
 
+import { ZeroAddress } from '../util/constants/web3'
 import callContract from '../util/web3/callContract'
 import EventBus from '../util/eventBus'
 
@@ -123,7 +124,7 @@ export default {
     },
     isAwaitingApproval() {
       return this.codexRecord.approvedAddress !== null &&
-        this.codexRecord.approvedAddress !== '0x0000000000000000000000000000000000000000' // @TODO: store this in config or similar
+        this.codexRecord.approvedAddress !== ZeroAddress
     },
   },
   created() {

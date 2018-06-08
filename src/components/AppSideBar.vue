@@ -12,7 +12,7 @@
     <b-link to="/settings">
       <img src="../assets/icons/settings.svg">Settings
     </b-link>
-    <b-link to="manage-tokens">
+    <b-link to="/manage-tokens">
       <img src="../assets/icons/codx-token.svg">Manage Tokens
     </b-link>
     <b-link to="/coming-soon">
