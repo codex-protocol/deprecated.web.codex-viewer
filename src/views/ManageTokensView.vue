@@ -56,6 +56,7 @@
 </template>
 
 <script>
+import EventBus from '../util/eventBus'
 import AppHeader from '../components/AppHeader'
 import ApproveContractModal from '../components/modals/ApproveContractModal'
 import FaucetModal from '../components/modals/FaucetModal'
@@ -75,6 +76,9 @@ export default {
     return {
       shouldShowFaucetButton: process.env.TARGET_ENV !== 'production',
     }
+  },
+  created() {
+    EventBus.$emit('events:view-tokens-page')
   },
   computed: {
     web3() {

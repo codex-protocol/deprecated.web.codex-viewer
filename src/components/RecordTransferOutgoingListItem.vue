@@ -18,7 +18,7 @@
 </template>
 
 <script>
-
+import EventBus from '../util/eventBus'
 import callContract from '../util/web3/callContract'
 import missingImage from '../assets/images/missing-image.png'
 
@@ -45,10 +45,12 @@ export default {
       this.$router.push(this.route)
     },
     cancelTransfer() {
+      EventBus.$emit('events:click-cancel-transfer')
       const input = ['0x0000000000000000000000000000000000000000', this.codexRecord.tokenId]
 
       callContract(this.recordContract.approve, input, this.web3)
         .then(() => {
+          EventBus.$emit('events:cancel-transfer')
           this.cancelApproved = true
         })
         .catch((error) => {

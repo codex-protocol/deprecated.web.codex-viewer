@@ -15,6 +15,8 @@ import config from './util/config'
 import AppSideBar from './components/AppSideBar'
 import MetaMaskModal from './components/modals/MetaMaskModal'
 
+import analytics from './util/analytics' // eslint-disable-line no-unused-vars
+
 export default {
   name: 'App',
   components: {

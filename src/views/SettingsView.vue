@@ -23,7 +23,7 @@
 
 <script>
 import axios from 'axios'
-
+import EventBus from '../util/eventBus'
 import AppHeader from '../components/AppHeader'
 import RecordPrivacySettingsRowItem from '../components/RecordPrivacySettingsRowItem'
 
@@ -39,6 +39,7 @@ export default {
     }
   },
   created() {
+    EventBus.$emit('events:view-settings-page')
     this.getRecords()
   },
   computed: {

@@ -16,10 +16,13 @@
 </template>
 
 <script>
+import EventBus from '../util/eventBus'
+
 export default {
   name: 'login-view',
   methods: {
     metamaskLogin() {
+      EventBus.$emit('events:click-login-button')
       const { account } = this.web3
       const personalMessageToSign = 'Please sign this message to authenticate with the Codex Registry.'
 
@@ -39,6 +42,8 @@ export default {
             return
           }
 
+          EventBus.$emit('events:login')
+
           this.$store.dispatch('sendAuthRequest', {
             userAddress: account,
             signedData: result.result.substr(2),
@@ -49,6 +54,7 @@ export default {
       })
     },
     aboutCodex() {
+      EventBus.$emit('events:click-about-codex')
       window.location = 'https://www.codexprotocol.com'
     },
   },
@@ -56,6 +62,9 @@ export default {
     web3() {
       return this.$store.state.web3
     },
+  },
+  created() {
+    EventBus.$emit('events:viewer:view-login-page')
   },
 }
 </script>

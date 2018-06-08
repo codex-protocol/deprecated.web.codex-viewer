@@ -47,6 +47,7 @@
 
 <script>
 import callContract from '../../util/web3/callContract'
+import EventBus from '../../util/eventBus'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
 export default {
@@ -69,8 +70,12 @@ export default {
       Object.assign(this.$data, this.$options.data.apply(this))
     },
     approveTransfer() {
+      EventBus.$emit('events:record-click-transfer')
       const input = [this.toEthAddress, this.recordId]
       return callContract(this.recordContract.approve, input, this.web3)
+        .then(() => {
+          EventBus.$emit('events:record-transfer')
+        })
         .catch((error) => {
           console.log('there was an error calling approveTransfer', error)
 

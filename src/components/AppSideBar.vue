@@ -26,10 +26,13 @@
 </template>
 
 <script>
+import EventBus from '../util/eventBus'
+
 export default {
   name: 'app-side-bar',
   methods: {
     logout() {
+      EventBus.$emit('events:click-logout-button')
       this.$store.dispatch('logout', this.$router)
     },
   },

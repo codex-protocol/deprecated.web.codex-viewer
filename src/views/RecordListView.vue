@@ -22,6 +22,7 @@ import axios from 'axios'
 import AppHeader from '../components/AppHeader'
 import RecordListItem from '../components/RecordListItem'
 import CreateRecordModal from '../components/modals/CreateRecordModal'
+import EventBus from '../util/eventBus'
 
 export default {
   name: 'record-list',
@@ -36,7 +37,7 @@ export default {
     }
   },
   created() {
-    this.getRecords()
+    EventBus.$emit('events:view-collection-page')
   },
   methods: {
     getRecords() {

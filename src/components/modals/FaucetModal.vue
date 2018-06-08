@@ -20,6 +20,8 @@
 
 import axios from 'axios'
 
+import EventBus from '../../util/eventBus'
+
 export default {
   name: 'faucetModal',
   data() {
@@ -30,6 +32,7 @@ export default {
   methods: {
     requestTokens(event) {
       event.preventDefault()
+      EventBus.$emit('events:faucet-request')
 
       axios.get('/user/faucet')
         .then((response) => {

@@ -25,7 +25,7 @@
 <script>
 
 import axios from 'axios'
-
+import EventBus from '../util/eventBus'
 import callContract from '../util/web3/callContract'
 import missingImage from '../assets/images/missing-image.png'
 
@@ -53,6 +53,7 @@ export default {
       this.$router.push(this.route)
     },
     acceptTransfer() {
+      EventBus.$emit('events:click-accept-transfer')
       const input = [
         this.codexRecord.ownerAddress,
         this.web3.account,
@@ -61,6 +62,7 @@ export default {
 
       callContract(this.recordContract.safeTransferFrom, input, this.web3)
         .then(() => {
+          EventBus.$emit('events:accept-transfer')
           this.transferAccepted = true
         })
         .catch((error) => {

@@ -31,6 +31,7 @@
 
 <script>
 import callContract from '../../util/web3/callContract'
+import EventBus from '../../util/eventBus'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
 export default {
@@ -49,8 +50,13 @@ export default {
       this.$refs.stakeAmount.focus()
     },
     stakeTokens() {
-      const input = [this.web3.instance().toWei(this.stakeAmount, 'ether'), '0x0']
+      EventBus.$emit('events:click-stake-tokens')
+      const amount = this.web3.instance().toWei(this.stakeAmount, 'ether')
+      const input = [amount, '0x0']
       return callContract(this.stakeContract.stake, input, this.web3)
+        .then(() => {
+          EventBus.$emit('events:stake-tokens', { amount })
+        })
         .catch((error) => {
           console.log('there was an error calling stakeTokens', error)
 

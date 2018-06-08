@@ -28,7 +28,7 @@
 
 <script>
 import axios from 'axios'
-
+import EventBus from '../util/eventBus'
 import AppHeader from '../components/AppHeader'
 import AppSubHeader from '../components/AppSubHeader'
 import RecordTransferIncomingListItem from '../components/RecordTransferIncomingListItem'
@@ -49,6 +49,7 @@ export default {
     }
   },
   created() {
+    EventBus.$emit('events:view-transfers-page')
     this.fetchData(this.transferDirection)
   },
   computed: {

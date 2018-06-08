@@ -70,6 +70,7 @@
 import axios from 'axios'
 
 import callContract from '../util/web3/callContract'
+import EventBus from '../util/eventBus'
 
 import missingImage from '../assets/images/missing-image.png'
 import RecordProvenance from '../components/RecordProvenance'
@@ -126,6 +127,7 @@ export default {
     },
   },
   created() {
+    EventBus.$emit('events:view-record-page')
     this.getRecord()
   },
   watch: {
@@ -157,6 +159,7 @@ export default {
 
       callContract(this.recordContract.safeTransferFrom, input, this.web3)
         .then(() => {
+          EventBus.$emit('events:accept-transfer')
         })
         .catch((error) => {
           console.log('There was an error accepting the transfer', error)

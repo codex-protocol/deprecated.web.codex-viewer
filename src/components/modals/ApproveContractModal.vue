@@ -15,6 +15,7 @@
 
 <script>
 import callContract from '../../util/web3/callContract'
+import EventBus from '../../util/eventBus'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
 export default {
@@ -25,12 +26,13 @@ export default {
   },
   methods: {
     approveTokens() {
-
+      EventBus.$emit('events:click-approve-contract', { id: this.id })
       const amount = new (this.web3.instance()).BigNumber(2).pow(255)
       const input = [this.contractInstance.address, amount.toFixed()]
 
       return callContract(this.tokenContract.approve, input, this.web3)
         .then(() => {
+          EventBus.$emit('events:approve-contract', { id: this.id })
           this.$store.commit('updateApprovalStatus', {
             allowance: amount,
             stateProperty: this.stateProperty,
