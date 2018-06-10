@@ -25,6 +25,7 @@
 <script>
 
 import axios from 'axios'
+
 import EventBus from '../util/eventBus'
 import callContract from '../util/web3/callContract'
 import missingImage from '../assets/images/missing-image.png'
@@ -62,11 +63,13 @@ export default {
 
       callContract(this.recordContract.safeTransferFrom, input, this.web3)
         .then(() => {
+          EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
           EventBus.$emit('events:accept-transfer')
           this.transferAccepted = true
         })
         .catch((error) => {
-          console.log('There was an error accepting the transfer', error)
+          EventBus.$emit('toast:error', `Could not accept transfer: ${error.message}`)
+          console.error('Could not accept transfer:', error)
         })
     },
     ignoreTransfer() {
@@ -85,22 +88,13 @@ export default {
 
       axios(requestOptions)
         .then((response) => {
-
-          if (response instanceof Error) {
-            throw response
-          }
-
-          const { error, result } = response.data
-
-          if (error) {
-            throw error
-          }
-
+          const { result } = response.data
           this.codexRecord.isIgnored = result.isIgnored
-
+          EventBus.$emit('toast:success', 'Transfer ignored successfully!', 5000)
         })
         .catch((error) => {
-          console.error('there was an error ignoring this transfer', error)
+          EventBus.$emit('toast:error', `Could not ignore transfer: ${error.message}`)
+          console.error('Could not ignore transfer:', error)
         })
         .finally(() => {
           this.isLoading = false

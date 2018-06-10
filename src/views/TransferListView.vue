@@ -79,18 +79,12 @@ export default {
 
       axios(requestOptions)
         .then((response) => {
-
-          const { error, result } = response.data
-
-          if (error) {
-            throw error
-          }
-
+          const { result } = response.data
           this.records = result
-
         })
         .catch((error) => {
-          console.error(`there was an error fetching ${transferDirection} transfers`, error)
+          EventBus.$emit('toast:error', `Could not fetch ${transferDirection} transfers: ${error.message}`)
+          console.error(`could not fetch ${transferDirection} transfers`, error)
         })
     },
   },

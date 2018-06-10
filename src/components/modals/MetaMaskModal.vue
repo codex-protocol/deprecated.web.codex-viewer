@@ -58,7 +58,6 @@ export default {
   },
   watch: {
     web3Error(newValue) {
-      console.log('modalVisible: ', !!newValue)
       this.modalVisible = !!newValue
     },
   },

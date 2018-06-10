@@ -1,6 +1,8 @@
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
 
+import EventBus from '../../util/eventBus'
+
 // If an auth token is present on page load, then add it to all future API requests
 let cachedAuthToken = window.localStorage.getItem('authToken')
 
@@ -28,19 +30,24 @@ const getters = {
 }
 
 const actions = {
-  sendAuthRequest({ commit, dispatch }, payload) {
-    return axios.post('auth-token', payload).then((response) => {
-      const { result, error } = response.data
-      if (response.data.error) {
-        throw new Error(error)
-      }
+  sendAuthRequest({ commit, dispatch }, data) {
 
-      dispatch('updateUserState', result.token, result.user)
+    const requestOptions = {
+      method: 'post',
+      url: '/auth-token',
+      data,
+    }
 
-    }).catch((error) => {
-      console.log(error)
-      commit('clearUserState')
-    })
+    return axios(requestOptions)
+      .then((response) => {
+        const { result } = response.data
+        dispatch('updateUserState', result.token, result.user)
+      })
+      .catch((error) => {
+        EventBus.$emit('toast:error', `Could not log in: ${error.message}`)
+        console.error('Could not log in:', error)
+        commit('clearUserState')
+      })
   },
 
   updateUserState({ commit, dispatch, rootState }, newAuthToken, newUser) {
@@ -82,18 +89,10 @@ const actions = {
       } else {
         axios.get('user')
           .then((response) => {
-
-            const { result, error } = response.data
-
-            if (response.data.error) {
-              throw new Error(error)
-            }
-
-            commit('setUser', result)
-
+            commit('setUser', response.data.result)
           })
           .catch((error) => {
-            console.log(error)
+            console.error('Could not get user:', error)
             commit('clearUserState')
           })
       }
@@ -163,7 +162,7 @@ const actions = {
 
 // @TODO: Only log for debug mode
 const logMutation = (mutationName, payload) => {
-  console.log(`${mutationName} mutation being executed`, payload)
+  console.info(`${mutationName} mutation being executed`, payload)
 }
 
 const mutations = {
