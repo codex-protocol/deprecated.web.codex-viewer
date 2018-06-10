@@ -5,6 +5,7 @@
       <router-view />
     </div>
     <meta-mask-modal />
+    <toast-container />
   </div>
 </template>
 
@@ -13,6 +14,7 @@ import axios from 'axios'
 
 import { apiUrl } from './util/config'
 import AppSideBar from './components/AppSideBar'
+import ToastContainer from './components/ToastContainer'
 import MetaMaskModal from './components/modals/MetaMaskModal'
 
 import analytics from './util/analytics' // eslint-disable-line no-unused-vars
@@ -22,6 +24,7 @@ export default {
   components: {
     AppSideBar,
     MetaMaskModal,
+    ToastContainer,
   },
   created() {
     this.initializeApi()
@@ -57,7 +60,11 @@ export default {
           this.$store.dispatch('logout', this.$router)
         }
 
-        return Promise.reject(error)
+        if (error.response && error.response.data && error.response.data.error && error.response.data.error.message) {
+          throw new Error(error.response.data.error.message)
+        }
+
+        throw error
       }
 
       axios.interceptors.response.use(
