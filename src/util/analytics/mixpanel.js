@@ -1,4 +1,4 @@
-const Mixpanel = require('mixpanel')
+import Mixpanel from 'mixpanel'
 
 const mixpanel = Mixpanel.init(process.env.MIXPANEL_TOKEN, {
   protocol: 'https',
