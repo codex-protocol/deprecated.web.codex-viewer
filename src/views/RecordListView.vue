@@ -2,6 +2,8 @@
   <div>
     <app-header title="Collection">
       <b-button variant="primary" v-b-modal.createRecordModal>Add New Asset</b-button>
+      <b-button variant="outline-primary" @click="createGiveaway">Create giveaway</b-button>
+      <b-button variant="outline-primary" @click="acceptGiveaway">Accept giveaway</b-button>
     </app-header>
     <b-card-group deck class="record-list" v-if="records.length">
       <record-list-item v-for="record in records"
@@ -34,6 +36,7 @@ export default {
   data() {
     return {
       records: [],
+      giveaways: [],
     }
   },
   mounted() {
@@ -51,6 +54,7 @@ export default {
   },
   created() {
     this.getRecords()
+    this.getGiveaways()
     EventBus.$emit('events:view-collection-page')
   },
   methods: {
@@ -72,6 +76,24 @@ export default {
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not get collection: ${error.message}`)
           console.error('Could not get collection:', error)
+        })
+    },
+    getGiveaways() {
+      axios.get('/giveaways')
+        .then((response) => {
+          this.giveaways = response.data.result
+        })
+    },
+    createGiveaway() {
+      axios.post('/giveaways')
+        .then((response) => {
+          console.log(response)
+        })
+    },
+    acceptGiveaway() {
+      axios.get(`/user/giveaway/${this.giveaways[0]._id}`)
+        .then((response) => {
+          console.log(response)
         })
     },
   },
