@@ -53,9 +53,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(devEnv.NODE_ENV),
-      'process.env.TARGET_ENV': JSON.stringify(devEnv.TARGET_ENV),
-      'process.env.ANALYTICS_PROVIDER': JSON.stringify(devEnv.ANALYTICS_PROVIDER),
+      'process.env': devEnv,
       'process.env.MIXPANEL_TOKEN': JSON.stringify(process.env.MIXPANEL_TOKEN),
     }),
     new webpack.HotModuleReplacementPlugin(),
