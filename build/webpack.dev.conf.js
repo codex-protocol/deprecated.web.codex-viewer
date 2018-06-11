@@ -1,6 +1,6 @@
-'use strict'
 const utils = require('./utils')
 const webpack = require('webpack')
+const dotenv = require('dotenv')
 const config = require('../config')
 const merge = require('webpack-merge')
 const path = require('path')
@@ -9,13 +9,20 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
+const devEnv = require('../config/dev.env')
+
+const dotenvResult = dotenv.config({ path: `${__dirname}/../.env` })
+
+if (dotenvResult.error) {
+  throw dotenvResult.error
+}
 
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
 
 const devWebpackConfig = merge(baseWebpackConfig, {
   module: {
-    rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
+    rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true }),
   },
   // cheap-module-eval-source-map is faster for development
   devtool: config.dev.devtool,
@@ -42,11 +49,14 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     quiet: true, // necessary for FriendlyErrorsPlugin
     watchOptions: {
       poll: config.dev.poll,
-    }
+    },
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env': require('../config/dev.env')
+      'process.env.NODE_ENV': JSON.stringify(devEnv.NODE_ENV),
+      'process.env.TARGET_ENV': JSON.stringify(devEnv.TARGET_ENV),
+      'process.env.ANALYTICS_PROVIDER': JSON.stringify(devEnv.ANALYTICS_PROVIDER),
+      'process.env.MIXPANEL_TOKEN': JSON.stringify(process.env.MIXPANEL_TOKEN),
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
@@ -56,17 +66,17 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       favicon: 'src/assets/favicon.ico',
       filename: 'index.html',
       template: 'index.html',
-      inject: true
+      inject: true,
     }),
     // copy custom static assets
     new CopyWebpackPlugin([
       {
         from: path.resolve(__dirname, '../static'),
         to: config.dev.assetsSubDirectory,
-        ignore: ['.*']
-      }
-    ])
-  ]
+        ignore: ['.*'],
+      },
+    ]),
+  ],
 })
 
 module.exports = new Promise((resolve, reject) => {
@@ -86,8 +96,8 @@ module.exports = new Promise((resolve, reject) => {
           messages: [`Your application is running here: http://${devWebpackConfig.devServer.host}:${port}`],
         },
         onErrors: config.dev.notifyOnErrors
-        ? utils.createNotifierCallback()
-        : undefined
+          ? utils.createNotifierCallback()
+          : undefined,
       }))
 
       resolve(devWebpackConfig)
