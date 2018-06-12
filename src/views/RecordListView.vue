@@ -24,17 +24,23 @@
       />
     </b-card-group>
     <b-card-group deck class="record-list giveaway" v-else-if="giveaway">
-      <b-card
-        :img-src="giveaway.metadata.mainImage ? giveaway.metadata.mainImage.uri : missingImage"
-        img-top
-      >
-        <b-button
-          variant="secondary"
-          @click="acceptGiveaway"
+      <div class="overlay-container" >
+        <div class="overlay" v-if="isLoading">
+          <img class="spinner" src="../assets/images/spinner.svg" />
+        </div>
+        <b-card
+          :img-src="giveaway.metadata.mainImage ? giveaway.metadata.mainImage.uri : missingImage"
+          img-top
         >
-          Create Record
-        </b-button>
-      </b-card>
+          <b-button
+            variant="secondary"
+            @click="acceptGiveaway"
+            :disabled="disableGiveawayButton"
+          >
+            Create Record
+          </b-button>
+        </b-card>
+      </div>
       <b-card class="info">
         <p>
           The first {{ giveaway.numberOfEditions }} users to participate in the Beta will receive an edition of this piece created by our designer Seb!
@@ -72,6 +78,8 @@ export default {
       records: [],
       giveaway: null,
       missingImage,
+      disableGiveawayButton: false,
+      isLoading: false,
     }
   },
   computed: {
@@ -138,9 +146,14 @@ export default {
         })
     },
     acceptGiveaway() {
+      // TODO: Show spinner
+      this.disableGiveawayButton = true
+      this.isLoading = true
+
       axios.get(`/user/giveaway/${this.giveaway._id}`)
         .then((response) => {
-          // TODO: Toast & notification
+          // TODO: Show some information dialog and stop the spinner
+          // this.isLoading = false
           console.log(response)
         })
     },
@@ -155,7 +168,7 @@ export default {
   display: flex
   flex-wrap: wrap
 
-  div.card
+  > div
     flex: none
     width: 25%
     text-align: center
@@ -168,4 +181,37 @@ export default {
     display: flex
     flex-direction: column
     justify-content: center
+
+.overlay-container
+  position: relative
+  margin-left: 1rem
+  margin-right: 1rem
+
+  .card
+    margin-left: 0
+    margin-right: 0
+
+.overlay
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  z-index: 998
+  display: flex
+  position: absolute
+  align-items: center
+  justify-content: center
+  background-color: rgba(255, 255, 255, .75)
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  width: 8em;
+  height: 8em;
+  animation: spin 1s linear infinite reverse;
+  z-index: 999
+}
 </style>
