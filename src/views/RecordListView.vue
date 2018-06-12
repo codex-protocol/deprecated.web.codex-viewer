@@ -48,6 +48,9 @@
         <p>
           Click the 'Create Record' button to the left to claim yours.
         </p>
+        <p>
+          After the transaction has been mined by the blockchain (which may take a few minutes) your new Codex Record will appear in your collection.
+        </p>
       </b-card>
     </b-card-group>
     <div v-else>
@@ -141,20 +144,20 @@ export default {
     },
     createGiveaway() {
       axios.post('/giveaways')
-        .then((response) => {
-          console.log(response)
+        .catch((error) => {
+          EventBus.$emit('toast:error', `Could not create giveaway: ${error.message}`)
+          console.error('Could not create giveaway:', error)
         })
     },
     acceptGiveaway() {
-      // TODO: Show spinner
+      // No need to toggle these off later--the toast will clean them up
       this.disableGiveawayButton = true
       this.isLoading = true
 
       axios.get(`/user/giveaway/${this.giveaway._id}`)
-        .then((response) => {
-          // TODO: Show some information dialog and stop the spinner
-          // this.isLoading = false
-          console.log(response)
+        .catch((error) => {
+          EventBus.$emit('toast:error', `Could not claim edition: ${error.message}`)
+          console.error('Could not claim edition:', error)
         })
     },
   },
