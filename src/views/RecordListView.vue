@@ -1,15 +1,48 @@
 <template>
   <div>
     <app-header title="Collection">
-      <b-button variant="primary" v-b-modal.createRecordModal>Add New Asset</b-button>
-      <b-button variant="outline-primary" @click="createGiveaway">Create giveaway</b-button>
-      <b-button variant="outline-primary" @click="acceptGiveaway">Accept giveaway</b-button>
+      <b-button
+        variant="primary"
+        v-b-modal.createRecordModal
+      >
+        Add New Asset
+      </b-button>
+
+      <b-button
+        variant="outline-primary"
+        v-if="showGiveawaysAdmin"
+        @click="createGiveaway"
+      >
+        Create giveaway
+      </b-button>
     </app-header>
     <b-card-group deck class="record-list" v-if="records.length">
-      <record-list-item v-for="record in records"
+      <record-list-item
+        v-for="record in records"
         :codex-record="record"
         :key="record.tokenId"
       />
+    </b-card-group>
+    <b-card-group deck class="record-list giveaway" v-else-if="giveaway">
+      <b-card
+        :img-src="giveaway.metadata.mainImage ? giveaway.metadata.mainImage.uri : missingImage"
+        img-top
+      >
+        <b-button
+          variant="secondary"
+          @click="acceptGiveaway"
+        >
+          Create Record
+        </b-button>
+      </b-card>
+      <b-card class="info">
+        <p>
+          The first {{ giveaway.numberOfEditions }} users to participate in the Beta will receive an edition of this piece created by our designer Seb!
+        </p>
+        <p>
+          Click the 'Create Record' button to the left to claim yours.
+        </p>
+      </b-card>
     </b-card-group>
     <div v-else>
       You have no Records in your collection!
@@ -20,6 +53,7 @@
 
 <script>
 import axios from 'axios'
+import missingImage from '../assets/images/missing-image.png'
 
 import AppHeader from '../components/AppHeader'
 import RecordListItem from '../components/RecordListItem'
@@ -36,8 +70,18 @@ export default {
   data() {
     return {
       records: [],
-      giveaways: [],
+      giveaway: null,
+      missingImage,
     }
+  },
+  computed: {
+    account() {
+      return this.$store.state.web3.account
+    },
+    showGiveawaysAdmin() {
+      // This is enforced on the API too, but let's hide it from the UI
+      return this.account === '0x8c5013e3a10b97f0382f7afdc559c8615047be20'
+    },
   },
   mounted() {
     // @NOTE: incoming transfers and newly minted Records both have the same
@@ -81,7 +125,10 @@ export default {
     getGiveaways() {
       axios.get('/giveaways')
         .then((response) => {
-          this.giveaways = response.data.result
+          if (response.data.result.length) {
+            // For now, just select the first giveaway that is available
+            this.giveaway = response.data.result[0]
+          }
         })
     },
     createGiveaway() {
@@ -91,8 +138,9 @@ export default {
         })
     },
     acceptGiveaway() {
-      axios.get(`/user/giveaway/${this.giveaways[0]._id}`)
+      axios.get(`/user/giveaway/${this.giveaway._id}`)
         .then((response) => {
+          // TODO: Toast & notification
           console.log(response)
         })
     },
@@ -101,7 +149,23 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+@import "../assets/variables.styl"
+
 .record-list
   display: flex
   flex-wrap: wrap
+
+  div.card
+    flex: none
+    width: 25%
+    text-align: center
+
+.info
+  background: $color-dark
+  border: 1px solid $color-light
+
+  div
+    display: flex
+    flex-direction: column
+    justify-content: center
 </style>
