@@ -46,6 +46,9 @@ export default {
     web3() {
       return this.$store.state.web3
     },
+    web3Error() {
+      return this.$store.state.web3.error
+    },
   },
   methods: {
     initializeApi() {
@@ -76,6 +79,13 @@ export default {
           return true
         default:
           return false
+      }
+    },
+  },
+  watch: {
+    web3Error(error) {
+      if (error) {
+        this.$store.dispatch('logout', this.$router)
       }
     },
   },
