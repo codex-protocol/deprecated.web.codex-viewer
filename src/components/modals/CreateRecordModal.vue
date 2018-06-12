@@ -203,7 +203,6 @@ export default {
 
         })
         .catch((error) => {
-          EventBus.$emit('toast:error', `Could not create Record: ${error.message}`)
           console.error('Could not create Record:', error)
 
           this.codexRecord = null
@@ -214,6 +213,7 @@ export default {
         })
     },
     createRecord(metadata) {
+
       const { sha3 } = this.web3.instance()
       const { account } = this.web3
       const input = [
@@ -225,14 +225,10 @@ export default {
         metadata.id,
       ]
 
+      // @NOTE: no need to catch() here since rejections will bubble up to the
+      //  catch() in createMetaData() above
       return callContract(this.recordContract.mint, input, this.web3)
-        .catch((error) => {
-          console.error('Could not create Record:', error)
 
-          // @NOTE: we must throw the error here so the MetaMaskNotificationModal
-          //  can catch() it too
-          throw error
-        })
     },
   },
   computed: {
