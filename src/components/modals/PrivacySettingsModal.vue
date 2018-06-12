@@ -143,6 +143,14 @@ export default {
   watch: {
     modalVisible(newVisibility) {
       if (!newVisibility) {
+        // @BUG: there's a bug here related to resetting this.sharedAddresses
+        //  to the this.whitelistedAddresses prop since the prop cannot be
+        //  updated to the updated value returned from the API from inside this
+        //  component
+        //
+        // to reproduce: remove an address, close the modal, reopen the modal
+        //  and note that the address is still there (even though it truly was
+        //  removed from the database)
         Object.assign(this.$data, this.$options.data.apply(this))
       }
     },
