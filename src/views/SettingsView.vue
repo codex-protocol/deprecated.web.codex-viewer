@@ -49,7 +49,7 @@ export default {
   },
   methods: {
     getRecords() {
-      axios.get('/user/records?include=metadata')
+      axios.get('/user/records')
         .then((response) => {
           this.records = response.data.result
         })

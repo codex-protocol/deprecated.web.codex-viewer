@@ -136,7 +136,7 @@ export default {
   },
   methods: {
     getRecord() {
-      axios.get(`/record/${this.recordId}?include=metadata&include=provenance`)
+      axios.get(`/record/${this.recordId}`)
         .then((response) => {
           this.codexRecord = response.data.result
         })

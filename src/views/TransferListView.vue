@@ -67,9 +67,6 @@ export default {
 
         params: {
           filters: {},
-          include: [
-            'metadata',
-          ],
         },
       }
 
