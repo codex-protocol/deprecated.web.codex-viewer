@@ -206,15 +206,16 @@ export default {
   justify-content: center
   background-color: rgba(255, 255, 255, .75)
 
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.spinner {
-  width: 8em;
-  height: 8em;
-  animation: spin 1s linear infinite reverse;
+.spinner
+  width: 8em
+  height: 8em
   z-index: 999
-}
+  animation: spin 1s linear infinite reverse
+
+@keyframes spin
+  from
+    transform: rotate(0deg)
+
+  to
+    transform: rotate(360deg)
 </style>
