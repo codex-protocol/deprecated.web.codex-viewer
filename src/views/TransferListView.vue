@@ -2,8 +2,8 @@
   <div>
     <app-header title="Transfers" />
     <app-sub-header
-      v-bind:transferDirection="transferDirection"
-      v-bind:fetchData="this.fetchData"
+      :fetchData="this.fetchData"
+      :transferDirection="transferDirection"
     />
     <b-card-group deck class="record-list" v-if="records.length">
       <record-transfer-incoming-list-item
