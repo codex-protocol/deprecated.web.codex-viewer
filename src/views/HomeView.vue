@@ -5,8 +5,11 @@
         <div class="logo"><b-link href="/#/"><img src="../assets/logos/codex/gold.svg" /></b-link></div>
         <h1>Codex Viewer (Beta)</h1>
         <div class="lead">Decentralized application for viewing The Codex Registry</div>
-        <b-button variant="primary" @click="login">Login</b-button>
-        <b-button variant="outline-primary" @click="aboutCodex">About Codex</b-button>
+        <div class="button-container mb-3">
+          <b-button variant="primary" @click="login">Login</b-button>
+          <b-button variant="outline-primary" @click="aboutCodex">About Codex</b-button>
+        </div>
+        <!-- <bug-bounty-marketing-card /> -->
       </div>
       <div class="col-sm-5 secondary">
         <div class="bust"><img src="../assets/images/login-art.png" /></div>
@@ -17,9 +20,13 @@
 
 <script>
 import EventBus from '../util/eventBus'
+import BugBountyMarketingCard from '../components/BugBountyMarketingCard'
 
 export default {
   name: 'home-view',
+  components: {
+    BugBountyMarketingCard,
+  },
   methods: {
     login() {
       EventBus.$emit('events:click-home-login')
@@ -66,4 +73,10 @@ export default {
   .btn-primary
     margin-right: 1rem
 
+  .button-container
+    display: flex
+    flex-direction: row
+
+    button
+      width: 50%
 </style>

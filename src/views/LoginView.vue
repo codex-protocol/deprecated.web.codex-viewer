@@ -121,7 +121,7 @@ export default {
         case Web3Errors.None:
         default:
           title = 'Login'
-          description = 'Login with your MetaMask account to create, view, &amp; transfer Codex Records'
+          description = 'Login to create, view, &amp; transfer Codex Records'
           this.setButton('Login', this.metamaskLogin)
           break
       }
@@ -169,6 +169,6 @@ export default {
     margin-bottom: 3.125rem
 
   .btn-primary
-    margin-right: 1rem
+    width: calc(50% - 0.5rem)
 
 </style>
