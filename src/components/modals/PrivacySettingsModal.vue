@@ -89,7 +89,7 @@ export default {
         },
       }
 
-      axios(requestOptions)
+      return axios(requestOptions)
         .then((response) => {
           const { result } = response.data
           this.newWhitelistedAddress = null
@@ -121,7 +121,7 @@ export default {
         },
       }
 
-      axios(requestOptions)
+      return axios(requestOptions)
         .then((response) => {
 
           const { result } = response.data
