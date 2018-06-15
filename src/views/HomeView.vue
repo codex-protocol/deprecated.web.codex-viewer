@@ -3,13 +3,13 @@
     <div class="row">
       <div class="col-sm-7">
         <div class="logo"><b-link href="/#/"><img src="../assets/logos/codex/gold.svg" /></b-link></div>
-        <h1>Codex Viewer</h1>
+        <h1>Codex Viewer (Beta)</h1>
         <div class="lead">Decentralized application for viewing The Codex Registry</div>
         <b-button variant="primary" @click="login">Login</b-button>
         <b-button variant="outline-primary" @click="aboutCodex">About Codex</b-button>
       </div>
       <div class="col-sm-5 secondary">
-        <div class="bust"><img src="../assets/images/bust.png" /></div>
+        <div class="bust"><img src="../assets/images/login-art.png" /></div>
       </div>
     </div>
   </div>
@@ -23,7 +23,7 @@ export default {
   methods: {
     login() {
       EventBus.$emit('events:click-home-login')
-      window.location = '/#/login'
+      this.$router.push('login')
     },
     aboutCodex() {
       EventBus.$emit('events:click-about-codex')

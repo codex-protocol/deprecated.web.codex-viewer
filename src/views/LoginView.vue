@@ -14,7 +14,7 @@
         </b-button>
       </div>
       <div class="col-sm-5 secondary">
-        <div class="bust"><img src="../assets/images/bust.png" /></div>
+        <div class="bust"><img src="../assets/images/login-art.png" /></div>
       </div>
     </div>
   </div>

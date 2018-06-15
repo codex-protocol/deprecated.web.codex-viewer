@@ -155,7 +155,7 @@ const actions = {
   logout({ commit }, router) {
     commit('clearUserState')
 
-    router.replace('/login')
+    router.replace('/')
   },
 }
 
