@@ -7,4 +7,10 @@ export default {
         return response.data.result
       })
   },
+  findRecord: (recordId) => {
+    return getApi(`/record/${recordId}`)
+      .then((response) => {
+        return response.data.result
+      })
+  },
 }

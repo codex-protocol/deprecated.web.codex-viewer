@@ -38,14 +38,14 @@
 import axios from 'axios'
 
 import EventBus from '../util/eventBus'
-import { showManageTokensPage } from '../util/config'
+import config from '../util/config'
 
 export default {
   name: 'app-side-bar',
   data() {
     return {
       numberOfIncomingTransfers: 0,
-      showManageTokensPage,
+      showManageTokensPage: config.showManageTokensPage,
     }
   },
   computed: {
@@ -112,7 +112,7 @@ nav
   height: 100%
   min-width: @width
   max-width: @width
-  overflow-y: scroll
+  overflow-y: auto
   background-color: rgba(white, .05)
 
   display: flex

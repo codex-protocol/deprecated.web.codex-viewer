@@ -103,7 +103,7 @@ import vue2Dropzone from 'vue2-dropzone'
 import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 import EventBus from '../../util/eventBus'
 
-import { apiUrl } from '../../util/config'
+import config from '../../util/config'
 import callContract from '../../util/web3/callContract'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
@@ -122,8 +122,6 @@ export default {
     const imageIds = this.codexRecord.metadata.images.map(({ id, hash }) => {
       return { id, hash }
     })
-
-    const filesUrl = `${apiUrl}/users/files`
 
     return {
       name: this.codexRecord.metadata.name,
@@ -144,7 +142,7 @@ export default {
       tokenId: this.codexRecord.tokenId,
       providerMetadataId: this.codexRecord.metadata.id,
       dropzoneOptions: {
-        url: filesUrl,
+        url: `${config.apiUrl}/users/files`,
         paramName: 'files',
         thumbnailWidth: 150,
         maxFilesize: 5,

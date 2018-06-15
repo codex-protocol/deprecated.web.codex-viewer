@@ -61,14 +61,13 @@
 
 <script>
 import EventBus from '../util/eventBus'
-import record from '../util/api/record'
-import giveaway from '../util/api/giveaway'
+import Record from '../util/api/record'
+import Giveaway from '../util/api/giveaway'
+import config from '../util/config'
 import missingImage from '../assets/images/missing-image.png'
 
-import EventBus from '../util/eventBus'
 import AppHeader from '../components/AppHeader'
 import RecordListItem from '../components/RecordListItem'
-import { showCreateGiveawayButton } from '../util/config'
 import CreateRecordModal from '../components/modals/CreateRecordModal'
 
 export default {
@@ -84,8 +83,8 @@ export default {
       missingImage,
       giveaway: null,
       isLoading: false,
-      showCreateGiveawayButton,
       disableGiveawayButton: false,
+      showCreateGiveawayButton: config.showCreateGiveawayButton,
     }
   },
   computed: {
@@ -123,7 +122,7 @@ export default {
       })
     },
     getRecords() {
-      record.getUserRecords()
+      Record.getUserRecords()
         .then((records) => {
           this.records = records
         })
@@ -132,14 +131,14 @@ export default {
         })
     },
     getGiveaways() {
-      giveaway.getAllEligibleGiveaways()
+      Giveaway.getAllEligibleGiveaways()
         .then((giveaways) => {
           // For now, just select the first giveaway that is available
           this.giveaway = giveaways[0]
         })
     },
     createGiveaway() {
-      giveaway.createNewGiveaway()
+      Giveaway.createNewGiveaway()
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not create giveaway: ${error.message}`)
         })
@@ -149,7 +148,7 @@ export default {
       this.disableGiveawayButton = true
       this.isLoading = true
 
-      giveaway.participateInGiveaway(this.giveaway._id)
+      Giveaway.participateInGiveaway(this.giveaway._id)
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not claim edition: ${error.message}`)
           this.disableGiveawayButton = false

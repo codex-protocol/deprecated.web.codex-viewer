@@ -9,7 +9,7 @@
           <b-button variant="primary" @click="login">Login</b-button>
           <b-button variant="outline-primary" @click="aboutCodex">About Codex</b-button>
         </div>
-        <!-- <bug-bounty-marketing-card /> -->
+        <bug-bounty-marketing-card v-if="showBugBountyMarketingCard" />
       </div>
       <div class="col-sm-5 secondary">
         <div class="bust"><img src="../assets/images/login-art.png" /></div>
@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import config from '../util/config'
 import EventBus from '../util/eventBus'
 import BugBountyMarketingCard from '../components/BugBountyMarketingCard'
 
@@ -26,6 +27,11 @@ export default {
   name: 'home-view',
   components: {
     BugBountyMarketingCard,
+  },
+  data() {
+    return {
+      showBugBountyMarketingCard: config.showBugBountyMarketingCard,
+    }
   },
   methods: {
     login() {
