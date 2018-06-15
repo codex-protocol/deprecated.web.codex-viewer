@@ -138,8 +138,11 @@ export default {
       return this.web3.account
     },
     isOwner() {
-      return this.account &&
+      return (
+        this.account &&
+        this.$store.state.auth.authToken &&
         this.account === this.codexRecord.ownerAddress
+      )
     },
     isApproved() {
       return this.account &&
