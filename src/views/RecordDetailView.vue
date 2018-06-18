@@ -61,7 +61,7 @@
         </div>
       </div>
       <div
-        v-if="codexRecord.metadata.images.length"
+        v-if="codexRecord.metadata && codexRecord.metadata.images.length"
         class="record-extra-images mb-5"
       >
         <b-img

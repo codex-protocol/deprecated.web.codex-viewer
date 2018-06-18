@@ -54,7 +54,9 @@ export default {
     },
   },
   created() {
-    this.updateIncomingTransfersCount()
+    if (this.isAuthenticated()) {
+      this.updateIncomingTransfersCount()
+    }
   },
   mounted() {
     EventBus.$on('socket:address-approved:approved', this.updateIncomingTransfersCount)
