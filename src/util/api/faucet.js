@@ -1,7 +1,12 @@
-import { getApi } from './helpers'
+import callApi from './callApi'
 
 export default {
   getDripFromFaucet: () => {
-    return getApi('/user/faucet')
+    const requestOptions = {
+      method: 'get',
+      url: '/user/faucet',
+    }
+
+    return callApi(requestOptions)
   },
 }

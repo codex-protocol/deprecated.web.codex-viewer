@@ -1,10 +1,12 @@
-import { getApi } from './helpers'
+import callApi from './callApi'
 
 export default {
   getUser: () => {
-    return getApi('/user')
-      .then((response) => {
-        return response.data.result
-      })
+    const requestOptions = {
+      method: 'get',
+      url: '/user',
+    }
+
+    return callApi(requestOptions)
   },
 }

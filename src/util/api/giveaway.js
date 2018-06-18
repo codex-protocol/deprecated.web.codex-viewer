@@ -1,18 +1,31 @@
-import { getApi, postApi } from './helpers'
+import callApi from './callApi'
 
 export default {
   getAllEligibleGiveaways: () => {
-    return getApi('/giveaways')
-      .then((response) => {
-        return response.data.result
-      })
+    const requestOptions = {
+      method: 'get',
+      url: '/giveaways',
+    }
+
+    return callApi(requestOptions)
   },
+
   participateInGiveaway: (giveawayId) => {
-    return getApi(`/user/giveaway/${giveawayId}`)
+    const requestOptions = {
+      method: 'get',
+      url: `/user/giveaway/${giveawayId}`,
+    }
+
+    return callApi(requestOptions)
   },
 
   // Admin functions
   createNewGiveaway: () => {
-    return postApi('/giveaways')
+    const requestOptions = {
+      method: 'post',
+      url: '/giveaways',
+    }
+
+    return callApi(requestOptions)
   },
 }

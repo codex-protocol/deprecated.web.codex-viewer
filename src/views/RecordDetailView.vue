@@ -212,7 +212,6 @@ export default {
         })
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not accept transfer: ${error.message}`)
-          console.error('Could not accept transfer:', error)
         })
     },
     toggleShowDetails() {

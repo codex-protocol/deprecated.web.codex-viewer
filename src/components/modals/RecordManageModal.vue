@@ -98,11 +98,12 @@
 </template>
 
 <script>
-import axios from 'axios'
 import vue2Dropzone from 'vue2-dropzone'
 import 'vue2-dropzone/dist/vue2Dropzone.min.css'
-import EventBus from '../../util/eventBus'
 
+import File from '../../util/api/file'
+import Record from '../../util/api/record'
+import EventBus from '../../util/eventBus'
 import config from '../../util/config'
 import callContract from '../../util/web3/callContract'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
@@ -242,34 +243,16 @@ export default {
       this.uploadMainImageSuccess = false
       this.uploadMainImageComplete = false
 
-      const formData = new FormData()
-      formData.append('files', file)
+      File.uploadFiles(file)
+        .then((uploadedFiles) => {
 
-      const requestOptions = {
-
-        method: 'post',
-        url: '/users/files',
-
-        headers: {
-          'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
-        },
-
-        data: formData,
-      }
-
-      axios(requestOptions)
-        .then((response) => {
-
-          const { result } = response.data
-
-          this.uploadedMainImageFile = result[0]
+          this.uploadedMainImageFile = uploadedFiles[0]
           this.uploadMainImageSuccess = true
           this.setMainImageId(this.uploadedMainImageFile.id)
 
         })
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not upload file: ${error.message}`)
-          console.error('Could not upload file:', error)
         })
         .finally(() => {
           this.uploadMainImageComplete = true
@@ -300,25 +283,16 @@ export default {
     },
     updateMetadata() {
 
-      const requestOptions = {
-
-        method: 'put',
-        url: `/users/records/${this.tokenId}/metadata`,
-
-        data: {
-          name: this.name,
-          images: this.getImageIds(),
-          mainImage: this.getMainImageId(),
-          description: this.description || null,
-        },
+      const updatedMetadata = {
+        name: this.name,
+        images: this.getImageIds(),
+        description: this.description,
+        mainImage: this.getMainImageId(),
       }
 
-      return axios(requestOptions)
-        .then((response) => {
+      return Record.updateMetadata(this.tokenId, updatedMetadata)
+        .then(() => {
           return this.modifyRecord()
-        })
-        .catch((error) => {
-          throw error
         })
     },
     modifyRecord() {
@@ -330,14 +304,9 @@ export default {
         '1',
         this.providerMetadataId,
       ]
-      return callContract(this.recordContract.modifyMetadataHashes, input, this.web3)
-        .catch((error) => {
-          console.error('there was an error calling modifyMetadataHashes', error)
 
-          // @NOTE: we must throw the error here so the MetaMaskNotificationModal
-          //  can catch() it too
-          throw error
-        })
+      // Note: we don't .catch here so that the error bubbles up to MetaMaskModal
+      return callContract(this.recordContract.modifyMetadataHashes, input, this.web3)
     },
   },
   computed: {
