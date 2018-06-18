@@ -31,17 +31,27 @@ export default {
     getTimeSince(createdAt) {
       return `${timeSince(new Date(createdAt))} ago`
     },
+    // @NOTE: on 2018-06-15 all provenance event types were made past-tense to
+    //  be consistent, since some were present-tense and some were past-tense
+    //
+    // @TODO: remove the "present-tense" versions of these events when mainnet
+    //  launch happens (or when staging / beta DBs have thier records updated
+    //  to use the past tense versions)
     getEventDescription(eventType) {
       switch (eventType) {
         case 'create':
+        case 'created':
           return 'Created by'
 
         case 'destroy':
+        case 'destroyed':
           return 'Destroyed by'
 
         case 'transfer':
+        case 'transfered':
           return 'Transferred to'
 
+        case 'modify':
         case 'modified':
           return 'Modified by'
 
@@ -54,8 +64,14 @@ export default {
         case 'create':
         case 'destroy':
         case 'transfer':
+
+        // eslint-disable-next-line: no-fallthrough
+        case 'created':
+        case 'destroyed':
+        case 'transfered':
           return row.newOwnerAddress
 
+        case 'modify':
         case 'modified':
           return row.codexRecordModifiedEvent.modifierAddress
 
