@@ -14,7 +14,7 @@
         </b-button>
       </div>
       <div class="col-sm-5 secondary">
-        <div class="bust"><img src="../assets/images/bust.png" /></div>
+        <div class="bust"><img src="../assets/images/login-art.png" /></div>
       </div>
     </div>
   </div>
@@ -113,15 +113,15 @@ export default {
           break
 
         case Web3Errors.WrongNetwork:
-          title = 'Wrong MetaMask network'
-          description = `You're on the wrong MetaMask network. Expected network is ${Networks[ExpectedNetworkId]}. Please change the network in your MetaMask settings.`
+          title = 'Wrong Ethereum network'
+          description = `You're on the wrong Ethereum network. Expected network is ${Networks[ExpectedNetworkId]}. Please change the network in your MetaMask settings.`
           this.setButton(false)
           break
 
         case Web3Errors.None:
         default:
           title = 'Login'
-          description = 'Login with your MetaMask account to create, view, &amp; transfer Codex Records'
+          description = 'Login to create, view, &amp; transfer Codex Records'
           this.setButton('Login', this.metamaskLogin)
           break
       }
@@ -169,6 +169,6 @@ export default {
     margin-bottom: 3.125rem
 
   .btn-primary
-    margin-right: 1rem
+    width: calc(50% - 0.5rem)
 
 </style>

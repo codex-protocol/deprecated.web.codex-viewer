@@ -11,7 +11,7 @@
 <script>
 import axios from 'axios'
 
-import { apiUrl } from './util/config'
+import config from './util/config'
 import AppSideBar from './components/AppSideBar'
 import { Web3Errors } from './store/modules/web3'
 import ToastContainer from './components/ToastContainer'
@@ -67,7 +67,7 @@ export default {
   },
   methods: {
     initializeApi() {
-      axios.defaults.baseURL = apiUrl
+      axios.defaults.baseURL = config.apiUrl
       axios.defaults.headers.common['Content-Type'] = 'application/json'
 
       const authErrorHandler = (error) => {
@@ -83,7 +83,7 @@ export default {
       }
 
       axios.interceptors.response.use(
-        (response) => { return response }, // NOTE: use a no-op here since we're only interested in intercepting errors
+        (response) => { return response }, // @NOTE: use a no-op here since we're only interested in intercepting errors
         authErrorHandler
       )
     },
@@ -139,7 +139,7 @@ body
   height: 100%
   flex-grow: 1
   padding: 2rem
-  overflow: scroll
+  overflow: auto
   min-width: 40rem
 
   &.with-background

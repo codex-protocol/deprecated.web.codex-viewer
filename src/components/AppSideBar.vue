@@ -35,17 +35,16 @@
 
 <script>
 
-import axios from 'axios'
-
+import Transfer from '../util/api/transfer'
 import EventBus from '../util/eventBus'
-import { showManageTokensPage } from '../util/config'
+import config from '../util/config'
 
 export default {
   name: 'app-side-bar',
   data() {
     return {
       numberOfIncomingTransfers: 0,
-      showManageTokensPage,
+      showManageTokensPage: config.showManageTokensPage,
     }
   },
   computed: {
@@ -71,33 +70,19 @@ export default {
       EventBus.$emit('events:click-logout-button')
       this.$store.dispatch('logout', this.$router)
     },
-    // @TODO: instead of requesting these independantly of
+    // @TODO: instead of requesting these independently of
     //  src/views/TransferListView.vue, the list of transfers should really be
     //  retrieved & cached in vuex (or Resource pattern)
     //
     // @NOTE: this is also not responsive when a user ignores a transfer (until
     //  they refresh the page of course), and the TODO above would address that
     updateIncomingTransfersCount() {
-      const requestOptions = {
-
-        method: 'get',
-        url: '/user/transfers/incoming',
-
-        params: {
-          filters: {
-            isIgnored: false,
-          },
-        },
-      }
-
-      return axios(requestOptions)
-        .then((response) => {
-          this.numberOfIncomingTransfers = response.data.result.length
+      return Transfer.getIncomingTransfers()
+        .then((transfers) => {
+          this.numberOfIncomingTransfers = transfers.length
         })
-        .catch((error) => {
-          // no need to show a toast here? this isn't a critical request
-          // EventBus.$emit('toast:error', `Could not fetch ${transferDirection} transfers: ${error.message}`)
-          console.error('could not fetch incoming transfers for AppSideBar:', error)
+        .catch(() => {
+          // @NOTE: This is a non-essential action, so prevent any errors from bubbling further
         })
     },
   },
@@ -112,7 +97,7 @@ nav
   height: 100%
   min-width: @width
   max-width: @width
-  overflow-y: scroll
+  overflow-y: auto
   background-color: rgba(white, .05)
 
   display: flex

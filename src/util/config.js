@@ -1,9 +1,6 @@
 // @TODO: Move all config to a common location using dotenv or some other config util.
 //  Do a search for references to process.env in non-build directories to consolidate
 
-const showManageTokensPage = process.env.TARGET_ENV === 'development'
-const showCreateGiveawayButton = process.env.TARGET_ENV === 'development'
-
 const apiUrl = (() => {
 
   switch (process.env.TARGET_ENV) {
@@ -22,7 +19,8 @@ const apiUrl = (() => {
 const etherScanUrl = (() => {
   switch (process.env.TARGET_ENV) {
     case 'production':
-      return 'https://rinkeby.etherscan.io/' // @TODO: change back to 'https://etherscan.io/' when out of beta and on mainnet
+      // @TODO: change back to 'https://etherscan.io/' when out of beta and on mainnet
+      return 'https://rinkeby.etherscan.io/'
 
     case 'staging':
       return 'https://ropsten.etherscan.io/'
@@ -32,9 +30,14 @@ const etherScanUrl = (() => {
   }
 })()
 
-export {
+export default {
+  showManageTokensPage: process.env.TARGET_ENV !== 'production',
+  showCreateGiveawayButton: process.env.TARGET_ENV !== 'production',
+
+  // @TODO: The text & links in BugBountyMarketingCard are NOT final.
+  // Update them before enabling this.
+  showBugBountyMarketingCard: process.env.TARGET_ENV !== 'production',
+
   apiUrl,
   etherScanUrl,
-  showManageTokensPage,
-  showCreateGiveawayButton,
 }
