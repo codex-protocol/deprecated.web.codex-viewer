@@ -73,7 +73,7 @@ export default {
       EventBus.$emit('events:record-click-transfer')
       const input = [this.toEthAddress, this.recordId]
 
-      // Note: we don't .catch here so that the error bubbles up to MetaMaskModal
+      // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
       return callContract(this.recordContract.approve, input, this.web3)
         .then(() => {
           EventBus.$emit('events:record-transfer')

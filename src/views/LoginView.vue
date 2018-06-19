@@ -113,8 +113,8 @@ export default {
           break
 
         case Web3Errors.WrongNetwork:
-          title = 'Wrong MetaMask network'
-          description = `You're on the wrong MetaMask network. Expected network is ${Networks[ExpectedNetworkId]}. Please change the network in your MetaMask settings.`
+          title = 'Wrong Ethereum network'
+          description = `You're on the wrong Ethereum network. Expected network is ${Networks[ExpectedNetworkId]}. Please change the network in your MetaMask settings.`
           this.setButton(false)
           break
 

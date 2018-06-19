@@ -19,7 +19,8 @@ const apiUrl = (() => {
 const etherScanUrl = (() => {
   switch (process.env.TARGET_ENV) {
     case 'production':
-      return 'https://rinkeby.etherscan.io/' // @TODO: change back to 'https://etherscan.io/' when out of beta and on mainnet
+      // @TODO: change back to 'https://etherscan.io/' when out of beta and on mainnet
+      return 'https://rinkeby.etherscan.io/'
 
     case 'staging':
       return 'https://ropsten.etherscan.io/'
@@ -32,6 +33,9 @@ const etherScanUrl = (() => {
 export default {
   showManageTokensPage: process.env.TARGET_ENV !== 'production',
   showCreateGiveawayButton: process.env.TARGET_ENV !== 'production',
+
+  // @TODO: The text & links in BugBountyMarketingCard are NOT final.
+  // Update them before enabling this.
   showBugBountyMarketingCard: process.env.TARGET_ENV !== 'production',
 
   apiUrl,

@@ -1,6 +1,6 @@
 <template>
   <div class="bounty-container">
-    <h1>Earn ETH & CODX by participating!</h1>
+    <h1>Earn ETH &amp; CODX by participating!</h1>
     <ul>
       <li>Earn ETH by submitting vulnerabilities you find in the Codex Protocol smart contracts.</li>
       <li>Earn CODX by completing tasks in the Beta and providing feedback to our team.</li>

@@ -305,7 +305,7 @@ export default {
         this.providerMetadataId,
       ]
 
-      // Note: we don't .catch here so that the error bubbles up to MetaMaskModal
+      // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
       return callContract(this.recordContract.modifyMetadataHashes, input, this.web3)
     },
   },

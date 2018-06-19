@@ -83,7 +83,7 @@ export default {
       }
 
       axios.interceptors.response.use(
-        (response) => { return response }, // NOTE: use a no-op here since we're only interested in intercepting errors
+        (response) => { return response }, // @NOTE: use a no-op here since we're only interested in intercepting errors
         authErrorHandler
       )
     },

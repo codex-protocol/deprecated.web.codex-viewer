@@ -1,13 +1,13 @@
 import callApi from './callApi'
 
 export default {
-  getIncomingTransfers: (includeIgnoredTransfers) => {
+  getIncomingTransfers: () => {
     const requestOptions = {
       method: 'get',
       url: '/user/transfers/incoming',
       params: {
         filters: {
-          isIgnored: !!includeIgnoredTransfers,
+          isIgnored: false,
         },
       },
     }

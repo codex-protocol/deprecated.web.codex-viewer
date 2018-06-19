@@ -10,7 +10,7 @@ export default {
     return callApi(requestOptions)
   },
 
-  findRecord: (recordId) => {
+  getRecord: (recordId) => {
     const requestOptions = {
       method: 'get',
       url: `/record/${recordId}`,

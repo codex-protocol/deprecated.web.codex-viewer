@@ -201,7 +201,7 @@ export default {
         metadata.id,
       ]
 
-      // Note: we don't .catch here so that the error bubbles up to MetaMaskModal
+      // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
       return callContract(this.recordContract.mint, input, this.web3)
     },
   },

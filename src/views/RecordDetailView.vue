@@ -188,7 +188,7 @@ export default {
       this.activeMainImage = null
     },
     getRecord() {
-      Record.findRecord(this.recordId)
+      Record.getRecord(this.recordId)
         .then((record) => {
           this.codexRecord = record
         })

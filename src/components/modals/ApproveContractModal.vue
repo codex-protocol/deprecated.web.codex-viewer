@@ -30,7 +30,7 @@ export default {
       const amount = new (this.web3.instance()).BigNumber(2).pow(255)
       const input = [this.contractInstance.address, amount.toFixed()]
 
-      // Note: we don't .catch here so that the error bubbles up to MetaMaskModal
+      // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
       return callContract(this.tokenContract.approve, input, this.web3)
         .then(() => {
           EventBus.$emit('events:approve-contract', { id: this.id })
