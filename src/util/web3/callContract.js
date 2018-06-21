@@ -13,9 +13,11 @@ function callContract(func, args, web3) {
     .then((estimatedGas) => {
       return func(
         ...args,
-        { from: web3.account,
+        {
+          from: web3.account,
           gas: estimatedGas + gasBuffer,
-          gasPrice: web3.instance().toWei(recommendedGasPriceInGwei, 'gwei') }
+          gasPrice: web3.instance().toWei(recommendedGasPriceInGwei, 'gwei'),
+        }
       )
     })
     .catch((error) => {
