@@ -4,12 +4,12 @@
       <div class="col-sm-5">
         <div class="logo"><b-link href="/#/"><img src="../assets/logos/codex/gold.svg" /></b-link></div>
         <h1>Codex Viewer (Beta)</h1>
-        <div class="lead">Decentralized application for viewing The Codex Registry</div>
-        <div class="button-container mb-3">
+        <div class="lead">Create and manage blockchain identities for your unique assets.</div>
+        <div class="button-container mb-5">
           <b-button variant="primary" @click="login">Login</b-button>
           <b-button variant="outline-primary" @click="aboutCodex">About Codex</b-button>
         </div>
-        <bug-bounty-marketing-card v-if="showBugBountyMarketingCard" />
+        <login-marketing-card v-if="showLoginMarketingCard" />
       </div>
       <div class="col-sm-7 secondary">
         <div class="login-art"><img src="../assets/images/login-art.png" /></div>
@@ -21,16 +21,17 @@
 <script>
 import config from '../util/config'
 import EventBus from '../util/eventBus'
-import BugBountyMarketingCard from '../components/BugBountyMarketingCard'
+
+import LoginMarketingCard from '../components/LoginMarketingCard'
 
 export default {
   name: 'home-view',
   components: {
-    BugBountyMarketingCard,
+    LoginMarketingCard,
   },
   data() {
     return {
-      showBugBountyMarketingCard: config.showBugBountyMarketingCard,
+      showLoginMarketingCard: config.showCodexQuestsMarketing,
     }
   },
   methods: {
@@ -50,6 +51,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+@import "../assets/variables.styl"
 
   .container
     height: 100%
@@ -68,14 +70,11 @@ export default {
     margin-bottom: 2.5rem
 
   h1
-    font-family: $font-family-serif
     font-weight: bold
-    font-size: 3rem
+    font-family: $font-family-serif
 
   .lead
-    font-weight: 400
-    font-size: 1.25rem
-    margin-bottom: 3.125rem
+    margin-bottom: 3rem
 
   .btn-primary
     margin-right: 1rem

@@ -23,6 +23,9 @@
       <b-link to="/extensions">
         <img src="../assets/icons/star.svg">Extensions
       </b-link>
+      <b-link v-if="showCodexGallery" to="/Gallery">
+        <img src="../assets/icons/star.svg">Gallery
+      </b-link>
       <b-link to="/settings">
         <img src="../assets/icons/settings.svg">Settings
       </b-link>
@@ -50,6 +53,7 @@ export default {
     return {
       numberOfIncomingTransfers: 0,
       showManageTokensPage: config.showManageTokensPage,
+      showCodexGallery: config.showCodexGalleryInSideBar,
     }
   },
   computed: {

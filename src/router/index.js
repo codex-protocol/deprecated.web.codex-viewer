@@ -14,6 +14,7 @@ import SettingsView from '../views/SettingsView'
 import ManageTokensView from '../views/ManageTokensView'
 import CodexQuestsView from '../views/CodexQuestsView'
 import FaucetView from '../views/FaucetView'
+import GalleryView from '../views/GalleryView'
 
 Vue.use(Router)
 
@@ -56,7 +57,8 @@ if (config.showManageTokensPage) {
 
 if (config.showCodexQuestsMarketing) {
   router.addRoutes([
-    { name: 'codex-quests', path: '/codex-quests', component: CodexQuestsView },
+    { name: 'codex-quests', path: '/codex-quests', component: CodexQuestsView, meta: { allowUnauthenticatedUsers: true } },
+    { name: 'gallery', path: '/gallery', component: GalleryView, meta: { allowUnauthenticatedUsers: true } },
   ])
 }
 

@@ -42,9 +42,12 @@
         <p><b>Fees for the registry will now be turned on, so make sure you have CODX from the faucet!</b><p>
 
         <!-- @TODO: Update ETH address to the actual one -->
+        <p>Create a Codex Record (bonus points for drawing your own!) and transfer it to address XXX.</p>
         <p>
-          Create a Codex Record (bonus points for drawing your own!) and transfer it to address XXX.
-          Address XXX is going to be our first Codex Gallery. Any Codex Records owned by this account will be made public, and shared at https://beta.codex-viewer.com/gallery. This means that by the end of our Beta period, we'll have a unique gallery composed of all the artists & collectors in our community.
+          Address XXX is going to be our first Codex Gallery. Any Codex Records owned by this account will be made public, and shared at <b-link to="/gallery">The Codex Gallery</b-link>.
+        </p>
+        <p>
+          This means that by the end of our Beta period, we'll have a unique gallery composed of all the artists &amp; collectors in our community.
         </p>
       </div>
     </div>
