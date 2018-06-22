@@ -6,8 +6,10 @@
         Codex Quests are designed to provide opportunities for our community to receive CODX tokens in reward for completing specific tasks related to Codex Viewer on a given day.
         On each quest day, the team will be around on social media to listen to your feedback so that we can incorporate your ideas into building a better product.
       </p>
+
+      <!-- @TODO: replace with real link -->
       <p>
-        For more details on how to participate and claim your CODX rewards, <a href=https://medium.com/@johnhforrest/announcing-codex-quests-our-bug-bounty-program-b034678014b3 target="_blank">check out the original announcement on Medium</a>.
+        For more details on how to participate and claim your CODX rewards, <a href="#" target="_blank">check out the original announcement on Medium</a>.
       </p>
 
       <p>The schedule of the quests is as follows:</p>
@@ -38,6 +40,8 @@
 
         <h2>July 11th - Gallery</h2>
         <p><b>Fees for the registry will now be turned on, so make sure you have CODX from the faucet!</b><p>
+
+        <!-- @TODO: Update ETH address to the actual one -->
         <p>
           Create a Codex Record (bonus points for drawing your own!) and transfer it to address XXX.
           Address XXX is going to be our first Codex Gallery. Any Codex Records owned by this account will be made public, and shared at https://beta.codex-viewer.com/gallery. This means that by the end of our Beta period, we'll have a unique gallery composed of all the artists & collectors in our community.

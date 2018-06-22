@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import store from '../store'
+import config from '../util/config'
 
 import HomeView from '../views/HomeView'
 import LoginView from '../views/LoginView'
@@ -41,13 +42,23 @@ const router = new Router({
 
     { name: 'settings', path: '/settings', component: SettingsView },
     { name: 'collection', path: '/collection', component: RecordListView },
-    { name: 'manage-tokens', path: '/manage-tokens', component: ManageTokensView },
-    { name: 'codex-quests', path: '/codex-quests', component: CodexQuestsView },
-    { name: 'faucet', path: '/faucet', component: FaucetView },
 
     { name: 'record-detail', path: '/record/:recordId', component: RecordDetailView, meta: { allowUnauthenticatedUsers: true } },
   ],
 })
+
+if (config.showManageTokensPage) {
+  router.addRoutes([
+    { name: 'manage-tokens', path: '/manage-tokens', component: ManageTokensView },
+    { name: 'faucet', path: '/faucet', component: FaucetView },
+  ])
+}
+
+if (config.showCodexQuestsMarketing) {
+  router.addRoutes([
+    { name: 'codex-quests', path: '/codex-quests', component: CodexQuestsView },
+  ])
+}
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some((route) => { return !route.meta.allowUnauthenticatedUsers })) {
