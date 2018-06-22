@@ -20,7 +20,8 @@
       <b-link to="/coming-soon">
         <img src="../assets/icons/star.svg">Coming Soon
       </b-link>
-      <span class="spacer"></span>
+      <!-- @TODO: Drop the Logout button to the bottom of the viewport -->
+      <!-- <span class="spacer"></span> -->
       <b-link @click.prevent="logout">
         <img src="../assets/icons/logout.svg">Logout
       </b-link>

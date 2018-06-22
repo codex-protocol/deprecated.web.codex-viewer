@@ -170,7 +170,7 @@ export default {
     margin-bottom: 3.125rem
 
   .btn-primary
-    width: calc(50% - 0.5rem)
+    min-width: calc(50% - 0.5rem)
 
   .login-art img
     width: 100%
