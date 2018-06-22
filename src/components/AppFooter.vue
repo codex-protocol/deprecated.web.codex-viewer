@@ -1,43 +1,33 @@
 <template>
-  <div class="footer">
-    <div class="row">
-      <div class="col-md-3 offset-md-2">
-          <p class="bug-bounty-notice" v-if="showBugBountyInfo">
-            Bug Bounty Program Active
-          </p>
-          <p>
-            <a href="https://github.com/codex-protocol/">
-              <icon-base iconName="github" width="24" height="24" class="icon">
-                <icon-github />
-              </icon-base>
-            </a>
-            <a href="https://twitter.com/codexprotocol">
-              <icon-base iconName="twitter" width="24" height="24" class="icon">
-                <icon-twitter />
-              </icon-base>
-            </a>
-            <a href="http://t.me/codexprotocol">
-              <icon-base iconName="telegram" width="24" height="24" class="icon">
-                <icon-telegram />
-              </icon-base>
-            </a>
-            <a href="https://medium.com/codexprotocol">
-              <icon-base iconName="medium" width="24" height="24" class="icon">
-                <icon-medium />
-              </icon-base>
-            </a>
-          </p>
-      </div>
-      <div class="col-6">
-        <p v-if="showBugBountyInfo">Earn CDX tokens by spotting bugs and completing tasks within the Viewer</p>
-        <p class="links">
-          <a href="#" v-if="showBugBountyInfo">Bug Bounty</a>
-          <a href="#" v-if="showBugBountyInfo">Earndrop</a>
-          <a href="https://www.codexprotocol.com/Terms-of-Service.pdf">Terms Of Use</a>
-          <a href="https://www.codexprotocol.com/privacy-policy.html">Privacy Policy</a>
-          <a href="mailto:support@codexprotocol.com">Contact Us</a>
-        </p>
-      </div>
+  <div class="footer mt-3 mb-3">
+    <div class="links mb-3">
+      <a href="#" v-if="showBugBountyInfo">Bug Bounty</a>
+      <a href="https://bitcointalk.org/index.php?topic=4508456.0">Earndrop</a>
+      <a href="https://www.codexprotocol.com/Terms-of-Service.pdf">Terms of Use</a>
+      <a href="https://www.codexprotocol.com/privacy-policy.html">Privacy Policy</a>
+      <a href="mailto:support@codexprotocol.com">Contact Us</a>
+    </div>
+    <div>
+      <a href="https://github.com/codex-protocol/">
+        <icon-base iconName="github" width="24" height="24" class="icon">
+          <icon-github />
+        </icon-base>
+      </a>
+      <a href="https://twitter.com/codexprotocol">
+        <icon-base iconName="twitter" width="24" height="24" class="icon">
+          <icon-twitter />
+        </icon-base>
+      </a>
+      <a href="http://t.me/codexprotocol">
+        <icon-base iconName="telegram" width="24" height="24" class="icon">
+          <icon-telegram />
+        </icon-base>
+      </a>
+      <a href="https://medium.com/codexprotocol">
+        <icon-base iconName="medium" width="24" height="24" class="icon">
+          <icon-medium />
+        </icon-base>
+      </a>
     </div>
   </div>
 </template>
@@ -73,18 +63,14 @@ export default {
 @import "../assets/variables.styl"
 
 .footer
-  padding-top: 2rem
-
-  .bug-bounty-notice
-    font-weight: bold
+  display: flex
+  align-items: center
+  flex-direction: column
 
   .links a
+    font-size: 80%
     margin-right: 2rem
     color: $color-light
-    text-decoration: underline
-
-.row
-  width: 100%
 
 a .icon
   fill: $color-light
