@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row">
-      <div class="col-sm-7">
+      <div class="col-sm-5">
         <div class="logo"><b-link href="/#/"><img src="../assets/logos/codex/gold.svg" /></b-link></div>
         <h1 v-html="pageContent.title"></h1>
         <div class="lead" v-html="pageContent.description"></div>
@@ -13,8 +13,8 @@
           {{ buttonTitle }}
         </b-button>
       </div>
-      <div class="col-sm-5 secondary">
-        <div class="bust"><img src="../assets/images/login-art.png" /></div>
+      <div class="col-sm-7 secondary">
+        <div class="login-art"><img src="../assets/images/login-art.png" /></div>
       </div>
     </div>
   </div>
@@ -144,15 +144,16 @@ export default {
 <style lang="stylus" scoped>
 
   .container
+    height: 100%
     display: flex
     align-items: center
-    height: 100%
 
   .row
     width: 100%
 
   .secondary
     text-align: right
+    align-self: center
 
   .logo
     max-width: 100px
@@ -170,5 +171,8 @@ export default {
 
   .btn-primary
     width: calc(50% - 0.5rem)
+
+  .login-art img
+    width: 100%
 
 </style>
