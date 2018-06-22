@@ -1,8 +1,11 @@
 <template>
-  <div id="app">
+  <div id="app" :class="{ 'with-background': this.useBackground() }">
     <app-side-bar v-if="showSideBar" />
-    <div class="main-content" :class="{ 'with-background': this.useBackground() }">
-      <router-view />
+    <div class="main-content-wrapper">
+      <div class="main-content">
+        <router-view />
+      </div>
+      <app-footer />
     </div>
     <toast-container />
   </div>
@@ -13,6 +16,7 @@ import axios from 'axios'
 
 import config from './util/config'
 import AppSideBar from './components/AppSideBar'
+import AppFooter from './components/AppFooter'
 import { Web3Errors } from './store/modules/web3'
 import ToastContainer from './components/ToastContainer'
 
@@ -22,6 +26,7 @@ export default {
   name: 'App',
   components: {
     AppSideBar,
+    AppFooter,
     ToastContainer,
   },
   created() {
@@ -130,20 +135,24 @@ body
   font-family: $font-family-sans-serif
 
 #app
-  width: 100%
-  height: 100%
   display: flex
-
-.main-content
   width: 100%
-  height: 100%
-  flex-grow: 1
-  padding: 2rem
-  overflow: auto
-  min-width: 40rem
 
   &.with-background
     background: url(assets/images/pattern-dark.jpeg)
+
+.main-content-wrapper
+  display: flex
+  flex-direction: column
+  min-height: 100vh
+  width: 100%
+  min-width: 40rem
+
+.main-content
+  flex: 1
+  width: 100%
+  padding: 2rem
+  overflow: auto
 
 // CSS Checkbox toggle
 // <input type="checkbox"> toggle
