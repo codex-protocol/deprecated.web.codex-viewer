@@ -13,6 +13,7 @@
 
 <script>
 import axios from 'axios'
+import 'freshchat-widget'
 
 import config from './util/config'
 import AppSideBar from './components/AppSideBar'
@@ -46,6 +47,7 @@ export default {
         'home',
         'login',
       ],
+      freshChatToken: process.env.FRESHCHAT_API_TOKEN,
     }
   },
   computed: {
@@ -110,6 +112,15 @@ export default {
         this.$store.dispatch('logout', this.$router)
       }
     },
+  },
+  mounted() {
+    const token = this.freshChatToken
+    if (token) {
+      window.fcWidget.init({
+        token,
+        host: 'https://wchat.freshchat.com',
+      })
+    }
   },
 }
 </script>
