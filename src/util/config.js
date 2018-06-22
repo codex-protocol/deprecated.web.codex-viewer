@@ -38,6 +38,8 @@ export default {
   // Update them before enabling this.
   showBugBountyMarketingCard: process.env.TARGET_ENV !== 'production',
 
+  showCodexQuestsMarketing: process.env.TARGET_ENV !== 'production',
+
   apiUrl,
   etherScanUrl,
 }

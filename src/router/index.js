@@ -11,6 +11,8 @@ import RecordListView from '../views/RecordListView'
 import RecordDetailView from '../views/RecordDetailView'
 import SettingsView from '../views/SettingsView'
 import ManageTokensView from '../views/ManageTokensView'
+import CodexQuestsView from '../views/CodexQuestsView'
+import FaucetView from '../views/FaucetView'
 
 Vue.use(Router)
 
@@ -28,13 +30,21 @@ const router = new Router({
   routes: [
     { name: 'home', path: '/', component: HomeView, meta: { allowUnauthenticatedUsers: true } },
     { name: 'login', path: '/login', component: LoginView, beforeEnter: ifAuthenticated, meta: { allowUnauthenticatedUsers: true } },
+
     { name: 'transfers', path: '/transfers', redirect: '/transfers/incoming' },
     { name: 'incoming-transfers', path: '/transfers/incoming', component: TransferListView, props: { transferDirection: 'incoming' } },
     { name: 'outgoing-transfers', path: '/transfers/outgoing', component: TransferListView, props: { transferDirection: 'outgoing' } },
+
+    // @TODO: Deprecate /coming-soon after /extensions has shipped
     { name: 'coming-soon', path: '/coming-soon', component: FeatureListView },
+    { name: 'extensions', path: '/extensions', component: FeatureListView },
+
     { name: 'settings', path: '/settings', component: SettingsView },
     { name: 'collection', path: '/collection', component: RecordListView },
     { name: 'manage-tokens', path: '/manage-tokens', component: ManageTokensView },
+    { name: 'codex-quests', path: '/codex-quests', component: CodexQuestsView },
+    { name: 'faucet', path: '/faucet', component: FaucetView },
+
     { name: 'record-detail', path: '/record/:recordId', component: RecordDetailView, meta: { allowUnauthenticatedUsers: true } },
   ],
 })

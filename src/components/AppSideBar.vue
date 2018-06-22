@@ -11,17 +11,21 @@
         <img src="../assets/icons/transfers.svg">Transfers
         <b-badge variant="danger" v-if="numberOfIncomingTransfers > 0">{{numberOfIncomingTransfers}}</b-badge>
       </b-link>
-      <b-link to="/settings">
-        <img src="../assets/icons/settings.svg">Settings
+      <b-link to="/codex-quests">
+        <img src="../assets/icons/codex-quest.svg">Codex Quests
       </b-link>
       <b-link v-if="showManageTokensPage" to="/manage-tokens">
         <img src="../assets/icons/codx-token.svg">Manage Tokens
       </b-link>
-      <b-link to="/coming-soon">
-        <img src="../assets/icons/star.svg">Coming Soon
+      <b-link v-if="showManageTokensPage" to="/faucet">
+        <img src="../assets/icons/faucet.svg">Faucet
       </b-link>
-      <!-- @TODO: Drop the Logout button to the bottom of the viewport -->
-      <!-- <span class="spacer"></span> -->
+      <b-link to="/extensions">
+        <img src="../assets/icons/star.svg">Extensions
+      </b-link>
+      <b-link to="/settings">
+        <img src="../assets/icons/settings.svg">Settings
+      </b-link>
       <b-link @click.prevent="logout">
         <img src="../assets/icons/logout.svg">Logout
       </b-link>
@@ -103,9 +107,6 @@ nav
 
   display: flex
   flex-direction: column
-
-.spacer
-  flex-grow: 1
 
 a
   padding: 1rem
