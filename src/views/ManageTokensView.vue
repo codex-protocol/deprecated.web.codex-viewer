@@ -46,6 +46,7 @@
 
 <script>
 import EventBus from '../util/eventBus'
+
 import AppHeader from '../components/AppHeader'
 import PersonalStakesTable from '../components/PersonalStakesTable'
 import ApproveContractModal from '../components/modals/ApproveContractModal'

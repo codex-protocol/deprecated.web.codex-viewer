@@ -18,9 +18,8 @@ export default {
 @import "../assets/variables.styl"
 
 .marketing-container
-  flex: 0
   border: 1px solid $color-primary
-  padding: 3rem
+  padding: 2rem
   background-color: $color-dark
 
 h1

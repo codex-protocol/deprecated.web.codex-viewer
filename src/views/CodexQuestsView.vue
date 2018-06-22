@@ -1,6 +1,7 @@
 <template>
   <div>
     <app-header title="Codex Quests" />
+    <h2>Earn CODX by completing Codex Quests</h2>
     <div class="content">
       <p>
         Codex Quests are designed to provide opportunities for our community to receive CODX tokens in reward for completing specific tasks related to Codex Viewer on a given day.
@@ -55,13 +56,17 @@
 </template>
 
 <script>
+import EventBus from '../util/eventBus'
+
 import AppHeader from '../components/AppHeader'
 
-// @TODO: events
 export default {
   name: 'codex-quests-view',
   components: {
     AppHeader,
+  },
+  created() {
+    EventBus.$emit('events:codex-quests-page')
   },
 }
 </script>

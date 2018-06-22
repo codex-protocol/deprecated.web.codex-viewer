@@ -168,6 +168,7 @@ export default {
   .logo
     max-width: 100px
     margin-bottom: 2.5rem
+    margin-top: 2.5rem
 
   h1
     font-weight: bold

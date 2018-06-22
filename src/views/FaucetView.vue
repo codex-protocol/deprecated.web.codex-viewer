@@ -14,15 +14,19 @@
 </template>
 
 <script>
+import EventBus from '../util/eventBus'
+
 import AppHeader from '../components/AppHeader'
 import FaucetModal from '../components/modals/FaucetModal'
 
-// @TODO: events
 export default {
   name: 'faucet-view',
   components: {
     AppHeader,
     FaucetModal,
+  },
+  created() {
+    EventBus.$emit('events:faucet-page')
   },
   computed: {
     userState() {

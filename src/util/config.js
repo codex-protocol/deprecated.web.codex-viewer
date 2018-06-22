@@ -31,7 +31,8 @@ const etherScanUrl = (() => {
 })()
 
 export default {
-  showManageTokensPage: process.env.TARGET_ENV !== 'production',
+  showManageTokensPage: process.env.TARGET_ENV === 'development',
+
   showCreateGiveawayButton: process.env.TARGET_ENV !== 'production',
 
   // @TODO: The text & links in BugBountyMarketingCard are NOT final.

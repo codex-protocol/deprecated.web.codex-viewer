@@ -7,12 +7,17 @@
 </template>
 
 <script>
+import EventBus from '../util/eventBus'
+
 import AppHeader from '../components/AppHeader'
 
 export default {
   name: 'gallery-view',
   components: {
     AppHeader,
+  },
+  created() {
+    EventBus.$emit('events:gallery-page')
   },
 }
 </script>
