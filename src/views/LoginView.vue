@@ -9,9 +9,11 @@
           v-if="buttonTitle"
           variant="primary"
           @click="buttonMethod"
+          class="mb-5"
         >
           {{ buttonTitle }}
         </b-button>
+        <login-marketing-card v-if="showLoginMarketingCard" />
       </div>
       <div class="col-sm-7 secondary">
         <div class="login-art"><img src="../assets/images/login-art.png" /></div>
@@ -21,12 +23,25 @@
 </template>
 
 <script>
+import config from '../util/config'
 import EventBus from '../util/eventBus'
 import { Web3Errors } from '../store/modules/web3'
 import { ExpectedNetworkId, Networks } from '../util/constants/web3'
 
+import LoginMarketingCard from '../components/LoginMarketingCard'
+
 export default {
   name: 'login-view',
+  components: {
+    LoginMarketingCard,
+  },
+  data() {
+    return {
+      buttonTitle: 'Login',
+      buttonMethod: this.metamaskLogin,
+      showLoginMarketingCard: config.showCodexQuestsMarketing,
+    }
+  },
   methods: {
     installMetamask() {
       window.open('https://www.metamask.io', '_blank')
@@ -79,12 +94,6 @@ export default {
       this.buttonTitle = title
       this.buttonMethod = method
     },
-  },
-  data() {
-    return {
-      buttonTitle: 'Login',
-      buttonMethod: this.metamaskLogin,
-    }
   },
   computed: {
     pageContent() {
@@ -142,6 +151,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+@import "../assets/variables.styl"
 
   .container
     height: 100%
@@ -158,16 +168,14 @@ export default {
   .logo
     max-width: 100px
     margin-bottom: 2.5rem
+    margin-top: 2.5rem
 
   h1
-    font-family: $font-family-serif
     font-weight: bold
-    font-size: 3rem
+    font-family: $font-family-serif
 
   .lead
-    font-weight: 400
-    font-size: 1.25rem
-    margin-bottom: 3.125rem
+    margin-bottom: 3rem
 
   .btn-primary
     min-width: calc(50% - 0.5rem)

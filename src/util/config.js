@@ -31,12 +31,16 @@ const etherScanUrl = (() => {
 })()
 
 export default {
-  showManageTokensPage: process.env.TARGET_ENV !== 'production',
+  showManageTokensPage: process.env.TARGET_ENV === 'development',
+
   showCreateGiveawayButton: process.env.TARGET_ENV !== 'production',
 
   // @TODO: The text & links in BugBountyMarketingCard are NOT final.
   // Update them before enabling this.
-  showBugBountyMarketingCard: process.env.TARGET_ENV !== 'production',
+  showCodexQuestsMarketing: process.env.TARGET_ENV !== 'production',
+
+  // @TODO: Navigation to this page is fine for now, but don't surface it in the side bar until the feature is ready
+  showCodexGalleryInSideBar: false,
 
   apiUrl,
   etherScanUrl,
