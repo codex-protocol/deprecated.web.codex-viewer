@@ -55,9 +55,12 @@ $grid-gutter-width:                 2rem;
 .custom-file-label {
   border: none;
   padding: .5rem;
-  overflow: hidden;
   border-radius: .25em;
   background-color: rgba(white, .1);
+}
+
+.custom-file-label {
+  overflow: hidden;
 }
 
 .form-control:focus {
