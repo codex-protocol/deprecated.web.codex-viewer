@@ -183,6 +183,9 @@ export default {
   },
   methods: {
     recordModifiedHandler(updatedCodexRecord) {
+      if (updatedCodexRecord.tokenId !== this.recordId) {
+        return
+      }
       this.codexRecord = updatedCodexRecord
       // Reset the primary displayed image to the main image
       this.activeMainImage = null
