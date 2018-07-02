@@ -174,9 +174,11 @@ export default {
   },
   mounted() {
     EventBus.$on('socket:record-modified', this.recordModifiedHandler)
+    EventBus.$on('socket:record-destroyed', this.recordDestroyedHandler)
   },
   beforeDestroy() {
     EventBus.$off('socket:record-modified', this.recordModifiedHandler)
+    EventBus.$off('socket:record-destroyed', this.recordDestroyedHandler)
   },
   watch: {
     $route: 'getRecord',
@@ -189,6 +191,14 @@ export default {
       this.codexRecord = updatedCodexRecord
       // Reset the primary displayed image to the main image
       this.activeMainImage = null
+    },
+    recordDestroyedHandler(destroyedCodexRecord) {
+      if (destroyedCodexRecord.tokenId !== this.recordId) {
+        return
+      }
+      // if they're viewing a record that has just been destroyed, send them
+      //  back to their collection
+      this.$router.replace({ name: 'collection' })
     },
     getRecord() {
       Record.getRecord(this.recordId)
