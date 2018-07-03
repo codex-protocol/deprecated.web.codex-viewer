@@ -67,32 +67,6 @@ export default {
 <style lang="stylus" scoped>
 @import "../assets/variables.styl"
 
-.header
-  height: 2.5rem
-  font-size: 2.5rem
-  margin-bottom: 2rem
-  color: $color-primary
-
-  display: flex
-  align-items: center
-
-  h1
-    font-size: 1em
-    font-weight: bold
-    line-height: 1em
-    font-family: $font-family-serif
-
-    margin: 0 .5em 0 0
-    padding-right: .5em
-    border-right: 1px solid $color-primary
-
-  .network-details
-    font-size: .4em
-    word-wrap: break-word
-
-  .spacer
-    flex-grow: 1
-
 .record-list
   display: flex
   flex-wrap: wrap
