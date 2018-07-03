@@ -9,7 +9,9 @@
           <b-col class="toggle">Details Public</b-col>
         </b-row>
       </b-container>
+      <!-- TODO: Better handling of record w/ no metadata -->
       <record-privacy-settings-row-item v-for="record in records"
+        v-if="record.metadata"
         :codex-record="record"
         :key="record.tokenId"
         :isPrivate="record.isPrivate"

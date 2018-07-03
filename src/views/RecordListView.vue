@@ -17,7 +17,9 @@
       </b-button>
     </app-header>
     <b-card-group deck class="record-list" v-if="records.length">
+      <!-- TODO: Better handling of record w/ no metadata -->
       <record-list-item
+        v-if="record.metadata"
         v-for="record in records"
         :codex-record="record"
         :key="record.tokenId"
