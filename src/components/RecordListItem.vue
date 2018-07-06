@@ -69,12 +69,6 @@ export default {
       font-weight: bold
       color: $color-dark
 
-      // uncomment to keep record name on a single line?
-      // display: block
-      // overflow: hidden
-      // white-space: nowrap
-      // text-overflow: ellipsis
-
     small
       color: $color-light-gray
 
