@@ -173,6 +173,12 @@ export default {
   flex-wrap: wrap
 
 .info
+.giveaway
+  flex: none
+  width: 25%
+  text-align: center
+
+.info
   background: $color-dark
   border: 1px solid $color-light
 
