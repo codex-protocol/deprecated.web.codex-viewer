@@ -1,5 +1,6 @@
 import router from '../../router'
 import EventBus from '../eventBus'
+import formatTokenAmount from '../formatTokenAmount'
 
 // this is here as a wrapper / convenience method so we don't have to repeat a
 //  bunch of stuff in the handlers below
@@ -73,5 +74,13 @@ export default {
       `You have been approved to view the Codex Record "${codexRecord.metadata.name}".\n\nClick this notification to view the Record.`,
       `/record/${codexRecord.tokenId}`
     )
+  },
+
+  'codex-coin:transferred': (value) => {
+    showToast(`You have successfully recieved ${formatTokenAmount(value)} CODX from the faucet.`)
+  },
+
+  'codex-coin:registry-contract-approved': (value) => {
+    showToast('The registry contract has been successfully approved to spend CODX on your behalf.')
   },
 }
