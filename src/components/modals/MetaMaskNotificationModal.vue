@@ -26,7 +26,9 @@
       time it takes to do so prevents webpack from being able to apply the
       scoped styles if you use a v-if
     -->
-    <slot v-show="shouldShowMainSlot"></slot>
+    <div v-show="shouldShowMainSlot">
+      <slot></slot>
+    </div>
 
     <div class="text-center" v-show="!shouldShowMainSlot">
 
