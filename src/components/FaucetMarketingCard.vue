@@ -123,8 +123,8 @@ export default {
 @import "../assets/variables.styl"
 
 h2
-  font-size: 1.25rem
   font-weight: bold
+  font-size: 1.25rem
   color: $color-light
 
 .card
@@ -133,12 +133,12 @@ h2
   background-color: rgba(white, .1)
 
 .faucet-card-body
-  text-align: left
-  padding: 1.25rem
   flex: 1
+  text-align: left
+  padding: 1.25rem 1.25rem 0
 
-  .card-body
-    text-align: left
+  p:last-of-type
+    margin-bottom: 0
 
 button
   margin: 1.25rem
