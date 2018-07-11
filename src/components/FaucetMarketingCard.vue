@@ -10,9 +10,9 @@
           variant="success"
         />
         <ul>
-          <li>Participate in the giveaway</li>
-          <li>Get CODX from the faucet</li>
-          <li>Approve the registry contract</li>
+          <li :class="{ 'completed': currentStep >= 1 }">Participate in the giveaway</li>
+          <li :class="{ 'completed': currentStep >= 2 }">Get CODX from the faucet</li>
+          <li :class="{ 'completed': currentStep >= 3 }">Approve the registry contract</li>
         </ul>
         <p>Your balance: {{ formatTokenAmount(balance) }} CODX</p>
       </div>
@@ -149,6 +149,10 @@ ul
 
 li
   margin-bottom: 1rem
+
+  &.completed
+    opacity: .5
+    text-decoration: line-through
 
 .dismiss
   font-size: 0.75rem
