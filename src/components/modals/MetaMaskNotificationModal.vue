@@ -46,7 +46,7 @@
           You haven't finished setting up your account so the transaction will fail.
         </p>
         <p>
-          Make sure to <a href="#" @click="$router.push({ name: 'faucet' })">get CODX from the faucet</a> and <a href="#" @click="$router.push({ name: 'manage-tokens' })">approve the registry contract.</a>
+          Make sure to <a href="#" @click="$router.push({ name: 'faucet' })">get CODX from the faucet and approve the registry contract.</a>
         </p>
       </div>
 
