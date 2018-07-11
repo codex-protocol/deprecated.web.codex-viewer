@@ -142,6 +142,7 @@ h2
 
 button
   margin: 1.25rem
+  white-space: normal
 
 ul
   font-size: 1.125rem
