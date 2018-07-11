@@ -86,7 +86,7 @@ export default {
           return 'Get CODX'
 
         case 2:
-          return 'Approve the registry contract'
+          return 'Approve Contract'
 
         case 3:
         default:
