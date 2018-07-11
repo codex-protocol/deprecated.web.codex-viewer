@@ -17,9 +17,18 @@
     :hide-header-close="preventClose"
     :no-close-on-backdrop="preventClose"
   >
-    <slot v-if="currentStep === 0 && !willTransactionFail"></slot>
 
-    <div class="text-center" v-else>
+    <!--
+      @NOTE: we use v-show here instead of v-if so that scoped styles from
+      parent components will still be applied
+
+      since there are some calculations to be done before showing the slot, the
+      time it takes to do so prevents webpack from being able to apply the
+      scoped styles if you use a v-if
+    -->
+    <slot v-show="shouldShowMainSlot"></slot>
+
+    <div class="text-center" v-show="!shouldShowMainSlot">
 
       <div>
         <img class="icon" src="../../assets/images/metamask.png" />
@@ -170,6 +179,9 @@ export default {
       } = this.$store.state.auth
 
       return this.requiresTokens && (!registryContractApproved || balance.eq(0))
+    },
+    shouldShowMainSlot() {
+      return this.currentStep === 0 && !this.willTransactionFail
     },
   },
 }
