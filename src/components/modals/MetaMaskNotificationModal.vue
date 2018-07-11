@@ -165,11 +165,7 @@ export default {
       return () => {}
     },
     isDisabled() {
-      if (this.currentStep === 1 && this.willTransactionFail) {
-        return true
-      }
-
-      return this.okDisabled || false
+      return this.willTransactionFail || this.okDisabled || false
     },
     modalSize() {
       return this.size || ''
