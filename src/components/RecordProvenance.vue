@@ -63,12 +63,6 @@ export default {
     getTimeSince(createdAt) {
       return `${timeSince(new Date(createdAt))} ago`
     },
-    // @NOTE: on 2018-06-15 all provenance event types were made past-tense to
-    //  be consistent, since some were present-tense and some were past-tense
-    //
-    // @TODO: remove the "present-tense" versions of these events when mainnet
-    //  launch happens (or when staging / beta DBs have thier records updated
-    //  to use the past tense versions)
     getEventDescription(eventType) {
       switch (eventType) {
         case 'created':
