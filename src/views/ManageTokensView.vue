@@ -5,6 +5,8 @@
         <app-header title="Manage Tokens" />
         <h5 class="mb-5">Get CODX from the faucet &amp; stake CODX for discounts!</h5>
 
+        <p>Credit balance: {{ creditBalance }}</p>
+
         <div class="item contract">
           <p>Registry contract approved? {{ registryContractApproved ? 'Yes!' : 'No' }}</p>
           <b-button variant="primary" v-b-modal.approveRegistryModal :disabled="registryContractApproved">
