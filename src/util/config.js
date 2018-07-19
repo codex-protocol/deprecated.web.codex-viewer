@@ -33,8 +33,8 @@ const etherScanUrl = (() => {
 export default {
 
   showFaucet: true,
-  showCodexQuestsMarketing: true,
-  showCodexGalleryInSideBar: true,
+  showCodexQuestsMarketing: false,
+  showCodexGalleryInSideBar: process.env.TARGET_ENV !== 'production',
 
   showManageTokensPage: false,
   showCreateGiveawayButton: process.env.TARGET_ENV !== 'production',
