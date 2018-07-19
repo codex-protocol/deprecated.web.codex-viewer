@@ -3,7 +3,7 @@
     'with-background': this.useBackground(),
     'show-nav': showNav,
   }">
-    <span class="hamburger" @click="toggleNav">
+    <span v-if="!hideSideBar" class="hamburger" @click="toggleNav">
       <icon-base
         iconName="menu"
         width="28"
