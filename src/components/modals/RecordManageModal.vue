@@ -5,6 +5,7 @@
     ok-title="Save"
     cancel-variant="outline-primary"
     size="lg"
+    :ok-disabled="!canSubmit"
     :ok-method="updateMetadata"
     :on-clear="clearModal"
     :requires-tokens="true"
@@ -95,6 +96,8 @@
         :destroyDropzone="false"
         v-on:vdropzone-success="fileAdded"
         v-on:vdropzone-removed-file="fileRemoved"
+        v-on:vdropzone-processing="onFileProcessing"
+        v-on:vdropzone-queue-complete="onQueueComplete"
       />
     </b-form-group>
   </meta-mask-notification-modal>
@@ -142,6 +145,7 @@ export default {
       progressVisible: false,
       uploadMainImageComplete: false,
       uploadMainImageSuccess: false,
+      isFileProcessing: false,
       images,
       imageIds,
       fileHashes: this.codexRecord.metadata.fileHashes,
@@ -158,6 +162,12 @@ export default {
     }
   },
   methods: {
+    onFileProcessing() {
+      this.isFileProcessing = true
+    },
+    onQueueComplete() {
+      this.isFileProcessing = false
+    },
     getMainImageId() {
       return { id: this.mainImageId }
     },
@@ -321,6 +331,9 @@ export default {
   computed: {
     web3() {
       return this.$store.state.web3
+    },
+    canSubmit() {
+      return !this.isFileProcessing
     },
     recordContract() {
       return this.web3.recordContractInstance()
