@@ -146,6 +146,15 @@ export default {
   },
   created() {
     EventBus.$emit('events:viewer:view-login-page')
+
+    // @TODO: evaluate what happens when a bogus auth token is set in the route
+    //  params
+    if (this.$route.params.authToken) {
+      this.$store.dispatch('updateUserState', this.$route.params.authToken)
+        .then(() => {
+          this.$router.replace({ name: 'collection' })
+        })
+    }
   },
 }
 </script>

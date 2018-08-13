@@ -45,7 +45,7 @@ const router = new Router({
     },
     {
       name: 'login',
-      path: '/login',
+      path: '/login/:authToken?',
       component: LoginView,
       beforeEnter: ifAuthenticated,
       meta: {
