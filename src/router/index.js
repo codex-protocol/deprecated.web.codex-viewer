@@ -22,14 +22,6 @@ import UnsupportedBrowserView from '../views/UnsupportedBrowserView'
 
 Vue.use(Router)
 
-const ifAuthenticated = (to, from, next) => {
-  if (store.getters.isAuthenticated) {
-    next('/collection')
-  } else {
-    next()
-  }
-}
-
 const router = new Router({
   routes: [
 
@@ -45,12 +37,12 @@ const router = new Router({
     },
     {
       name: 'login',
-      path: '/login/:authToken?',
+      path: '/login',
       component: LoginView,
-      beforeEnter: ifAuthenticated,
       meta: {
         hideSideBar: true,
         allowUnauthenticatedUsers: true,
+        ifAuthenticatedRedirectTo: 'collection',
       },
     },
 
@@ -158,6 +150,30 @@ if (config.showCodexQuestsMarketing) {
 
 router.beforeEach((to, from, next) => {
 
+  // @TODO: evaluate what happens when a bogus auth token is set in the
+  //  route params
+  if (to.query.authToken) {
+    // @TODO: remove this once "application wide" race condition is fixed
+    return store.dispatch('registerWeb3', router)
+      .then(() => {
+        return store.dispatch('updateUserState', to.query.authToken)
+          .then(() => {
+
+            const query = Object.assign({}, to.query)
+            delete query.authToken
+
+            return next({
+              name: to.meta.ifAuthenticatedRedirectTo || to.name,
+              query,
+            })
+          })
+      })
+  }
+
+  if (to.meta.ifAuthenticatedRedirectTo && store.getters.isAuthenticated) {
+    return next({ name: to.meta.ifAuthenticatedRedirectTo })
+  }
+
   // we need to check if we've already been redirected to an error page,
   //  otherwise navigating to an error page will result in an endless loop
   const isErrorPage = /^\/error\//.test(to.path)
@@ -170,17 +186,17 @@ router.beforeEach((to, from, next) => {
     // @TODO: move this logic to the login page instead?
     // @NOTE: is.chrome() is true in the Brave browser since it's Chromium-based
     if (requireAuthentication && is.desktop() && !is.firefox() && !is.chrome() && !is.opera()) {
-      return next('/error/unsupported-browser')
+      return next({ name: 'unsupported-browser' })
     }
   }
 
   // if no route was matched (i.e. a 404), send them to the homepage
   if (to.matched.length === 0) {
-    return next('/')
+    return next({ name: 'home' })
   }
 
   if (requireAuthentication && !store.getters.isAuthenticated) {
-    return next('/login')
+    return next({ name: 'login' })
   }
 
   return next()
