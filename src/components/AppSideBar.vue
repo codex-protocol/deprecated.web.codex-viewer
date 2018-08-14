@@ -190,18 +190,12 @@ a
   a
     text-align: center
     width: 100%
-    border-bottom: 1px solid $color-primary
-
-    &:first-of-type
-      border-top: 1px solid $color-primary
+    margin-bottom: 0.5rem
 
     @media screen and (min-width: $breakpoint-md)
       text-align: left
       width: auto
-      border: none
-
-      &:first-of-type
-        border: none
+      margin-bottom: 0
 
 .badge
   margin-left: .25em
