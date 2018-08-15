@@ -3,16 +3,37 @@
     <div class="row">
       <div class="col-12 col-md-6 primary">
         <div class="logo"><b-link href="/#/"><img src="../assets/logos/codex/gold.svg" /></b-link></div>
-        <h1 v-html="pageContent.title"></h1>
-        <div class="lead" v-html="pageContent.description"></div>
-        <b-button
-          v-if="buttonTitle"
-          variant="primary"
-          @click="buttonMethod"
-          class="mb-5"
-        >
-          {{ buttonTitle }}
-        </b-button>
+        <div v-if="isMobile">
+          <h1 v-html="mobilePageContent.title"></h1>
+          <div class="lead" v-html="mobilePageContent.description"></div>
+          <div v-if="web3Error === Web3Errors.Unknown">
+            <a href="http://www.toshi.org/">
+              <img src="../assets/images/get-toshi.png" width="200">
+            </a>
+          </div>
+          <div v-else>
+            <b-button
+              v-if="buttonTitle"
+              variant="primary"
+              @click="buttonMethod"
+              class="mb-5"
+            >
+              {{ buttonTitle }}
+            </b-button>
+          </div>
+        </div>
+        <div v-else>
+          <h1 v-html="pageContent.title"></h1>
+          <div class="lead" v-html="pageContent.description"></div>
+          <b-button
+            v-if="buttonTitle"
+            variant="primary"
+            @click="buttonMethod"
+            class="mb-5"
+          >
+            {{ buttonTitle }}
+          </b-button>
+        </div>
         <login-marketing-card v-if="showLoginMarketingCard" />
       </div>
       <div class="col-12 col-md-6 secondary">
@@ -23,6 +44,7 @@
 </template>
 
 <script>
+import is from 'is_js'
 import config from '../util/config'
 import EventBus from '../util/eventBus'
 import { Web3Errors } from '../store/modules/web3'
@@ -38,8 +60,10 @@ export default {
   data() {
     return {
       buttonTitle: 'Login',
-      buttonMethod: this.metamaskLogin,
+      buttonMethod: this.web3Login,
       showLoginMarketingCard: config.showCodexQuestsMarketing,
+      isMobile: is.mobile(),
+      Web3Errors,
     }
   },
   methods: {
@@ -52,7 +76,7 @@ export default {
       EventBus.$emit('events:click-check-metamask')
       window.location.reload(true)
     },
-    metamaskLogin() {
+    web3Login() {
 
       const { account } = this.web3
       const personalMessageToSign = 'Please sign this message to authenticate with the Codex Registry.'
@@ -96,6 +120,43 @@ export default {
     },
   },
   computed: {
+    mobilePageContent() {
+      let title
+      let description
+
+      switch (this.web3Error) {
+        case Web3Errors.Missing:
+          console.log('M')
+          title = 'Let&rsquo;s get started'
+          description = '<p>Please use a DApp browser, such as Toshi or Status.</p>'
+          this.setButton(false)
+          break
+
+        case Web3Errors.Unknown:
+          console.log('U')
+          title = 'Let&rsquo;s get started'
+          description = '<p>Please use a DApp browser, such as Toshi.</p>'
+          this.setButton(false)
+          break
+
+        case Web3Errors.WrongNetwork:
+          console.log('W')
+          title = 'Wrong Ethereum network'
+          description = `You're on the wrong Ethereum network. Expected network is ${Networks[ExpectedNetworkId]}. Please change the network in your DApp browser settings.`
+          this.setButton(false)
+          break
+
+        case Web3Errors.None:
+        default:
+          console.log('N')
+          title = 'Login'
+          description = 'Login to create, view, &amp; transfer Codex Records'
+          this.setButton('Login', this.web3Login)
+          break
+      }
+
+      return { title, description }
+    },
     pageContent() {
       let title
       let description
@@ -131,7 +192,7 @@ export default {
         default:
           title = 'Login'
           description = 'Login to create, view, &amp; transfer Codex Records'
-          this.setButton('Login', this.metamaskLogin)
+          this.setButton('Login', this.web3Login)
           break
       }
 
