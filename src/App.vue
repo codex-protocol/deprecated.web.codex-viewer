@@ -16,7 +16,7 @@
     <app-side-bar v-if="!hideSideBar" :hideNav="hideNav" />
     <div class="main-content-wrapper">
       <div class="main-content">
-        <router-view />
+        <router-view v-if="web3.isLoaded" />
       </div>
       <app-footer />
     </div>
@@ -55,7 +55,22 @@ export default {
     this.$store.dispatch('registerWeb3', this.$router)
       .then(() => {
 
-        if (this.authToken) {
+        // @TODO: evaluate what happens when a bogus auth token is set in the
+        //  route params
+        if (this.$route.query.authToken) {
+          // @TODO: remove this once "application wide" race condition is fixed
+          this.$store.dispatch('updateUserState', this.$route.query.authToken)
+            .then(() => {
+
+              const query = Object.assign({}, this.$route.query)
+              delete query.authToken
+
+              return this.$router.replace({
+                name: this.$route.meta.ifAuthenticatedRedirectTo || this.$route.name,
+                query,
+              })
+            })
+        } else if (this.authToken) {
           this.$store.dispatch('updateUserState', this.authToken)
         }
 

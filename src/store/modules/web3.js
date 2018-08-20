@@ -24,7 +24,14 @@ const getters = {
 }
 
 const actions = {
-  registerWeb3({ commit, dispatch }, router) {
+  registerWeb3({ commit, dispatch, state }, router) {
+
+    // prevent web3 & contracts from being loaded multiple times, since this is
+    //  really just a bootstrapping method
+    if (state.isLoaded) {
+      return null
+    }
+
     console.info('registerWeb3 action being executed')
 
     return registerWeb3()
@@ -51,6 +58,9 @@ const actions = {
           }),
         ])
 
+      })
+      .then(() => {
+        commit('setIsLoaded', true)
       })
       .catch((error) => {
         commit('setWeb3Error', { message: 'Unable to register web3', error })
@@ -85,6 +95,9 @@ const actions = {
 }
 
 const mutations = {
+  setIsLoaded(currentState, newIsLoaded) {
+    currentState.isLoaded = newIsLoaded
+  },
   registerWeb3Instance(currentState, payload) {
     const { result, router } = payload
     console.info('registerWeb3instance mutation being executed', result)
