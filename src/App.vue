@@ -230,50 +230,50 @@ img
 // <input type="checkbox"> toggle
 // https://danklammer.com/articles/simple-css-toggle-switch/
 .toggle-checkbox
-    opacity: 1
-    z-index: 0
-    -webkit-appearance: none
-    appearance: none
-    width: 62px
-    height: 32px
-    display: inline-block
-    position: relative
-    border-radius: 50px
-    overflow: hidden
-    outline: none
-    border: 3px solid $color-gray
-    cursor: pointer
+  opacity: 1
+  z-index: 0
+  -webkit-appearance: none
+  appearance: none
+  width: 62px
+  height: 32px
+  display: inline-block
+  position: relative
+  border-radius: 50px
+  overflow: hidden
+  outline: none
+  border: 3px solid $color-gray
+  cursor: pointer
+  background-color: transparent
+  transition: border-color ease 0.3s
+
+  &::before
+    content: ""
+    display: block
+    position: absolute
+    z-index: 2
+    width: 22px
+    height: 22px
+    background: $color-gray
+    left: 2px
+    top: 2px
+    border-radius: 50%
+    font: 10px/28px Helvetica
+    text-transform: uppercase
+    font-weight: bold
+    text-indent: -22px
+    word-spacing: 37px
+    color: $color-light
+    text-shadow: -1px -1px rgba(0,0,0,0.15)
+    white-space: nowrap
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2)
+    transition: all cubic-bezier(0.3, 1.5, 0.7, 1) 0.3s
+
+  &:checked
     background-color: transparent
-    transition: border-color ease 0.3s
+    border-color: $color-success
 
-    &:before
-      content: ""
-      display: block
-      position: absolute
-      z-index: 2
-      width: 22px
-      height: 22px
-      background: $color-gray
-      left: 2px
-      top: 2px
-      border-radius: 50%
-      font: 10px/28px Helvetica
-      text-transform: uppercase
-      font-weight: bold
-      text-indent: -22px
-      word-spacing: 37px
-      color: $color-light
-      text-shadow: -1px -1px rgba(0,0,0,0.15)
-      white-space: nowrap
-      box-shadow: 0 1px 2px rgba(0,0,0,0.2)
-      transition: all cubic-bezier(0.3, 1.5, 0.7, 1) 0.3s
-
-    &:checked
-      background-color: transparent
-      border-color: $color-success
-
-      &:before
-        left: 32px
-        background: $color-success
+    &::before
+      left: 32px
+      background: $color-success
 // End CSS Checkbox toggle
 </style>
