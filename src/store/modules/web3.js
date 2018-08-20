@@ -7,14 +7,17 @@ import {
   getStakeContract,
 } from '../../util/web3/getContract'
 
-const state = {
-  instance: null,
-  network: null,
-  account: null,
-  error: Web3Errors.None,
-  recordContractInstance: null,
-  tokenContractInstance: null,
-  stakeContractInstance: null,
+const getInitialState = () => {
+  return {
+    instance: null,
+    network: null,
+    account: null,
+    isLoaded: false,
+    error: Web3Errors.None,
+    recordContractInstance: null,
+    tokenContractInstance: null,
+    stakeContractInstance: null,
+  }
 }
 
 const getters = {
@@ -136,8 +139,8 @@ const mutations = {
 export { Web3Errors }
 
 export default {
-  state,
   getters,
   actions,
   mutations,
+  state: getInitialState(),
 }

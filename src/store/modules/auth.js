@@ -12,7 +12,7 @@ if (cachedAuthToken) {
   axios.defaults.headers.common.Authorization = cachedAuthToken
 }
 
-const initialState = () => {
+const getInitialState = () => {
   return {
     user: null,
     balance: new BigNumber(0),
@@ -211,7 +211,7 @@ const mutations = {
     delete axios.defaults.headers.common.Authorization
 
     // Reset state to its initial values
-    Object.assign(currentState, initialState())
+    Object.assign(currentState, getInitialState())
   },
 
   updateTokenBalance(currentState, newBalance) {
@@ -259,8 +259,8 @@ const mutations = {
 }
 
 export default {
-  state: initialState(),
   getters,
   actions,
   mutations,
+  state: getInitialState(),
 }
