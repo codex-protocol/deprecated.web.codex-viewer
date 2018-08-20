@@ -17,6 +17,7 @@
     <div class="main-content-wrapper">
       <div class="main-content">
         <router-view v-if="web3.isLoaded" />
+        <div class="loading-overlay global-loading-overlay" v-else></div>
       </div>
       <app-footer />
     </div>
@@ -230,16 +231,55 @@ img
     display: none
 
 .main-content-wrapper
-  display: flex
-  flex-direction: column
-  min-height: 100vh
   width: 100%
+  display: flex
+  min-height: 100vh
+  position: relative
+  flex-direction: column
   padding-bottom: $bottom-nav-height
 
 .main-content
   flex: 1
   width: 100%
   overflow: auto
+
+.loading-overlay
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  z-index: 998
+  display: flex
+  position: absolute
+  align-items: center
+  justify-content: center
+  background-color: rgba(255, 255, 255, .75)
+
+  &::before
+    content: ""
+    width: 4rem
+    height: 4rem
+    z-index: 999
+    display: block
+    border-radius: 50%
+    animation: spin 1s linear infinite
+
+    border: .5rem solid rgba($color-secondary, .25)
+    border-top-color: $color-secondary
+
+  @keyframes spin
+    from
+      transform: rotate(0deg)
+
+    to
+      transform: rotate(360deg)
+
+.global-loading-overlay
+  background-color: transparent
+
+  &::before
+    border-color: rgba($color-primary, .25)
+    border-top-color: $color-primary
 
 // CSS Checkbox toggle
 // <input type="checkbox"> toggle

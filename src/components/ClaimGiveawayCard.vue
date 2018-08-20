@@ -4,9 +4,7 @@
     img-top
     :img-src="missingImageHelper.getMainImageUri(giveaway.editionDetails)"
   >
-    <div class="overlay" v-if="isLoading">
-      <img class="spinner" src="../assets/images/spinner.svg" />
-    </div>
+    <div class="loading-overlay" v-if="isLoading"></div>
     <b-button
       variant="secondary"
       @click="acceptGiveaway"
@@ -63,24 +61,6 @@ export default {
 
 button
   white-space: normal
-
-.overlay
-  top: 0
-  left: 0
-  width: 100%
-  height: 100%
-  z-index: 998
-  display: flex
-  position: absolute
-  align-items: center
-  justify-content: center
-  background-color: rgba(255, 255, 255, .75)
-
-.spinner
-  width: 8em
-  height: 8em
-  z-index: 999
-  animation: spin 1s linear infinite reverse
 
 @keyframes spin
   from
