@@ -45,12 +45,16 @@
 
 <script>
 import is from 'is_js'
+import debug from 'debug'
+
 import config from '../util/config'
 import EventBus from '../util/eventBus'
 import { Web3Errors } from '../store/modules/web3'
 import { ExpectedNetworkId, Networks } from '../util/constants/web3'
 
 import LoginMarketingCard from '../components/LoginMarketingCard'
+
+const logger = debug('app:component:login-view')
 
 export default {
   name: 'login-view',
@@ -96,7 +100,7 @@ export default {
         // result.error will be populated if the user rejects the signature
         //  prompt
         if (error || result.error) {
-          console.error(error || result.error)
+          logger(error || result.error)
           return
         }
 
@@ -126,21 +130,18 @@ export default {
 
       switch (this.web3Error) {
         case Web3Errors.Missing:
-          console.log('M')
           title = 'Let&rsquo;s get started'
           description = '<p>Please use a DApp browser, such as Toshi or Status.</p>'
           this.setButton(false)
           break
 
         case Web3Errors.Unknown:
-          console.log('U')
           title = 'Let&rsquo;s get started'
           description = '<p>Please use a DApp browser, such as Toshi.</p>'
           this.setButton(false)
           break
 
         case Web3Errors.WrongNetwork:
-          console.log('W')
           title = 'Wrong Ethereum network'
           description = `You're on the wrong Ethereum network. Expected network is ${Networks[ExpectedNetworkId]}. Please change the network in your DApp browser settings.`
           this.setButton(false)
@@ -148,7 +149,6 @@ export default {
 
         case Web3Errors.None:
         default:
-          console.log('N')
           title = 'Login'
           description = 'Login to create, view, &amp; transfer Codex Records'
           this.setButton('Login', this.web3Login)

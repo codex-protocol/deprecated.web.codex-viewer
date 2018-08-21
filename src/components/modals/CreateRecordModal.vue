@@ -70,6 +70,7 @@
 </template>
 
 <script>
+import debug from 'debug'
 
 import File from '../../util/api/file'
 import Record from '../../util/api/record'
@@ -77,6 +78,8 @@ import EventBus from '../../util/eventBus'
 import callContract from '../../util/web3/callContract'
 import additionalDataHelper from '../../util/additionalDataHelper'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
+
+const logger = debug('app:component:create-record-modal')
 
 export default {
   name: 'create-record-modal',
@@ -184,7 +187,7 @@ export default {
 
         })
         .catch((error) => {
-          console.error('Could not create Record:', error)
+          logger('Could not create Record:', error)
 
           this.codexRecord = null
 
