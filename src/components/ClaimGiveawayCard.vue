@@ -4,7 +4,7 @@
     img-top
     :img-src="missingImageHelper.getMainImageUri(giveaway.editionDetails)"
   >
-    <div class="loading-overlay" v-if="isLoading"></div>
+    <loading-overlay :show="isLoading" type="dark" />
     <b-button
       variant="secondary"
       @click="acceptGiveaway"
@@ -16,6 +16,9 @@
 </template>
 
 <script>
+
+import LoadingOverlay from './LoadingOverlay'
+
 import EventBus from '../util/eventBus'
 import Giveaway from '../util/api/giveaway'
 import missingImageHelper from '../util/missingImageHelper'
@@ -23,6 +26,9 @@ import missingImageHelper from '../util/missingImageHelper'
 export default {
   name: 'claim-giveaway-card',
   props: ['giveaway'],
+  components: {
+    LoadingOverlay,
+  },
   data() {
     return {
       isLoading: false,

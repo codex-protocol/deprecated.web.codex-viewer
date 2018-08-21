@@ -17,7 +17,7 @@
     <div class="main-content-wrapper">
       <div class="main-content">
         <router-view v-if="web3.isLoaded" />
-        <div class="loading-overlay global-loading-overlay" v-else></div>
+        <loading-overlay type="global" v-else />
       </div>
       <app-footer />
     </div>
@@ -26,28 +26,33 @@
 </template>
 
 <script>
-import axios from 'axios'
+
 import 'freshchat-widget'
+import axios from 'axios'
 
 import config from './util/config'
 import EventBus from './util/eventBus'
-import AppSideBar from './components/AppSideBar'
-import AppFooter from './components/AppFooter'
-import IconBase from './components/icons/IconBase'
-import IconHamburger from './components/icons/IconHamburger'
+
 import { Web3Errors } from './store/modules/web3'
+
+import AppFooter from './components/AppFooter'
+import AppSideBar from './components/AppSideBar'
+import IconBase from './components/icons/IconBase'
+import LoadingOverlay from './components/LoadingOverlay'
 import ToastContainer from './components/ToastContainer'
+import IconHamburger from './components/icons/IconHamburger'
 
 import './util/analytics'
 
 export default {
   name: 'App',
   components: {
-    AppSideBar,
-    AppFooter,
-    ToastContainer,
     IconBase,
+    AppFooter,
+    AppSideBar,
     IconHamburger,
+    ToastContainer,
+    LoadingOverlay,
   },
   created() {
 
@@ -181,7 +186,6 @@ body
   margin: 0
   padding: 0
   width: 100%
-  height: 100%
 
 body
   font-size: 1em
@@ -234,7 +238,6 @@ img
   width: 100%
   display: flex
   min-height: 100vh
-  position: relative
   flex-direction: column
   padding-bottom: $bottom-nav-height
 
@@ -242,44 +245,6 @@ img
   flex: 1
   width: 100%
   overflow: auto
-
-.loading-overlay
-  top: 0
-  left: 0
-  width: 100%
-  height: 100%
-  z-index: 998
-  display: flex
-  position: absolute
-  align-items: center
-  justify-content: center
-  background-color: rgba(255, 255, 255, .75)
-
-  &::before
-    content: ""
-    width: 4rem
-    height: 4rem
-    z-index: 999
-    display: block
-    border-radius: 50%
-    animation: spin 1s linear infinite
-
-    border: .5rem solid rgba($color-secondary, .25)
-    border-top-color: $color-secondary
-
-  @keyframes spin
-    from
-      transform: rotate(0deg)
-
-    to
-      transform: rotate(360deg)
-
-.global-loading-overlay
-  background-color: transparent
-
-  &::before
-    border-color: rgba($color-primary, .25)
-    border-top-color: $color-primary
 
 // CSS Checkbox toggle
 // <input type="checkbox"> toggle
