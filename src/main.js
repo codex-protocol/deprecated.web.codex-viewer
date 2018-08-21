@@ -14,7 +14,9 @@ import store from './store'
 
 if (process.env.SENTRY_CONFIG) {
   Raven
-    .config(process.env.SENTRY_CONFIG)
+    .config(process.env.SENTRY_CONFIG, {
+      environment: process.env.TARGET_ENV,
+    })
     .addPlugin(RavenVue, Vue)
     .install()
 }

@@ -29,7 +29,6 @@
 
 import 'freshchat-widget'
 import axios from 'axios'
-import Raven from 'raven-js'
 
 import config from './util/config'
 import EventBus from './util/eventBus'
@@ -56,10 +55,6 @@ export default {
     LoadingOverlay,
   },
   created() {
-
-    Raven.captureMessage('testing')
-
-    Raven.captureException(new Error('testing'))
 
     this.initializeApi()
 
