@@ -17,6 +17,7 @@
     <div class="main-content-wrapper">
       <div class="main-content">
         <router-view v-if="web3.isLoaded" />
+        <loading-overlay type="global" v-else />
       </div>
       <app-footer />
     </div>
@@ -25,28 +26,33 @@
 </template>
 
 <script>
-import axios from 'axios'
+
 import 'freshchat-widget'
+import axios from 'axios'
 
 import config from './util/config'
 import EventBus from './util/eventBus'
-import AppSideBar from './components/AppSideBar'
-import AppFooter from './components/AppFooter'
-import IconBase from './components/icons/IconBase'
-import IconHamburger from './components/icons/IconHamburger'
+
 import { Web3Errors } from './store/modules/web3'
+
+import AppFooter from './components/AppFooter'
+import AppSideBar from './components/AppSideBar'
+import IconBase from './components/icons/IconBase'
+import LoadingOverlay from './components/LoadingOverlay'
 import ToastContainer from './components/ToastContainer'
+import IconHamburger from './components/icons/IconHamburger'
 
 import './util/analytics'
 
 export default {
   name: 'App',
   components: {
-    AppSideBar,
-    AppFooter,
-    ToastContainer,
     IconBase,
+    AppFooter,
+    AppSideBar,
     IconHamburger,
+    ToastContainer,
+    LoadingOverlay,
   },
   created() {
 
@@ -180,7 +186,6 @@ body
   margin: 0
   padding: 0
   width: 100%
-  height: 100%
 
 body
   font-size: 1em
@@ -230,10 +235,10 @@ img
     display: none
 
 .main-content-wrapper
-  display: flex
-  flex-direction: column
-  min-height: 100vh
   width: 100%
+  display: flex
+  min-height: 100vh
+  flex-direction: column
   padding-bottom: $bottom-nav-height
 
 .main-content
