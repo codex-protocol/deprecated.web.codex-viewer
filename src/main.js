@@ -12,10 +12,10 @@ import router from './router'
 import App from './App'
 import store from './store'
 
-if (process.env.SENTRY_DSN) {
+if (process.env.VUE_APP_SENTRY_DSN) {
   Raven
-    .config(process.env.SENTRY_DSN, {
-      environment: process.env.TARGET_ENV,
+    .config(process.env.VUE_APP_SENTRY_DSN, {
+      environment: process.env.VUE_APP_TARGET_ENV,
     })
     .addPlugin(RavenVue, Vue)
     .install()
@@ -26,9 +26,7 @@ Vue.use(VueBootstrap)
 
 // eslint-disable-next-line no-new
 new Vue({
-  el: '#app',
   router,
   store,
-  components: { App },
-  template: '<App/>',
-})
+  render: (h) => { return h(App) },
+}).$mount('#app')

@@ -90,7 +90,7 @@ export default {
   },
   data() {
     return {
-      freshChatToken: process.env.FRESHCHAT_API_TOKEN,
+      freshChatToken: process.env.VUE_APP_FRESHCHAT_API_TOKEN,
       showNav: false,
     }
   },
