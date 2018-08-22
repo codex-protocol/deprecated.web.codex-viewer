@@ -12,9 +12,9 @@ import router from './router'
 import App from './App'
 import store from './store'
 
-if (process.env.SENTRY_CONFIG) {
+if (process.env.SENTRY_DSN) {
   Raven
-    .config(process.env.SENTRY_CONFIG, {
+    .config(process.env.SENTRY_DSN, {
       environment: process.env.TARGET_ENV,
     })
     .addPlugin(RavenVue, Vue)
