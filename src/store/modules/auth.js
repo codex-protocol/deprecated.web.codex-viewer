@@ -1,9 +1,13 @@
 import axios from 'axios'
+import debug from 'debug'
+import Raven from 'raven-js'
 import BigNumber from 'bignumber.js'
 
 import User from '../../util/api/user'
 import EventBus from '../../util/eventBus'
 import SocketService from '../../util/socket'
+
+const logger = debug('app:store:auth')
 
 // If an auth token is present on page load, then add it to all future API requests
 let cachedAuthToken = window.localStorage.getItem('authToken')
@@ -47,7 +51,7 @@ const actions = {
       })
       .catch((error) => {
         EventBus.$emit('toast:error', `Could not log in: ${error.message}`)
-        console.error('Could not log in:', error)
+        Raven.captureException(error)
         commit('clearUserState')
       })
   },
@@ -175,7 +179,7 @@ const actions = {
 
 // @TODO: Only log for debug mode
 const logMutation = (mutationName, payload) => {
-  console.info(`${mutationName} mutation being executed`, payload)
+  logger(`${mutationName} mutation being executed`, payload)
 }
 
 const mutations = {

@@ -64,7 +64,6 @@ export default {
         // @TODO: evaluate what happens when a bogus auth token is set in the
         //  route params
         if (this.$route.query.authToken) {
-          // @TODO: remove this once "application wide" race condition is fixed
           this.$store.dispatch('updateUserState', this.$route.query.authToken)
             .then(() => {
 
