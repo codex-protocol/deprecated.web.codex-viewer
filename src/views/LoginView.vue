@@ -74,10 +74,10 @@ export default {
     installMetamask() {
       window.open('https://www.metamask.io', '_blank')
       this.setButton('MetaMask has been installed', this.checkMetamask)
-      EventBus.$emit('events:click-install-metamask')
+      EventBus.$emit('events:click-install-metamask', this)
     },
     checkMetamask() {
-      EventBus.$emit('events:click-check-metamask')
+      EventBus.$emit('events:click-check-metamask', this)
       window.location.reload(true)
     },
     web3Login() {
@@ -85,7 +85,7 @@ export default {
       const { account } = this.web3
       const personalMessageToSign = 'Please sign this message to authenticate with the Codex Registry.'
 
-      EventBus.$emit('events:click-login-button')
+      EventBus.$emit('events:click-login-button', this)
 
       const sendAsyncOptions = {
         method: 'personal_sign',
@@ -104,7 +104,7 @@ export default {
           return
         }
 
-        EventBus.$emit('events:login')
+        EventBus.$emit('events:login', this)
 
         const sendAuthRequestOptions = {
           userAddress: account,
@@ -206,7 +206,7 @@ export default {
     },
   },
   created() {
-    EventBus.$emit('events:viewer:view-login-page')
+    EventBus.$emit('events:viewer:view-login-page', this)
   },
 }
 </script>

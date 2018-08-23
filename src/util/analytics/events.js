@@ -1,21 +1,21 @@
 import EventBus from '../eventBus'
-import eventNames from './eventNames'
+import { category, actionsLabels } from './eventNames'
 
 const events = (analytics) => {
 
-  const has = (object, key) => {
-    return object ? hasOwnProperty.call(object, key) : false
-  }
-
   const registerEvent = (event) => {
-    EventBus.$on(event, (params) => {
-      // Strip email
-      if (has(params, 'user')) {
-        delete params.user.email // eslint-disable-line no-param-reassign
-      }
-      analytics.track(eventNames[event], params)
+    EventBus.$on(event, (self, value) => {
+      analytics.track(
+        category,
+        actionsLabels[event].action,
+        actionsLabels[event].label,
+        value || '',
+        self
+      )
     })
   }
+
+  // @NOTE: Registering a new event below requires adding the event to `./eventNames.js`
 
   // Home
   registerEvent('events:viewer:view-home-page')
@@ -63,13 +63,17 @@ const events = (analytics) => {
   registerEvent('events:click-partner-link')
 
   // Gallery
-  registerEvent('events:gallery-page')
+  registerEvent('events:view-gallery-page')
 
   // Faucet
-  registerEvent('events:faucet-page')
+  registerEvent('events:view-faucet-page')
 
   // Codex Quests
-  registerEvent('events:codex-quests-page')
+  registerEvent('events:view-codex-quests-page')
+
+  // Unsupported Browsers/Devices
+  registerEvent('events:unsupported-browser')
+  registerEvent('events:unsupported-device')
 }
 
 export default events
