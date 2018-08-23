@@ -76,26 +76,33 @@ import ApproveContractModal from '../components/modals/ApproveContractModal'
 
 export default {
   name: 'faucet-view',
+
   components: {
     AppHeader,
     FaucetModal,
     ApproveContractModal,
   },
+
   created() {
     EventBus.$emit('events:view-faucet-page', this)
   },
+
   computed: {
     ...mapState('auth', ['registryContractApproved', 'balance', 'user']),
+    ...mapState('web3', ['recordContractInstance']),
+
     formattedBalance() {
       return formatTokenAmount(this.balance)
     },
+
     nextRequestIn() {
       const lastRequestedAt = new Date(this.user.faucetLastRequestedAt)
       const nextDay = new Date(lastRequestedAt.getTime() - (86400 * 1000))
       return timeSince(nextDay)
     },
+
     recordContract() {
-      return this.$store.state.web3.recordContractInstance()
+      return this.recordContractInstance()
     },
   },
 }

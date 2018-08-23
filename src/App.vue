@@ -16,7 +16,7 @@
     <app-side-bar v-if="!hideSideBar" :hideNav="hideNav" />
     <div class="main-content-wrapper">
       <div class="main-content">
-        <router-view v-if="web3.isLoaded" />
+        <router-view v-if="isLoaded" />
         <loading-overlay type="global" v-else />
       </div>
       <app-footer />
@@ -34,7 +34,7 @@ import { mapState } from 'vuex'
 import config from './util/config'
 import EventBus from './util/eventBus'
 
-import { Web3Errors } from './store/modules/web3'
+import { Web3Errors } from './util/constants/web3'
 
 import AppFooter from './components/AppFooter'
 import AppSideBar from './components/AppSideBar'
@@ -47,6 +47,7 @@ import './util/analytics'
 
 export default {
   name: 'App',
+
   components: {
     IconBase,
     AppFooter,
@@ -55,13 +56,14 @@ export default {
     ToastContainer,
     LoadingOverlay,
   },
+
   created() {
 
     this.initializeApi()
 
-    this.$store.dispatch('updateOAuth2Clients')
+    this.$store.dispatch('oauth2/updateOAuth2Clients')
 
-    this.$store.dispatch('registerWeb3', this.$router)
+    this.$store.dispatch('web3/registerWeb3', this.$router)
       .then(() => {
 
         // @TODO: evaluate what happens when a bogus auth token is set in the
@@ -91,27 +93,37 @@ export default {
         })
       })
   },
+
   data() {
     return {
       freshChatToken: process.env.VUE_APP_FRESHCHAT_API_TOKEN,
       showNav: false,
     }
   },
+
+  mounted() {
+    const token = this.freshChatToken
+    if (token) {
+      window.fcWidget.init({
+        token,
+        host: 'https://wchat.freshchat.com',
+      })
+    }
+  },
+
   computed: {
     ...mapState('auth', ['authToken', 'uesr']),
+    ...mapState('web3', ['error', 'isLoaded']),
+
     hideSideBar() {
       return this.$route.meta && this.$route.meta.hideSideBar
     },
+
     recordId() {
       return this.$route.params.recordId
     },
-    web3() {
-      return this.$store.state.web3
-    },
-    web3Error() {
-      return this.$store.state.web3.error
-    },
   },
+
   methods: {
     initializeApi() {
       axios.defaults.baseURL = config.apiUrl
@@ -150,6 +162,7 @@ export default {
       this.showNav = false
     },
   },
+
   watch: {
     web3Error(error) {
       // MetaMask has been locked while logged in
@@ -158,15 +171,6 @@ export default {
         this.$store.dispatch('auth/logout', this.$router)
       }
     },
-  },
-  mounted() {
-    const token = this.freshChatToken
-    if (token) {
-      window.fcWidget.init({
-        token,
-        host: 'https://wchat.freshchat.com',
-      })
-    }
   },
 }
 </script>

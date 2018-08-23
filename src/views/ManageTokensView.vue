@@ -64,6 +64,7 @@ import UnstakeTokensModal from '../components/modals/UnstakeTokensModal'
 
 export default {
   name: 'manage-tokens-view',
+
   components: {
     AppHeader,
     PersonalStakesTable,
@@ -71,9 +72,11 @@ export default {
     StakeTokensModal,
     UnstakeTokensModal,
   },
+
   created() {
     EventBus.$emit('events:view-tokens-page', this)
   },
+
   computed: {
     ...mapState('auth', [
       'creditBalance',
@@ -81,14 +84,15 @@ export default {
       'stakeContractApproved',
       'personalStakes',
     ]),
-    web3() {
-      return this.$store.state.web3.instance()
-    },
-    stakeContract() {
-      return this.$store.state.web3.stakeContractInstance()
-    },
+
+    ...mapState('web3', ['recordContractInstance', 'stakeContractInstance']),
+
     recordContract() {
-      return this.$store.state.web3.recordContractInstance()
+      return this.recordContractInstance()
+    },
+
+    stakeContract() {
+      return this.stakeContractInstance()
     },
   },
 }

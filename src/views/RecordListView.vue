@@ -53,6 +53,7 @@ import CreateRecordModal from '../components/modals/CreateRecordModal'
 
 export default {
   name: 'record-list',
+
   components: {
     AppHeader,
     RecordListItem,
@@ -61,6 +62,7 @@ export default {
     GiveawayInfoCard,
     CreateRecordModal,
   },
+
   data() {
     return {
       records: [],
@@ -68,16 +70,7 @@ export default {
       showCreateGiveawayButton: config.showCreateGiveawayButton,
     }
   },
-  computed: {
-    ...mapState('auth', ['hideSetup']),
 
-    account() {
-      return this.$store.state.web3.account
-    },
-    showFaucetMarketingCard() {
-      return config.showFaucet && !this.hideSetup && !this.giveaway
-    },
-  },
   mounted() {
     // @NOTE: incoming transfers and newly minted Records both have the same
     //  effect of pushing the new record onto this.records, so we use the same
@@ -100,6 +93,15 @@ export default {
     this.getGiveaways()
     EventBus.$emit('events:view-collection-page', this)
   },
+
+  computed: {
+    ...mapState('auth', ['hideSetup']),
+
+    showFaucetMarketingCard() {
+      return config.showFaucet && !this.hideSetup && !this.giveaway
+    },
+  },
+
   methods: {
     // add the record to the collection if it was just transferred
     addTransferredRecordHandler(codexRecordToAdd) {
@@ -111,12 +113,14 @@ export default {
 
       this.records.push(codexRecordToAdd)
     },
+
     // add the record from the collection if it was just transferred
     removeTransferredRecordHandler(codexRecordToRemove) {
       this.records = this.records.filter((codexRecord) => {
         return codexRecord.tokenId !== codexRecordToRemove.tokenId
       })
     },
+
     getRecords() {
       Record.getUserRecords()
         .then((records) => {
@@ -126,6 +130,7 @@ export default {
           EventBus.$emit('toast:error', `Could not get collection: ${error.message}`)
         })
     },
+
     getGiveaways() {
       Giveaway.getAllEligibleGiveaways()
         .then((giveaways) => {
@@ -133,6 +138,7 @@ export default {
           this.giveaway = giveaways[0]
         })
     },
+
     createGiveaway() {
       Giveaway.createNewGiveaway()
         .catch((error) => {
@@ -148,5 +154,4 @@ export default {
   display: flex
   flex-wrap: wrap
   align-items: start
-
 </style>

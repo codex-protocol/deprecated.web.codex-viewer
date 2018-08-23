@@ -60,6 +60,7 @@ export default {
   },
   computed: {
     ...mapState('auth', ['balance', 'registryContractApproved']),
+    ...mapState('web3', ['recordContractInstance']),
 
     done() {
       return this.currentStep === this.numSteps
@@ -78,7 +79,7 @@ export default {
     },
 
     recordContract() {
-      return this.$store.state.web3.recordContractInstance()
+      return this.recordContractInstance()
     },
 
     buttonText() {

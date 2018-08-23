@@ -104,6 +104,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import vue2Dropzone from 'vue2-dropzone'
 import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 
@@ -117,11 +118,16 @@ import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
 export default {
   name: 'record-manage-modal',
-  props: ['codexRecord'],
+
+  props: {
+    codexRecord: Object,
+  },
+
   components: {
     vueDropzone: vue2Dropzone,
     MetaMaskNotificationModal,
   },
+
   data() {
     // Extra image objects
     const images = Array.from(this.codexRecord.metadata.images)
@@ -159,6 +165,31 @@ export default {
       },
     }
   },
+
+  computed: {
+    ...mapState('web3', ['account', 'instance', 'recordContractInstance']),
+
+    canSubmit() {
+      return !this.isFileProcessing
+    },
+
+    recordContract() {
+      return this.recordContractInstance()
+    },
+
+    progressVariant() {
+      if (!this.uploadMainImageComplete) {
+        return 'primary'
+      }
+
+      if (this.uploadMainImageSuccess) {
+        return 'success'
+      }
+
+      return 'danger'
+    },
+  },
+
   methods: {
     onFileProcessing() {
       this.isFileProcessing = true
@@ -215,7 +246,7 @@ export default {
       this.descriptionHash = this.hash(this.description || '')
     },
     hash(input) {
-      return this.$store.state.web3.instance().sha3(input)
+      return this.instance().sha3(input)
     },
     // Upload a new main image
     displayAndUploadFile(file) {
@@ -244,7 +275,7 @@ export default {
       const binaryFileReader = new FileReader()
 
       binaryFileReader.addEventListener('loadend', () => {
-        next(null, this.web3.instance().sha3(binaryFileReader.result))
+        next(null, this.instance().sha3(binaryFileReader.result))
       })
 
       binaryFileReader.readAsBinaryString(file)
@@ -323,29 +354,7 @@ export default {
       ]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return callContract(this.recordContract.modifyMetadataHashes, input, this.web3)
-    },
-  },
-  computed: {
-    web3() {
-      return this.$store.state.web3
-    },
-    canSubmit() {
-      return !this.isFileProcessing
-    },
-    recordContract() {
-      return this.web3.recordContractInstance()
-    },
-    progressVariant() {
-      if (!this.uploadMainImageComplete) {
-        return 'primary'
-      }
-
-      if (this.uploadMainImageSuccess) {
-        return 'success'
-      }
-
-      return 'danger'
+      return callContract(this.recordContract.modifyMetadataHashes, input, this.account, this.instance)
     },
   },
 }

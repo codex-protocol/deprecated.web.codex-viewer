@@ -46,11 +46,15 @@
 <script>
 import is from 'is_js'
 import debug from 'debug'
+import { mapState } from 'vuex'
 
 import config from '../util/config'
 import EventBus from '../util/eventBus'
-import { Web3Errors } from '../store/modules/web3'
-import { ExpectedNetworkId, Networks } from '../util/constants/web3'
+import {
+  ExpectedNetworkId,
+  Web3Errors,
+  Networks,
+} from '../util/constants/web3'
 
 import LoginMarketingCard from '../components/LoginMarketingCard'
 
@@ -58,9 +62,11 @@ const logger = debug('app:component:login-view')
 
 export default {
   name: 'login-view',
+
   components: {
     LoginMarketingCard,
   },
+
   data() {
     return {
       buttonTitle: 'Login',
@@ -70,65 +76,19 @@ export default {
       Web3Errors,
     }
   },
-  methods: {
-    installMetamask() {
-      window.open('https://www.metamask.io', '_blank')
-      this.setButton('MetaMask has been installed', this.checkMetamask)
-      EventBus.$emit('events:click-install-metamask', this)
-    },
-    checkMetamask() {
-      EventBus.$emit('events:click-check-metamask', this)
-      window.location.reload(true)
-    },
-    web3Login() {
 
-      const { account } = this.web3
-      const personalMessageToSign = 'Please sign this message to authenticate with the Codex Registry.'
-
-      EventBus.$emit('events:click-login-button', this)
-
-      const sendAsyncOptions = {
-        method: 'personal_sign',
-        params: [
-          account,
-          this.web3.instance().toHex(personalMessageToSign),
-        ],
-      }
-
-      this.web3.instance().currentProvider.sendAsync(sendAsyncOptions, (error, result) => {
-
-        // result.error will be populated if the user rejects the signature
-        //  prompt
-        if (error || result.error) {
-          logger(error || result.error)
-          return
-        }
-
-        EventBus.$emit('events:login', this)
-
-        const sendAuthRequestOptions = {
-          userAddress: account,
-          signedData: result.result.substr(2),
-        }
-
-        this.$store.dispatch('auth/sendAuthRequest', sendAuthRequestOptions)
-          .then(() => {
-            this.$router.replace({ name: 'collection' })
-          })
-
-      })
-    },
-    setButton(title, method) {
-      this.buttonTitle = title
-      this.buttonMethod = method
-    },
+  created() {
+    EventBus.$emit('events:viewer:view-login-page', this)
   },
+
   computed: {
+    ...mapState('web3', ['account', 'instance', 'error']),
+
     mobilePageContent() {
       let title
       let description
 
-      switch (this.web3Error) {
+      switch (this.error) {
         case Web3Errors.Missing:
           title = 'Let&rsquo;s get started'
           description = '<p>Please use a DApp browser, such as Toshi or Status.</p>'
@@ -157,6 +117,7 @@ export default {
 
       return { title, description }
     },
+
     pageContent() {
       let title
       let description
@@ -198,15 +159,59 @@ export default {
 
       return { title, description }
     },
-    web3() {
-      return this.$store.state.web3
-    },
-    web3Error() {
-      return this.$store.state.web3.error
-    },
   },
-  created() {
-    EventBus.$emit('events:viewer:view-login-page', this)
+
+  methods: {
+    installMetamask() {
+      window.open('https://www.metamask.io', '_blank')
+      this.setButton('MetaMask has been installed', this.checkMetamask)
+      EventBus.$emit('events:click-install-metamask', this)
+    },
+    checkMetamask() {
+      EventBus.$emit('events:click-check-metamask', this)
+      window.location.reload(true)
+    },
+    web3Login() {
+
+      const personalMessageToSign = 'Please sign this message to authenticate with the Codex Registry.'
+
+      EventBus.$emit('events:click-login-button', this)
+
+      const sendAsyncOptions = {
+        method: 'personal_sign',
+        params: [
+          this.account,
+          this.instance().toHex(personalMessageToSign),
+        ],
+      }
+
+      this.instance().currentProvider.sendAsync(sendAsyncOptions, (error, result) => {
+
+        // result.error will be populated if the user rejects the signature
+        //  prompt
+        if (error || result.error) {
+          logger(error || result.error)
+          return
+        }
+
+        EventBus.$emit('events:login', this)
+
+        const sendAuthRequestOptions = {
+          userAddress: this.account,
+          signedData: result.result.substr(2),
+        }
+
+        this.$store.dispatch('auth/sendAuthRequest', sendAuthRequestOptions)
+          .then(() => {
+            this.$router.replace({ name: 'collection' })
+          })
+
+      })
+    },
+    setButton(title, method) {
+      this.buttonTitle = title
+      this.buttonMethod = method
+    },
   },
 }
 </script>

@@ -44,37 +44,41 @@ import RecordTransferOutgoingListItem from '../components/RecordTransferOutgoing
 
 export default {
   name: 'record-list',
-  props: ['transferDirection'],
+
+  props: {
+    transferDirection: String,
+  },
+
   components: {
     AppHeader,
     AppSubHeader,
     RecordTransferIncomingListItem,
     RecordTransferOutgoingListItem,
   },
+
   data() {
     return {
       records: [],
     }
   },
+
   mounted() {
     EventBus.$on('socket:codex-record:address-approved:owner', this.addOutgoingRecordHandler)
     EventBus.$on('socket:codex-record:address-approved:approved', this.addIncomingRecordHandler)
     EventBus.$on('socket:codex-record:transferred:old-owner', this.removeTransferredRecordHandler)
   },
+
   beforeDestroy() {
     EventBus.$off('socket:codex-record:address-approved:owner', this.addOutgoingRecordHandler)
     EventBus.$off('socket:codex-record:address-approved:approved', this.addIncomingRecordHandler)
     EventBus.$off('socket:codex-record:transferred:old-owner', this.removeTransferredRecordHandler)
   },
+
   created() {
     EventBus.$emit('events:view-transfers-page', this)
     this.fetchData(this.transferDirection)
   },
-  computed: {
-    web3() {
-      return this.$store.state.web3
-    },
-  },
+
   methods: {
 
     // add the record to the incoming list if it was just approved

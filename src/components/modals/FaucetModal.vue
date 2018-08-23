@@ -32,10 +32,7 @@ export default {
   },
   computed: {
     ...mapState('auth', ['balance']),
-
-    web3() {
-      return this.$store.state.web3.instance()
-    },
+    ...mapState('web3', ['instance']),
   },
   methods: {
     requestTokens(event) {
@@ -52,7 +49,7 @@ export default {
           //  until the faucet transaction is actually mined
           //
           // This will update the UI optimistically even though the token transfer may still be pending
-          // this.$store.dispatch('auth/handleFaucetRequest', this.balance.add(this.web3.toWei(this.dripAmount, 'ether')))
+          // this.$store.dispatch('auth/handleFaucetRequest', this.balance.add(this.instance().toWei(this.dripAmount, 'ether')))
         })
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not request tokens: ${error.message}`)

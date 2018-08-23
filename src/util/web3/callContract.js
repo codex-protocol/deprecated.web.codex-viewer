@@ -5,18 +5,18 @@ const gasBuffer = 100000
 // @TODO: Pull from ethgasstation instead
 const recommendedGasPriceInGwei = 10
 
-function callContract(func, args, web3) {
+function callContract(func, args, account, instance) {
   return func.estimateGas(
     ...args,
-    { from: web3.account }
+    { from: account }
   )
     .then((estimatedGas) => {
       return func(
         ...args,
         {
-          from: web3.account,
+          from: account,
           gas: estimatedGas + gasBuffer,
-          gasPrice: web3.instance().toWei(recommendedGasPriceInGwei, 'gwei'),
+          gasPrice: instance().toWei(recommendedGasPriceInGwei, 'gwei'),
         }
       )
     })
