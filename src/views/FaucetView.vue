@@ -18,7 +18,7 @@
             Make sure to get some CodexCoin from the faucet!
             When fees are enabled, you'll be required to have CodexCoin to transact with the protocol.
           </p>
-          <p v-if="!userState.user">
+          <p v-if="!user">
             You need to be logged in before you can request tokens from the faucet!
             Login using the button on the side.
           </p>
@@ -31,13 +31,13 @@
                 class="mb-3"
                 variant="primary"
                 v-b-modal.faucetModal
-                :disabled="!this.userState.user.canRequestFaucetTokens"
+                :disabled="!user.canRequestFaucetTokens"
               >
                 Get more CODX
               </b-button>
 
               <p>Your balance: {{ formattedBalance }} CODX</p>
-              <p v-if="!userState.user.canRequestFaucetTokens">
+              <p v-if="!user.canRequestFaucetTokens">
                 <strong>You'll be able to request more CODX in {{ nextRequestIn }}</strong>
               </p>
 
@@ -64,6 +64,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import EventBus from '../util/eventBus'
 import { timeSince } from '../util/dateHelpers'
 import formatTokenAmount from '../util/formatTokenAmount'
@@ -83,17 +85,12 @@ export default {
     EventBus.$emit('events:view-faucet-page', this)
   },
   computed: {
-    userState() {
-      return this.$store.state.auth
-    },
-    registryContractApproved() {
-      return this.userState.registryContractApproved
-    },
+    ...mapState('auth', ['registryContractApproved', 'balance', 'user']),
     formattedBalance() {
-      return formatTokenAmount(this.userState.balance)
+      return formatTokenAmount(this.balance)
     },
     nextRequestIn() {
-      const lastRequestedAt = new Date(this.userState.user.faucetLastRequestedAt)
+      const lastRequestedAt = new Date(this.user.faucetLastRequestedAt)
       const nextDay = new Date(lastRequestedAt.getTime() - (86400 * 1000))
       return timeSince(nextDay)
     },

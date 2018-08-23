@@ -24,7 +24,7 @@
         <div class="item">
           <p v-if="!stakeContractApproved">Before you can stake CODX, you have to approve the contract above</p>
 
-          <personal-stakes-table :personal-stakes="userState.personalStakes" />
+          <personal-stakes-table :personal-stakes="personalStakes" />
           <div class="stake-buttons">
             <b-button variant="primary" v-b-modal.stakeTokensModal :disabled="!stakeContractApproved">
               Stake more CODX
@@ -52,6 +52,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import EventBus from '../util/eventBus'
 
 import AppHeader from '../components/AppHeader'
@@ -73,20 +75,14 @@ export default {
     EventBus.$emit('events:view-tokens-page', this)
   },
   computed: {
+    ...mapState('auth', [
+      'creditBalance',
+      'registryContractApproved',
+      'stakeContractApproved',
+      'personalStakes',
+    ]),
     web3() {
       return this.$store.state.web3.instance()
-    },
-    userState() {
-      return this.$store.state.auth
-    },
-    creditBalance() {
-      return this.userState.creditBalance
-    },
-    registryContractApproved() {
-      return this.userState.registryContractApproved
-    },
-    stakeContractApproved() {
-      return this.userState.stakeContractApproved
     },
     stakeContract() {
       return this.$store.state.web3.stakeContractInstance()

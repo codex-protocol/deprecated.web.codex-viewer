@@ -111,7 +111,7 @@ export default {
           signedData: result.result.substr(2),
         }
 
-        this.$store.dispatch('sendAuthRequest', sendAuthRequestOptions)
+        this.$store.dispatch('auth/sendAuthRequest', sendAuthRequestOptions)
           .then(() => {
             this.$router.replace({ name: 'collection' })
           })

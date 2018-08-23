@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Raven from 'raven-js'
 
 import Record from '../util/api/record'
@@ -51,9 +52,7 @@ export default {
     }
   },
   computed: {
-    user() {
-      return this.$store.state.auth.user
-    },
+    ...mapState('auth', ['user']),
     isPublic: {
       get: function getIsPublic() {
         return !this.isPrivate

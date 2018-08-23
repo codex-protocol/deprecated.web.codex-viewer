@@ -29,6 +29,7 @@
 
 import 'freshchat-widget'
 import axios from 'axios'
+import { mapState } from 'vuex'
 
 import config from './util/config'
 import EventBus from './util/eventBus'
@@ -66,7 +67,7 @@ export default {
         // @TODO: evaluate what happens when a bogus auth token is set in the
         //  route params
         if (this.$route.query.authToken) {
-          this.$store.dispatch('updateUserState', this.$route.query.authToken)
+          this.$store.dispatch('auth/updateUserState', this.$route.query.authToken)
             .then(() => {
 
               const query = Object.assign({}, this.$route.query)
@@ -78,15 +79,15 @@ export default {
               })
             })
         } else if (this.authToken) {
-          this.$store.dispatch('updateUserState', this.authToken)
+          this.$store.dispatch('auth/updateUserState', this.authToken)
         }
 
         EventBus.$on('socket:codex-coin:transferred', () => {
-          this.$store.dispatch('updateUserState')
+          this.$store.dispatch('auth/updateUserState')
         })
 
         EventBus.$on('socket:codex-coin:registry-contract-approved', () => {
-          this.$store.dispatch('updateUserState')
+          this.$store.dispatch('auth/updateUserState')
         })
       })
   },
@@ -97,14 +98,9 @@ export default {
     }
   },
   computed: {
+    ...mapState('auth', ['authToken', 'uesr']),
     hideSideBar() {
       return this.$route.meta && this.$route.meta.hideSideBar
-    },
-    user() {
-      return this.$store.state.auth.user
-    },
-    authToken() {
-      return this.$store.state.auth.authToken
     },
     recordId() {
       return this.$route.params.recordId
@@ -123,7 +119,7 @@ export default {
 
       const authErrorHandler = (error) => {
         if (error.response && error.response.status === 401) {
-          this.$store.dispatch('logout', this.$router)
+          this.$store.dispatch('auth/logout', this.$router)
         }
 
         if (error.response && error.response.data && error.response.data.error && error.response.data.error.message) {
@@ -159,7 +155,7 @@ export default {
       // MetaMask has been locked while logged in
       //  Logout the user
       if (Web3Errors.Locked && this.authToken) {
-        this.$store.dispatch('logout', this.$router)
+        this.$store.dispatch('auth/logout', this.$router)
       }
     },
   },

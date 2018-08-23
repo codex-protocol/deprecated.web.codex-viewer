@@ -74,6 +74,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import Record from '../util/api/record'
 import EventBus from '../util/eventBus'
 import { ZeroAddress } from '../util/constants/web3'
@@ -105,6 +107,7 @@ export default {
     }
   },
   computed: {
+    ...mapState('auth', ['authToken']),
     web3() {
       return this.$store.state.web3
     },
@@ -114,7 +117,7 @@ export default {
     isOwner() {
       return (
         this.account &&
-        this.$store.state.auth.authToken &&
+        this.authToken &&
         this.account === this.codexRecord.ownerAddress
       )
     },

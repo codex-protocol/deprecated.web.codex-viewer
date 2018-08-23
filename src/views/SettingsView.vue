@@ -28,6 +28,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import Record from '../util/api/record'
 import EventBus from '../util/eventBus'
 import AppHeader from '../components/AppHeader'
@@ -50,11 +52,9 @@ export default {
     this.getRecords()
   },
   computed: {
+    ...mapState('auth', ['user']),
     web3() {
       return this.$store.state.web3
-    },
-    user() {
-      return this.$store.state.auth.user
     },
   },
   methods: {

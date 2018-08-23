@@ -19,7 +19,7 @@
           </b-button>
         </app-header>
         <b-card-group deck class="record-list">
-          <faucet-marketing-card :giveaway="giveaway" v-if="!hideSetup && !giveaway" />
+          <faucet-marketing-card :giveaway="giveaway" v-if="showFaucetMarketingCard" />
           <claim-giveaway-card :giveaway="giveaway" />
           <giveaway-info-card :giveaway="giveaway" />
 
@@ -37,6 +37,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import config from '../util/config'
 import EventBus from '../util/eventBus'
 import Record from '../util/api/record'
@@ -67,11 +69,13 @@ export default {
     }
   },
   computed: {
+    ...mapState('auth', ['hideSetup']),
+
     account() {
       return this.$store.state.web3.account
     },
-    hideSetup() {
-      return !config.showFaucet || this.$store.state.auth.hideSetup
+    showFaucetMarketingCard() {
+      return config.showFaucet && !this.hideSetup && !this.giveaway
     },
   },
   mounted() {

@@ -84,6 +84,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import debug from 'debug'
 
 import HashFormatter from '../HashFormatter'
@@ -108,9 +109,7 @@ export default {
     }
   },
   computed: {
-    user() {
-      return this.$store.state.auth.user
-    },
+    ...mapState('auth', ['user']),
     web3() {
       return this.$store.state.web3
     },
