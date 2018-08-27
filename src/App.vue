@@ -29,7 +29,10 @@
 
 import 'freshchat-widget'
 import axios from 'axios'
-import { mapState } from 'vuex'
+import {
+  mapState,
+  mapGetters,
+} from 'vuex'
 
 import config from './util/config'
 import { Web3Errors } from './util/constants/web3'
@@ -87,7 +90,7 @@ export default {
   },
 
   computed: {
-    ...mapState('auth', ['authToken', 'uesr']),
+    ...mapGetters('auth', ['isAuthenticated']),
     ...mapState('web3', ['error']),
 
     hideSideBar() {
@@ -145,7 +148,7 @@ export default {
     web3Error(error) {
       // MetaMask has been locked while logged in
       //  Logout the user
-      if (Web3Errors.Locked && this.authToken) {
+      if (Web3Errors.Locked && this.isAuthenticated) {
         this.$store.dispatch('auth/logout', this.$router)
       }
     },
