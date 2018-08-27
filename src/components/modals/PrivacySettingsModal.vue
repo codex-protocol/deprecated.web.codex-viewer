@@ -84,6 +84,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import debug from 'debug'
 
 import HashFormatter from '../HashFormatter'
@@ -94,10 +95,13 @@ const logger = debug('app:component:privacy-settings-modal')
 
 export default {
   name: 'privacy-settings-modal',
+
   props: ['codexRecord', 'onUpdated'],
+
   components: {
     HashFormatter,
   },
+
   data() {
     return {
       modalVisible: false,
@@ -107,13 +111,11 @@ export default {
       whitelistedAddresses: Array.from(this.codexRecord.whitelistedAddresses) || [],
     }
   },
+
   computed: {
-    user() {
-      return this.$store.state.auth.user
-    },
-    web3() {
-      return this.$store.state.web3
-    },
+    ...mapState('auth', ['user']),
+    ...mapState('web3', ['account']),
+
     isPublic: {
       get: function getIsPublic() {
         return !this.isPrivate
@@ -123,6 +125,7 @@ export default {
       },
     },
   },
+
   methods: {
     onHide() {
       Object.assign(this.$data, this.$options.data.apply(this))
@@ -144,7 +147,7 @@ export default {
       if (
         addressToAdd !== null &&
         !this.whitelistedAddresses.includes(addressToAdd) &&
-        addressToAdd.toLowerCase() !== this.web3.account.toLowerCase()
+        addressToAdd.toLowerCase() !== this.account.toLowerCase()
       ) {
         this.whitelistedAddresses.push(addressToAdd)
       }

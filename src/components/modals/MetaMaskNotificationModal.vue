@@ -87,6 +87,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Raven from 'raven-js'
 
 import config from '../../util/config'
@@ -164,6 +165,8 @@ export default {
     },
   },
   computed: {
+    ...mapState('auth', ['balance', 'registryContractApproved']),
+
     shown() {
       return this.onShown || this.noop
     },
@@ -177,12 +180,7 @@ export default {
       return this.size || ''
     },
     willTransactionFail() {
-      const {
-        balance,
-        registryContractApproved,
-      } = this.$store.state.auth
-
-      return config.showFaucet && this.requiresTokens && (!registryContractApproved || balance.eq(0))
+      return config.showFaucet && this.requiresTokens && (!this.registryContractApproved || this.balance.eq(0))
     },
     shouldShowMainSlot() {
       return this.currentStep === 0 && !this.willTransactionFail

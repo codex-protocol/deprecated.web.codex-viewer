@@ -16,7 +16,7 @@
     <app-side-bar v-if="!hideSideBar" :hideNav="hideNav" />
     <div class="main-content-wrapper">
       <div class="main-content">
-        <router-view v-if="web3.isLoaded" />
+        <router-view v-if="isLoaded" />
         <loading-overlay type="global" v-else />
       </div>
       <app-footer />
@@ -29,11 +29,12 @@
 
 import 'freshchat-widget'
 import axios from 'axios'
+import { mapState } from 'vuex'
 
 import config from './util/config'
 import EventBus from './util/eventBus'
 
-import { Web3Errors } from './store/modules/web3'
+import { Web3Errors } from './util/constants/web3'
 
 import AppFooter from './components/AppFooter'
 import AppSideBar from './components/AppSideBar'
@@ -46,6 +47,7 @@ import './util/analytics'
 
 export default {
   name: 'App',
+
   components: {
     IconBase,
     AppFooter,
@@ -54,19 +56,20 @@ export default {
     ToastContainer,
     LoadingOverlay,
   },
+
   created() {
 
     this.initializeApi()
 
-    this.$store.dispatch('updateOAuth2Clients')
+    this.$store.dispatch('oauth2/updateOAuth2Clients')
 
-    this.$store.dispatch('registerWeb3', this.$router)
+    this.$store.dispatch('web3/registerWeb3', this.$router)
       .then(() => {
 
         // @TODO: evaluate what happens when a bogus auth token is set in the
         //  route params
         if (this.$route.query.authToken) {
-          this.$store.dispatch('updateUserState', this.$route.query.authToken)
+          this.$store.dispatch('auth/updateUserState', this.$route.query.authToken)
             .then(() => {
 
               const query = Object.assign({}, this.$route.query)
@@ -78,44 +81,49 @@ export default {
               })
             })
         } else if (this.authToken) {
-          this.$store.dispatch('updateUserState', this.authToken)
+          this.$store.dispatch('auth/updateUserState', this.authToken)
         }
 
         EventBus.$on('socket:codex-coin:transferred', () => {
-          this.$store.dispatch('updateUserState')
+          this.$store.dispatch('auth/updateUserState')
         })
 
         EventBus.$on('socket:codex-coin:registry-contract-approved', () => {
-          this.$store.dispatch('updateUserState')
+          this.$store.dispatch('auth/updateUserState')
         })
       })
   },
+
   data() {
     return {
       freshChatToken: process.env.VUE_APP_FRESHCHAT_API_TOKEN,
       showNav: false,
     }
   },
+
+  mounted() {
+    const token = this.freshChatToken
+    if (token) {
+      window.fcWidget.init({
+        token,
+        host: 'https://wchat.freshchat.com',
+      })
+    }
+  },
+
   computed: {
+    ...mapState('auth', ['authToken', 'uesr']),
+    ...mapState('web3', ['error', 'isLoaded']),
+
     hideSideBar() {
       return this.$route.meta && this.$route.meta.hideSideBar
     },
-    user() {
-      return this.$store.state.auth.user
-    },
-    authToken() {
-      return this.$store.state.auth.authToken
-    },
+
     recordId() {
       return this.$route.params.recordId
     },
-    web3() {
-      return this.$store.state.web3
-    },
-    web3Error() {
-      return this.$store.state.web3.error
-    },
   },
+
   methods: {
     initializeApi() {
       axios.defaults.baseURL = config.apiUrl
@@ -123,7 +131,7 @@ export default {
 
       const authErrorHandler = (error) => {
         if (error.response && error.response.status === 401) {
-          this.$store.dispatch('logout', this.$router)
+          this.$store.dispatch('auth/logout', this.$router)
         }
 
         if (error.response && error.response.data && error.response.data.error && error.response.data.error.message) {
@@ -154,23 +162,15 @@ export default {
       this.showNav = false
     },
   },
+
   watch: {
     web3Error(error) {
       // MetaMask has been locked while logged in
       //  Logout the user
       if (Web3Errors.Locked && this.authToken) {
-        this.$store.dispatch('logout', this.$router)
+        this.$store.dispatch('auth/logout', this.$router)
       }
     },
-  },
-  mounted() {
-    const token = this.freshChatToken
-    if (token) {
-      window.fcWidget.init({
-        token,
-        host: 'https://wchat.freshchat.com',
-      })
-    }
   },
 }
 </script>

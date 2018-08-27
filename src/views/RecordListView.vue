@@ -19,7 +19,7 @@
           </b-button>
         </app-header>
         <b-card-group deck class="record-list">
-          <faucet-marketing-card :giveaway="giveaway" v-if="!hideSetup && !giveaway" />
+          <faucet-marketing-card :giveaway="giveaway" v-if="showFaucetMarketingCard" />
           <claim-giveaway-card :giveaway="giveaway" />
           <giveaway-info-card :giveaway="giveaway" />
 
@@ -37,6 +37,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import config from '../util/config'
 import EventBus from '../util/eventBus'
 import Record from '../util/api/record'
@@ -51,6 +53,7 @@ import CreateRecordModal from '../components/modals/CreateRecordModal'
 
 export default {
   name: 'record-list',
+
   components: {
     AppHeader,
     RecordListItem,
@@ -59,6 +62,7 @@ export default {
     GiveawayInfoCard,
     CreateRecordModal,
   },
+
   data() {
     return {
       records: [],
@@ -66,14 +70,7 @@ export default {
       showCreateGiveawayButton: config.showCreateGiveawayButton,
     }
   },
-  computed: {
-    account() {
-      return this.$store.state.web3.account
-    },
-    hideSetup() {
-      return !config.showFaucet || this.$store.state.auth.hideSetup
-    },
-  },
+
   mounted() {
     // @NOTE: incoming transfers and newly minted Records both have the same
     //  effect of pushing the new record onto this.records, so we use the same
@@ -96,6 +93,15 @@ export default {
     this.getGiveaways()
     EventBus.$emit('events:view-collection-page', this)
   },
+
+  computed: {
+    ...mapState('auth', ['hideSetup']),
+
+    showFaucetMarketingCard() {
+      return config.showFaucet && !this.hideSetup && !this.giveaway
+    },
+  },
+
   methods: {
     // add the record to the collection if it was just transferred
     addTransferredRecordHandler(codexRecordToAdd) {
@@ -107,12 +113,14 @@ export default {
 
       this.records.push(codexRecordToAdd)
     },
+
     // add the record from the collection if it was just transferred
     removeTransferredRecordHandler(codexRecordToRemove) {
       this.records = this.records.filter((codexRecord) => {
         return codexRecord.tokenId !== codexRecordToRemove.tokenId
       })
     },
+
     getRecords() {
       Record.getUserRecords()
         .then((records) => {
@@ -122,6 +130,7 @@ export default {
           EventBus.$emit('toast:error', `Could not get collection: ${error.message}`)
         })
     },
+
     getGiveaways() {
       Giveaway.getAllEligibleGiveaways()
         .then((giveaways) => {
@@ -129,6 +138,7 @@ export default {
           this.giveaway = giveaways[0]
         })
     },
+
     createGiveaway() {
       Giveaway.createNewGiveaway()
         .catch((error) => {
@@ -144,5 +154,4 @@ export default {
   display: flex
   flex-wrap: wrap
   align-items: start
-
 </style>

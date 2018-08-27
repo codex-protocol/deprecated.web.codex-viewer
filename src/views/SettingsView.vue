@@ -28,6 +28,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import Record from '../util/api/record'
 import EventBus from '../util/eventBus'
 import AppHeader from '../components/AppHeader'
@@ -35,28 +37,28 @@ import RecordPrivacySettingsRowItem from '../components/RecordPrivacySettingsRow
 
 export default {
   name: 'record-list',
+
   components: {
     AppHeader,
     RecordPrivacySettingsRowItem,
   },
+
   data() {
     return {
       records: [],
     }
   },
+
   created() {
     // @TODO: add the same socket event handlers as the collection page here too?
     EventBus.$emit('events:view-settings-page', this)
     this.getRecords()
   },
+
   computed: {
-    web3() {
-      return this.$store.state.web3
-    },
-    user() {
-      return this.$store.state.auth.user
-    },
+    ...mapState('auth', ['user']),
   },
+
   methods: {
     getRecords() {
       Record.getUserRecords()

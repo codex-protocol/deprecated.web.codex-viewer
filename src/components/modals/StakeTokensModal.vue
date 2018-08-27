@@ -30,51 +30,60 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import callContract from '../../util/web3/callContract'
 import EventBus from '../../util/eventBus'
+
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
 export default {
   name: 'stake-tokens-modal',
+
   components: {
     MetaMaskNotificationModal,
   },
+
   data() {
     return {
       stakeAmount: null,
       modalVisible: false,
     }
   },
+
   methods: {
     focusModal() {
       this.$refs.stakeAmount.focus()
     },
+
     stakeTokens() {
 
-      const amount = this.web3.instance().toWei(this.stakeAmount, 'ether')
+      const amount = this.instance().toWei(this.stakeAmount, 'ether')
       const input = [amount, '0x0']
 
       EventBus.$emit('events:click-stake-tokens', this)
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return callContract(this.stakeContract.stake, input, this.web3)
+      return callContract(this.stakeContract.stake, input, this.account, this.instance)
         .then(() => {
           EventBus.$emit('events:stake-tokens', this, amount)
         })
     },
+
     clearModal() {
       Object.assign(this.$data, this.$options.data.apply(this))
     },
   },
+
   computed: {
-    web3() {
-      return this.$store.state.web3
-    },
+    ...mapState('web3', ['account', 'instance', 'stakeContractInstance']),
+
     canSubmit() {
       return this.stakeAmount
     },
+
     stakeContract() {
-      return this.web3.stakeContractInstance()
+      return this.stakeContractInstance()
     },
   },
 }

@@ -70,6 +70,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import debug from 'debug'
 
 import File from '../../util/api/file'
@@ -133,7 +134,7 @@ export default {
       const binaryFileReader = new FileReader()
 
       binaryFileReader.addEventListener('loadend', () => {
-        this.uploadedFileHash = this.web3.instance().sha3(binaryFileReader.result)
+        this.uploadedFileHash = this.instance().sha3(binaryFileReader.result)
       })
 
       binaryFileReader.readAsBinaryString(file)
@@ -177,7 +178,7 @@ export default {
 
           // TODO: maybe show somewhere that the locally-calculated hashes match
           //  the server-side-calculated hashes? e.g.:
-          // const { sha3 } = this.web3.instance()
+          // const { sha3 } = this.instance()
           //
           // metadata.nameHash === sha3(metadata.name)
           // metadata.mainImage.hash === this.uploadedFileHash
@@ -198,10 +199,9 @@ export default {
     },
     createRecord(metadata) {
 
-      const { sha3 } = this.web3.instance()
-      const { account } = this.web3
+      const { sha3 } = this.instance()
       const input = [
-        account,
+        this.account,
         sha3(metadata.name),
         metadata.description ? sha3(metadata.description) : '',
         [this.uploadedFileHash],
@@ -212,18 +212,16 @@ export default {
       ]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return callContract(this.recordContract.mint, input, this.web3)
+      return callContract(this.recordContract.mint, input, this.account, this.instance)
     },
   },
   computed: {
-    web3() {
-      return this.$store.state.web3
-    },
+    ...mapState('web3', ['account', 'instance', 'recordContractInstance']),
     canSubmit() {
       return this.name && this.uploadedFileHash && this.uploadedFile
     },
     recordContract() {
-      return this.$store.state.web3.recordContractInstance()
+      return this.recordContractInstance()
     },
     progressVariant() {
       if (!this.uploadComplete) {

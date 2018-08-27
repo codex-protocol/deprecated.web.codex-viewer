@@ -8,18 +8,22 @@
 <script>
 export default {
   name: 'hash-formatter',
+
   props: ['data'],
+
   methods: {
     formatData(data, isShort = false) {
-      if (!data) {
+      if (typeof data !== 'string') {
         return null
       }
+
       let formattedData = data
       if (isShort) {
         const beginning = data.substring(0, 6)
         const end = data.substring(data.length - 4)
         formattedData = `${beginning}…${end}`
       }
+
       return formattedData
     },
   },

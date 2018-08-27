@@ -1,41 +1,10 @@
 import axios from 'axios'
-import debug from 'debug'
 import Raven from 'raven-js'
-import BigNumber from 'bignumber.js'
 
-import User from '../../util/api/user'
-import EventBus from '../../util/eventBus'
-import SocketService from '../../util/socket'
+import User from '../../../util/api/user'
+import EventBus from '../../../util/eventBus'
 
-const logger = debug('app:store:auth')
-
-// If an auth token is present on page load, then add it to all future API requests
-let cachedAuthToken = window.localStorage.getItem('authToken')
-
-if (cachedAuthToken) {
-  axios.defaults.headers.common.Authorization = cachedAuthToken
-}
-
-const getInitialState = () => {
-  return {
-    user: null,
-    balance: new BigNumber(0),
-    authToken: cachedAuthToken,
-    creditBalance: new BigNumber(0),
-    personalStakes: [],
-    registryContractApproved: false,
-    stakeContractApproved: false,
-    hideSetup: !!window.localStorage.getItem('hideSetup'),
-  }
-}
-
-const getters = {
-  isAuthenticated: (currentState) => {
-    return !!currentState.authToken
-  },
-}
-
-const actions = {
+export default {
   sendAuthRequest({ commit, dispatch }, data) {
 
     const requestOptions = {
@@ -175,96 +144,4 @@ const actions = {
 
     router.replace('/')
   },
-}
-
-// @TODO: Only log for debug mode
-const logMutation = (mutationName, payload) => {
-  logger(`${mutationName} mutation being executed`, payload)
-}
-
-const mutations = {
-  setAuthToken(currentState, newAuthToken) {
-    logMutation('setAuthToken', newAuthToken)
-
-    currentState.authToken = newAuthToken
-    axios.defaults.headers.common.Authorization = newAuthToken
-
-    SocketService.updateSocket(newAuthToken)
-
-    window.localStorage.setItem('authToken', newAuthToken)
-  },
-
-  setUser(currentState, newUser) {
-    logMutation('setUser', newUser)
-    currentState.user = newUser
-  },
-
-  updateUser(currentState, newProperties) {
-    logMutation('updateUser', newProperties)
-
-    Object.assign(currentState.user, newProperties)
-  },
-
-  clearUserState(currentState) {
-    logMutation('clearUserState')
-
-    cachedAuthToken = null
-    SocketService.disconnect()
-    window.localStorage.removeItem('authToken')
-    window.localStorage.removeItem('hideSetup')
-    delete axios.defaults.headers.common.Authorization
-
-    // Reset state to its initial values
-    Object.assign(currentState, getInitialState())
-  },
-
-  updateTokenBalance(currentState, newBalance) {
-    logMutation('updateTokenBalance', newBalance)
-
-    currentState.balance = newBalance
-  },
-
-  updatePersonalStakes(currentState, newPersonalStakes) {
-    logMutation('updatePersonalStakes', newPersonalStakes)
-
-    currentState.personalStakes = newPersonalStakes
-  },
-
-  updateCreditBalance(currentState, newBalance) {
-    logMutation('updateCreditBalance', newBalance)
-
-    currentState.creditBalance = newBalance
-  },
-
-  updateApprovalStatus(currentState, payload) {
-    const {
-      allowance,
-      stateProperty,
-    } = payload
-
-    logMutation('updateApprovalStatus', payload)
-
-    // The approval exposed in the UI is not a binary operation, but it does
-    //  approve the contract's allowance to a high value (2^255).
-    // Here we check to see if it's greater than 1 token, and if so assume that
-    //  approval has taken place.
-    // If somehow the user has used so many tokens that their allowance is now low,
-    //  they'll need to re-approve the contract for more.
-    currentState[stateProperty] = allowance.greaterThan(new BigNumber('10e18'))
-  },
-
-  hideSetup(currentState) {
-    logMutation('hideSetup')
-
-    currentState.hideSetup = true
-
-    window.localStorage.setItem('hideSetup', true)
-  },
-}
-
-export default {
-  getters,
-  actions,
-  mutations,
-  state: getInitialState(),
 }

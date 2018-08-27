@@ -17,6 +17,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import EventBus from '../../util/eventBus'
 import callContract from '../../util/web3/callContract'
 import etherscanHelper from '../../util/web3/etherscanHelper'
@@ -25,21 +27,32 @@ import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
 export default {
   name: 'approve-contract-modal',
+
   props: ['id', 'contractInstance', 'stateProperty'],
+
   components: {
     MetaMaskNotificationModal,
   },
+
+  computed: {
+    ...mapState('web3', ['instance', 'tokenContractInstance']),
+
+    tokenContract() {
+      return this.tokenContractInstance()
+    },
+  },
+
   methods: {
     approveTokens() {
       EventBus.$emit('events:click-approve-contract', this)
-      const amount = new (this.web3.instance()).BigNumber(2).pow(255)
+      const amount = new (this.instance()).BigNumber(2).pow(255)
       const input = [this.contractInstance.address, amount.toFixed()]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return callContract(this.tokenContract.approve, input, this.web3)
+      return callContract(this.tokenContract.approve, input, this.account, this.instance)
         .then(() => {
           EventBus.$emit('events:approve-contract', this)
-          this.$store.commit('updateApprovalStatus', {
+          this.$store.commit('auth/updateApprovalStatus', {
             allowance: amount,
             stateProperty: this.stateProperty,
           })
@@ -49,14 +62,6 @@ export default {
       return etherscanHelper.getAddressUrl(this.contractInstance.address)
     },
   },
-  computed: {
-    web3() {
-      return this.$store.state.web3
-    },
-    tokenContract() {
-      return this.web3.tokenContractInstance()
-    },
-  },
 }
 </script>
 
@@ -64,5 +69,4 @@ export default {
 .token-icon
   width: 8rem
   margin-bottom: 2rem
-
 </style>

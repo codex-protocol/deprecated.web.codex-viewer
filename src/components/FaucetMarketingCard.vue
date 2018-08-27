@@ -40,6 +40,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import formatTokenAmount from '../util/formatTokenAmount'
 
 import ApproveContractModal from './modals/ApproveContractModal'
@@ -57,9 +59,13 @@ export default {
     }
   },
   computed: {
+    ...mapState('auth', ['balance', 'registryContractApproved']),
+    ...mapState('web3', ['recordContractInstance']),
+
     done() {
       return this.currentStep === this.numSteps
     },
+
     currentStep() {
       if (this.balance.eq(0)) {
         return 1
@@ -71,15 +77,11 @@ export default {
 
       return 3
     },
-    balance() {
-      return this.$store.state.auth.balance
-    },
-    registryContractApproved() {
-      return this.$store.state.auth.registryContractApproved
-    },
+
     recordContract() {
-      return this.$store.state.web3.recordContractInstance()
+      return this.recordContractInstance()
     },
+
     buttonText() {
       switch (this.currentStep) {
         case 1:
@@ -110,7 +112,7 @@ export default {
       }
     },
     hide() {
-      this.$store.dispatch('hideSetup')
+      this.$store.dispatch('auth/hideSetup')
     },
     formatTokenAmount(rawAmount) {
       return formatTokenAmount(rawAmount)

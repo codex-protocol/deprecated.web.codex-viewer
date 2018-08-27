@@ -33,7 +33,7 @@
         <img src="../assets/icons/logout.svg">Logout
       </b-link>
       <div class="address">
-        <div class="network-details" v-if="showNetworkDetails">Logged in as <hash-formatter :data="web3.account" /> ({{ web3.network }})</div>
+        <div class="network-details" v-if="showNetworkDetails">Logged in as <hash-formatter :data="account" /> ({{ network }})</div>
       </div>
     </div>
 
@@ -64,6 +64,11 @@
 </template>
 
 <script>
+import {
+  mapState,
+  mapGetters,
+} from 'vuex'
+
 import HashFormatter from './HashFormatter'
 import Transfer from '../util/api/transfer'
 import EventBus from '../util/eventBus'
@@ -71,10 +76,13 @@ import config from '../util/config'
 
 export default {
   name: 'app-side-bar',
+
   props: ['hideNetworkDetails', 'hideNav'],
+
   components: {
     HashFormatter,
   },
+
   data() {
     return {
       numberOfIncomingTransfers: 0,
@@ -84,35 +92,37 @@ export default {
       showCodexQuests: config.showCodexQuestsMarketing,
     }
   },
-  computed: {
-    isAuthenticated() {
-      return this.$store.getters.isAuthenticated
-    },
-    web3() {
-      return this.$store.state.web3
-    },
-    showNetworkDetails() {
-      return !this.hideNetworkDetails && this.web3.account
-    },
-  },
+
   created() {
     if (this.isAuthenticated) {
       this.updateIncomingTransfersCount()
     }
   },
+
   mounted() {
     EventBus.$on('socket:codex-record:address-approved:approved', this.updateIncomingTransfersCount)
     EventBus.$on('socket:codex-record:transferred:new-owner', this.updateIncomingTransfersCount)
   },
+
   beforeDestroy() {
     EventBus.$off('socket:codex-record:address-approved:approved', this.updateIncomingTransfersCount)
     EventBus.$off('socket:codex-record:transferred:new-owner', this.updateIncomingTransfersCount)
   },
+
+  computed: {
+    ...mapState('web3', ['account', 'network']),
+    ...mapGetters('auth', ['isAuthenticated']),
+
+    showNetworkDetails() {
+      return !this.hideNetworkDetails && this.account
+    },
+  },
+
   methods: {
     logout() {
       this.hideNav()
       EventBus.$emit('events:click-logout-button', this)
-      this.$store.dispatch('logout', this.$router)
+      this.$store.dispatch('auth/logout', this.$router)
     },
     // @TODO: instead of requesting these independently of
     //  src/views/TransferListView.vue, the list of transfers should really be

@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 
 import Transfer from '../util/api/transfer'
 import EventBus from '../util/eventBus'
@@ -26,7 +27,9 @@ import missingImageHelper from '../util/missingImageHelper'
 
 export default {
   name: 'record-transfer-incoming-list-item',
+
   props: ['codexRecord'],
+
   data() {
     return {
       route: { name: 'record-detail', params: { recordId: this.codexRecord.tokenId } },
@@ -35,24 +38,28 @@ export default {
       missingImageHelper,
     }
   },
+
   mounted() {
     EventBus.$on('socket:codex-record:transferred:new-owner', this.recordTransferredHandler)
   },
+
   beforeDestroy() {
     EventBus.$off('socket:codex-record:transferred:new-owner', this.recordTransferredHandler)
   },
+
   computed: {
-    web3() {
-      return this.$store.state.web3
-    },
+    ...mapState('web3', ['account', 'instance', 'recordContractInstance']),
+
     recordContract() {
-      return this.web3.recordContractInstance()
+      return this.recordContractInstance()
     },
   },
+
   methods: {
     viewRecord() {
       this.$router.push(this.route)
     },
+
     // show the "transfer accepted" overlay when the transfer event comes in
     recordTransferredHandler(codexRecord) {
       if (this.codexRecord.tokenId !== codexRecord.tokenId) {
@@ -61,18 +68,19 @@ export default {
       this.transferAccepted = true
       this.isLoading = false
     },
+
     acceptTransfer() {
 
       const input = [
         this.codexRecord.ownerAddress,
-        this.web3.account,
+        this.account,
         this.codexRecord.tokenId,
       ]
 
       this.isLoading = true
       EventBus.$emit('events:click-accept-transfer', this)
 
-      callContract(this.recordContract.safeTransferFrom, input, this.web3)
+      callContract(this.recordContract.safeTransferFrom, input, this.account, this.instance)
         .then(() => {
 
           EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
@@ -92,6 +100,7 @@ export default {
           this.isLoading = false
         })
     },
+
     ignoreTransfer() {
 
       this.isLoading = true

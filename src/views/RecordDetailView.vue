@@ -74,6 +74,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import Record from '../util/api/record'
 import EventBus from '../util/eventBus'
 import { ZeroAddress } from '../util/constants/web3'
@@ -89,6 +91,7 @@ import RecordBlockchainDetails from '../components/RecordBlockchainDetails'
 
 export default {
   name: 'record-detail',
+
   components: {
     ApproveTransferModal,
     PrivacySettingsModal,
@@ -97,6 +100,7 @@ export default {
     RecordManageModal,
     RecordImageCarousel,
   },
+
   data() {
     return {
       error: null,
@@ -104,50 +108,56 @@ export default {
       showDetails: false,
     }
   },
+
+  created() {
+    EventBus.$emit('events:view-record-page', this)
+    this.getRecord()
+  },
+
+  mounted() {
+    EventBus.$on('socket:codex-record:modified', this.recordModifiedHandler)
+    EventBus.$on('socket:codex-record:destroyed', this.recordDestroyedHandler)
+  },
+
+  beforeDestroy() {
+    EventBus.$off('socket:codex-record:modified', this.recordModifiedHandler)
+    EventBus.$off('socket:codex-record:destroyed', this.recordDestroyedHandler)
+  },
+
   computed: {
-    web3() {
-      return this.$store.state.web3
-    },
-    account() {
-      return this.web3.account
-    },
+    ...mapState('auth', ['authToken']),
+    ...mapState('web3', ['account', 'instance', 'recordContractInstance']),
+
     isOwner() {
       return (
         this.account &&
-        this.$store.state.auth.authToken &&
+        this.authToken &&
         this.account === this.codexRecord.ownerAddress
       )
     },
+
     isApproved() {
       return this.account &&
         this.account === this.codexRecord.approvedAddress
     },
+
     recordId() {
       return this.$route.params.recordId
     },
+
     recordContract() {
-      return this.web3.recordContractInstance()
+      return this.recordContractInstance()
     },
+
     isAwaitingApproval() {
       return this.codexRecord.approvedAddress !== null &&
         this.codexRecord.approvedAddress !== ZeroAddress
     },
   },
-  created() {
-    EventBus.$emit('events:view-record-page', this)
-    this.getRecord()
-  },
-  mounted() {
-    EventBus.$on('socket:codex-record:modified', this.recordModifiedHandler)
-    EventBus.$on('socket:codex-record:destroyed', this.recordDestroyedHandler)
-  },
-  beforeDestroy() {
-    EventBus.$off('socket:codex-record:modified', this.recordModifiedHandler)
-    EventBus.$off('socket:codex-record:destroyed', this.recordDestroyedHandler)
-  },
   watch: {
     $route: 'getRecord',
   },
+
   methods: {
     recordModifiedHandler(updatedCodexRecord) {
       if (updatedCodexRecord.tokenId !== this.recordId) {
@@ -155,6 +165,7 @@ export default {
       }
       this.codexRecord = updatedCodexRecord
     },
+
     recordDestroyedHandler(destroyedCodexRecord) {
       if (destroyedCodexRecord.tokenId !== this.recordId) {
         return
@@ -163,9 +174,11 @@ export default {
       //  back to their collection
       this.$router.replace({ name: 'collection' })
     },
+
     onSettingsUpdate(newCodexRecord) {
       this.codexRecord = newCodexRecord
     },
+
     getRecord() {
       Record.getRecord(this.recordId)
         .then((record) => {
@@ -177,6 +190,7 @@ export default {
           this.error = error
         })
     },
+
     acceptTransfer() {
       const input = [
         this.codexRecord.ownerAddress,
@@ -184,7 +198,7 @@ export default {
         this.recordId,
       ]
 
-      callContract(this.recordContract.safeTransferFrom, input, this.web3)
+      callContract(this.recordContract.safeTransferFrom, input, this.account, this.instance)
         .then(() => {
           EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
           EventBus.$emit('events:accept-transfer', this)
@@ -193,9 +207,11 @@ export default {
           EventBus.$emit('toast:error', `Could not accept transfer: ${error.message}`)
         })
     },
+
     toggleShowDetails() {
       this.showDetails = !this.showDetails
     },
+
     copyShareLink() {
       copyToClipboard(window.location.href, 'Share link copied to clipboard!')
       this.$refs['copy-share-link-button'].focus()

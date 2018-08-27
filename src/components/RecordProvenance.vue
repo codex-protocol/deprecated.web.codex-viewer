@@ -49,26 +49,37 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 import HashFormatter from './HashFormatter'
 import { timeSince } from '../util/dateHelpers'
 import etherscanHelper from '../util/web3/etherscanHelper'
 
 export default {
   name: 'record-provenance',
+
   props: ['provenance'],
+
   components: {
     HashFormatter,
   },
+
   data() {
     return {
       modifiedDetails: null,
       modifiedDetailsModalVisible: false,
     }
   },
+
+  computed: {
+    ...mapGetters('oauth2', ['getOAuth2ClientNameFromAddress']),
+  },
+
   methods: {
     getTimeSince(createdAt) {
       return `${timeSince(new Date(createdAt))} ago`
     },
+
     getEventDescription(eventType) {
       switch (eventType) {
         case 'created':
@@ -87,6 +98,7 @@ export default {
           return null
       }
     },
+
     getEventAddress(row) {
 
       let address = null
@@ -105,12 +117,13 @@ export default {
         default: // do nothing
       }
 
-      return this.$store.getters.getOAuth2ClientNameFromAddress(address)
-
+      return this.getOAuth2ClientNameFromAddress(address)
     },
+
     getTransactionUrl(txHash) {
       return etherscanHelper.getTxUrl(txHash)
     },
+
     showModifiedDetailsModal(row) {
       this.modifiedDetailsModalVisible = true
       this.modifiedDetails = Object.keys(row.codexRecordModifiedEvent.changedData).map((fieldName) => {
@@ -120,6 +133,7 @@ export default {
         }
       })
     },
+
   },
 }
 </script>

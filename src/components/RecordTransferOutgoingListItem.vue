@@ -16,6 +16,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import EventBus from '../util/eventBus'
 import { ZeroAddress } from '../util/constants/web3'
 import callContract from '../util/web3/callContract'
@@ -32,11 +34,10 @@ export default {
     }
   },
   computed: {
-    web3() {
-      return this.$store.state.web3
-    },
+    ...mapState('web3', ['recordContractInstance']),
+
     recordContract() {
-      return this.web3.recordContractInstance()
+      return this.recordContractInstance()
     },
   },
   methods: {
@@ -47,7 +48,7 @@ export default {
       EventBus.$emit('events:click-cancel-transfer', this)
       const input = [ZeroAddress, this.codexRecord.tokenId]
 
-      callContract(this.recordContract.approve, input, this.web3)
+      callContract(this.recordContract.approve, input, this.account, this.instance)
         .then(() => {
           EventBus.$emit('events:cancel-transfer', this)
           EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)

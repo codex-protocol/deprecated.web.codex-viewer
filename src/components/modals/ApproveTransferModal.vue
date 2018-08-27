@@ -47,6 +47,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import callContract from '../../util/web3/callContract'
 import EventBus from '../../util/eventBus'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
@@ -77,18 +79,17 @@ export default {
       const input = [this.toEthAddress, this.codexRecord.tokenId]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return callContract(this.recordContract.approve, input, this.web3)
+      return callContract(this.recordContract.approve, input, this.account, this.instance)
         .then(() => {
           EventBus.$emit('events:record-transfer', this)
         })
     },
   },
   computed: {
-    web3() {
-      return this.$store.state.web3
-    },
+    ...mapState('web3', ['account', 'instance', 'recordContractInstance']),
+
     recordContract() {
-      return this.web3.recordContractInstance()
+      return this.recordContractInstance()
     },
   },
 }

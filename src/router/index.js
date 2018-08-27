@@ -150,7 +150,7 @@ if (config.showCodexQuestsMarketing) {
 
 router.beforeEach((to, from, next) => {
 
-  if (to.meta.ifAuthenticatedRedirectTo && store.getters.isAuthenticated) {
+  if (to.meta.ifAuthenticatedRedirectTo && store.getters['auth/isAuthenticated']) {
     return next({ name: to.meta.ifAuthenticatedRedirectTo })
   }
 
@@ -175,7 +175,7 @@ router.beforeEach((to, from, next) => {
     return next({ name: 'home' })
   }
 
-  if (requireAuthentication && !store.getters.isAuthenticated) {
+  if (requireAuthentication && !store.getters['auth/isAuthenticated']) {
     return next({ name: 'login' })
   }
 
