@@ -57,15 +57,6 @@ export default {
 
   created() {
     this.initializeApi()
-
-    this.$store.dispatch('oauth2/updateOAuth2Clients')
-    this.$store.dispatch('web3/registerWeb3')
-      .then(() => {
-        return this.$store.dispatch('auth/INITIALIZE_AUTH')
-      })
-      .then(() => {
-        this.isLoaded = true
-      })
   },
 
   data() {
@@ -84,6 +75,15 @@ export default {
         host: 'https://wchat.freshchat.com',
       })
     }
+
+    this.$store.dispatch('oauth2/updateOAuth2Clients')
+    this.$store.dispatch('web3/registerWeb3')
+      .then(() => {
+        return this.$store.dispatch('auth/INITIALIZE_AUTH')
+      })
+      .then(() => {
+        this.isLoaded = true
+      })
   },
 
   computed: {

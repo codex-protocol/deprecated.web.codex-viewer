@@ -9,7 +9,7 @@ import EventBus from '../../../util/eventBus'
 const logger = debug('app:store:auth:actions')
 
 export default {
-  INITIALIZE_AUTH({ dispatch, state, rootState }) {
+  INITIALIZE_AUTH({ dispatch, commit, state, rootState }) {
     logger('INITIALIZE_AUTH action being executed')
 
     EventBus.$on('socket:codex-coin:transferred', () => {
@@ -23,28 +23,43 @@ export default {
     // @TODO: evaluate what happens when a bogus auth token is set in the
     //  route params
     if (rootState.route.query.authToken) {
-      return dispatch('updateUserState', {
+      logger('Fetching user state with the query string authToken')
+
+      commit('SET_AUTH_STATE', {
         authToken: rootState.route.query.authToken,
       })
-        .then(() => {
-          logger(rootState.route)
 
-          const query = Object.assign({}, rootState.route.query)
-          delete query.authToken
-
-          return router.replace({
-            name: rootState.route.meta.ifAuthenticatedRedirectTo || rootState.route.name,
-            query,
-          })
-        })
+      return dispatch('FETCH_USER')
     } else if (state.authToken) {
-      // This means there's a cached auth token in local storage, so let's use it to pull user state
-      return dispatch('updateUserState', {
-        authToken: state.authToken,
-      })
+      logger('Fetching user state with the cached authToken')
+
+      return dispatch('FETCH_USER')
     }
 
     return null
+  },
+
+  FETCH_USER({ commit, dispatch, rootState }) {
+    logger('FETCH_USER action being executed')
+
+    return User.getUser()
+      .then((user) => {
+        commit('SET_USER', {
+          user,
+        })
+
+        return dispatch('UPDATE_CONTRACT_STATE')
+      })
+      .then(() => {
+        router.replace({
+          name: rootState.route.meta.ifAuthenticatedRedirectTo || rootState.route.name,
+        })
+      })
+      .catch((error) => {
+        EventBus.$emit('toast:error', `Could not log in: ${error.message}`)
+        Raven.captureException(error)
+        commit('CLEAR_USER_STATE')
+      })
   },
 
   // Dispatched after a user has signed a string via web3.
@@ -61,10 +76,16 @@ export default {
     return axios(requestOptions)
       .then((response) => {
         const { result } = response.data
-        return dispatch('updateUserState', {
+
+        commit('SET_AUTH_STATE', {
           authToken: result.token,
+        })
+
+        commit('SET_USER', {
           user: result.user,
         })
+
+        return dispatch('UPDATE_CONTRACT_STATE')
       })
       .catch((error) => {
         EventBus.$emit('toast:error', `Could not log in: ${error.message}`)
@@ -73,36 +94,18 @@ export default {
       })
   },
 
-  updateUserState({ commit, dispatch }, { authToken, user }) {
-    logger('updateUserState action being executed')
+  UPDATE_CONTRACT_STATE({ dispatch, state }) {
+    if (!state.user) {
+      return null
+    }
+
+    logger('UPDATE_CONTRACT_STATE action being executed')
 
     return Promise.all([
       dispatch('getTokenBalance'),
       dispatch('getStakeBalances'),
       dispatch('getApprovalStatus'),
     ])
-      .then(() => {
-        if (authToken && user) {
-          commit('SET_AUTH_STATE', {
-            authToken,
-            user,
-          })
-        } else if (authToken) {
-          return User.getUser()
-            .then((newUser) => {
-              commit('SET_AUTH_STATE', {
-                authToken,
-                user: newUser,
-              })
-            })
-        }
-
-        return null
-      })
-      .catch((error) => {
-        logger(error)
-        commit('CLEAR_USER_STATE')
-      })
   },
 
   getTokenBalance({ commit, rootState }) {
