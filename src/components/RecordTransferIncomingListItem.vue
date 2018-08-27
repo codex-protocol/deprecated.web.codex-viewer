@@ -48,7 +48,7 @@ export default {
   },
 
   computed: {
-    ...mapState('web3', ['account', 'instance', 'recordContract']),
+    ...mapState('web3', ['account', 'recordContract']),
   },
 
   methods: {
@@ -66,7 +66,6 @@ export default {
     },
 
     acceptTransfer() {
-
       const input = [
         this.codexRecord.ownerAddress,
         this.account,
@@ -76,7 +75,7 @@ export default {
       this.isLoading = true
       EventBus.$emit('events:click-accept-transfer', this)
 
-      callContract(this.recordContract.safeTransferFrom, input, this.account, this.instance)
+      callContract(this.recordContract.safeTransferFrom, input)
         .then(() => {
 
           EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)

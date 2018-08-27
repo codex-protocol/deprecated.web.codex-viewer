@@ -126,7 +126,7 @@ export default {
 
   computed: {
     ...mapState('auth', ['authToken']),
-    ...mapState('web3', ['account', 'instance', 'recordContract']),
+    ...mapState('web3', ['account', 'recordContract']),
 
     isOwner() {
       return (
@@ -194,7 +194,7 @@ export default {
         this.recordId,
       ]
 
-      callContract(this.recordContract.safeTransferFrom, input, this.account, this.instance)
+      callContract(this.recordContract.safeTransferFrom, input)
         .then(() => {
           EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
           EventBus.$emit('events:accept-transfer', this)

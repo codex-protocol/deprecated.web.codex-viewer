@@ -220,7 +220,7 @@ export default {
       ]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return callContract(this.recordContract.mint, input, this.account, this.instance)
+      return callContract(this.recordContract.mint, input)
     },
   },
 

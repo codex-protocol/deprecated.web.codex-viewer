@@ -63,7 +63,7 @@ export default {
       EventBus.$emit('events:click-unstake-tokens', this)
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return callContract(this.stakeContract.unstake, input, this.account, this.instance)
+      return callContract(this.stakeContract.unstake, input)
         .then(() => {
           EventBus.$emit('events:unstake-tokens', this, amount)
         })
@@ -74,7 +74,7 @@ export default {
   },
 
   computed: {
-    ...mapState('web3', ['account', 'instance', 'stakeContract']),
+    ...mapState('web3', ['instance', 'stakeContract']),
 
     canSubmit() {
       return this.unstakeAmount

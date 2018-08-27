@@ -62,8 +62,8 @@ export default {
       .then((response) => {
         const { result } = response.data
         return dispatch('updateUserState', {
-          newAuthToken: result.token,
-          newUser: result.user,
+          authToken: result.token,
+          user: result.user,
         })
       })
       .catch((error) => {

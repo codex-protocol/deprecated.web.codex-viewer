@@ -167,7 +167,7 @@ export default {
   },
 
   computed: {
-    ...mapState('web3', ['account', 'instance', 'recordContract']),
+    ...mapState('web3', ['instance', 'recordContract']),
 
     canSubmit() {
       return !this.isFileProcessing
@@ -350,7 +350,7 @@ export default {
       ]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return callContract(this.recordContract.modifyMetadataHashes, input, this.account, this.instance)
+      return callContract(this.recordContract.modifyMetadataHashes, input)
     },
   },
 }

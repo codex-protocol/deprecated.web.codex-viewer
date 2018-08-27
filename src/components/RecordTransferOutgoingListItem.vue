@@ -49,7 +49,7 @@ export default {
       EventBus.$emit('events:click-cancel-transfer', this)
       const input = [ZeroAddress, this.codexRecord.tokenId]
 
-      callContract(this.recordContract.approve, input, this.account, this.instance)
+      callContract(this.recordContract.approve, input)
         .then(() => {
           EventBus.$emit('events:cancel-transfer', this)
           EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
