@@ -63,7 +63,7 @@ export default {
 
     this.$store.dispatch('oauth2/updateOAuth2Clients')
 
-    this.$store.dispatch('web3/registerWeb3', this.$router)
+    this.$store.dispatch('web3/registerWeb3')
       .then(() => {
 
         // @TODO: evaluate what happens when a bogus auth token is set in the

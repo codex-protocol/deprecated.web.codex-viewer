@@ -1,6 +1,7 @@
 import axios from 'axios'
 import Raven from 'raven-js'
 
+import router from '../../../router'
 import User from '../../../util/api/user'
 import EventBus from '../../../util/eventBus'
 
@@ -133,7 +134,7 @@ export default {
   // This is currently used for handling some Metamask state changes
   //  Changing the route this navigates to will require updating how we handle
   //  the state changes.
-  logout({ commit }, router) {
+  logout({ commit }) {
     commit('clearUserState')
 
     // if this is an unauthenticated route, clear their auth token (i.e. log

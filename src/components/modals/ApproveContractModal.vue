@@ -45,7 +45,7 @@ export default {
   methods: {
     approveTokens() {
       EventBus.$emit('events:click-approve-contract', this)
-      const amount = new (this.instance()).BigNumber(2).pow(255)
+      const amount = new (this.instance).BigNumber(2).pow(255)
       const input = [this.contractInstance.address, amount.toFixed()]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal

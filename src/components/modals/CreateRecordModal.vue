@@ -134,7 +134,7 @@ export default {
       const binaryFileReader = new FileReader()
 
       binaryFileReader.addEventListener('loadend', () => {
-        this.uploadedFileHash = this.instance().sha3(binaryFileReader.result)
+        this.uploadedFileHash = this.instance.sha3(binaryFileReader.result)
       })
 
       binaryFileReader.readAsBinaryString(file)
@@ -178,7 +178,7 @@ export default {
 
           // TODO: maybe show somewhere that the locally-calculated hashes match
           //  the server-side-calculated hashes? e.g.:
-          // const { sha3 } = this.instance()
+          // const { sha3 } = this.instance
           //
           // metadata.nameHash === sha3(metadata.name)
           // metadata.mainImage.hash === this.uploadedFileHash
@@ -199,7 +199,7 @@ export default {
     },
     createRecord(metadata) {
 
-      const { sha3 } = this.instance()
+      const { sha3 } = this.instance
       const input = [
         this.account,
         sha3(metadata.name),

@@ -16,7 +16,7 @@ function callContract(func, args, account, instance) {
         {
           from: account,
           gas: estimatedGas + gasBuffer,
-          gasPrice: instance().toWei(recommendedGasPriceInGwei, 'gwei'),
+          gasPrice: instance.toWei(recommendedGasPriceInGwei, 'gwei'),
         }
       )
     })

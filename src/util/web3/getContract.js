@@ -36,30 +36,30 @@ const getContract = (contractProperty, json, address, provider) => {
   return contracts[contractProperty]
 }
 
-const getCodexRecordContract = (web3) => {
+const getCodexRecordContract = (currentProvider) => {
   return getContract(
     'codexRecord',
     codexRecordJson,
     codexRecordProxyJson.address,
-    web3.currentProvider
+    currentProvider
   )
 }
 
-const getCodexCoinContract = (web3) => {
+const getCodexCoinContract = (currentProvider) => {
   return getContract(
     'codexCoin',
     codexCoinJson,
     codexCoinJson.address,
-    web3.currentProvider
+    currentProvider
   )
 }
 
-const getStakeContract = (web3) => {
+const getStakeContract = (currentProvider) => {
   return getContract(
     'stakeContract',
     stakeContractJson,
     stakeContractJson.address,
-    web3.currentProvider
+    currentProvider
   )
 }
 

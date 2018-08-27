@@ -246,7 +246,7 @@ export default {
       this.descriptionHash = this.hash(this.description || '')
     },
     hash(input) {
-      return this.instance().sha3(input)
+      return this.instance.sha3(input)
     },
     // Upload a new main image
     displayAndUploadFile(file) {
@@ -275,7 +275,7 @@ export default {
       const binaryFileReader = new FileReader()
 
       binaryFileReader.addEventListener('loadend', () => {
-        next(null, this.instance().sha3(binaryFileReader.result))
+        next(null, this.instance.sha3(binaryFileReader.result))
       })
 
       binaryFileReader.readAsBinaryString(file)

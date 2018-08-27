@@ -1,5 +1,6 @@
 import debug from 'debug'
 
+import { Web3Errors } from '../../../util/constants/web3'
 import registerWeb3 from '../../../util/web3/registerWeb3'
 import {
   getCodexRecordContract,
@@ -10,64 +11,44 @@ import {
 const logger = debug('app:store:web3:actions')
 
 export default {
-  registerWeb3({ commit, dispatch, state }, router) {
-
-    // prevent web3 & contracts from being loaded multiple times, since this is
-    //  really just a bootstrapping method
-    if (state.isLoaded) {
-      return null
-    }
-
+  registerWeb3({ commit, dispatch }, router) {
     logger('registerWeb3 action being executed')
 
     return registerWeb3()
       .then((result) => {
         commit('registerWeb3Instance', { result, router })
 
-        const web3 = result.web3()
-
         return Promise.all([
           dispatch('registerContract', {
-            web3,
             registrationFunction: getCodexRecordContract,
             propertyName: 'recordContractInstance',
           }),
           dispatch('registerContract', {
-            web3,
             registrationFunction: getCodexCoinContract,
             propertyName: 'tokenContractInstance',
           }),
           dispatch('registerContract', {
-            web3,
             registrationFunction: getStakeContract,
             propertyName: 'stakeContractInstance',
           }),
         ])
-
       })
       .then(() => {
+        dispatch('pollWeb3')
         commit('setIsLoaded', true)
       })
       .catch((error) => {
-        commit('setWeb3Error', { message: 'Unable to register web3', error })
+        commit('setWeb3Error', {
+          message: 'Unable to register web3',
+          error,
+        })
       })
   },
 
-  pollWeb3({ commit }, payload) {
-    logger('pollWeb3 action being executed')
-    commit('pollWeb3Instance', payload)
-  },
-
-  registerContract({ commit }, payload) {
-    const {
-      web3,
-      registrationFunction,
-      propertyName,
-    } = payload
-
+  registerContract({ commit, state }, { registrationFunction, propertyName }) {
     logger('registerContract action being executed for contract', registrationFunction.name)
 
-    return registrationFunction(web3)
+    return registrationFunction(state.instance.currentProvider)
       .then((result) => {
         commit('registerContractInstance', {
           propertyName,
@@ -77,5 +58,35 @@ export default {
       .catch((error) => {
         commit('setWeb3Error', { message: 'Unable to register the contract', error })
       })
+  },
+
+  pollWeb3({ commit, dispatch, state }) {
+    // logger('pollWeb3 action being executed')
+
+    if (state.instance) {
+      state.instance.eth.getAccounts((error, accounts) => {
+        if (error) {
+          commit('setWeb3Error', {
+            message: 'Error while polling web3',
+            error: Web3Errors.Unknown,
+          })
+        } else if (!accounts.length) {
+          commit('setWeb3Error', {
+            message: 'MetaMask is locked',
+            error: Web3Errors.Locked,
+          })
+        } else if (state.account !== accounts[0]) {
+          dispatch('auth/logout', null, { root: true })
+
+          commit('setPollResult', {
+            account: accounts[0],
+          })
+        }
+      })
+    }
+
+    window.setTimeout(() => {
+      dispatch('pollWeb3')
+    }, 1000)
   },
 }
