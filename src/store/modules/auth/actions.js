@@ -13,13 +13,11 @@ export default {
     logger('INITIALIZE_AUTH action being executed')
 
     EventBus.$on('socket:codex-coin:transferred', () => {
-      // @TODO: Optimize this, we only have to refresh the balance
-      // dispatch('updateUserState')
+      dispatch('getTokenBalance')
     })
 
     EventBus.$on('socket:codex-coin:registry-contract-approved', () => {
-      // @TODO: Optimize this, we only have to refresh the approval state
-      // dispatch('updateUserState')
+      dispatch('getApprovalStatus')
     })
 
     // @TODO: evaluate what happens when a bogus auth token is set in the
@@ -75,31 +73,13 @@ export default {
       })
   },
 
-  updateUserState({ commit, dispatch, rootState }, { authToken, user }) {
+  updateUserState({ commit, dispatch }, { authToken, user }) {
     logger('updateUserState action being executed')
 
-    const {
-      account,
-      tokenContract,
-      recordContract,
-      stakeContract,
-    } = rootState.web3
-
     return Promise.all([
-      dispatch('getTokenBalance', {
-        account,
-        tokenContract,
-      }),
-      dispatch('getStakeBalances', {
-        account,
-        stakeContract,
-      }),
-      dispatch('getApprovalStatus', {
-        account,
-        tokenContract,
-        recordContractAddress: recordContract.address,
-        stakeContractAddress: stakeContract.address,
-      }),
+      dispatch('getTokenBalance'),
+      dispatch('getStakeBalances'),
+      dispatch('getApprovalStatus'),
     ])
       .then(() => {
         if (authToken && user) {
@@ -125,16 +105,26 @@ export default {
       })
   },
 
-  getTokenBalance({ commit }, { account, tokenContract }) {
+  getTokenBalance({ commit, rootState }) {
     logger('getTokenBalance action being executed')
+
+    const {
+      account,
+      tokenContract
+    } = rootState.web3
 
     return tokenContract.balanceOf(account).then((balance) => {
       commit('updateTokenBalance', balance)
     })
   },
 
-  getStakeBalances({ commit }, { account, stakeContract }) {
+  getStakeBalances({ commit, rootState }) {
     logger('getStakeBalances action being executed')
+
+    const {
+      account,
+      stakeContract
+    } = rootState.web3
 
     return Promise.all([
       stakeContract.getPersonalStakes(account).then((personalStakes) => {
@@ -146,17 +136,24 @@ export default {
     ])
   },
 
-  getApprovalStatus({ commit }, { account, tokenContract, recordContractAddress, stakeContractAddress }) {
+  getApprovalStatus({ commit, rootState }) {
     logger('getApprovalStatus action being executed')
 
+    const {
+      account,
+      recordContract,
+      tokenContract,
+      stakeContract
+    } = rootState.web3
+
     return Promise.all([
-      tokenContract.allowance(account, recordContractAddress).then((allowance) => {
+      tokenContract.allowance(account, recordContract.address).then((allowance) => {
         commit('updateApprovalStatus', {
           allowance,
           stateProperty: 'registryContractApproved',
         })
       }),
-      tokenContract.allowance(account, stakeContractAddress).then((allowance) => {
+      tokenContract.allowance(account, stakeContract.address).then((allowance) => {
         commit('updateApprovalStatus', {
           allowance,
           stateProperty: 'stakeContractApproved',
