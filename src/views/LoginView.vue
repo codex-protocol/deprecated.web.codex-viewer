@@ -34,6 +34,8 @@
             {{ buttonTitle }}
           </b-button>
         </div>
+        <br>
+        <a :href="oauthLoginUrl"><img src="../assets/images/google-signin@2x.png" width="200"></a>
         <login-marketing-card v-if="showLoginMarketingCard" />
       </div>
       <div class="col-12 col-md-6 secondary">
@@ -74,6 +76,7 @@ export default {
       showLoginMarketingCard: config.showCodexQuestsMarketing,
       isMobile: is.mobile(),
       Web3Errors,
+      oauthLoginUrl: `${config.apiUrl}/oauth2/login/google`,
     }
   },
 
