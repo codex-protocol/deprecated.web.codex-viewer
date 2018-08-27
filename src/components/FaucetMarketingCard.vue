@@ -30,7 +30,7 @@
 
     <approve-contract-modal
       id="approveRegistryModal"
-      :contractInstance="recordContract"
+      :contract="recordContract"
       stateProperty="registryContractApproved"
     >
       This will grant the Codex Viewer permission to spend CODX on your behalf.

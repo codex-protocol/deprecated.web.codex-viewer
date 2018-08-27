@@ -34,10 +34,10 @@ export default {
     currentState.account = account
   },
 
-  registerContractInstance(currentState, { propertyName, contractInstance }) {
-    logger('registerContractInstance mutation being executed for contract', propertyName)
+  SET_CONTRACT(currentState, { propertyName, contract }) {
+    logger('tokenContract mutation being executed for contract', propertyName)
 
-    currentState[propertyName] = Object.freeze(contractInstance)
+    currentState[propertyName] = Object.freeze(contract)
   },
 
   setWeb3Error(currentState, { message, error }) {

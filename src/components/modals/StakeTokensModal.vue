@@ -76,14 +76,10 @@ export default {
   },
 
   computed: {
-    ...mapState('web3', ['account', 'instance', 'stakeContractInstance']),
+    ...mapState('web3', ['account', 'instance', 'stakeContract']),
 
     canSubmit() {
       return this.stakeAmount
-    },
-
-    stakeContract() {
-      return this.stakeContractInstance()
     },
   },
 }

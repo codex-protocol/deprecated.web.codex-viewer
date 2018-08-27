@@ -23,14 +23,15 @@ export default {
     currentState.user = user
   },
 
-  updateUser(currentState, newProperties) {
-    logMutation('updateUser', newProperties)
+  SET_USER_PROPERTIES(currentState, newProperties) {
+    logMutation('SET_USER_PROPERTIES', newProperties)
 
-    Object.assign(currentState.user, newProperties)
+    // https://vuejs.org/v2/guide/list.html#Object-Change-Detection-Caveats
+    Object.assign({}, currentState.user, newProperties)
   },
 
-  clearUserState(currentState) {
-    logMutation('clearUserState')
+  CLEAR_USER_STATE(currentState) {
+    logMutation('CLEAR_USER_STATE')
 
     SocketService.disconnect()
     window.localStorage.removeItem('authToken')

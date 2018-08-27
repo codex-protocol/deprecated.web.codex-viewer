@@ -69,7 +69,7 @@ export default {
       .catch((error) => {
         EventBus.$emit('toast:error', `Could not log in: ${error.message}`)
         Raven.captureException(error)
-        commit('clearUserState')
+        commit('CLEAR_USER_STATE')
       })
   },
 
@@ -101,7 +101,7 @@ export default {
       })
       .catch((error) => {
         logger(error)
-        commit('clearUserState')
+        commit('CLEAR_USER_STATE')
       })
   },
 
@@ -110,7 +110,7 @@ export default {
 
     const {
       account,
-      tokenContract
+      tokenContract,
     } = rootState.web3
 
     return tokenContract.balanceOf(account).then((balance) => {
@@ -123,7 +123,7 @@ export default {
 
     const {
       account,
-      stakeContract
+      stakeContract,
     } = rootState.web3
 
     return Promise.all([
@@ -143,7 +143,7 @@ export default {
       account,
       recordContract,
       tokenContract,
-      stakeContract
+      stakeContract,
     } = rootState.web3
 
     return Promise.all([
@@ -166,7 +166,7 @@ export default {
     logger('handleFaucetRequest action being executed')
 
     commit('updateTokenBalance', optimisticBalance)
-    commit('updateUser', {
+    commit('SET_USER_PROPERTIES', {
       canRequestFaucetTokens: false,
       faucetLastRequestedAt: (new Date()).toISOString(),
     })
@@ -182,7 +182,7 @@ export default {
   logout({ commit }) {
     logger('logout action being executed')
 
-    commit('clearUserState')
+    commit('CLEAR_USER_STATE')
 
     // if this is an unauthenticated route, clear their auth token (i.e. log
     //  the user out), but do not redirect them to the homepage

@@ -51,10 +51,10 @@ export default {
     logger('registerContract action being executed for contract', registrationFunction.name)
 
     return registrationFunction(state.instance.currentProvider)
-      .then((result) => {
-        commit('registerContractInstance', {
+      .then((contract) => {
+        commit('SET_CONTRACT', {
           propertyName,
-          contractInstance: result,
+          contract,
         })
       })
       .catch((error) => {

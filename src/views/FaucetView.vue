@@ -52,7 +52,7 @@
                 Approve the registry contract
               </b-button>
 
-              <approve-contract-modal id="approveRegistryModal" :contractInstance="recordContract" stateProperty="registryContractApproved">
+              <approve-contract-modal id="approveRegistryModal" :contract="recordContract" stateProperty="registryContractApproved">
                 This will grant the Codex Viewer permission to spend CODX on your behalf.
               </approve-contract-modal>
             </div>

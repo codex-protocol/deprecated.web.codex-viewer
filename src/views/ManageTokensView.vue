@@ -36,11 +36,11 @@
           </div>
         </div>
 
-        <approve-contract-modal id="approveRegistryModal" :contractInstance="recordContract" stateProperty="registryContractApproved">
+        <approve-contract-modal id="approveRegistryModal" :contract="recordContract" stateProperty="registryContractApproved">
           This will grant the Codex Viewer permission to spend CODX on your behalf.
         </approve-contract-modal>
 
-        <!-- <approve-contract-modal id="approveStakeModal" :contractInstance="stakeContract" stateProperty="stakeContractApproved">
+        <!-- <approve-contract-modal id="approveStakeModal" :contract="stakeContract" stateProperty="stakeContractApproved">
           This will allow you to stake CODX.
         </approve-contract-modal> -->
 
