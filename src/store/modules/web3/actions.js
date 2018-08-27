@@ -17,25 +17,10 @@ export default {
     return registerWeb3()
       .then((result) => {
         commit('registerWeb3Instance', { result, router })
-
-        return Promise.all([
-          dispatch('registerContract', {
-            registrationFunction: getCodexRecordContract,
-            propertyName: 'recordContractInstance',
-          }),
-          dispatch('registerContract', {
-            registrationFunction: getCodexCoinContract,
-            propertyName: 'tokenContractInstance',
-          }),
-          dispatch('registerContract', {
-            registrationFunction: getStakeContract,
-            propertyName: 'stakeContractInstance',
-          }),
-        ])
+        return dispatch('registerAllContracts')
       })
       .then(() => {
         dispatch('pollWeb3')
-        commit('setIsLoaded', true)
       })
       .catch((error) => {
         commit('setWeb3Error', {
@@ -43,6 +28,23 @@ export default {
           error,
         })
       })
+  },
+
+  registerAllContracts({ dispatch }) {
+    return Promise.all([
+      dispatch('registerContract', {
+        registrationFunction: getCodexRecordContract,
+        propertyName: 'recordContract',
+      }),
+      dispatch('registerContract', {
+        registrationFunction: getCodexCoinContract,
+        propertyName: 'tokenContract',
+      }),
+      dispatch('registerContract', {
+        registrationFunction: getStakeContract,
+        propertyName: 'stakeContract',
+      }),
+    ])
   },
 
   registerContract({ commit, state }, { registrationFunction, propertyName }) {

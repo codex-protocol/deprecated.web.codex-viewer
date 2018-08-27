@@ -12,20 +12,15 @@ const logMutation = (mutationName, payload) => {
 }
 
 export default {
-  setAuthToken(currentState, newAuthToken) {
-    logMutation('setAuthToken', newAuthToken)
+  SET_AUTH_STATE(currentState, { authToken, user }) {
+    logMutation('SET_AUTH_STATE', authToken)
 
-    currentState.authToken = newAuthToken
-    axios.defaults.headers.common.Authorization = newAuthToken
+    axios.defaults.headers.common.Authorization = authToken
+    SocketService.updateSocket(authToken)
+    window.localStorage.setItem('authToken', authToken)
 
-    SocketService.updateSocket(newAuthToken)
-
-    window.localStorage.setItem('authToken', newAuthToken)
-  },
-
-  setUser(currentState, newUser) {
-    logMutation('setUser', newUser)
-    currentState.user = newUser
+    currentState.authToken = authToken
+    currentState.user = user
   },
 
   updateUser(currentState, newProperties) {

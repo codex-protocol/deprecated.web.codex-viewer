@@ -84,9 +84,11 @@ const logger = debug('app:component:create-record-modal')
 
 export default {
   name: 'create-record-modal',
+
   components: {
     MetaMaskNotificationModal,
   },
+
   data() {
     return {
       name: null,
@@ -99,12 +101,14 @@ export default {
       uploadSuccess: false,
     }
   },
+
   methods: {
     focusModal() {
       if (this.$refs.defaultModalFocus) {
         this.$refs.defaultModalFocus.focus()
       }
     },
+
     clearModal() {
       Object.assign(this.$data, this.$options.data.apply(this))
 
@@ -114,6 +118,7 @@ export default {
         this.$refs.fileInput.reset()
       }
     },
+
     displayAndUploadFile(file) {
       if (!file) {
         return
@@ -140,6 +145,7 @@ export default {
       binaryFileReader.readAsBinaryString(file)
 
     },
+
     uploadFile(file) {
 
       this.progressVisible = true
@@ -160,6 +166,7 @@ export default {
           this.uploadComplete = true
         })
     },
+
     createMetaData() {
 
       // TODO: Show some better error handling if these aren't filled in
@@ -197,6 +204,7 @@ export default {
           throw error
         })
     },
+
     createRecord(metadata) {
 
       const { sha3 } = this.instance
@@ -215,14 +223,14 @@ export default {
       return callContract(this.recordContract.mint, input, this.account, this.instance)
     },
   },
+
   computed: {
-    ...mapState('web3', ['account', 'instance', 'recordContractInstance']),
+    ...mapState('web3', ['account', 'instance', 'recordContract']),
+
     canSubmit() {
       return this.name && this.uploadedFileHash && this.uploadedFile
     },
-    recordContract() {
-      return this.recordContractInstance()
-    },
+
     progressVariant() {
       if (!this.uploadComplete) {
         return 'primary'

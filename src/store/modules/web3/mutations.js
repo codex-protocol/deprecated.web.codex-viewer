@@ -6,10 +6,6 @@ import { Networks, Web3Errors } from '../../../util/constants/web3'
 const logger = debug('app:store:web3:mutations')
 
 export default {
-  setIsLoaded(currentState, newIsLoaded) {
-    currentState.isLoaded = newIsLoaded
-  },
-
   registerWeb3Instance(currentState, { result }) {
     logger('registerWeb3instance mutation being executed', result)
 
@@ -28,31 +24,24 @@ export default {
     }
   },
 
-  setPollResult(currentState, { account, networkId }) {
+  // @NOTE: If MetaMask stops refreshing the page when the network changes
+  //  we'll have to start polling for networkId in addition to account.
+  // i.e., basically just dupe the registerWeb3 functionality into the polling mechanism.
+  setPollResult(currentState, { account }) {
     logger('setPollResult mutation being executed', account)
 
     currentState.error = Web3Errors.None
     currentState.account = account
-    // currentState.network = Networks[networkId]
   },
 
-  registerContractInstance(currentState, payload) {
-    const {
-      propertyName,
-      contractInstance,
-    } = payload
-
+  registerContractInstance(currentState, { propertyName, contractInstance }) {
     logger('registerContractInstance mutation being executed for contract', propertyName)
 
-    currentState[propertyName] = () => {
-      return contractInstance
-    }
+    currentState[propertyName] = Object.freeze(contractInstance)
   },
 
-  setWeb3Error(currentState, payload) {
-    const { message, error } = payload
-
-    logger(message, error)
+  setWeb3Error(currentState, { message, error }) {
+    logger('setWeb3Error mutation being executed', message, error)
     Raven.captureException(error)
 
     currentState.error = error

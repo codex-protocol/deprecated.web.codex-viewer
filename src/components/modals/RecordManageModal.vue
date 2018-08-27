@@ -167,14 +167,10 @@ export default {
   },
 
   computed: {
-    ...mapState('web3', ['account', 'instance', 'recordContractInstance']),
+    ...mapState('web3', ['account', 'instance', 'recordContract']),
 
     canSubmit() {
       return !this.isFileProcessing
-    },
-
-    recordContract() {
-      return this.recordContractInstance()
     },
 
     progressVariant() {

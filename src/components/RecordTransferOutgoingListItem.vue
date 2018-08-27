@@ -25,7 +25,9 @@ import missingImageHelper from '../util/missingImageHelper'
 
 export default {
   name: 'record-transfer-outgoing-list-item',
+
   props: ['codexRecord'],
+
   data() {
     return {
       route: { name: 'record-detail', params: { recordId: this.codexRecord.tokenId } },
@@ -33,17 +35,16 @@ export default {
       missingImageHelper,
     }
   },
-  computed: {
-    ...mapState('web3', ['recordContractInstance']),
 
-    recordContract() {
-      return this.recordContractInstance()
-    },
+  computed: {
+    ...mapState('web3', ['recordContract']),
   },
+
   methods: {
     viewRecord() {
       this.$router.push(this.route)
     },
+
     cancelTransfer() {
       EventBus.$emit('events:click-cancel-transfer', this)
       const input = [ZeroAddress, this.codexRecord.tokenId]

@@ -126,7 +126,7 @@ export default {
 
   computed: {
     ...mapState('auth', ['authToken']),
-    ...mapState('web3', ['account', 'instance', 'recordContractInstance']),
+    ...mapState('web3', ['account', 'instance', 'recordContract']),
 
     isOwner() {
       return (
@@ -143,10 +143,6 @@ export default {
 
     recordId() {
       return this.$route.params.recordId
-    },
-
-    recordContract() {
-      return this.recordContractInstance()
     },
 
     isAwaitingApproval() {

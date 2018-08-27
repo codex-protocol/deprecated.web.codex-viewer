@@ -86,11 +86,7 @@ export default {
     },
   },
   computed: {
-    ...mapState('web3', ['account', 'instance', 'recordContractInstance']),
-
-    recordContract() {
-      return this.recordContractInstance()
-    },
+    ...mapState('web3', ['account', 'instance', 'recordContract']),
   },
 }
 </script>

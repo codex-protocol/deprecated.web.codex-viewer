@@ -85,15 +85,7 @@ export default {
       'personalStakes',
     ]),
 
-    ...mapState('web3', ['recordContractInstance', 'stakeContractInstance']),
-
-    recordContract() {
-      return this.recordContractInstance()
-    },
-
-    stakeContract() {
-      return this.stakeContractInstance()
-    },
+    ...mapState('web3', ['recordContract', 'stakeContract']),
   },
 }
 </script>

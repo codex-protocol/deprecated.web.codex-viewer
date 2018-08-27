@@ -5,10 +5,9 @@ export default () => {
     instance: null,
     network: null,
     account: null,
-    isLoaded: false,
     error: Web3Errors.None,
-    recordContractInstance: null,
-    tokenContractInstance: null,
-    stakeContractInstance: null,
+    recordContract: null,
+    tokenContract: null,
+    stakeContract: null,
   }
 }

@@ -32,8 +32,6 @@ import axios from 'axios'
 import { mapState } from 'vuex'
 
 import config from './util/config'
-import EventBus from './util/eventBus'
-
 import { Web3Errors } from './util/constants/web3'
 
 import AppFooter from './components/AppFooter'
@@ -58,39 +56,15 @@ export default {
   },
 
   created() {
-
     this.initializeApi()
 
     this.$store.dispatch('oauth2/updateOAuth2Clients')
-
     this.$store.dispatch('web3/registerWeb3')
       .then(() => {
-
-        // @TODO: evaluate what happens when a bogus auth token is set in the
-        //  route params
-        if (this.$route.query.authToken) {
-          this.$store.dispatch('auth/updateUserState', this.$route.query.authToken)
-            .then(() => {
-
-              const query = Object.assign({}, this.$route.query)
-              delete query.authToken
-
-              return this.$router.replace({
-                name: this.$route.meta.ifAuthenticatedRedirectTo || this.$route.name,
-                query,
-              })
-            })
-        } else if (this.authToken) {
-          this.$store.dispatch('auth/updateUserState', this.authToken)
-        }
-
-        EventBus.$on('socket:codex-coin:transferred', () => {
-          this.$store.dispatch('auth/updateUserState')
-        })
-
-        EventBus.$on('socket:codex-coin:registry-contract-approved', () => {
-          this.$store.dispatch('auth/updateUserState')
-        })
+        return this.$store.dispatch('auth/INITIALIZE_AUTH')
+      })
+      .then(() => {
+        this.isLoaded = true
       })
   },
 
@@ -98,6 +72,7 @@ export default {
     return {
       freshChatToken: process.env.VUE_APP_FRESHCHAT_API_TOKEN,
       showNav: false,
+      isLoaded: false,
     }
   },
 
@@ -113,7 +88,7 @@ export default {
 
   computed: {
     ...mapState('auth', ['authToken', 'uesr']),
-    ...mapState('web3', ['error', 'isLoaded']),
+    ...mapState('web3', ['error']),
 
     hideSideBar() {
       return this.$route.meta && this.$route.meta.hideSideBar
@@ -146,6 +121,7 @@ export default {
         authErrorHandler
       )
     },
+
     useBackground() {
       switch (this.$route.name) {
         case 'login':
@@ -155,9 +131,11 @@ export default {
           return false
       }
     },
+
     toggleNav() {
       this.showNav = !this.showNav
     },
+
     hideNav() {
       this.showNav = false
     },
