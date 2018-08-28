@@ -4,10 +4,13 @@ import Raven from 'raven-js'
 import { Networks, Web3Errors } from '../../../util/constants/web3'
 
 const logger = debug('app:store:web3:mutations')
+const logMutation = (mutationName, ...args) => {
+  logger(`${mutationName} mutation being executed`, ...args)
+}
 
 export default {
   SET_INITIAL_STATE(currentState, { result }) {
-    logger('SET_INITIAL_STATE mutation being executed', result)
+    logMutation('SET_INITIAL_STATE', result)
 
     currentState.network = Networks[result.networkId]
 
@@ -28,20 +31,20 @@ export default {
   //  we'll have to start polling for networkId in addition to account.
   // i.e., basically just dupe the registerWeb3 functionality into the polling mechanism.
   SET_POLL_RESULT(currentState, { account }) {
-    logger('SET_POLL_RESULT mutation being executed', account)
+    logMutation('SET_POLL_RESULT', account)
 
     currentState.error = Web3Errors.None
     currentState.account = account
   },
 
   SET_CONTRACT(currentState, { propertyName, contract }) {
-    logger('SET_CONTRACT mutation being executed for contract', propertyName)
+    logMutation('SET_CONTRACT', propertyName)
 
     currentState[propertyName] = Object.freeze(contract)
   },
 
   SET_ERROR(currentState, { message, error, ignoreInSentry }) {
-    logger('SET_ERROR mutation being executed', message, error)
+    logMutation('SET_ERROR', message, error, ignoreInSentry)
 
     if (!ignoreInSentry) {
       Raven.captureException(error)
@@ -49,5 +52,11 @@ export default {
 
     currentState.error = error
     currentState.account = null
+  },
+
+  SET_IS_POLLING(currentState, { isPolling }) {
+    logMutation('SET_IS_POLLING')
+
+    currentState.isPolling = isPolling
   },
 }

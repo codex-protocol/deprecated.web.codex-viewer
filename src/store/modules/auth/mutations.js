@@ -6,7 +6,6 @@ import getInitialState from './state'
 import SocketService from '../../../util/socket'
 
 const logger = debug('app:store:auth:mutations')
-
 const logMutation = (mutationName, payload) => {
   logger(`${mutationName} mutation being executed`, payload)
 }

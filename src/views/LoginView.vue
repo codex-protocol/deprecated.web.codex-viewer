@@ -6,7 +6,7 @@
         <div v-if="isMobile">
           <h1 v-html="mobilePageContent.title"></h1>
           <div class="lead" v-html="mobilePageContent.description"></div>
-          <div v-if="web3Error === Web3Errors.Unknown">
+          <div v-if="error === Web3Errors.Unknown">
             <a href="http://www.toshi.org/">
               <img src="../assets/images/get-toshi.png" width="200">
             </a>

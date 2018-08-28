@@ -79,7 +79,7 @@ export default {
       })
     }
 
-    this.$store.dispatch('oauth2/updateOAuth2Clients')
+    this.$store.dispatch('oauth2/FETCH_CLIENTS')
     this.$store.dispatch('web3/REGISTER')
       .then(() => {
         if (this.error) {
@@ -152,7 +152,7 @@ export default {
     error(error) {
       // MetaMask has been locked while logged in
       //  Logout the user
-      if (Web3Errors.Locked && this.isAuthenticated) {
+      if (error === Web3Errors.Locked && this.isAuthenticated) {
         this.$store.dispatch('auth/LOGOUT_USER')
       }
     },

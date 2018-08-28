@@ -11,7 +11,7 @@ import {
 const logger = debug('app:store:web3:actions')
 
 export default {
-  REGISTER({ commit, dispatch }, router) {
+  REGISTER({ commit, dispatch, state }, router) {
     logger('REGISTER action being executed')
 
     return registerWeb3()
@@ -20,7 +20,10 @@ export default {
         return dispatch('REGISTER_ALL_CONTRACTS')
       })
       .then(() => {
-        dispatch('POLL_WEB3')
+        if (!state.isPolling) {
+          commit('SET_IS_POLLING', { isPolling: true })
+          dispatch('POLL_WEB3')
+        }
       })
       .catch((error) => {
         commit('SET_ERROR', {
