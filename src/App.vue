@@ -35,7 +35,6 @@ import {
 } from 'vuex'
 
 import config from './util/config'
-import { Web3Errors } from './util/constants/web3'
 
 import AppFooter from './components/AppFooter'
 import AppSideBar from './components/AppSideBar'
@@ -145,16 +144,6 @@ export default {
 
     hideNav() {
       this.showNav = false
-    },
-  },
-
-  watch: {
-    error(error) {
-      // MetaMask has been locked while logged in
-      //  Logout the user
-      if (error === Web3Errors.Locked && this.isAuthenticated) {
-        this.$store.dispatch('auth/LOGOUT_USER')
-      }
     },
   },
 }

@@ -65,7 +65,7 @@ export default {
       })
   },
 
-  POLL_WEB3({ commit, dispatch, state }) {
+  POLL_WEB3({ commit, dispatch, state, rootGetters }) {
     if (state.instance) {
       state.instance.eth.getAccounts((error, accounts) => {
         if (error) {
@@ -75,6 +75,10 @@ export default {
             ignoreInSentry: true,
           })
         } else if (!accounts.length) {
+          if (rootGetters['auth/isAuthenticated']) {
+            dispatch('auth/LOGOUT_USER', null, { root: true })
+          }
+
           commit('SET_ERROR', {
             message: 'MetaMask is locked',
             error: Web3Errors.Locked,

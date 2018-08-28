@@ -44,6 +44,10 @@ export default {
 
     return User.getUser()
       .then((user) => {
+        if (user.address !== rootState.web3.account) {
+          return dispatch('LOGOUT_USER')
+        }
+
         commit('SET_USER', {
           user,
         })
