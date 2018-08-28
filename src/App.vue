@@ -80,8 +80,12 @@ export default {
     }
 
     this.$store.dispatch('oauth2/updateOAuth2Clients')
-    this.$store.dispatch('web3/registerWeb3')
+    this.$store.dispatch('web3/REGISTER')
       .then(() => {
+        if (this.error) {
+          return this.$store.dispatch('auth/LOGOUT_USER')
+        }
+
         return this.$store.dispatch('auth/INITIALIZE_AUTH')
       })
       .then(() => {
@@ -109,7 +113,7 @@ export default {
 
       const authErrorHandler = (error) => {
         if (error.response && error.response.status === 401) {
-          this.$store.dispatch('auth/logout', this.$router)
+          this.$store.dispatch('auth/LOGOUT_USER')
         }
 
         if (error.response && error.response.data && error.response.data.error && error.response.data.error.message) {
@@ -145,11 +149,11 @@ export default {
   },
 
   watch: {
-    web3Error(error) {
+    error(error) {
       // MetaMask has been locked while logged in
       //  Logout the user
       if (Web3Errors.Locked && this.isAuthenticated) {
-        this.$store.dispatch('auth/logout', this.$router)
+        this.$store.dispatch('auth/LOGOUT_USER')
       }
     },
   },
