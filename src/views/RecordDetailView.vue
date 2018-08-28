@@ -126,7 +126,7 @@ export default {
 
   computed: {
     ...mapState('auth', ['authToken']),
-    ...mapState('web3', ['account', 'instance', 'recordContractInstance']),
+    ...mapState('web3', ['account', 'recordContract']),
 
     isOwner() {
       return (
@@ -143,10 +143,6 @@ export default {
 
     recordId() {
       return this.$route.params.recordId
-    },
-
-    recordContract() {
-      return this.recordContractInstance()
     },
 
     isAwaitingApproval() {
@@ -198,7 +194,7 @@ export default {
         this.recordId,
       ]
 
-      callContract(this.recordContract.safeTransferFrom, input, this.account, this.instance)
+      callContract(this.recordContract.safeTransferFrom, input)
         .then(() => {
           EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
           EventBus.$emit('events:accept-transfer', this)

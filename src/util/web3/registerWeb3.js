@@ -5,24 +5,15 @@ import { ExpectedNetworkId, Web3Errors } from '../../util/constants/web3'
 
 const registerWeb3 = () => {
   return new Promise((resolve, reject) => {
-    const web3js = window.web3
-
-    if (typeof web3js !== 'undefined') {
-      const web3 = new window.Web3(web3js.currentProvider)
-
-      resolve({
-        web3() {
-          return web3
-        },
-      })
-
+    if (typeof window.web3 !== 'undefined') {
+      resolve(new window.Web3(window.web3.currentProvider))
     } else {
       reject(Web3Errors.Unknown)
     }
   })
-    .then((result) => {
+    .then((localWeb3) => {
       return new Promise((resolve, reject) => {
-        result.web3().version.getNetwork((error, networkId) => {
+        localWeb3.version.getNetwork((error, networkId) => {
           if (error) {
             reject(Web3Errors.Unknown)
             return
@@ -33,20 +24,23 @@ const registerWeb3 = () => {
             return
           }
 
-          const returnValue = Object.assign({}, result, { networkId })
+          const returnValue = Object.assign({}, {
+            web3: localWeb3,
+            networkId,
+          })
           resolve(returnValue)
         })
       })
     })
-    .then((result) => {
+    .then((state) => {
       return new Promise((resolve, reject) => {
-        result.web3().eth.getAccounts((error, accounts) => {
+        state.web3.eth.getAccounts((error, accounts) => {
           if (error) {
             reject(Web3Errors.Unknown)
             return
           }
 
-          const returnValue = Object.assign({}, result, { accounts })
+          const returnValue = Object.assign({}, state, { accounts })
           resolve(returnValue)
         })
       })

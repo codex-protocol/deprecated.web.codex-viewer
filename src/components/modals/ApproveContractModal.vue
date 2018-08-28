@@ -28,28 +28,24 @@ import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 export default {
   name: 'approve-contract-modal',
 
-  props: ['id', 'contractInstance', 'stateProperty'],
+  props: ['id', 'contract', 'stateProperty'],
 
   components: {
     MetaMaskNotificationModal,
   },
 
   computed: {
-    ...mapState('web3', ['instance', 'tokenContractInstance']),
-
-    tokenContract() {
-      return this.tokenContractInstance()
-    },
+    ...mapState('web3', ['instance', 'tokenContract']),
   },
 
   methods: {
     approveTokens() {
       EventBus.$emit('events:click-approve-contract', this)
-      const amount = new (this.instance()).BigNumber(2).pow(255)
-      const input = [this.contractInstance.address, amount.toFixed()]
+      const amount = new (this.instance).BigNumber(2).pow(255)
+      const input = [this.contract.address, amount.toFixed()]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return callContract(this.tokenContract.approve, input, this.account, this.instance)
+      return callContract(this.tokenContract.approve, input)
         .then(() => {
           EventBus.$emit('events:approve-contract', this)
           this.$store.commit('auth/updateApprovalStatus', {
@@ -59,7 +55,7 @@ export default {
         })
     },
     getAddressUrl() {
-      return etherscanHelper.getAddressUrl(this.contractInstance.address)
+      return etherscanHelper.getAddressUrl(this.contract.address)
     },
   },
 }

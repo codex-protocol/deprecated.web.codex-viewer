@@ -167,14 +167,10 @@ export default {
   },
 
   computed: {
-    ...mapState('web3', ['account', 'instance', 'recordContractInstance']),
+    ...mapState('web3', ['instance', 'recordContract']),
 
     canSubmit() {
       return !this.isFileProcessing
-    },
-
-    recordContract() {
-      return this.recordContractInstance()
     },
 
     progressVariant() {
@@ -246,7 +242,7 @@ export default {
       this.descriptionHash = this.hash(this.description || '')
     },
     hash(input) {
-      return this.instance().sha3(input)
+      return this.instance.sha3(input)
     },
     // Upload a new main image
     displayAndUploadFile(file) {
@@ -275,7 +271,7 @@ export default {
       const binaryFileReader = new FileReader()
 
       binaryFileReader.addEventListener('loadend', () => {
-        next(null, this.instance().sha3(binaryFileReader.result))
+        next(null, this.instance.sha3(binaryFileReader.result))
       })
 
       binaryFileReader.readAsBinaryString(file)
@@ -354,7 +350,7 @@ export default {
       ]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return callContract(this.recordContract.modifyMetadataHashes, input, this.account, this.instance)
+      return callContract(this.recordContract.modifyMetadataHashes, input)
     },
   },
 }

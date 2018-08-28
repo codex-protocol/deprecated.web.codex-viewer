@@ -57,13 +57,13 @@ export default {
     },
     unstakeTokens() {
 
-      const amount = this.instance().toWei(this.unstakeAmount, 'ether')
+      const amount = this.instance.toWei(this.unstakeAmount, 'ether')
       const input = [amount, '0x0']
 
       EventBus.$emit('events:click-unstake-tokens', this)
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return callContract(this.stakeContract.unstake, input, this.account, this.instance)
+      return callContract(this.stakeContract.unstake, input)
         .then(() => {
           EventBus.$emit('events:unstake-tokens', this, amount)
         })
@@ -74,14 +74,10 @@ export default {
   },
 
   computed: {
-    ...mapState('web3', ['account', 'instance', 'stakeContractInstance']),
+    ...mapState('web3', ['instance', 'stakeContract']),
 
     canSubmit() {
       return this.unstakeAmount
-    },
-
-    stakeContract() {
-      return this.stakeContractInstance()
     },
   },
 }

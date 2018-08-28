@@ -52,7 +52,7 @@
                 Approve the registry contract
               </b-button>
 
-              <approve-contract-modal id="approveRegistryModal" :contractInstance="recordContract" stateProperty="registryContractApproved">
+              <approve-contract-modal id="approveRegistryModal" :contract="recordContract" stateProperty="registryContractApproved">
                 This will grant the Codex Viewer permission to spend CODX on your behalf.
               </approve-contract-modal>
             </div>
@@ -89,7 +89,7 @@ export default {
 
   computed: {
     ...mapState('auth', ['registryContractApproved', 'balance', 'user']),
-    ...mapState('web3', ['recordContractInstance']),
+    ...mapState('web3', ['recordContract']),
 
     formattedBalance() {
       return formatTokenAmount(this.balance)
@@ -99,10 +99,6 @@ export default {
       const lastRequestedAt = new Date(this.user.faucetLastRequestedAt)
       const nextDay = new Date(lastRequestedAt.getTime() - (86400 * 1000))
       return timeSince(nextDay)
-    },
-
-    recordContract() {
-      return this.recordContractInstance()
     },
   },
 }

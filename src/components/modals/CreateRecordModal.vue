@@ -84,9 +84,11 @@ const logger = debug('app:component:create-record-modal')
 
 export default {
   name: 'create-record-modal',
+
   components: {
     MetaMaskNotificationModal,
   },
+
   data() {
     return {
       name: null,
@@ -99,12 +101,14 @@ export default {
       uploadSuccess: false,
     }
   },
+
   methods: {
     focusModal() {
       if (this.$refs.defaultModalFocus) {
         this.$refs.defaultModalFocus.focus()
       }
     },
+
     clearModal() {
       Object.assign(this.$data, this.$options.data.apply(this))
 
@@ -114,6 +118,7 @@ export default {
         this.$refs.fileInput.reset()
       }
     },
+
     displayAndUploadFile(file) {
       if (!file) {
         return
@@ -134,12 +139,13 @@ export default {
       const binaryFileReader = new FileReader()
 
       binaryFileReader.addEventListener('loadend', () => {
-        this.uploadedFileHash = this.instance().sha3(binaryFileReader.result)
+        this.uploadedFileHash = this.instance.sha3(binaryFileReader.result)
       })
 
       binaryFileReader.readAsBinaryString(file)
 
     },
+
     uploadFile(file) {
 
       this.progressVisible = true
@@ -160,6 +166,7 @@ export default {
           this.uploadComplete = true
         })
     },
+
     createMetaData() {
 
       // TODO: Show some better error handling if these aren't filled in
@@ -178,7 +185,7 @@ export default {
 
           // TODO: maybe show somewhere that the locally-calculated hashes match
           //  the server-side-calculated hashes? e.g.:
-          // const { sha3 } = this.instance()
+          // const { sha3 } = this.instance
           //
           // metadata.nameHash === sha3(metadata.name)
           // metadata.mainImage.hash === this.uploadedFileHash
@@ -197,9 +204,10 @@ export default {
           throw error
         })
     },
+
     createRecord(metadata) {
 
-      const { sha3 } = this.instance()
+      const { sha3 } = this.instance
       const input = [
         this.account,
         sha3(metadata.name),
@@ -212,17 +220,17 @@ export default {
       ]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return callContract(this.recordContract.mint, input, this.account, this.instance)
+      return callContract(this.recordContract.mint, input)
     },
   },
+
   computed: {
-    ...mapState('web3', ['account', 'instance', 'recordContractInstance']),
+    ...mapState('web3', ['account', 'instance', 'recordContract']),
+
     canSubmit() {
       return this.name && this.uploadedFileHash && this.uploadedFile
     },
-    recordContract() {
-      return this.recordContractInstance()
-    },
+
     progressVariant() {
       if (!this.uploadComplete) {
         return 'primary'

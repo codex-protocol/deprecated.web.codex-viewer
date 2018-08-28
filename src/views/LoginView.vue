@@ -184,11 +184,11 @@ export default {
         method: 'personal_sign',
         params: [
           this.account,
-          this.instance().toHex(personalMessageToSign),
+          this.instance.toHex(personalMessageToSign),
         ],
       }
 
-      this.instance().currentProvider.sendAsync(sendAsyncOptions, (error, result) => {
+      this.instance.currentProvider.sendAsync(sendAsyncOptions, (error, result) => {
 
         // result.error will be populated if the user rejects the signature
         //  prompt

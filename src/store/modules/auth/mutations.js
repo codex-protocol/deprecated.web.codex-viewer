@@ -12,30 +12,31 @@ const logMutation = (mutationName, payload) => {
 }
 
 export default {
-  setAuthToken(currentState, newAuthToken) {
-    logMutation('setAuthToken', newAuthToken)
+  SET_AUTH_STATE(currentState, { authToken }) {
+    logMutation('SET_AUTH_STATE', authToken)
 
-    currentState.authToken = newAuthToken
-    axios.defaults.headers.common.Authorization = newAuthToken
+    axios.defaults.headers.common.Authorization = authToken
+    SocketService.updateSocket(authToken)
+    window.localStorage.setItem('authToken', authToken)
 
-    SocketService.updateSocket(newAuthToken)
-
-    window.localStorage.setItem('authToken', newAuthToken)
+    currentState.authToken = authToken
   },
 
-  setUser(currentState, newUser) {
-    logMutation('setUser', newUser)
-    currentState.user = newUser
+  SET_USER(currentState, { user }) {
+    logMutation('SET_USER', user)
+
+    currentState.user = user
   },
 
-  updateUser(currentState, newProperties) {
-    logMutation('updateUser', newProperties)
+  SET_USER_PROPERTIES(currentState, newProperties) {
+    logMutation('SET_USER_PROPERTIES', newProperties)
 
-    Object.assign(currentState.user, newProperties)
+    // https://vuejs.org/v2/guide/list.html#Object-Change-Detection-Caveats
+    Object.assign({}, currentState.user, newProperties)
   },
 
-  clearUserState(currentState) {
-    logMutation('clearUserState')
+  CLEAR_USER_STATE(currentState) {
+    logMutation('CLEAR_USER_STATE')
 
     SocketService.disconnect()
     window.localStorage.removeItem('authToken')

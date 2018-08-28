@@ -5,13 +5,16 @@ import Raven from 'raven-js'
 import RavenVue from 'raven-js/plugins/vue'
 import VueBootstrap from 'bootstrap-vue'
 import VueAnalytics from 'vue-analytics'
+import { sync } from 'vuex-router-sync'
 
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import './assets/custom-bootstrap.scss'
 
-import router from './router'
 import App from './App'
+import router from './router'
 import store from './store'
+
+sync(store, router)
 
 if (process.env.VUE_APP_SENTRY_DSN) {
   Raven
