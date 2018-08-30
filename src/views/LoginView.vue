@@ -101,9 +101,11 @@ export default {
         return this.handleWeb3Error(this.error)
       }
 
+      this.setButton('Login', this.web3Login)
+
       return {
-        title: '',
-        description: '',
+        title: 'Login',
+        description: 'Login to create, view, &amp; transfer Codex Records',
       }
     },
   },
