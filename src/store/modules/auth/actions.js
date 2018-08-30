@@ -12,21 +12,26 @@ export default {
   INITIALIZE_AUTH({ dispatch, commit, state, rootState }) {
     logger('INITIALIZE_AUTH action being executed')
 
-    EventBus.$on('socket:codex-coin:transferred', () => {
-      dispatch('FETCH_TOKEN_BALANCE')
-    })
+    const {
+      error,
+      errorCode,
+      authToken,
+    } = rootState.route.query
 
-    EventBus.$on('socket:codex-coin:registry-contract-approved', () => {
-      dispatch('FETCH_APPROVAL_STATUSES')
-    })
+    if (error || errorCode) {
+      logger('Oauth2 authentication failed with an error', errorCode, error)
 
-    // @TODO: evaluate what happens when a bogus auth token is set in the
-    //  route params
-    if (rootState.route.query.authToken) {
+      commit('SET_ERROR', {
+        code: errorCode,
+        message: error,
+      })
+    } else if (authToken) {
       logger('Fetching user state with the query string authToken')
 
+      // @TODO: evaluate what happens when a bogus auth token is set in the
+      //  route params
       commit('SET_AUTH_STATE', {
-        authToken: rootState.route.query.authToken,
+        authToken,
       })
 
       return dispatch('FETCH_USER')
