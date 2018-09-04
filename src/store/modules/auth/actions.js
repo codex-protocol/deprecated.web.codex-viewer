@@ -25,6 +25,11 @@ export default {
         code: errorCode,
         message: error,
       })
+
+      // Clear the error params from the query string
+      router.replace({
+        name: rootState.route.name,
+      })
     } else if (authToken) {
       logger('Fetching user state with the query string authToken')
 
