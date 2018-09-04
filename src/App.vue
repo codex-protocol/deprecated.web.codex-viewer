@@ -77,7 +77,6 @@ export default {
       freshChatToken: process.env.VUE_APP_FRESHCHAT_API_TOKEN,
       showNav: false,
       isLoaded: false,
-      oauth2Error: null,
     }
   },
 
@@ -105,9 +104,6 @@ export default {
       })
       .then(() => {
         this.isLoaded = true
-      })
-      .catch((error) => {
-        this.oauth2Error = error
       })
   },
 
