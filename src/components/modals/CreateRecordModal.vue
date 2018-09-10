@@ -139,7 +139,7 @@ export default {
       const binaryFileReader = new FileReader()
 
       binaryFileReader.addEventListener('loadend', () => {
-        this.uploadedFileHash = this.instance.sha3(binaryFileReader.result)
+        this.uploadedFileHash = this.instance.utils.soliditySha3(binaryFileReader.result)
       })
 
       binaryFileReader.readAsBinaryString(file)
@@ -185,11 +185,11 @@ export default {
 
           // TODO: maybe show somewhere that the locally-calculated hashes match
           //  the server-side-calculated hashes? e.g.:
-          // const { sha3 } = this.instance
+          // const { soliditySha3 } = this.instance.utils
           //
-          // metadata.nameHash === sha3(metadata.name)
+          // metadata.nameHash === soliditySha3(metadata.name)
           // metadata.mainImage.hash === this.uploadedFileHash
-          // metadata.descriptionHash === (metadata.description ? sha3(metadata.description) : null)
+          // metadata.descriptionHash === (metadata.description ? soliditySha3(metadata.description) : null)
 
           return this.createRecord(metadata)
 
@@ -207,11 +207,12 @@ export default {
 
     createRecord(metadata) {
 
-      const { sha3 } = this.instance
+      const { soliditySha3 } = this.instance.utils
+
       const input = [
         this.account,
-        sha3(metadata.name),
-        metadata.description ? sha3(metadata.description) : '',
+        soliditySha3(metadata.name),
+        metadata.description ? soliditySha3(metadata.description) : '',
         [this.uploadedFileHash],
         additionalDataHelper.encode([
           process.env.VUE_APP_METADATA_PROVIDER_ID, // providerId
