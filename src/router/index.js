@@ -18,6 +18,7 @@ import GalleryView from '../views/GalleryView'
 import GalleryListView from '../views/GalleryListView'
 import UnsupportedDeviceView from '../views/UnsupportedDeviceView'
 import UnsupportedBrowserView from '../views/UnsupportedBrowserView'
+import OAuth2AppView from '../views/test/OAuth2AppView'
 
 Vue.use(Router)
 
@@ -105,6 +106,13 @@ const router = new Router({
       name: 'extensions',
       path: '/extensions',
       component: FeatureListView,
+    },
+
+    // test routes (development only)
+    {
+      name: 'test-oauth2-app',
+      path: '/test/oauth2-app',
+      component: OAuth2AppView,
     },
 
     // global error routes

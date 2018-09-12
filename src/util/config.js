@@ -35,6 +35,7 @@ export default {
   showFaucet: process.env.VUE_APP_TARGET_ENV !== 'production',
   showCreateGiveawayButton: process.env.VUE_APP_TARGET_ENV !== 'production',
   showCodexGalleryInSideBar: process.env.VUE_APP_TARGET_ENV !== 'production',
+  showTestAppInSideBar: process.env.VUE_APP_TARGET_ENV !== 'production',
 
   apiUrl,
   etherScanUrl,
