@@ -2,16 +2,17 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">
-        <app-header title="CODX Faucet" />
+        <app-header title="OAuth2 Test App API Interface" />
         <div class="content">
           <b-tabs>
-            <b-tab title="Create client">
+            <b-tab
+              v-for="(tab, i) in tabs"
+              :key="i"
+              :title="tab.title"
+            >
               <div class="container-fluid mt-3">
-                <OAuth2AppCreateClientForm :showResult="showResult" />
+                <component :is="tab.component" :showResult="showResult" />
               </div>
-            </b-tab>
-            <b-tab title="Token request">
-              Token request
             </b-tab>
           </b-tabs>
           <div class="container-fluid mt-3">
@@ -27,17 +28,48 @@
 <script>
 import AppHeader from '../../components/core/AppHeader'
 import OAuth2AppCreateClientForm from '../../components/OAuth2AppCreateClientForm'
+import OAuth2AppTokenRequestForm from '../../components/OAuth2AppTokenRequestForm'
+import OAuth2AppCreateRecordForm from '../../components/OAuth2AppCreateRecordForm'
+import OAuth2AppReadRecordForm from '../../components/OAuth2AppReadRecordForm'
+import OAuth2AppUpdateRecordForm from '../../components/OAuth2AppUpdateRecordForm'
+import OAuth2AppTransferRecordForm from '../../components/OAuth2AppTransferRecordForm'
 
 export default {
   name: 'OAuth2AppView',
 
   components: {
     AppHeader,
-    OAuth2AppCreateClientForm,
   },
 
   data() {
     return {
+      tabs: [
+        {
+          title: 'Create client',
+          component: OAuth2AppCreateClientForm,
+        },
+        {
+          title: 'Token request',
+          component: OAuth2AppTokenRequestForm,
+        },
+        {
+          title: 'Create record',
+          component: OAuth2AppCreateRecordForm,
+        },
+        {
+          title: 'Read record',
+          component: OAuth2AppReadRecordForm,
+        },
+        {
+          title: 'Update record',
+          component: OAuth2AppUpdateRecordForm,
+        },
+        {
+          title: 'Transfer record',
+          component: OAuth2AppTransferRecordForm,
+        },
+      ],
+
       result: null,
     }
   },
