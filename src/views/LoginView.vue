@@ -10,9 +10,9 @@
         <div v-if="isMobile">
           <h1 v-html="pageContent.title"></h1>
           <div class="lead" v-html="pageContent.description"></div>
-          <div v-if="showToshiLink">
-            <a href="http://www.toshi.org/">
-              <img src="../assets/images/get-toshi.png" width="150">
+          <div v-if="showCBWalletLink">
+            <a href="https://wallet.coinbase.com/">
+              <img src="../assets/images/get-coinbase-wallet@3x.png" width="150">
             </a>
             <br /><br />
           </div>
@@ -114,7 +114,7 @@ export default {
       }
     },
 
-    showToshiLink() {
+    showCBWalletLink() {
       return this.isMobile && !this.hasWeb3Browser
     },
   },
@@ -176,7 +176,7 @@ export default {
       if (this.isMobile) {
         copy = {
           title: 'Login',
-          description: '<p>To create, view, &amp; transfer Codex Records, please sign in with Google or a Web3 browser such as Toshi.</p>',
+          description: '<p>To create, view, &amp; transfer Codex Records, please sign in with Google or a Web3 browser such as Coinbase Wallet.</p>',
         }
       } else {
         this.setButton('Install MetaMask', this.installMetamask)
