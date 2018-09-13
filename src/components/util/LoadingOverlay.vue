@@ -37,7 +37,7 @@ export default {
 
 <style lang="stylus" scoped>
 
-@import "../assets/variables.styl"
+@import "../../assets/variables.styl"
 
 .loading-overlay
   top: 0

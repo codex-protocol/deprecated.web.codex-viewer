@@ -26,7 +26,7 @@
 
 <script>
 
-import EventBus from '../util/eventBus'
+import EventBus from '../../util/eventBus'
 
 export default {
   name: 'toast-container',

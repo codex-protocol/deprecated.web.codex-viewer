@@ -70,7 +70,7 @@ import EventBus from '../util/eventBus'
 import { timeSince } from '../util/dateHelpers'
 import formatTokenAmount from '../util/formatTokenAmount'
 
-import AppHeader from '../components/AppHeader'
+import AppHeader from '../components/core/AppHeader'
 import FaucetModal from '../components/modals/FaucetModal'
 import ApproveContractModal from '../components/modals/ApproveContractModal'
 

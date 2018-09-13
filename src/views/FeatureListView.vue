@@ -25,7 +25,7 @@
 
 <script>
 import EventBus from '../util/eventBus'
-import AppHeader from '../components/AppHeader'
+import AppHeader from '../components/core/AppHeader'
 import laLogo from '../assets/images/features/la-logo.png'
 import amLogo from '../assets/images/features/am-logo.png'
 import vmsLogo from '../assets/images/features/vms-logo.png'

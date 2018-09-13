@@ -52,7 +52,7 @@ import copyToClipboard from '../util/copyToClipboard'
 import fullscreenHelper from '../util/fullscreenHelper'
 import missingImageHelper from '../util/missingImageHelper'
 
-import AppHeader from '../components/AppHeader'
+import AppHeader from '../components/core/AppHeader'
 import RecordListItem from '../components/RecordListItem'
 
 export default {

@@ -44,7 +44,7 @@ import EventBus from '../util/eventBus'
 import Record from '../util/api/record'
 import Giveaway from '../util/api/giveaway'
 
-import AppHeader from '../components/AppHeader'
+import AppHeader from '../components/core/AppHeader'
 import RecordListItem from '../components/RecordListItem'
 import GiveawayInfoCard from '../components/GiveawayInfoCard'
 import ClaimGiveawayCard from '../components/ClaimGiveawayCard'

@@ -32,7 +32,7 @@ import { mapState } from 'vuex'
 
 import Record from '../util/api/record'
 import EventBus from '../util/eventBus'
-import AppHeader from '../components/AppHeader'
+import AppHeader from '../components/core/AppHeader'
 import RecordPrivacySettingsRowItem from '../components/RecordPrivacySettingsRowItem'
 
 export default {

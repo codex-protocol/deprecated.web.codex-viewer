@@ -69,10 +69,10 @@ import {
   mapGetters,
 } from 'vuex'
 
-import HashFormatter from './HashFormatter'
-import Transfer from '../util/api/transfer'
-import EventBus from '../util/eventBus'
-import config from '../util/config'
+import HashFormatter from '../util/HashFormatter'
+import Transfer from '../../util/api/transfer'
+import EventBus from '../../util/eventBus'
+import config from '../../util/config'
 
 export default {
   name: 'app-side-bar',
@@ -152,7 +152,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-@import "../assets/variables.styl"
+@import "../../assets/variables.styl"
 
 nav
   display: none

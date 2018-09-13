@@ -39,12 +39,12 @@ import {
 import config from './util/config'
 import EventBus from './util/eventBus'
 
-import AppFooter from './components/AppFooter'
-import AppSideBar from './components/AppSideBar'
-import IconBase from './components/icons/IconBase'
-import LoadingOverlay from './components/LoadingOverlay'
-import ToastContainer from './components/ToastContainer'
+import AppFooter from './components/core/AppFooter'
+import AppSideBar from './components/core/AppSideBar'
+import LoadingOverlay from './components/util/LoadingOverlay'
+import ToastContainer from './components/util/ToastContainer'
 import IconHamburger from './components/icons/IconHamburger'
+import IconBase from './components/icons/IconBase'
 
 import './util/analytics'
 

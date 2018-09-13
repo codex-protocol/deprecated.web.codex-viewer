@@ -34,13 +34,13 @@
 
 <script>
 
-import IconBase from './icons/IconBase'
-import IconGithub from './icons/IconGithub'
-import IconTwitter from './icons/IconTwitter'
-import IconTelegram from './icons/IconTelegram'
-import IconMedium from './icons/IconMedium'
+import IconBase from '../icons/IconBase'
+import IconGithub from '../icons/IconGithub'
+import IconTwitter from '../icons/IconTwitter'
+import IconTelegram from '../icons/IconTelegram'
+import IconMedium from '../icons/IconMedium'
 
-import config from '../util/config'
+import config from '../../util/config'
 
 export default {
   name: 'app-footer',
@@ -60,7 +60,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-@import "../assets/variables.styl"
+@import "../../assets/variables.styl"
 
 .footer
   display: flex

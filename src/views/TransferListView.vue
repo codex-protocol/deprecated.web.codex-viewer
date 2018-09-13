@@ -37,8 +37,8 @@
 <script>
 import Transfer from '../util/api/transfer'
 import EventBus from '../util/eventBus'
-import AppHeader from '../components/AppHeader'
-import AppSubHeader from '../components/AppSubHeader'
+import AppHeader from '../components/core/AppHeader'
+import AppSubHeader from '../components/core/AppSubHeader'
 import RecordTransferIncomingListItem from '../components/RecordTransferIncomingListItem'
 import RecordTransferOutgoingListItem from '../components/RecordTransferOutgoingListItem'
 

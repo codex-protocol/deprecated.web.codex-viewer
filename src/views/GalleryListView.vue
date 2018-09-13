@@ -38,7 +38,7 @@
 import EventBus from '../util/eventBus'
 import Gallery from '../util/api/gallery'
 
-import AppHeader from '../components/AppHeader'
+import AppHeader from '../components/core/AppHeader'
 import GalleryListItem from '../components/GalleryListItem'
 
 export default {

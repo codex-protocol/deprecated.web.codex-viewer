@@ -71,7 +71,7 @@
 <script>
 import EventBus from '../util/eventBus'
 
-import AppHeader from '../components/AppHeader'
+import AppHeader from '../components/core/AppHeader'
 
 export default {
   name: 'codex-quests-view',
