@@ -8,12 +8,13 @@
           </b-link>
         </div>
         <div v-if="isMobile">
-          <h1 v-html="mobilePageContent.title"></h1>
-          <div class="lead" v-html="mobilePageContent.description"></div>
-          <div v-if="error === Web3Errors.Unknown">
+          <h1 v-html="pageContent.title"></h1>
+          <div class="lead" v-html="pageContent.description"></div>
+          <div v-if="showToshiLink">
             <a href="http://www.toshi.org/">
-              <img src="../assets/images/get-toshi.png" width="200">
+              <img src="../assets/images/get-toshi.png" width="150">
             </a>
+            <br /><br />
           </div>
           <div v-else>
             <b-button
@@ -90,7 +91,7 @@ export default {
 
   computed: {
     ...mapState('auth', ['authError']),
-    ...mapState('web3', ['account', 'instance', 'error']),
+    ...mapState('web3', ['account', 'instance', 'error', 'hasWeb3Browser']),
 
     pageContent() {
       if (this.authError) {
@@ -101,12 +102,20 @@ export default {
         return this.handleWeb3Error(this.error)
       }
 
+      if (!this.hasWeb3Browser) {
+        return this.handleNoWeb3Browser()
+      }
+
       this.setButton('Login', this.web3Login)
 
       return {
         title: 'Login',
         description: 'Login to create, view, &amp; transfer Codex Records',
       }
+    },
+
+    showToshiLink() {
+      return this.isMobile && !this.hasWeb3Browser
     },
   },
 
@@ -159,6 +168,24 @@ export default {
     setButton(title, method) {
       this.buttonTitle = title
       this.buttonMethod = method
+    },
+
+    handleNoWeb3Browser() {
+      this.setButton(false)
+      let copy = {}
+      if (this.isMobile) {
+        copy = {
+          title: 'Login',
+          description: '<p>To create, view, &amp; transfer Codex Records, please sign in with Google or a Web3 browser such as Toshi.</p>',
+        }
+      } else {
+        this.setButton('Install MetaMask', this.installMetamask)
+        copy = {
+          title: 'Login',
+          description: '<p>To create, view, &amp; transfer Codex Records, please sign in with Google or use a Web3 browser extension such as Metamask.</p>',
+        }
+      }
+      return copy
     },
 
     handleAuthError(error) {

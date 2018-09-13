@@ -5,6 +5,7 @@ export default () => {
     instance: null,
     network: null,
     account: null,
+    hasWeb3Browser: null,
     error: Web3Errors.None,
     recordContract: null,
     tokenContract: null,
