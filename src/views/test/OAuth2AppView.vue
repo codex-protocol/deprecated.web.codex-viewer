@@ -7,14 +7,17 @@
           <b-tabs>
             <b-tab title="Create client">
               <div class="container-fluid mt-3">
-                Create the client
-                <OAuth2AppCreateClientForm />
+                <OAuth2AppCreateClientForm :showResult="showResult" />
               </div>
             </b-tab>
             <b-tab title="Token request">
               Token request
             </b-tab>
           </b-tabs>
+          <div class="container-fluid mt-3">
+            <div class="json" v-text="result">
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -26,21 +29,30 @@ import AppHeader from '../../components/core/AppHeader'
 import OAuth2AppCreateClientForm from '../../components/OAuth2AppCreateClientForm'
 
 export default {
-  name: 'oauth2-app',
+  name: 'OAuth2AppView',
 
   components: {
     AppHeader,
     OAuth2AppCreateClientForm,
   },
 
-  methods: {
-    createOAuth2Client() {
+  data() {
+    return {
+      result: null,
+    }
+  },
 
+  methods: {
+    showResult(response) {
+      // @TODO: error checking
+      this.result = response.data.result
     },
   },
 }
 </script>
 
-<style>
+<style lang="stylus" scoped>
+.json
+  white-space: pre;
 
 </style>

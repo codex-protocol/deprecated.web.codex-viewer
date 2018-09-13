@@ -24,6 +24,19 @@
         placeholder="Enter the email address for the app admin"
       />
     </b-form-group>
+    <b-form-group
+      label="Webhook URL"
+      label-for="webhookUrl"
+    >
+      <b-form-input
+        id="webhookUrl"
+        type="text"
+        v-model="webhookUrl"
+        required
+        placeholder="Enter the webhook callback URL"
+      />
+    </b-form-group>
+    <b-button type="submit" variant="primary">Submit</b-button>
   </b-form>
 </template>
 
@@ -33,27 +46,28 @@ import axios from 'axios'
 export default {
   name: 'OAuth2AppCreateClientForm',
 
+  props: {
+    showResult: Function,
+  },
+
   data() {
     return {
       appName: null,
       adminEmail: null,
+      webhookUrl: 'http://localhost:3001/test/webhook',
     }
   },
 
   methods: {
     onSubmit() {
       axios.post('/admin/oauth2/clients', {
-        name: this.appName,
-        email: this.adminEmail,
-      })
-        .then((response) => {
-          console.log(response)
-        })
+        user: {
+          name: this.appName,
+          email: this.adminEmail,
+        },
+        webhookUrl: this.webhookUrl,
+      }).then(this.showResult)
     },
   },
 }
 </script>
-
-<style>
-
-</style>
