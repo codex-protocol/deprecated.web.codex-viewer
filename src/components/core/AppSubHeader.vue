@@ -27,7 +27,7 @@
 
 <script>
 export default {
-  name: 'app-sub-header',
+  name: 'AppSubHeader',
   props: ['transferDirection', 'fetchData'],
   watch: {
     transferDirection(newTransferDirection) {

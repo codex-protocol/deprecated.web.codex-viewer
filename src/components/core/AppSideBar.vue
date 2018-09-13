@@ -72,7 +72,7 @@ import EventBus from '../../util/eventBus'
 import config from '../../util/config'
 
 export default {
-  name: 'app-side-bar',
+  name: 'AppSideBar',
 
   props: ['hideNetworkDetails', 'hideNav'],
 

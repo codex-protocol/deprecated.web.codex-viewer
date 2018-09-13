@@ -23,7 +23,6 @@
 </template>
 
 <script>
-import config from '../util/config'
 import EventBus from '../util/eventBus'
 
 import LoginMarketingCard from '../components/LoginMarketingCard'

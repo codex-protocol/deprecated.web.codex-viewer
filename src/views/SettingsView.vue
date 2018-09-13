@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">
-        <app-header title="Settings &amp; Privacy" />
+        <AppHeader title="Settings &amp; Privacy" />
         <div class="record-list" v-if="records.length">
           <b-container class="record-settings-row">
             <b-row>

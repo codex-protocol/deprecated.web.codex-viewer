@@ -5,12 +5,12 @@
   >
     <div class="row">
       <div class="col-12">
-        <app-header :hide-network-details="true" :title="gallery.name">
+        <AppHeader :hide-network-details="true" :title="gallery.name">
           <b-button variant="outline-primary" @click="copyShareLink" ref="copy-share-link-button">Copy Share Link</b-button>
           <b-button variant="outline-primary" @click="viewFullscreen" v-if="browserSupportsFullscreen">
             View Fullscreen
           </b-button>
-        </app-header>
+        </AppHeader>
 
         <div class="carousel-container" ref="carousel-container">
           <b-carousel

@@ -2,8 +2,8 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">
-        <app-header title="Transfers" />
-        <app-sub-header
+        <AppHeader title="Transfers" />
+        <AppSubHeader
           :fetchData="this.fetchData"
           :transferDirection="transferDirection"
         />

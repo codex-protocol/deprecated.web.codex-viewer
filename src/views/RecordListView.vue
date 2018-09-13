@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">
-        <app-header title="Collection">
+        <AppHeader title="Collection">
           <b-button
             variant="primary"
             v-b-modal.createRecordModal
@@ -17,7 +17,7 @@
           >
             Create giveaway
           </b-button>
-        </app-header>
+        </AppHeader>
         <b-card-group deck class="record-list">
           <FaucetMarketingCard :giveaway="giveaway" v-if="showFaucetMarketingCard" />
           <ClaimGiveawayCard :giveaway="giveaway" />

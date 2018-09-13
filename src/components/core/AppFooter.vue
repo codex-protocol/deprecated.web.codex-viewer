@@ -43,7 +43,7 @@ import IconMedium from '../icons/IconMedium'
 import config from '../../util/config'
 
 export default {
-  name: 'app-footer',
+  name: 'AppFooter',
   components: {
     IconBase,
     IconGithub,

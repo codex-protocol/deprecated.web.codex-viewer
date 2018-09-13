@@ -14,14 +14,14 @@
           <icon-hamburger />
         </icon-base>
       </span>
-      <app-side-bar :hideNav="hideNav" />
+      <AppSideBar :hideNav="hideNav" />
     </template>
     <div class="main-content-wrapper">
       <div class="main-content">
         <router-view v-if="isLoaded" />
         <LoadingOverlay type="global" v-else />
       </div>
-      <app-footer />
+      <AppFooter />
     </div>
     <ToastContainer />
   </div>

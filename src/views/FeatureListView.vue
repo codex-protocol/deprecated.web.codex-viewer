@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">
-        <app-header title="Coming Soon" />
+        <AppHeader title="Coming Soon" />
         <h5 class="mb-5">Upcoming extensions and features</h5>
         <b-card-group deck>
           <div class="deck-item" v-for="feature in features" :key="feature.description">
@@ -34,7 +34,7 @@ import oilPainting from '../assets/images/features/oil-painting.png'
 import maecenas from '../assets/images/features/maecenas.png'
 
 export default {
-  name: 'FeaturesListView',
+  name: 'FeatureListView',
   components: {
     AppHeader,
   },

@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">
-        <app-header title="Manage Tokens" />
+        <AppHeader title="Manage Tokens" />
         <h5 class="mb-5">Get CODX from the faucet &amp; stake CODX for discounts!</h5>
 
         <p>Credit balance: {{ creditBalance }}</p>
