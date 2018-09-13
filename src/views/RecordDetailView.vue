@@ -79,7 +79,7 @@ import { mapState } from 'vuex'
 import Record from '../util/api/record'
 import EventBus from '../util/eventBus'
 import { ZeroAddress } from '../util/constants/web3'
-import callContract from '../util/web3/callContract'
+import contractHelper from '../util/contractHelper'
 import copyToClipboard from '../util/copyToClipboard'
 
 import RecordProvenance from '../components/RecordProvenance'
@@ -125,23 +125,22 @@ export default {
   },
 
   computed: {
-    ...mapState('auth', ['authToken']),
-    ...mapState('web3', ['account', 'recordContract']),
+    ...mapState('auth', ['user', 'authToken']),
 
     isOwner() {
       return (
-        this.account &&
+        this.user &&
         this.authToken &&
         this.codexRecord.ownerAddress &&
-        this.account.toLowerCase() === this.codexRecord.ownerAddress.toLowerCase()
+        this.user.address.toLowerCase() === this.codexRecord.ownerAddress.toLowerCase()
       )
     },
 
     isApproved() {
       return (
-        this.account &&
+        this.user &&
         this.codexRecord.approvedAddress &&
-        this.account.toLowerCase() === this.codexRecord.approvedAddress.toLowerCase()
+        this.user.address.toLowerCase() === this.codexRecord.approvedAddress.toLowerCase()
       )
     },
 
@@ -194,11 +193,19 @@ export default {
     acceptTransfer() {
       const input = [
         this.codexRecord.ownerAddress,
-        this.account,
+        this.user.address,
         this.recordId,
       ]
 
-      callContract(this.recordContract.safeTransferFrom, input)
+      // @FIXME: we can't actually use safeTransferFrom here because it has some
+      //  checks to make sure if you're transferring to a contract that it supports
+      //  the ERC721 interface, which our IdentityProxy contracts do not
+      //
+      // instead, we'll just use transferFrom
+      //
+      // see checkAndCallSafeTransfer() in:
+      //  contract.codex-registry/contracts/ERC721/ERC721BasicToken.sol
+      return contractHelper('CodexRecord', 'transferFrom', input, this.$store.state)
         .then(() => {
           EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
           EventBus.$emit('events:accept-transfer', this)

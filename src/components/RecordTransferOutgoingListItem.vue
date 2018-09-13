@@ -16,11 +16,9 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-
 import EventBus from '../util/eventBus'
 import { ZeroAddress } from '../util/constants/web3'
-import callContract from '../util/web3/callContract'
+import contractHelper from '../util/contractHelper'
 import missingImageHelper from '../util/missingImageHelper'
 
 export default {
@@ -36,10 +34,6 @@ export default {
     }
   },
 
-  computed: {
-    ...mapState('web3', ['recordContract']),
-  },
-
   methods: {
     viewRecord() {
       this.$router.push(this.route)
@@ -49,7 +43,7 @@ export default {
       EventBus.$emit('events:click-cancel-transfer', this)
       const input = [ZeroAddress, this.codexRecord.tokenId]
 
-      callContract(this.recordContract.approve, input)
+      return contractHelper('CodexRecord', 'approve', input, this.$store.state)
         .then(() => {
           EventBus.$emit('events:cancel-transfer', this)
           EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)

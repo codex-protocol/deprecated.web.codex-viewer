@@ -111,8 +111,8 @@ import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 import File from '../../util/api/file'
 import config from '../../util/config'
 import Record from '../../util/api/record'
+import contractHelper from '../../util/contractHelper'
 import EventBus from '../../util/eventBus'
-import callContract from '../../util/web3/callContract'
 import additionalDataHelper from '../../util/additionalDataHelper'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
@@ -161,7 +161,7 @@ export default {
 
   computed: {
     ...mapState('auth', ['authToken']),
-    ...mapState('web3', ['instance', 'recordContract']),
+    ...mapState('web3', ['instance']),
 
     canSubmit() {
       return !this.isFileProcessing
@@ -357,7 +357,7 @@ export default {
       ]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return callContract(this.recordContract.modifyMetadataHashes, input)
+      return contractHelper('CodexRecord', 'modifyMetadataHashes', input, this.$store.state)
     },
   },
 }

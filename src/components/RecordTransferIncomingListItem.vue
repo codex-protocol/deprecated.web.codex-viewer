@@ -22,7 +22,7 @@ import { mapState } from 'vuex'
 
 import Transfer from '../util/api/transfer'
 import EventBus from '../util/eventBus'
-import callContract from '../util/web3/callContract'
+import contractHelper from '../util/contractHelper'
 import missingImageHelper from '../util/missingImageHelper'
 
 export default {
@@ -48,7 +48,7 @@ export default {
   },
 
   computed: {
-    ...mapState('web3', ['account', 'recordContract']),
+    ...mapState('auth', ['user']),
   },
 
   methods: {
@@ -68,14 +68,22 @@ export default {
     acceptTransfer() {
       const input = [
         this.codexRecord.ownerAddress,
-        this.account,
+        this.user.address,
         this.codexRecord.tokenId,
       ]
 
       this.isLoading = true
       EventBus.$emit('events:click-accept-transfer', this)
 
-      callContract(this.recordContract.safeTransferFrom, input)
+      // @FIXME: we can't actually use safeTransferFrom here because it has some
+      //  checks to make sure if you're transferring to a contract that it supports
+      //  the ERC721 interface, which our IdentityProxy contracts do not
+      //
+      // instead, we'll just use transferFrom
+      //
+      // see checkAndCallSafeTransfer() in:
+      //  contract.codex-registry/contracts/ERC721/ERC721BasicToken.sol
+      return contractHelper('CodexRecord', 'transferFrom', input, this.$store.state)
         .then(() => {
 
           EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)

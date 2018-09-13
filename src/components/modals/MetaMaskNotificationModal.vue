@@ -11,7 +11,7 @@
     :size="modalSize"
     v-model="modalVisible"
     v-on:shown="shown"
-    v-on:ok.prevent="goToStep(currentStep + 1)"
+    v-on:ok.prevent="nextStep"
 
     :no-close-on-esc="preventClose"
     :hide-header-close="preventClose"
@@ -32,7 +32,7 @@
 
     <div class="text-center" v-show="!shouldShowMainSlot">
 
-      <div>
+      <div v-if="!isSimpleUser">
         <img class="icon" src="../../assets/images/metamask.png" />
       </div>
 
@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import Raven from 'raven-js'
 
 import config from '../../util/config'
@@ -120,6 +120,13 @@ export default {
       Object.assign(this.$data, this.$options.data.apply(this))
       if (typeof this.onClear === 'function') this.onClear()
     },
+    nextStep() {
+      if (!this.isSimpleUser) {
+        this.goToStep(this.currentStep + 1)
+      } else {
+        this.goToStep(3)
+      }
+    },
     goToStep(newCurrentStep) {
 
       switch (newCurrentStep) {
@@ -151,6 +158,14 @@ export default {
 
         // transaction submitted, waiting for mine
         case 3:
+          if (this.isSimpleUser) {
+            this.okMethod()
+              .catch((error) => {
+                Raven.captureException(error)
+
+                this.metamaskError = (error.message || 'An unknown error occurred').replace(/.*Error:(.*)$/, '$1')
+              })
+          }
           this.preventClose = false
           this.isFooterHidden = true
           break
@@ -165,7 +180,8 @@ export default {
     },
   },
   computed: {
-    ...mapState('auth', ['balance', 'registryContractApproved']),
+    ...mapState('auth', ['balance', 'registryContractApproved', 'user']),
+    ...mapGetters('auth', ['isSimpleUser']),
 
     shown() {
       return this.onShown || this.noop

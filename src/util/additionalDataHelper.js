@@ -1,9 +1,11 @@
-export default {
+import { Buffer } from 'buffer/'
 
-  // this is the delimiter used to separate providerId, providerMetadataId, etc
-  //  in additionalData strings sent to CodexRecord.mint() and
-  //  CodexRecord.modifyMetadataHashes() contract calls
-  additionalDataDelimeter: '::',
+// this is the delimiter used to separate providerId, providerMetadataId, etc
+//  in additionalData strings sent to CodexRecord.mint() and
+//  CodexRecord.modifyMetadataHashes() contract calls
+const additionalDataDelimeter = '::'
+
+export default {
 
   // this simply returns all arguments passed concatenated in a string delimited
   //  by the additionalDataDelimeter defined above
@@ -19,8 +21,11 @@ export default {
     // allow an array or a list of arguments to be passed in
     const additionalData = (Object.prototype.toString.call(args[0]) === '[object Array]') ? args[0] : args
 
-    // there's no need to hex encode this string since web3 does that internally
-    return additionalData.join(this.additionalDataDelimeter)
+    const hexString = Buffer
+      .from(additionalData.join(additionalDataDelimeter))
+      .toString('hex')
+
+    return `0x${hexString}`
   },
 
 }

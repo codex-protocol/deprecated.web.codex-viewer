@@ -72,11 +72,10 @@
 <script>
 import { mapState } from 'vuex'
 import debug from 'debug'
-
+import contractHelper from '../../util/contractHelper'
 import File from '../../util/api/file'
 import Record from '../../util/api/record'
 import EventBus from '../../util/eventBus'
-import callContract from '../../util/web3/callContract'
 import additionalDataHelper from '../../util/additionalDataHelper'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
@@ -206,11 +205,12 @@ export default {
     },
 
     createRecord(metadata) {
+      const account = this.user.address
 
       const { soliditySha3 } = this.instance.utils
 
       const input = [
-        this.account,
+        account,
         soliditySha3(metadata.name),
         metadata.description ? soliditySha3(metadata.description) : '',
         [this.uploadedFileHash],
@@ -221,12 +221,13 @@ export default {
       ]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return callContract(this.recordContract.mint, input)
+      return contractHelper('CodexRecord', 'mint', input, this.$store.state)
     },
   },
 
   computed: {
-    ...mapState('web3', ['account', 'instance', 'recordContract']),
+    ...mapState('auth', ['user']),
+    ...mapState('web3', ['instance']),
 
     canSubmit() {
       return this.name && this.uploadedFileHash && this.uploadedFile
