@@ -34,7 +34,7 @@ import oilPainting from '../assets/images/features/oil-painting.png'
 import maecenas from '../assets/images/features/maecenas.png'
 
 export default {
-  name: 'features-view',
+  name: 'FeaturesListView',
   components: {
     AppHeader,
   },

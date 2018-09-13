@@ -5,7 +5,7 @@
         <div v-if="codexRecord">
           <div class="row">
             <div class="col-12 col-md-5">
-              <record-image-carousel
+              <RecordImageCarousel
                 :codexRecord="codexRecord"
               />
             </div>
@@ -54,11 +54,11 @@
                   </b-button>
                 </div>
 
-                <record-blockchain-details v-if="showDetails" :codexRecord="codexRecord" />
+                <RecordBlockchainDetails v-if="showDetails" :codexRecord="codexRecord" />
               </div>
             </div>
           </div>
-          <record-provenance :provenance="codexRecord.provenance" />
+          <RecordProvenance :provenance="codexRecord.provenance" />
         </div>
 
         <div v-else>
@@ -90,7 +90,7 @@ import PrivacySettingsModal from '../components/modals/PrivacySettingsModal'
 import RecordBlockchainDetails from '../components/RecordBlockchainDetails'
 
 export default {
-  name: 'record-detail',
+  name: 'RecordDetailView',
 
   components: {
     ApproveTransferModal,

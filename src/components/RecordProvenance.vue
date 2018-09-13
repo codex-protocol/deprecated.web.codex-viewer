@@ -5,7 +5,7 @@
       <div class="flex mb-4 pb-1" v-for="row in provenance" :key="row.id">
         <div>{{ getEventDescription(row.type) }}</div>
         <div>
-          <hash-formatter :data="getEventAddress(row)" />
+          <HashFormatter :data="getEventAddress(row)" />
         </div>
         <div>{{ getTimeSince(row.createdAt) }}</div>
         <div class="action-buttons">
@@ -56,7 +56,7 @@ import { timeSince } from '../util/dateHelpers'
 import etherscanHelper from '../util/web3/etherscanHelper'
 
 export default {
-  name: 'record-provenance',
+  name: 'RecordProvenance',
 
   props: ['provenance'],
 

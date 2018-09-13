@@ -34,7 +34,7 @@
         </div>
 
         <b-card-group deck class="record-list">
-          <record-list-item
+          <RecordListItem
             v-for="record in gallery.codexRecords"
             :codex-record="record"
             :key="record.tokenId"
@@ -56,7 +56,7 @@ import AppHeader from '../components/core/AppHeader'
 import RecordListItem from '../components/RecordListItem'
 
 export default {
-  name: 'gallery-view',
+  name: 'GalleryView',
   components: {
     AppHeader,
     RecordListItem,

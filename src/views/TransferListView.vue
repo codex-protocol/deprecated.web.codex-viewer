@@ -12,13 +12,13 @@
           deck
           class="record-list"
         >
-          <record-transfer-incoming-list-item
+          <RecordTransferIncomingListItem
             v-if="transferDirection === 'incoming'"
             v-for="record in records"
             :codex-record="record"
             :key="record.tokenId"
           />
-          <record-transfer-outgoing-list-item
+          <RecordTransferOutgoingListItem
             v-if="transferDirection === 'outgoing'"
             v-for="record in records"
             :codex-record="record"
@@ -43,7 +43,7 @@ import RecordTransferIncomingListItem from '../components/RecordTransferIncoming
 import RecordTransferOutgoingListItem from '../components/RecordTransferOutgoingListItem'
 
 export default {
-  name: 'record-list',
+  name: 'TransferListView',
 
   props: {
     transferDirection: String,

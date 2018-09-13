@@ -68,7 +68,7 @@
       <div class="mt-4">
         <div v-if="whitelistedAddresses.length > 0">
           <div v-for="address in whitelistedAddresses" :key="address">
-            <hash-formatter :data="address" />
+            <HashFormatter :data="address" />
             <span class="close" v-on:click="removeWhitelistedAddress(address)">×</span>
           </div>
         </div>

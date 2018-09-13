@@ -10,7 +10,7 @@
 
 <script>
 export default {
-  name: 'login-marketing-card',
+  name: 'LoginMarketingCard',
 }
 </script>
 

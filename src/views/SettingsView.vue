@@ -13,7 +13,7 @@
             </b-row>
           </b-container>
           <!-- TODO: Better handling of record w/ no metadata -->
-          <record-privacy-settings-row-item v-for="record in records"
+          <RecordPrivacySettingsRowItem v-for="record in records"
             v-if="record.metadata"
             :codex-record="record"
             :key="record.tokenId"
@@ -36,7 +36,7 @@ import AppHeader from '../components/core/AppHeader'
 import RecordPrivacySettingsRowItem from '../components/RecordPrivacySettingsRowItem'
 
 export default {
-  name: 'record-list',
+  name: 'SettingsView',
 
   components: {
     AppHeader,

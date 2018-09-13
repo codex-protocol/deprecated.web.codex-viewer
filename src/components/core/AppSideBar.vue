@@ -11,9 +11,6 @@
         <img src="../../assets/icons/transfers.svg">Transfers
         <b-badge variant="danger" v-if="numberOfIncomingTransfers > 0">{{numberOfIncomingTransfers}}</b-badge>
       </b-link>
-      <b-link to="/codex-quests" v-if="showCodexQuests" @click.prevent="hideNav">
-        <img src="../../assets/icons/codex-quest.svg">Earn CODX
-      </b-link>
       <b-link v-if="showManageTokensPage" to="/manage-tokens" @click.prevent="hideNav">
         <img src="../../assets/icons/codx-token.svg">Manage Tokens
       </b-link>
@@ -36,7 +33,7 @@
         <img src="../../assets/icons/logout.svg">Logout
       </b-link>
       <div class="address">
-        <div class="network-details" v-if="showNetworkDetails">Logged in as <hash-formatter :data="address" /> ({{ network }})</div>
+        <div class="network-details" v-if="showNetworkDetails">Logged in as <HashFormatter :data="address" /> ({{ network }})</div>
       </div>
     </div>
 
@@ -52,9 +49,6 @@
       -->
       <b-link to="/home" @click.prevent="hideNav">
         <img src="../../assets/icons/home.svg">Home
-      </b-link>
-      <b-link to="/codex-quests" v-if="showCodexQuests" @click.prevent="hideNav">
-        <img src="../../assets/icons/codex-quest.svg">Earn CODX
       </b-link>
       <b-link to="/galleries" v-if="showCodexGallery" @click.prevent="hideNav">
         <img src="../../assets/icons/gallery.svg">Galleries
@@ -91,7 +85,6 @@ export default {
       numberOfIncomingTransfers: 0,
       showFaucet: config.showFaucet,
       showCodexGallery: config.showCodexGalleryInSideBar,
-      showCodexQuests: config.showCodexQuestsMarketing,
     }
   },
 

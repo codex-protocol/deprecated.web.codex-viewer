@@ -1,5 +1,5 @@
 <template>
-  <div class="toast-container">
+  <div class="ToastContainer">
     <div
       v-for="(toast, index) in toasts" :key="index"
       @click="typeof toast.clickHandler === 'function' ? toast.clickHandler.call(toast, toast) : undefined"
@@ -29,7 +29,7 @@
 import EventBus from '../../util/eventBus'
 
 export default {
-  name: 'toast-container',
+  name: 'ToastContainer',
   data() {
     return {
       toasts: [],
@@ -94,7 +94,7 @@ export default {
 
 @import "../../assets/variables.styl"
 
-.toast-container
+.ToastContainer
   top: 0
   right: 0
   width: 25rem

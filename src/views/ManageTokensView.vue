@@ -24,7 +24,7 @@
         <div class="item">
           <p v-if="!stakeContractApproved">Before you can stake CODX, you have to approve the contract above</p>
 
-          <personal-stakes-table :personal-stakes="personalStakes" />
+          <PersonalStakesTable :personal-stakes="personalStakes" />
           <div class="stake-buttons">
             <b-button variant="primary" v-b-modal.stakeTokensModal :disabled="!stakeContractApproved">
               Stake more CODX
@@ -64,7 +64,7 @@ import StakeTokensModal from '../components/modals/StakeTokensModal'
 import UnstakeTokensModal from '../components/modals/UnstakeTokensModal'
 
 export default {
-  name: 'manage-tokens-view',
+  name: 'ManageTokensView',
 
   components: {
     AppHeader,

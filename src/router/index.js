@@ -13,7 +13,6 @@ import RecordListView from '../views/RecordListView'
 import RecordDetailView from '../views/RecordDetailView'
 import SettingsView from '../views/SettingsView'
 import ManageTokensView from '../views/ManageTokensView'
-import CodexQuestsView from '../views/CodexQuestsView'
 import FaucetView from '../views/FaucetView'
 import GalleryView from '../views/GalleryView'
 import GalleryListView from '../views/GalleryListView'
@@ -143,12 +142,6 @@ if (config.showFaucet) {
 if (config.showManageTokensPage) {
   router.addRoutes([
     { name: 'manage-tokens', path: '/manage-tokens', component: ManageTokensView },
-  ])
-}
-
-if (config.showCodexQuestsMarketing) {
-  router.addRoutes([
-    { name: 'codex-quests', path: '/codex-quests', component: CodexQuestsView, meta: { allowUnauthenticatedUsers: true } },
   ])
 }
 

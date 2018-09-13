@@ -19,11 +19,11 @@
     <div class="main-content-wrapper">
       <div class="main-content">
         <router-view v-if="isLoaded" />
-        <loading-overlay type="global" v-else />
+        <LoadingOverlay type="global" v-else />
       </div>
       <app-footer />
     </div>
-    <toast-container />
+    <ToastContainer />
   </div>
 </template>
 

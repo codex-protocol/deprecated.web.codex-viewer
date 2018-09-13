@@ -22,7 +22,7 @@ import is from 'is_js'
 import EventBus from '../util/eventBus'
 
 export default {
-  name: 'unsupported-device-view',
+  name: 'UnsupportedDeviceView',
   created() {
 
     const deviceDetails = {

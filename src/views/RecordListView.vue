@@ -19,11 +19,11 @@
           </b-button>
         </app-header>
         <b-card-group deck class="record-list">
-          <faucet-marketing-card :giveaway="giveaway" v-if="showFaucetMarketingCard" />
-          <claim-giveaway-card :giveaway="giveaway" />
-          <giveaway-info-card :giveaway="giveaway" />
+          <FaucetMarketingCard :giveaway="giveaway" v-if="showFaucetMarketingCard" />
+          <ClaimGiveawayCard :giveaway="giveaway" />
+          <GiveawayInfoCard :giveaway="giveaway" />
 
-          <record-list-item
+          <RecordListItem
             v-if="record.metadata"
             v-for="record in records"
             :codex-record="record"
@@ -52,7 +52,7 @@ import FaucetMarketingCard from '../components/FaucetMarketingCard'
 import CreateRecordModal from '../components/modals/CreateRecordModal'
 
 export default {
-  name: 'record-list',
+  name: 'RecordListView',
 
   components: {
     AppHeader,

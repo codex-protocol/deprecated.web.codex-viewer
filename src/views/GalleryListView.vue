@@ -6,7 +6,7 @@
 
         <div v-if="galleries.length">
           <b-card-group deck>
-            <gallery-list-item
+            <GalleryListItem
               v-if="gallery.codexRecords"
               v-for="gallery in galleries"
               :gallery="gallery"
@@ -42,7 +42,7 @@ import AppHeader from '../components/core/AppHeader'
 import GalleryListItem from '../components/GalleryListItem'
 
 export default {
-  name: 'gallery-list-view',
+  name: 'GalleryListView',
   components: {
     AppHeader,
     GalleryListItem,

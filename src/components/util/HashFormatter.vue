@@ -7,7 +7,7 @@
 
 <script>
 export default {
-  name: 'hash-formatter',
+  name: 'HashFormatter',
 
   props: ['data'],
 

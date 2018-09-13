@@ -75,7 +75,7 @@ import FaucetModal from '../components/modals/FaucetModal'
 import ApproveContractModal from '../components/modals/ApproveContractModal'
 
 export default {
-  name: 'faucet-view',
+  name: 'FaucetView',
 
   components: {
     AppHeader,

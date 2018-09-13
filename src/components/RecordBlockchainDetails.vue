@@ -1,14 +1,14 @@
 <template>
   <div>
     <h4>Details</h4>
-    <p>Current owner: <hash-formatter :data="codexRecord.ownerAddress" /></p>
-    <p>Approved owner: <hash-formatter :data="codexRecord.approvedAddress" /></p>
+    <p>Current owner: <HashFormatter :data="codexRecord.ownerAddress" /></p>
+    <p>Approved owner: <HashFormatter :data="codexRecord.approvedAddress" /></p>
     <!-- @FIXME: Hiding until we bring back Modify option
       <p>Last updated: {{ this.formatDate(codexRecord.updatedAt) }}</p>
     -->
     <h5>Metadata</h5>
-    <p>Name hash: <hash-formatter :data="codexRecord.nameHash" /></p>
-    <p>Description hash: <hash-formatter :data="codexRecord.descriptionHash" /></p>
+    <p>Name hash: <HashFormatter :data="codexRecord.nameHash" /></p>
+    <p>Description hash: <HashFormatter :data="codexRecord.descriptionHash" /></p>
     <p>ProviderId:
       {{ codexRecord.providerId }}
     </p>
@@ -20,7 +20,7 @@ import HashFormatter from './util/HashFormatter'
 import { formatDate } from '../util/dateHelpers'
 
 export default {
-  name: 'record-blockchain-details',
+  name: 'RecordBlockchainDetails',
   props: ['codexRecord'],
   components: {
     HashFormatter,

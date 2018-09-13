@@ -39,7 +39,7 @@
 import missingImageHelper from '../util/missingImageHelper'
 
 export default {
-  name: 'record-image-carousel',
+  name: 'RecordImageCarousel',
   props: ['codexRecord'],
   computed: {
     mainImageUri() {

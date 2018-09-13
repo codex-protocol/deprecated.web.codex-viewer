@@ -20,7 +20,7 @@ import Raven from 'raven-js'
 import missingImageHelper from '../util/missingImageHelper'
 
 export default {
-  name: 'record-list-item',
+  name: 'RecordListItem',
   props: ['codexRecord'],
   data() {
 
