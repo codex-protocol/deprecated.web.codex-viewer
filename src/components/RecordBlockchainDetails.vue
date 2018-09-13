@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import HashFormatter from './HashFormatter'
+import HashFormatter from './util/HashFormatter'
 import { formatDate } from '../util/dateHelpers'
 
 export default {

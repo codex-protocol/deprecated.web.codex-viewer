@@ -51,7 +51,7 @@
 <script>
 import { mapGetters } from 'vuex'
 
-import HashFormatter from './HashFormatter'
+import HashFormatter from './util/HashFormatter'
 import { timeSince } from '../util/dateHelpers'
 import etherscanHelper from '../util/web3/etherscanHelper'
 

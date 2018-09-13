@@ -17,7 +17,7 @@
 
 <script>
 
-import LoadingOverlay from './LoadingOverlay'
+import LoadingOverlay from './util/LoadingOverlay'
 
 import EventBus from '../util/eventBus'
 import Giveaway from '../util/api/giveaway'

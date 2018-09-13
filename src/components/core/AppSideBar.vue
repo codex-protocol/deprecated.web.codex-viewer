@@ -1,36 +1,39 @@
 <template>
   <nav>
     <div class="logo">
-      <img src="../assets/logos/codex/gold.svg">
+      <img src="../../assets/logos/codex/gold.svg">
     </div>
     <div class="button-container" v-if="isAuthenticated">
       <b-link to="/collection" @click.prevent="hideNav">
-        <img src="../assets/icons/collection.svg">Collection
+        <img src="../../assets/icons/collection.svg">Collection
       </b-link>
       <b-link to="/transfers" @click.prevent="hideNav">
-        <img src="../assets/icons/transfers.svg">Transfers
+        <img src="../../assets/icons/transfers.svg">Transfers
         <b-badge variant="danger" v-if="numberOfIncomingTransfers > 0">{{numberOfIncomingTransfers}}</b-badge>
       </b-link>
       <b-link to="/codex-quests" v-if="showCodexQuests" @click.prevent="hideNav">
-        <img src="../assets/icons/codex-quest.svg">Earn CODX
+        <img src="../../assets/icons/codex-quest.svg">Earn CODX
       </b-link>
       <b-link v-if="showManageTokensPage" to="/manage-tokens" @click.prevent="hideNav">
-        <img src="../assets/icons/codx-token.svg">Manage Tokens
+        <img src="../../assets/icons/codx-token.svg">Manage Tokens
       </b-link>
       <b-link v-if="showFaucet" to="/faucet" @click.prevent="hideNav">
-        <img src="../assets/icons/faucet.svg">Faucet
+        <img src="../../assets/icons/faucet.svg">Faucet
       </b-link>
       <b-link to="/extensions" @click.prevent="hideNav">
-        <img src="../assets/icons/star.svg">Extensions
+        <img src="../../assets/icons/star.svg">Extensions
       </b-link>
       <b-link to="/galleries" v-if="showCodexGallery" @click.prevent="hideNav">
-        <img src="../assets/icons/gallery.svg">Galleries
+        <img src="../../assets/icons/gallery.svg">Galleries
       </b-link>
       <b-link to="/settings" @click.prevent="hideNav">
-        <img src="../assets/icons/settings.svg">Settings
+        <img src="../../assets/icons/settings.svg">Settings
+      </b-link>
+      <b-link to="/test/oauth2-app" @click.prevent="hideNav" v-if="showTestAppInSideBar">
+        <img src="../../assets/icons/settings.svg">Test OAuth2 App
       </b-link>
       <b-link @click.prevent="logout">
-        <img src="../assets/icons/logout.svg">Logout
+        <img src="../../assets/icons/logout.svg">Logout
       </b-link>
       <div class="address">
         <div class="network-details" v-if="showNetworkDetails">Logged in as <hash-formatter :data="address" /> ({{ network }})</div>
@@ -48,16 +51,16 @@
         reason, so we'll just use "/home" which will redirect to "/" anyway
       -->
       <b-link to="/home" @click.prevent="hideNav">
-        <img src="../assets/icons/home.svg">Home
+        <img src="../../assets/icons/home.svg">Home
       </b-link>
       <b-link to="/codex-quests" v-if="showCodexQuests" @click.prevent="hideNav">
-        <img src="../assets/icons/codex-quest.svg">Earn CODX
+        <img src="../../assets/icons/codex-quest.svg">Earn CODX
       </b-link>
       <b-link to="/galleries" v-if="showCodexGallery" @click.prevent="hideNav">
-        <img src="../assets/icons/gallery.svg">Galleries
+        <img src="../../assets/icons/gallery.svg">Galleries
       </b-link>
       <b-link to="/login" @click.prevent="hideNav">
-        <img src="../assets/icons/logout.svg">Login
+        <img src="../../assets/icons/logout.svg">Login
       </b-link>
     </div>
   </nav>

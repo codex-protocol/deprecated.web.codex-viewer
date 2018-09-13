@@ -87,7 +87,7 @@
 import { mapState } from 'vuex'
 import debug from 'debug'
 
-import HashFormatter from '../HashFormatter'
+import HashFormatter from '../util/HashFormatter'
 import Record from '../../util/api/record'
 import EventBus from '../../util/eventBus'
 

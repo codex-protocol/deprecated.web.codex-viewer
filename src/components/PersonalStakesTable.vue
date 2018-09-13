@@ -36,8 +36,7 @@
 
 <script>
 import formatTokenAmount from '../util/formatTokenAmount'
-import HashFormatter from './HashFormatter'
-
+import HashFormatter from './util/HashFormatter'
 
 export default {
   name: 'personal-stakes-table',
