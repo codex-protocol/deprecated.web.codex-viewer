@@ -41,7 +41,7 @@ import EventBus from '../util/eventBus'
 import missingImageHelper from '../util/missingImageHelper'
 
 export default {
-  name: 'record-privacy-settings-row-item',
+  name: 'RecordPrivacySettingsRowItem',
   props: ['codexRecord'],
   data() {
     return {

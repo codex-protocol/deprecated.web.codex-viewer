@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">
-        <app-header title="Coming Soon" />
+        <AppHeader title="Coming Soon" />
         <h5 class="mb-5">Upcoming extensions and features</h5>
         <b-card-group deck>
           <div class="deck-item" v-for="feature in features" :key="feature.description">
@@ -25,7 +25,7 @@
 
 <script>
 import EventBus from '../util/eventBus'
-import AppHeader from '../components/AppHeader'
+import AppHeader from '../components/core/AppHeader'
 import laLogo from '../assets/images/features/la-logo.png'
 import amLogo from '../assets/images/features/am-logo.png'
 import vmsLogo from '../assets/images/features/vms-logo.png'
@@ -34,7 +34,7 @@ import oilPainting from '../assets/images/features/oil-painting.png'
 import maecenas from '../assets/images/features/maecenas.png'
 
 export default {
-  name: 'features-view',
+  name: 'FeatureListView',
   components: {
     AppHeader,
   },

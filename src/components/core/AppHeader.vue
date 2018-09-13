@@ -9,13 +9,13 @@
 
 <script>
 export default {
-  name: 'app-header',
+  name: 'AppHeader',
   props: ['title'],
 }
 </script>
 
 <style lang="stylus" scoped>
-@import "../assets/variables.styl"
+@import "../../assets/variables.styl"
 
 .header
   font-size: 2.5rem

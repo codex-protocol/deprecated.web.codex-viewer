@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">
-        <app-header title="Collection">
+        <AppHeader title="Collection">
           <b-button
             variant="primary"
             v-b-modal.createRecordModal
@@ -17,13 +17,13 @@
           >
             Create giveaway
           </b-button>
-        </app-header>
+        </AppHeader>
         <b-card-group deck class="record-list">
-          <faucet-marketing-card :giveaway="giveaway" v-if="showFaucetMarketingCard" />
-          <claim-giveaway-card :giveaway="giveaway" />
-          <giveaway-info-card :giveaway="giveaway" />
+          <FaucetMarketingCard :giveaway="giveaway" v-if="showFaucetMarketingCard" />
+          <ClaimGiveawayCard :giveaway="giveaway" />
+          <GiveawayInfoCard :giveaway="giveaway" />
 
-          <record-list-item
+          <RecordListItem
             v-if="record.metadata"
             v-for="record in records"
             :codex-record="record"
@@ -44,7 +44,7 @@ import EventBus from '../util/eventBus'
 import Record from '../util/api/record'
 import Giveaway from '../util/api/giveaway'
 
-import AppHeader from '../components/AppHeader'
+import AppHeader from '../components/core/AppHeader'
 import RecordListItem from '../components/RecordListItem'
 import GiveawayInfoCard from '../components/GiveawayInfoCard'
 import ClaimGiveawayCard from '../components/ClaimGiveawayCard'
@@ -52,7 +52,7 @@ import FaucetMarketingCard from '../components/FaucetMarketingCard'
 import CreateRecordModal from '../components/modals/CreateRecordModal'
 
 export default {
-  name: 'record-list',
+  name: 'RecordListView',
 
   components: {
     AppHeader,

@@ -2,11 +2,11 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">
-        <app-header title="Galleries" />
+        <AppHeader title="Galleries" />
 
         <div v-if="galleries.length">
           <b-card-group deck>
-            <gallery-list-item
+            <GalleryListItem
               v-if="gallery.codexRecords"
               v-for="gallery in galleries"
               :gallery="gallery"
@@ -38,11 +38,11 @@
 import EventBus from '../util/eventBus'
 import Gallery from '../util/api/gallery'
 
-import AppHeader from '../components/AppHeader'
+import AppHeader from '../components/core/AppHeader'
 import GalleryListItem from '../components/GalleryListItem'
 
 export default {
-  name: 'gallery-list-view',
+  name: 'GalleryListView',
   components: {
     AppHeader,
     GalleryListItem,

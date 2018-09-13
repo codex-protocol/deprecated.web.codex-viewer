@@ -66,7 +66,7 @@ import IconChrome from '../components/icons/IconChrome'
 import IconFirefox from '../components/icons/IconFirefox'
 
 export default {
-  name: 'unsupported-browser-view',
+  name: 'UnsupportedBrowserView',
   components: {
     IconBase,
     IconOpera,

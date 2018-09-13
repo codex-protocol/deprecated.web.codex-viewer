@@ -5,12 +5,12 @@
   >
     <div class="row">
       <div class="col-12">
-        <app-header :hide-network-details="true" :title="gallery.name">
+        <AppHeader :hide-network-details="true" :title="gallery.name">
           <b-button variant="outline-primary" @click="copyShareLink" ref="copy-share-link-button">Copy Share Link</b-button>
           <b-button variant="outline-primary" @click="viewFullscreen" v-if="browserSupportsFullscreen">
             View Fullscreen
           </b-button>
-        </app-header>
+        </AppHeader>
 
         <div class="carousel-container" ref="carousel-container">
           <b-carousel
@@ -34,7 +34,7 @@
         </div>
 
         <b-card-group deck class="record-list">
-          <record-list-item
+          <RecordListItem
             v-for="record in gallery.codexRecords"
             :codex-record="record"
             :key="record.tokenId"
@@ -52,11 +52,11 @@ import copyToClipboard from '../util/copyToClipboard'
 import fullscreenHelper from '../util/fullscreenHelper'
 import missingImageHelper from '../util/missingImageHelper'
 
-import AppHeader from '../components/AppHeader'
+import AppHeader from '../components/core/AppHeader'
 import RecordListItem from '../components/RecordListItem'
 
 export default {
-  name: 'gallery-view',
+  name: 'GalleryView',
   components: {
     AppHeader,
     RecordListItem,

@@ -9,11 +9,11 @@
 
 <script>
 export default {
-  name: 'loading-overlay',
+  name: 'LoadingOverlay',
   props: {
     show: {
       type: Boolean,
-      default: true, // default is true so you can use v-else on a <loading-overlay> without also specifying this prop
+      default: true, // default is true so you can use v-else on a <LoadingOverlay> without also specifying this prop
     },
     type: {
       type: String,
@@ -21,10 +21,10 @@ export default {
     },
   },
   mounted() {
-    // add a "loading-overlay-contianer" ref somewhere in the parent component
+    // add a "loading-overlay-container" ref somewhere in the parent component
     //  to have it's position automatically set to "relative" (if it's not
     //  already positioned somehow)
-    const loadingOverlayContainer = this.$parent.$refs['loading-overlay-contianer']
+    const loadingOverlayContainer = this.$parent.$refs['loading-overlay-container']
     if (loadingOverlayContainer) {
       if (window.getComputedStyle(loadingOverlayContainer).position === 'static') {
         loadingOverlayContainer.style.position = 'relative'
@@ -37,7 +37,7 @@ export default {
 
 <style lang="stylus" scoped>
 
-@import "../assets/variables.styl"
+@import "../../assets/variables.styl"
 
 .loading-overlay
   top: 0

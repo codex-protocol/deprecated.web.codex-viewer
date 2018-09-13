@@ -41,7 +41,7 @@
         <a :href="oauthLoginUrl">
           <img src="../assets/images/google-signin@2x.png" width="200">
         </a>
-        <login-marketing-card v-if="showLoginMarketingCard" />
+        <LoginMarketingCard v-if="showLoginMarketingCard" />
       </div>
       <div class="col-12 col-md-6 secondary">
         <div class="login-art"><img src="../assets/images/login-art.png" /></div>
@@ -68,7 +68,7 @@ import LoginMarketingCard from '../components/LoginMarketingCard'
 const logger = debug('app:component:login-view')
 
 export default {
-  name: 'login-view',
+  name: 'LoginView',
 
   components: {
     LoginMarketingCard,
@@ -78,7 +78,10 @@ export default {
     return {
       buttonTitle: 'Login',
       buttonMethod: this.web3Login,
-      showLoginMarketingCard: config.showCodexQuestsMarketing,
+
+      // @NOTE: Disabled for now, but we'll leave the component around for
+      //  marketing purposes later
+      showLoginMarketingCard: false,
       isMobile: is.mobile(),
       oauthLoginUrl: `${config.apiUrl}/oauth2/login/google`,
     }

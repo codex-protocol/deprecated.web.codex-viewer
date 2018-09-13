@@ -13,7 +13,7 @@
           <b-button variant="primary" @click="login">Get Started</b-button>
           <b-button variant="outline-primary" @click="aboutCodex">About Codex</b-button>
         </div>
-        <login-marketing-card v-if="showLoginMarketingCard" />
+        <LoginMarketingCard v-if="showLoginMarketingCard" />
       </div>
       <div class="col-12 col-md-6 secondary">
         <div class="login-art"><img src="../assets/images/login-art.png" /></div>
@@ -23,19 +23,21 @@
 </template>
 
 <script>
-import config from '../util/config'
 import EventBus from '../util/eventBus'
 
 import LoginMarketingCard from '../components/LoginMarketingCard'
 
 export default {
-  name: 'home-view',
+  name: 'HomeView',
   components: {
     LoginMarketingCard,
   },
   data() {
     return {
-      showLoginMarketingCard: config.showCodexQuestsMarketing,
+
+      // @NOTE: Disabled for now, but we'll leave the component around for
+      //  marketing purposes later
+      showLoginMarketingCard: false,
     }
   },
   methods: {

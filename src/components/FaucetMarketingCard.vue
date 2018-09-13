@@ -48,7 +48,7 @@ import ApproveContractModal from './modals/ApproveContractModal'
 import FaucetModal from './modals/FaucetModal'
 
 export default {
-  name: 'faucet-marketing-card',
+  name: 'FaucetMarketingCard',
   components: {
     ApproveContractModal,
     FaucetModal,

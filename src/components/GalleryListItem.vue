@@ -32,7 +32,7 @@
 import missingImageHelper from '../util/missingImageHelper'
 
 export default {
-  name: 'gallery-list-item',
+  name: 'GalleryListItem',
   props: ['gallery'],
   data() {
     return {

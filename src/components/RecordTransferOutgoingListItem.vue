@@ -22,7 +22,7 @@ import contractHelper from '../util/contractHelper'
 import missingImageHelper from '../util/missingImageHelper'
 
 export default {
-  name: 'record-transfer-outgoing-list-item',
+  name: 'RecordTransferOutgoingListItem',
 
   props: ['codexRecord'],
 

@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">
-        <app-header title="CODX Faucet" />
+        <AppHeader title="CODX Faucet" />
 
         <div class="content">
           <p>
@@ -70,12 +70,12 @@ import EventBus from '../util/eventBus'
 import { timeSince } from '../util/dateHelpers'
 import formatTokenAmount from '../util/formatTokenAmount'
 
-import AppHeader from '../components/AppHeader'
+import AppHeader from '../components/core/AppHeader'
 import FaucetModal from '../components/modals/FaucetModal'
 import ApproveContractModal from '../components/modals/ApproveContractModal'
 
 export default {
-  name: 'faucet-view',
+  name: 'FaucetView',
 
   components: {
     AppHeader,

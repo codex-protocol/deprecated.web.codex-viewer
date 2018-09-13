@@ -2,8 +2,8 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">
-        <app-header title="Transfers" />
-        <app-sub-header
+        <AppHeader title="Transfers" />
+        <AppSubHeader
           :fetchData="this.fetchData"
           :transferDirection="transferDirection"
         />
@@ -12,13 +12,13 @@
           deck
           class="record-list"
         >
-          <record-transfer-incoming-list-item
+          <RecordTransferIncomingListItem
             v-if="transferDirection === 'incoming'"
             v-for="record in records"
             :codex-record="record"
             :key="record.tokenId"
           />
-          <record-transfer-outgoing-list-item
+          <RecordTransferOutgoingListItem
             v-if="transferDirection === 'outgoing'"
             v-for="record in records"
             :codex-record="record"
@@ -37,13 +37,13 @@
 <script>
 import Transfer from '../util/api/transfer'
 import EventBus from '../util/eventBus'
-import AppHeader from '../components/AppHeader'
-import AppSubHeader from '../components/AppSubHeader'
+import AppHeader from '../components/core/AppHeader'
+import AppSubHeader from '../components/core/AppSubHeader'
 import RecordTransferIncomingListItem from '../components/RecordTransferIncomingListItem'
 import RecordTransferOutgoingListItem from '../components/RecordTransferOutgoingListItem'
 
 export default {
-  name: 'record-list',
+  name: 'TransferListView',
 
   props: {
     transferDirection: String,
