@@ -1,8 +1,13 @@
 export default {
-  isAuthenticated: (currentState) => {
-    return !!currentState.authToken
+  isAuthenticated: (state) => {
+    return !!state.authToken
   },
-  isSimpleUser: (currentState) => {
-    return currentState.user && currentState.user.type === 'simple'
+
+  isAdmin: (state) => {
+    return state.user && state.user.isAdmin
+  },
+
+  isSimpleUser: (state) => {
+    return state.user && state.user.type === 'simple'
   },
 }

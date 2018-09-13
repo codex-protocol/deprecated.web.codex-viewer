@@ -1,6 +1,12 @@
 <template>
   <b-form @submit="onSubmit">
     <b-form-group
+      label="Access token"
+      label-for="accessToken"
+    >
+      <div v-text="accessToken"></div>
+    </b-form-group>
+    <b-form-group
       label="Title"
       label-for="title"
     >
@@ -28,10 +34,12 @@
       label="Image"
       label-for="image"
     >
-      <b-form-input
+      <b-form-file
         id="image"
-        type="text"
-        placeholder="(Coming soon)"
+        accept="image/*"
+        v-model="image"
+        required
+        placeholder="Upload image file"
       />
     </b-form-group>
     <b-button type="submit" variant="primary">Submit</b-button>
@@ -46,6 +54,7 @@ export default {
 
   props: {
     showResult: Function,
+    accessToken: String,
   },
 
   data() {
@@ -58,9 +67,16 @@ export default {
 
   methods: {
     onSubmit() {
-      axios.post('', {
-        title: this.title,
-        description: this.description,
+      const formData = new FormData()
+      formData.append('name', this.title)
+      formData.append('description', this.description)
+      formData.append('mainImage', this.image)
+
+      axios.post('v1/client/record-metadata', formData, {
+        headers: {
+          Authorization: `Bearer ${this.accessToken}`,
+          'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+        },
       }).then(this.showResult)
     },
   },

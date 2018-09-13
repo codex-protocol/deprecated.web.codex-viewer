@@ -9,9 +9,10 @@
               v-for="(tab, i) in tabs"
               :key="i"
               :title="tab.title"
+              v-if="!tab.requiresAdmin || (tab.requiresAdmin && isAdmin)"
             >
               <div class="container-fluid mt-3">
-                <component :is="tab.component" :showResult="showResult" />
+                <component :is="tab.component" :showResult="showResult" :accessToken="accessToken" />
               </div>
             </b-tab>
           </b-tabs>
@@ -26,6 +27,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 import AppHeader from '../../components/core/AppHeader'
 import OAuth2AppCreateClientForm from '../../components/OAuth2AppCreateClientForm'
 import OAuth2AppTokenRequestForm from '../../components/OAuth2AppTokenRequestForm'
@@ -47,6 +50,7 @@ export default {
         {
           title: 'Create client',
           component: OAuth2AppCreateClientForm,
+          requiresAdmin: true,
         },
         {
           title: 'Token request',
@@ -71,13 +75,22 @@ export default {
       ],
 
       result: null,
+      accessToken: null,
     }
+  },
+
+  computed: {
+    ...mapGetters('auth', ['isAdmin']),
   },
 
   methods: {
     showResult(response) {
       // @TODO: error checking
       this.result = response.data.result
+
+      if (this.result.accessToken) {
+        this.accessToken = this.result.accessToken
+      }
     },
   },
 }

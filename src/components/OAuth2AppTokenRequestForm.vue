@@ -47,10 +47,23 @@ export default {
 
   methods: {
     onSubmit() {
-      axios.post('/oauth2/token', {
+
+      const createFormData = (obj) => {
+        return Object.keys(obj).map((key) => {
+          return `${encodeURIComponent(key)}=${encodeURIComponent(obj[key])}`
+        }).join('&')
+      }
+
+      const data = createFormData({
         client_id: this.clientId,
         client_secret: this.clientSecret,
         grant_type: 'client_credentials',
+      })
+
+      axios.post('/v1/oauth2/token', data, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
       }).then(this.showResult)
     },
   },
