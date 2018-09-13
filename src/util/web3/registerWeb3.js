@@ -7,15 +7,21 @@ const registerWeb3 = () => {
     // Avoid race conditions with web3 injection
     window.addEventListener('load', () => {
       if (typeof window.web3 !== 'undefined') {
-        resolve(new Web3(window.web3.currentProvider))
+        resolve({
+          web3: new Web3(window.web3.currentProvider),
+          hasWeb3Browser: true,
+        })
       } else {
         const providerUrl = process.env.VUE_APP_PROVIDER
         const provider = new Web3.providers.HttpProvider(providerUrl)
-        resolve(new Web3(provider))
+        resolve({
+          web3: new Web3(provider),
+          hasWeb3Browser: false,
+        })
       }
     })
   })
-    .then((web3) => {
+    .then(({ web3, hasWeb3Browser }) => {
       return web3.eth.net.getId()
         .then((networkId) => {
           const networkIdStr = String(networkId)
@@ -25,6 +31,7 @@ const registerWeb3 = () => {
           const returnValue = Object.assign({}, {
             web3,
             networkId,
+            hasWeb3Browser,
           })
           // truffle-contract assumes web3@0.2.x which uses sendAsync.
           returnValue.web3.providers.HttpProvider.prototype.sendAsync = web3.providers.HttpProvider.prototype.send
