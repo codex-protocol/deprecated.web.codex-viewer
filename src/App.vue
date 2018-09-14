@@ -24,6 +24,24 @@
       <AppFooter />
     </div>
     <ToastContainer />
+    <vue-cookie-accept-decline
+      :debug="false"
+      :position="'bottom'"
+      :disableDecline="true"
+      :transitionName="'slideFromBottom'"
+      @status="cookieStatus"
+      @clickedAccept="cookieClickedAccept">
+
+      <!-- Optional -->
+      <div slot="message">
+        We use cookies to ensure you get the best experience on our website. <a href="https://cookiesandyou.com/" target="_blank">Learn More...</a>
+      </div>
+
+      <!-- Optional -->
+      <div slot="acceptContent">
+        Got It!
+      </div>
+    </vue-cookie-accept-decline>
   </div>
 </template>
 
@@ -35,6 +53,7 @@ import {
   mapState,
   mapGetters,
 } from 'vuex'
+import VueCookieAcceptDecline from 'vue-cookie-accept-decline'
 
 import config from './util/config'
 import EventBus from './util/eventBus'
@@ -58,6 +77,7 @@ export default {
     IconHamburger,
     ToastContainer,
     LoadingOverlay,
+    VueCookieAcceptDecline,
   },
 
   created() {
@@ -77,6 +97,7 @@ export default {
       freshChatToken: process.env.VUE_APP_FRESHCHAT_API_TOKEN,
       showNav: false,
       isLoaded: false,
+      cookieStatus: false,
     }
   },
 
