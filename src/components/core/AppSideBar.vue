@@ -27,7 +27,7 @@
         <img src="../../assets/icons/settings.svg">Settings
       </b-link>
       <b-link to="/test/oauth2-app" @click.prevent="hideNav" v-if="showTestAppInSideBar">
-        <img src="../assets/icons/settings.svg">Test OAuth2 App
+        <img src="../../assets/icons/settings.svg">Test OAuth2 App
       </b-link>
       <b-link @click.prevent="logout">
         <img src="../../assets/icons/logout.svg">Logout
