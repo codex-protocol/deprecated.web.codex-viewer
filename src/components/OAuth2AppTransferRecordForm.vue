@@ -1,6 +1,12 @@
 <template>
   <b-form @submit="onSubmit">
     <b-form-group
+      label="Access token"
+      label-for="accessToken"
+    >
+      <div v-text="accessToken"></div>
+    </b-form-group>
+    <b-form-group
       label="Unique Record Identifier"
       label-for="recordId"
     >
@@ -13,15 +19,15 @@
       />
     </b-form-group>
     <b-form-group
-      label="Receiving email address"
+      label="Receiving Ethereum address"
       label-for="receivingAddress"
     >
       <b-form-input
         id="receivingAddress"
-        type="email"
+        type="text"
         v-model="receivingAddress"
         required
-        placeholder="Enter the email address to send the record to"
+        placeholder="Enter the Ethereum address to send the record to"
       />
     </b-form-group>
     <b-button type="submit" variant="primary">Submit</b-button>
@@ -36,6 +42,7 @@ export default {
 
   props: {
     showResult: Function,
+    accessToken: String,
   },
 
   data() {
@@ -46,12 +53,13 @@ export default {
   },
 
   methods: {
-
-    // @TODO: Verify params
     onSubmit() {
-      axios.post('/admin/oauth2/clients', {
-        recordId: this.recordId,
-        emailAddress: this.receivingAddress,
+      axios.put(`/v1/client/record/${this.recordId}/transfer/approve`, {
+        address: this.receivingAddress,
+      }, {
+        headers: {
+          Authorization: `Bearer ${this.accessToken}`,
+        },
       }).then(this.showResult)
     },
   },

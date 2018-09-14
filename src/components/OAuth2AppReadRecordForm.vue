@@ -33,12 +33,9 @@ export default {
   },
 
   methods: {
-
-    // @TODO: Verify params
     onSubmit() {
-      axios.get('/admin/oauth2/clients', {
-        recordId: this.recordId,
-      }).then(this.showResult)
+      axios.get(`v1/record/${this.recordId}`)
+        .then(this.showResult)
     },
   },
 }
