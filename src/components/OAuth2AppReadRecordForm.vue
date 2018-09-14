@@ -1,5 +1,5 @@
 <template>
-  <b-form @submit="onSubmit">
+  <b-form @submit.prevent="onSubmit">
     <b-form-group
       label="Unique Record Identifier"
       label-for="recordId"
