@@ -24,6 +24,11 @@
       <AppFooter />
     </div>
     <ToastContainer />
+    <vue-cookie-accept-decline :disableDecline="true">
+      <div slot="message">
+        This website stores cookies on your computer. Cookies are used to save information about how you interact with our website and allow us to remember you when you return. We never sell this information, and we use it strictly for analytics and metrics. For more information, please see our <a href="https://www.codexprotocol.com/privacy-policy.html" target="_blank">Privacy Policy.</a>
+      </div>
+    </vue-cookie-accept-decline>
   </div>
 </template>
 
@@ -35,6 +40,7 @@ import {
   mapState,
   mapGetters,
 } from 'vuex'
+import VueCookieAcceptDecline from 'vue-cookie-accept-decline'
 
 import config from './util/config'
 import EventBus from './util/eventBus'
@@ -58,6 +64,7 @@ export default {
     IconHamburger,
     ToastContainer,
     LoadingOverlay,
+    VueCookieAcceptDecline,
   },
 
   created() {
@@ -77,6 +84,7 @@ export default {
       freshChatToken: process.env.VUE_APP_FRESHCHAT_API_TOKEN,
       showNav: false,
       isLoaded: false,
+      cookieStatus: false,
     }
   },
 
@@ -235,6 +243,18 @@ img
   flex: 1
   width: 100%
   overflow: auto
+
+.cookie
+  color: $color-dark
+  padding: 2rem !important
+  background-color: $color-light !important
+
+  a
+    font-weight: 700
+    color: $color-secondary
+
+  button
+    background-color: lighten($color-secondary, 25%) !important
 
 // CSS Checkbox toggle
 // <input type="checkbox"> toggle
