@@ -70,7 +70,6 @@ export default {
       const formData = new FormData()
       formData.append('name', this.name)
       formData.append('description', this.description)
-      formData.append('files', [])
 
       axios.put(`/v1/client/record-metadata/${this.recordId}`, formData, {
         headers: {

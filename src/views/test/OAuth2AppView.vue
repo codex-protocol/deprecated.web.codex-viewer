@@ -98,6 +98,6 @@ export default {
 
 <style lang="stylus" scoped>
 .json
-  white-space: pre;
+  white-space: pre
 
 </style>
