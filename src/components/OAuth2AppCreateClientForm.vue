@@ -42,6 +42,7 @@
 
 <script>
 import axios from 'axios'
+import config from '../util/config'
 
 export default {
   name: 'OAuth2AppCreateClientForm',
@@ -54,7 +55,7 @@ export default {
     return {
       appName: null,
       adminEmail: null,
-      webhookUrl: 'http://localhost:3001/test/webhook',
+      webhookUrl: `${config.apiUrl}/test/webhook`,
     }
   },
 
