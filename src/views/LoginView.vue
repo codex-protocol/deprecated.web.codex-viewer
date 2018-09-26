@@ -10,7 +10,7 @@
         <div v-if="isMobile">
           <h1 v-html="pageContent.title"></h1>
           <div class="lead" v-html="pageContent.description"></div>
-          <div v-if="showCBWalletLink">
+          <div v-if="showCoinbaseWalletLink">
             <a href="https://wallet.coinbase.com/">
               <img src="../assets/images/get-coinbase-wallet@3x.png" width="150">
             </a>
@@ -90,7 +90,7 @@ export default {
 
   computed: {
     ...mapState('auth', ['authError']),
-    ...mapState('web3', ['account', 'instance', 'error', 'hasWeb3Browser']),
+    ...mapState('web3', ['account', 'instance', 'error']),
 
     pageContent() {
       if (this.authError) {
@@ -101,10 +101,6 @@ export default {
         return this.handleWeb3Error(this.error)
       }
 
-      if (!this.hasWeb3Browser) {
-        return this.handleNoWeb3Browser()
-      }
-
       this.setButton('Login', this.web3Login)
 
       return {
@@ -113,8 +109,8 @@ export default {
       }
     },
 
-    showCBWalletLink() {
-      return this.isMobile && !this.hasWeb3Browser
+    showCoinbaseWalletLink() {
+      return this.isMobile && this.error === Web3Errors.Missing
     },
   },
 
@@ -169,31 +165,13 @@ export default {
       this.buttonMethod = method
     },
 
-    handleNoWeb3Browser() {
-      this.setButton(false)
-      let copy = {}
-      if (this.isMobile) {
-        copy = {
-          title: 'Login',
-          description: '<p>To create, view, &amp; transfer Codex Records, please sign in with Google or a Web3 browser such as Coinbase Wallet.</p>',
-        }
-      } else {
-        this.setButton('Install MetaMask', this.installMetamask)
-        copy = {
-          title: 'Login',
-          description: '<p>To create, view, &amp; transfer Codex Records, please sign in with Google or use a Web3 browser extension such as Metamask.</p>',
-        }
-      }
-      return copy
-    },
-
     handleAuthError(error) {
       this.setButton()
 
       return {
         title: 'There was a problem logging in',
         description: error.message
-          || 'We were unable to log you in with your Google account. Please try again later.',
+          || 'We were unable to log you in with your Google account. Try again later.',
       }
     },
 
@@ -204,7 +182,7 @@ export default {
       switch (error) {
         case Web3Errors.Locked:
           title = 'Your account is locked'
-          description = 'Please open your Ethereum wallet and follow the instructions to unlock it'
+          description = 'Open your Ethereum wallet and follow the instructions to unlock it'
           this.setButton()
           break
 
@@ -212,10 +190,10 @@ export default {
           title = 'Let&rsquo;s get started'
 
           if (this.isMobile) {
-            description = '<p>Please use a DApp browser, such as Coinbase Wallet.</p>'
+            description = '<p>Use a DApp browser, such as Coinbase Wallet.</p>'
             this.setButton()
           } else {
-            description = '<p>To continue, please install the MetaMask browser extension.</p>'
+            description = '<p>To continue, install the MetaMask browser extension.</p>'
             description += '<p>The best place to store your Codex Records is a secure wallet like MetaMask. This will also be used as your login (no password needed)'
             this.setButton('Install MetaMask', this.installMetamask)
           }
@@ -223,7 +201,7 @@ export default {
 
         case Web3Errors.WrongNetwork:
           title = 'Wrong Ethereum network'
-          description = `You're on the wrong Ethereum network. Expected network is ${Networks[config.expectedNetworkId]}. Please change the network in your MetaMask settings.`
+          description = `You're on the wrong Ethereum network. Expected network is ${Networks[config.expectedNetworkId]}. Sign in with Google or change the network in your wallet settings.`
           this.setButton()
           break
 
@@ -232,11 +210,21 @@ export default {
           title = 'Let&rsquo;s get started'
 
           if (this.isMobile) {
-            description = '<p>Please use a DApp browser, such as Coinbase Wallet or Status.</p>'
+            description = '<p>Use a DApp browser, such as Coinbase Wallet or Status.</p>'
             this.setButton()
           } else {
-            description = '<p>To continue, please install the MetaMask browser extension.</p>'
+            description = '<p>To continue, install the MetaMask browser extension.</p>'
             description += '<p>The best place to store your Codex Records is a secure wallet like MetaMask. This will also be used as your login (no password needed)'
+            this.setButton('Install MetaMask', this.installMetamask)
+          }
+
+          if (this.isMobile) {
+            title = 'Login'
+            description = '<p>To create, view, &amp; transfer Codex Records, sign in with Google or a Web3 browser such as Coinbase Wallet.</p>'
+            this.setButton()
+          } else {
+            title = 'Login'
+            description = '<p>To create, view, &amp; transfer Codex Records, sign in with Google or use a Web3 browser extension such as Metamask.</p>'
             this.setButton('Install MetaMask', this.installMetamask)
           }
           break

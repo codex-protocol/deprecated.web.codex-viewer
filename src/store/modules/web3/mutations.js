@@ -19,10 +19,9 @@ export default {
     // If a new web3 instance is ever needed, a full page refresh has to occur
     currentState.instance = Object.freeze(result.web3)
 
-    // We either use the web3 browser provider or infura
-    currentState.hasWeb3Browser = result.hasWeb3Browser
-
-    if (!result.accounts.length) {
+    if (!result.hasWeb3Browser) {
+      currentState.error = Web3Errors.Missing
+    } else if (!result.accounts.length) {
       currentState.error = Web3Errors.Locked
     } else {
       currentState.account = result.accounts[0]
