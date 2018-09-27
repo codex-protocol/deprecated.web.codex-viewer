@@ -5,11 +5,6 @@ import config from '../config'
 
 const contracts = contractsByNetwork[config.expectedNetworkId]
 
-if (contracts.CodexRecord && contracts.CodexRecordProxy) {
-  contracts.CodexRecord.address = contracts.CodexRecordProxy.address
-  delete contracts.CodexRecordProxy
-}
-
 const contractAbstractions = {
   stakeContract: null,
   codexRecord: null,
