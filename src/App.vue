@@ -248,6 +248,7 @@ img
 .cookie
   color: $color-dark
   padding: 2rem !important
+  z-index: 2147483601 !important // freshchat sets their button's z-index to 2147483600 lol
   background-color: $color-light !important
 
   a
