@@ -75,15 +75,7 @@ export default {
       this.isLoading = true
       EventBus.$emit('events:click-accept-transfer', this)
 
-      // @FIXME: we can't actually use safeTransferFrom here because it has some
-      //  checks to make sure if you're transferring to a contract that it supports
-      //  the ERC721 interface, which our IdentityProxy contracts do not
-      //
-      // instead, we'll just use transferFrom
-      //
-      // see checkAndCallSafeTransfer() in:
-      //  contract.codex-registry/contracts/ERC721/ERC721BasicToken.sol
-      return contractHelper('CodexRecord', 'transferFrom', input, this.$store.state)
+      return contractHelper('CodexRecord', 'safeTransferFrom', input, this.$store.state)
         .then(() => {
 
           EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
