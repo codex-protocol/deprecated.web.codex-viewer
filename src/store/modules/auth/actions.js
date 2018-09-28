@@ -61,11 +61,20 @@ export default {
           return dispatch('LOGOUT_USER')
         }
 
-        commit('SET_USER', {
-          user,
-        })
+        const setUserAndContractState = () => {
+          commit('SET_USER', {
+            user,
+          })
 
-        return dispatch('UPDATE_CONTRACT_STATE')
+          return dispatch('UPDATE_CONTRACT_STATE')
+        }
+
+        if (user.type === 'simple' && rootState.web3.error) {
+          return dispatch('web3/REGISTER', true, { root: true })
+            .then(setUserAndContractState)
+        }
+
+        return setUserAndContractState()
       })
       .then(() => {
         router.replace({

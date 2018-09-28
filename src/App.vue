@@ -95,22 +95,25 @@ export default {
       })
     }
 
-    this.$store.dispatch('web3/REGISTER')
-      .then(() => {
-        if (this.error) {
-          this.$store.dispatch('auth/LOGOUT_USER')
-        }
-      })
-      .then(() => {
-        return Promise.all([
-          this.$store.dispatch('oauth2/FETCH_CLIENTS'),
-        ], [
-          this.$store.dispatch('auth/INITIALIZE_AUTH'),
-        ])
-      })
-      .then(() => {
-        this.isLoaded = true
-      })
+    // Avoid race conditions with web3 injection
+    window.addEventListener('load', () => {
+      this.$store.dispatch('web3/REGISTER')
+        .then(() => {
+          if (this.error) {
+            this.$store.dispatch('auth/LOGOUT_USER')
+          }
+        })
+        .then(() => {
+          return Promise.all([
+            this.$store.dispatch('oauth2/FETCH_CLIENTS'),
+          ], [
+            this.$store.dispatch('auth/INITIALIZE_AUTH'),
+          ])
+        })
+        .then(() => {
+          this.isLoaded = true
+        })
+    })
   },
 
   computed: {

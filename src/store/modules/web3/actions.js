@@ -11,16 +11,20 @@ import {
 const logger = debug('app:store:web3:actions')
 
 export default {
-  REGISTER({ commit, dispatch, state }, router) {
+  REGISTER({ commit, dispatch, state }, overrideWeb3) {
     logger('REGISTER action being executed')
 
-    return registerWeb3()
+    let hasWeb3Browser
+    return registerWeb3(overrideWeb3)
       .then((result) => {
-        commit('SET_INITIAL_STATE', { result, router })
+        commit('SET_INITIAL_STATE', { result })
+
+        ;({ hasWeb3Browser } = result)
+
         return dispatch('REGISTER_ALL_CONTRACTS')
       })
       .then(() => {
-        if (!state.isPolling) {
+        if (hasWeb3Browser && !state.isPolling) {
           commit('SET_IS_POLLING', { isPolling: true })
           dispatch('POLL_WEB3')
         }
