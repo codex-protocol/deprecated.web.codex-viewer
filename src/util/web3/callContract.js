@@ -37,6 +37,7 @@ function callContract(func, args) {
     })
     .catch((error) => {
       logger(error)
+      throw error
     })
 }
 
