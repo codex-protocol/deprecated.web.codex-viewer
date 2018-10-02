@@ -1,11 +1,16 @@
 <template>
   <div class="footer mt-3 mb-3">
-    <div class="links mb-3">
-      <a href="#" v-if="showBugBountyInfo">Bug Bounty</a>
-      <a href="https://bitcointalk.org/index.php?topic=4508456.0">Earndrop</a>
+    <div class="links mb-1">
+      <a href="https://www.codexprotocol.com/">Home</a>
       <a href="https://www.codexprotocol.com/Terms-of-Service.pdf">Terms of Use</a>
       <a href="https://www.codexprotocol.com/privacy-policy.html">Privacy Policy</a>
+      <a href="https://dev.codexprotocol.com">Documentation</a>
       <a href="mailto:support@codexprotocol.com">Contact Us</a>
+    </div>
+    <div class="links mb-3">
+      <a href="https://codex-viewer.com">Mainnet</a>
+      <a href="https://rinkeby.codex-viewer.com">Rinkeby</a>
+      <a href="http://ropsten.codex-viewer.com">Ropsten</a>
     </div>
     <div class="icons">
       <a href="https://github.com/codex-protocol/">
@@ -80,7 +85,7 @@ export default {
 
   .links
     flex-wrap: wrap
-    max-width: 25rem
+    max-width: 30rem
 
     a
       font-size: .8em
