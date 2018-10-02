@@ -1,6 +1,5 @@
 <template>
   <b-card
-    v-if="giveaway"
     img-top
     :img-src="missingImageHelper.getMainImageUri(giveaway.editionDetails)"
   >
@@ -17,11 +16,11 @@
 
 <script>
 
-import LoadingOverlay from './util/LoadingOverlay'
+import LoadingOverlay from '../util/LoadingOverlay'
 
-import EventBus from '../util/eventBus'
-import Giveaway from '../util/api/giveaway'
-import missingImageHelper from '../util/missingImageHelper'
+import EventBus from '../../util/eventBus'
+import Giveaway from '../../util/api/giveaway'
+import missingImageHelper from '../../util/missingImageHelper'
 
 export default {
   name: 'ClaimGiveawayCard',
@@ -54,7 +53,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-@import "../assets/variables.styl"
+@import "../../assets/variables.styl"
 
 .card
   card()
