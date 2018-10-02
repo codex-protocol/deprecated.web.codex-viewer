@@ -28,6 +28,7 @@
         </b-card-group>
         <div v-else>
           You have no {{ transferDirection }} transfers.
+          To transfer a record you own, go to that record's detail page.
         </div>
       </div>
     </div>

@@ -16,7 +16,7 @@
           variant="danger"
           v-if="navItem.text == 'Transfers' && numberOfIncomingTransfers > 0"
         >
-          {{numberOfIncomingTransfers}}
+          {{ numberOfIncomingTransfers }}
         </b-badge>
       </b-link>
       <div class="contact" v-if="user">
@@ -178,6 +178,7 @@ export default {
       EventBus.$emit('events:click-logout-button', this)
       this.$store.dispatch('auth/LOGOUT_USER')
     },
+
     // @TODO: instead of requesting these independently of
     //  src/views/TransferListView.vue, the list of transfers should really be
     //  retrieved & cached in vuex (or Resource pattern)
