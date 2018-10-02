@@ -21,7 +21,7 @@
 
                 <div class="owner-action-buttons action-buttons" v-if="isOwner">
                   <b-button variant="primary" v-b-modal.recordManageModal>
-                    Manage
+                    Edit
                   </b-button>
 
                   <b-button variant="primary" v-b-modal.approveTransferModal>

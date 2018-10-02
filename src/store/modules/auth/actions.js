@@ -203,7 +203,7 @@ export default {
     commit('CLEAR_USER_STATE')
 
     // if this is an unauthenticated route, clear their auth token (i.e. log
-    //  the user out), but do not redirect them to the homepage
+    //  the user out), but do not redirect them to the login page
     if (router.currentRoute.meta && router.currentRoute.meta.allowUnauthenticatedUsers) {
       return
     }

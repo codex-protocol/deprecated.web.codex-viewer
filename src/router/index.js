@@ -5,7 +5,6 @@ import Router from 'vue-router'
 import store from '../store'
 import config from '../util/config'
 
-import HomeView from '../views/HomeView'
 import LoginView from '../views/LoginView'
 import FeatureListView from '../views/FeatureListView'
 import TransferListView from '../views/TransferListView'
@@ -25,19 +24,11 @@ Vue.use(Router)
 const router = new Router({
   routes: [
 
-    // home & login routes
-    {
-      name: 'home',
-      path: '/',
-      component: HomeView,
-      meta: {
-        hideSideBar: true,
-        allowUnauthenticatedUsers: true,
-      },
-    },
+    // login routes
     {
       name: 'login',
       path: '/login',
+      alias: '/',
       component: LoginView,
       meta: {
         hideSideBar: true,
@@ -175,12 +166,11 @@ router.beforeEach((to, from, next) => {
     }
   }
 
-  // if no route was matched (i.e. a 404), send them to the homepage
-  if (to.matched.length === 0) {
-    return next({ name: 'home' })
-  }
-
-  if (requireAuthentication && !store.getters['auth/isAuthenticated']) {
+  // if no route was matched (i.e. a 404)
+  // or if the user is trying to access an authenticated page but is unauthenticated
+  // then send them to the login page
+  if (to.matched.length === 0
+    || (requireAuthentication && !store.getters['auth/isAuthenticated'])) {
     return next({ name: 'login' })
   }
 

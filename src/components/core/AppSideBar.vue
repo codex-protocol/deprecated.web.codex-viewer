@@ -43,7 +43,7 @@
     -->
     <div class="button-container" v-else>
       <!--
-        @NOTE: the home route is actually just "/", but if I use that then
+        @NOTE: the login route is actually just "/", but if I use that then
         bootsrap highlights the button as if it were the active route for some
         reason, so we'll just use "/home" which will redirect to "/" anyway
       -->

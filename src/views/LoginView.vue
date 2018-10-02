@@ -11,37 +11,48 @@
           <h1 v-html="pageContent.title"></h1>
           <div class="lead" v-html="pageContent.description"></div>
           <div v-if="showCoinbaseWalletLink">
-            <a href="https://wallet.coinbase.com/">
+            <div class="mb-3">
+              <a :href="oauthLoginUrl">
+                <img src="../assets/images/google-signin@2x.png" width="200">
+              </a>
+            </div>
+            <!-- <a href="https://wallet.coinbase.com/">
               <img src="../assets/images/get-coinbase-wallet@3x.png" width="150">
-            </a>
-            <br /><br />
+            </a> -->
+            <b-button
+              variant="outline-primary"
+            >
+              Get Coinbase Wallet
+            </b-button>
           </div>
           <div v-else>
+            <a :href="oauthLoginUrl">
+              <img src="../assets/images/google-signin@2x.png" width="200">
+            </a>
             <b-button
               v-if="buttonTitle"
-              variant="primary"
+              variant="outline-primary"
               @click="buttonMethod"
-              class="mb-5"
             >
               {{ buttonTitle }}
             </b-button>
           </div>
         </div>
         <div v-else>
-          <h1 v-html="pageContent.title"></h1>
-          <div class="lead" v-html="pageContent.description"></div>
+          <h1>Login</h1>
+          <div class="lead">Login to create, view &amp; transfer Codex Records</div>
+          <a :href="oauthLoginUrl" class="mr-4">
+            <img src="../assets/images/google-signin@2x.png" width="200">
+          </a>
           <b-button
             v-if="buttonTitle"
-            variant="primary"
+            variant="outline-primary"
             @click="buttonMethod"
-            class="mb-5"
           >
             {{ buttonTitle }}
           </b-button>
+          <p class="mt-3">You're on the wrong Ethereum network. Expected network is Ganache. Sign in with Google or change the network in your wallet settings.</p>
         </div>
-        <a :href="oauthLoginUrl">
-          <img src="../assets/images/google-signin@2x.png" width="200">
-        </a>
         <LoginMarketingCard v-if="showLoginMarketingCard" />
       </div>
       <div class="col-12 col-md-6 secondary">
@@ -73,7 +84,7 @@ export default {
 
   data() {
     return {
-      buttonTitle: 'Login',
+      buttonTitle: 'Login with Web3',
       buttonMethod: this.web3Login,
 
       // @NOTE: Disabled for now, but we'll leave the component around for
@@ -101,7 +112,7 @@ export default {
         return this.handleWeb3Error(this.error)
       }
 
-      this.setButton('Login', this.web3Login)
+      this.setButton('Login with Web3', this.web3Login)
 
       return {
         title: 'Login',
@@ -182,7 +193,10 @@ export default {
       switch (error) {
         case Web3Errors.Locked:
           title = 'Your account is locked'
-          description = 'Open your Ethereum wallet and follow the instructions to unlock it'
+          description = 'Your account is locked. Open your Ethereum wallet and follow the instructions to unlock it'
+
+          // Your Web3 account is locked. To login with Web3, open your Ethereum wallet and follow the instructions to unlock it.
+
           this.setButton()
           break
 
@@ -219,11 +233,11 @@ export default {
           }
 
           if (this.isMobile) {
-            title = 'Login'
+            title = 'Login with Web3'
             description = '<p>To create, view, &amp; transfer Codex Records, sign in with Google or a Web3 browser such as Coinbase Wallet.</p>'
             this.setButton()
           } else {
-            title = 'Login'
+            title = 'Login with Web3'
             description = '<p>To create, view, &amp; transfer Codex Records, sign in with Google or use a Web3 browser extension such as Metamask.</p>'
             this.setButton('Install MetaMask', this.installMetamask)
           }
