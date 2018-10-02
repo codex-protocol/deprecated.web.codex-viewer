@@ -5,7 +5,7 @@
         <AppHeader title="Settings &amp; Privacy" />
         <b-tabs>
           <b-tab title="Profile">
-            <div class="profile mt-3">
+            <div>
               <div
                 v-for="(item, i) in profileProperties"
                 :key="i"
@@ -16,7 +16,7 @@
           </b-tab>
           <b-tab title="Collection">
             <div
-              class="record-list mt-3"
+              class="record-list"
               v-if="recordList.length"
             >
               <b-container class="record-settings-row">
@@ -151,4 +151,7 @@ export default {
 
   .toggle
     text-align: center
+
+.tab-pane > div
+  margin-top: 1rem
 </style>
