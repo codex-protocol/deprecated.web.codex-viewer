@@ -20,7 +20,7 @@
         </b-badge>
       </b-link>
       <div class="contact" v-if="user">
-        Logged in as <DisplayName :user="user" />
+        Logged in as <DisplayName :userObject="user" />
       </div>
     </div>
   </nav>

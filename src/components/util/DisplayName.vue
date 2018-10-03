@@ -16,12 +16,12 @@ export default {
 
   props: {
     name: String,
-    user: Object,
+    userObject: Object,
   },
 
   data() {
-    const selectedName = this.user
-      ? this.user.email || this.user.address
+    const selectedName = this.userObject
+      ? this.userObject.email || this.userObject.address
       : this.name
 
     return {
