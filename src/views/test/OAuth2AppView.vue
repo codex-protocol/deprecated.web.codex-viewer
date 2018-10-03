@@ -4,7 +4,11 @@
       <div class="col-12">
         <app-header title="OAuth2 Test App API Interface" />
         <div class="content">
-          <b-tabs>
+          <p>This page is for developers that have registered an OAuth2 application with the Codex API.</p>
+          <p>
+            See <a href="https://dev.codexprotocol.com" target="_blank">dev.codexprotocol.com</a> for more details on how to register.
+          </p>
+          <b-tabs class="mt-3">
             <b-tab
               v-for="(tab, i) in tabs"
               :key="i"

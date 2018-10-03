@@ -62,7 +62,6 @@ export default {
       numberOfIncomingTransfers: 0,
       showFaucet: config.showFaucet,
       showCodexGallery: config.showCodexGalleryInSideBar,
-      showTestAppInSideBar: config.showTestAppInSideBar,
     }
   },
 
@@ -122,13 +121,6 @@ export default {
         icon: settingsIcon,
         text: 'Settings',
       },
-      {
-        to: '/test/oauth2-app',
-        condition: this.isAuthenticated,
-        icon: settingsIcon,
-        text: 'Test OAuth2 App',
-      },
-
       {
         to: '/logout',
         action: this.logout,
