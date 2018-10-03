@@ -1,5 +1,5 @@
 <template>
-  <b-card v-if="giveaway">
+  <b-card>
     <p>
       The first {{ giveaway.numberOfEditions }} users to use the Codex Viewer will receive an edition of this piece created by our designer Seb!
     </p>
@@ -20,7 +20,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-@import "../assets/variables.styl"
+@import "../../assets/variables.styl"
 
 .card
   card()

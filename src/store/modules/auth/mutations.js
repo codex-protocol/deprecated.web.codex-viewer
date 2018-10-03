@@ -94,4 +94,13 @@ export default {
       message,
     }
   },
+
+  SPEND_GAS(currentState, { estimatedGas }) {
+    logMutation('SPEND_GAS', estimatedGas)
+
+    if (currentState.user && currentState.user.gasAllowance) {
+      const bnAllowance = new BigNumber(currentState.user.gasAllowance)
+      currentState.user.gasAllowance = bnAllowance.sub(estimatedGas).toString()
+    }
+  },
 }

@@ -21,7 +21,7 @@
 
                 <div class="owner-action-buttons action-buttons" v-if="isOwner">
                   <b-button variant="primary" v-b-modal.recordManageModal>
-                    Manage
+                    Edit
                   </b-button>
 
                   <b-button variant="primary" v-b-modal.approveTransferModal>
@@ -197,7 +197,7 @@ export default {
         this.recordId,
       ]
 
-      return contractHelper('CodexRecord', 'safeTransferFrom', input, this.$store.state)
+      return contractHelper('CodexRecord', 'safeTransferFrom', input, this.$store)
         .then(() => {
           EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
           EventBus.$emit('events:accept-transfer', this)

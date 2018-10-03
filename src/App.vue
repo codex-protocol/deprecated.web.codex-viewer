@@ -155,7 +155,6 @@ export default {
     useBackground() {
       switch (this.$route.name) {
         case 'login':
-        case 'home':
           return true
         default:
           return false

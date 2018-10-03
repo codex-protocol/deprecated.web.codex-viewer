@@ -42,10 +42,10 @@
 <script>
 import { mapState } from 'vuex'
 
-import formatTokenAmount from '../util/formatTokenAmount'
+import formatTokenAmount from '../../util/formatTokenAmount'
 
-import ApproveContractModal from './modals/ApproveContractModal'
-import FaucetModal from './modals/FaucetModal'
+import ApproveContractModal from './../modals/ApproveContractModal'
+import FaucetModal from './../modals/FaucetModal'
 
 export default {
   name: 'FaucetMarketingCard',
@@ -118,7 +118,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-@import "../assets/variables.styl"
+@import "../../assets/variables.styl"
 
 .faucet-card
   card()

@@ -75,7 +75,7 @@ export default {
       this.isLoading = true
       EventBus.$emit('events:click-accept-transfer', this)
 
-      return contractHelper('CodexRecord', 'safeTransferFrom', input, this.$store.state)
+      return contractHelper('CodexRecord', 'safeTransferFrom', input, this.$store)
         .then(() => {
 
           EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)

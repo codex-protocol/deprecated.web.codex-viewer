@@ -358,7 +358,7 @@ export default {
       ]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return contractHelper('CodexRecord', 'modifyMetadataHashes', input, this.$store.state)
+      return contractHelper('CodexRecord', 'modifyMetadataHashes', input, this.$store)
     },
   },
 }

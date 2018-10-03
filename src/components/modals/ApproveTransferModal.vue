@@ -77,7 +77,7 @@ export default {
       const input = [this.toEthAddress, this.codexRecord.tokenId]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return contractHelper('CodexRecord', 'approve', input, this.$store.state)
+      return contractHelper('CodexRecord', 'approve', input, this.$store)
         .then(() => {
           EventBus.$emit('events:record-transfer', this)
         })
