@@ -20,12 +20,7 @@
         </b-badge>
       </b-link>
       <div class="contact" v-if="user">
-        <div v-if="user.email">
-          Logged in as {{ user.email }}
-        </div>
-        <div class="address" v-else-if="user.address">
-          Logged in as <HashFormatter :data="user.address" />
-        </div>
+        Logged in as <DisplayName :user="user" />
       </div>
     </div>
   </nav>
@@ -37,7 +32,7 @@ import {
   mapGetters,
 } from 'vuex'
 
-import HashFormatter from '../util/HashFormatter'
+import DisplayName from '../util/DisplayName'
 import Transfer from '../../util/api/transfer'
 import EventBus from '../../util/eventBus'
 import config from '../../util/config'
@@ -58,7 +53,7 @@ export default {
   props: ['hideNav'],
 
   components: {
-    HashFormatter,
+    DisplayName,
   },
 
   data() {
@@ -263,10 +258,7 @@ a
 
 .contact
   text-align: center
-  padding: 2rem 0
-
-  .address
-    padding: 1rem
-    word-break: break-word
+  padding: 1rem
+  word-break: break-word
 
 </style>
