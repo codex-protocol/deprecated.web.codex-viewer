@@ -27,7 +27,7 @@
           </template>
 
           <!-- If there are no marketing cards displayed the user has no records, show a 'how-to' card -->
-          <CreateRecordCard v-if="!giveaway && !recordList.length" />
+          <CreateRecordCard v-if="!giveaway && recordList.length === 0" />
           <template v-else>
             <RecordListItem
               v-for="record in recordList"
@@ -118,7 +118,7 @@ export default {
 
     recordList() {
       return this.records.filter((record) => {
-        return record.metadata
+        return !!record.metadata
       })
     },
 

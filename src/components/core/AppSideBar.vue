@@ -5,8 +5,8 @@
     </div>
     <div class="button-container">
       <b-link
-        v-for="(navItem, i) in navItems"
-        :key="i"
+        v-for="(navItem, index) in navItems"
+        :key="index"
         :to="navItem.to"
         @click.prevent="navItem.action ? navItem.action() : hideNav()"
         v-if="navItem.condition"
@@ -14,7 +14,7 @@
         <img :src="navItem.icon">{{ navItem.text }}
         <b-badge
           variant="danger"
-          v-if="navItem.text == 'Transfers' && numberOfIncomingTransfers > 0"
+          v-if="navItem.text === 'Transfers' && numberOfIncomingTransfers > 0"
         >
           {{ numberOfIncomingTransfers }}
         </b-badge>
@@ -80,7 +80,7 @@ export default {
   mounted() {
     this.navItems = [
       {
-        to: '/home',
+        to: '/login',
         condition: !this.isAuthenticated,
         icon: iconHome,
         text: 'Home',

@@ -7,8 +7,8 @@
           <b-tab title="Profile">
             <div>
               <div
-                v-for="(item, i) in profileProperties"
-                :key="i"
+                v-for="(item, index) in profileProperties"
+                :key="index"
               >
                 {{ item.text }}: {{ item.formatter ? item.formatter(user[item.property]) : user[item.property] }}
               </div>
@@ -103,7 +103,7 @@ export default {
 
     recordList() {
       return this.records.filter((record) => {
-        return record.metadata
+        return !!record.metadata
       })
     },
   },

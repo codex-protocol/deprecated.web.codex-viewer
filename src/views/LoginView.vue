@@ -13,7 +13,7 @@
 
         <div class="login-buttons">
           <a :href="oauthLoginUrl" class="mb-3">
-            <img src="../assets/images/google-signin@2x.png" width="200">
+            <img src="../assets/images/google-signin@2x.png">
           </a>
           <b-button
             v-if="buttonTitle"
@@ -193,8 +193,8 @@ export default {
       background-color: white
       text-align: center
 
-    button
-      height: 48.16px
+    a > img, button
+      height: 3rem
 
     @media(min-width: 600px)
       a
