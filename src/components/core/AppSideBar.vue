@@ -159,13 +159,8 @@ export default {
   },
 
   computed: {
-    ...mapState('web3', ['network']),
     ...mapState('auth', ['user']),
     ...mapGetters('auth', ['isAuthenticated']),
-
-    showNetworkDetails() {
-      return this.user && this.user.address
-    },
 
     showManageTokensPage() {
       return this.user && this.user.type === 'savvy' && config.showManageTokensPage

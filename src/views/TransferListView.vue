@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-12">
         <AppHeader title="Transfers" />
-        <AppSubHeader
+        <TransferListSubheader
           :fetchData="this.fetchData"
           :transferDirection="transferDirection"
         />
@@ -39,7 +39,7 @@
 import Transfer from '../util/api/transfer'
 import EventBus from '../util/eventBus'
 import AppHeader from '../components/core/AppHeader'
-import AppSubHeader from '../components/core/AppSubHeader'
+import TransferListSubheader from '../components/TransferListSubheader'
 import RecordTransferIncomingListItem from '../components/RecordTransferIncomingListItem'
 import RecordTransferOutgoingListItem from '../components/RecordTransferOutgoingListItem'
 
@@ -52,7 +52,7 @@ export default {
 
   components: {
     AppHeader,
-    AppSubHeader,
+    TransferListSubheader,
     RecordTransferIncomingListItem,
     RecordTransferOutgoingListItem,
   },

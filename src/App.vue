@@ -1,34 +1,37 @@
 <template>
-  <div id="app" :class="{
-    'with-background': this.useBackground(),
-    'show-nav': showNav,
-  }">
-    <template v-if="!hideSideBar">
-      <span class="hamburger" @click="toggleNav">
-        <icon-base
-          iconName="menu"
-          width="28"
-          height="32"
-          class="icon-menu"
-        >
-          <icon-hamburger />
-        </icon-base>
-      </span>
-      <AppSideBar :hideNav="hideNav" />
-    </template>
-    <div class="main-content-wrapper">
-      <div class="main-content">
-        <router-view v-if="isLoaded" />
-        <LoadingOverlay type="global" v-else />
+  <div>
+    <AppWarningBanner v-if="showWarningBanner" />
+    <div id="app" :class="{
+      'with-background': this.useBackground(),
+      'show-nav': showNav,
+    }">
+      <template v-if="!hideSideBar">
+        <span class="hamburger" @click="toggleNav">
+          <icon-base
+            iconName="menu"
+            width="28"
+            height="32"
+            class="icon-menu"
+          >
+            <icon-hamburger />
+          </icon-base>
+        </span>
+        <AppSideBar :hideNav="hideNav" />
+      </template>
+      <div class="main-content-wrapper">
+        <div class="main-content">
+          <router-view v-if="isLoaded" />
+          <LoadingOverlay type="global" v-else />
+        </div>
+        <AppFooter />
       </div>
-      <AppFooter />
+      <ToastContainer />
+      <vue-cookie-accept-decline :disableDecline="true">
+        <div slot="message">
+          This website stores cookies on your computer. Cookies are used to save information about how you interact with our website and allow us to remember you when you return. We never sell this information, and we use it strictly for analytics and metrics. For more information, please see our <a href="https://www.codexprotocol.com/privacy-policy.html" target="_blank">Privacy Policy.</a>
+        </div>
+      </vue-cookie-accept-decline>
     </div>
-    <ToastContainer />
-    <vue-cookie-accept-decline :disableDecline="true">
-      <div slot="message">
-        This website stores cookies on your computer. Cookies are used to save information about how you interact with our website and allow us to remember you when you return. We never sell this information, and we use it strictly for analytics and metrics. For more information, please see our <a href="https://www.codexprotocol.com/privacy-policy.html" target="_blank">Privacy Policy.</a>
-      </div>
-    </vue-cookie-accept-decline>
   </div>
 </template>
 
@@ -47,8 +50,11 @@ import EventBus from './util/eventBus'
 
 import AppFooter from './components/core/AppFooter'
 import AppSideBar from './components/core/AppSideBar'
+import AppWarningBanner from './components/core/AppWarningBanner'
+
 import LoadingOverlay from './components/util/LoadingOverlay'
 import ToastContainer from './components/util/ToastContainer'
+
 import IconHamburger from './components/icons/IconHamburger'
 import IconBase from './components/icons/IconBase'
 
@@ -58,13 +64,17 @@ export default {
   name: 'App',
 
   components: {
-    IconBase,
+    VueCookieAcceptDecline,
+
     AppFooter,
     AppSideBar,
-    IconHamburger,
-    ToastContainer,
+    AppWarningBanner,
+
     LoadingOverlay,
-    VueCookieAcceptDecline,
+    ToastContainer,
+
+    IconHamburger,
+    IconBase,
   },
 
   created() {
@@ -84,6 +94,7 @@ export default {
       showNav: false,
       isLoaded: false,
       cookieStatus: false,
+      showWarningBanner: config.expectedNetworkId !== '1' && config.expectedNetworkId !== '5777',
     }
   },
 
