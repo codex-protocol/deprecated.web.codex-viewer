@@ -27,7 +27,7 @@
 
 <script>
 export default {
-  name: 'AppSubHeader',
+  name: 'TransferListSubheader',
   props: ['transferDirection', 'fetchData'],
   watch: {
     transferDirection(newTransferDirection) {
@@ -38,7 +38,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-@import "../../assets/variables.styl"
+@import "../assets/variables.styl"
 
 .sub-heading
   font-weight: 600

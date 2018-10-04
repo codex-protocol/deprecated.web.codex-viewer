@@ -20,12 +20,7 @@
         </b-badge>
       </b-link>
       <div class="contact" v-if="user">
-        <div v-if="user.email">
-          Logged in as {{ user.email }}
-        </div>
-        <div class="address" v-else-if="user.address">
-          Logged in as <HashFormatter :data="user.address" />
-        </div>
+        Logged in as <DisplayName :userObject="user" />
       </div>
     </div>
   </nav>
@@ -37,7 +32,7 @@ import {
   mapGetters,
 } from 'vuex'
 
-import HashFormatter from '../util/HashFormatter'
+import DisplayName from '../util/DisplayName'
 import Transfer from '../../util/api/transfer'
 import EventBus from '../../util/eventBus'
 import config from '../../util/config'
@@ -58,7 +53,7 @@ export default {
   props: ['hideNav'],
 
   components: {
-    HashFormatter,
+    DisplayName,
   },
 
   data() {
@@ -67,7 +62,6 @@ export default {
       numberOfIncomingTransfers: 0,
       showFaucet: config.showFaucet,
       showCodexGallery: config.showCodexGalleryInSideBar,
-      showTestAppInSideBar: config.showTestAppInSideBar,
     }
   },
 
@@ -128,13 +122,6 @@ export default {
         text: 'Settings',
       },
       {
-        to: '/test/oauth2-app',
-        condition: this.isAuthenticated,
-        icon: settingsIcon,
-        text: 'Test OAuth2 App',
-      },
-
-      {
         to: '/logout',
         action: this.logout,
         condition: this.isAuthenticated,
@@ -159,13 +146,8 @@ export default {
   },
 
   computed: {
-    ...mapState('web3', ['network']),
     ...mapState('auth', ['user']),
     ...mapGetters('auth', ['isAuthenticated']),
-
-    showNetworkDetails() {
-      return this.user && this.user.address
-    },
 
     showManageTokensPage() {
       return this.user && this.user.type === 'savvy' && config.showManageTokensPage
@@ -268,10 +250,7 @@ a
 
 .contact
   text-align: center
-  padding: 2rem 0
-
-  .address
-    padding: 1rem
-    word-break: break-word
+  padding: 1rem
+  word-break: break-word
 
 </style>
