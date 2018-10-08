@@ -3,11 +3,11 @@
     <div><b>Prepaid Transactions</b></div>
     <b-progress
       class="progress-container"
-      :max="parseInt(user.maxGasAllowance, 10)"
+      :max="parseInt(user.gasAllowance, 10)"
     >
       <b-progress-bar
         class="progress-bar"
-        :value="parseInt(user.gasAllowance, 10)"
+        :value="parseInt(user.gasAllowanceRemaining, 10)"
         :variant="variant"
       />
     </b-progress>
@@ -29,7 +29,7 @@ export default {
 
     variant() {
       const percentageRemaining =
-        ((parseInt(this.user.gasAllowance, 10) / this.user.maxGasAllowance) * 100).toFixed(0)
+        ((parseInt(this.user.gasAllowanceRemaining, 10) / this.user.gasAllowance) * 100).toFixed(0)
 
       if (percentageRemaining < 15) {
         return 'danger'

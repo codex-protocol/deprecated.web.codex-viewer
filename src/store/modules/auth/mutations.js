@@ -99,9 +99,9 @@ export default {
   SPEND_GAS(currentState, { estimatedGas }) {
     logMutation('SPEND_GAS', estimatedGas)
 
-    if (currentState.user && currentState.user.gasAllowance) {
-      const bnAllowance = new BigNumber(currentState.user.gasAllowance)
-      currentState.user.gasAllowance = bnAllowance.sub(estimatedGas).toString()
+    if (currentState.user && currentState.user.gasAllowanceRemaining) {
+      const bnAllowance = new BigNumber(currentState.user.gasAllowanceRemaining)
+      currentState.user.gasAllowanceRemaining = bnAllowance.sub(estimatedGas).toString()
     }
   },
 }
