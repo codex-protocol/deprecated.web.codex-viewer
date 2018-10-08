@@ -77,6 +77,10 @@ export default {
         text: 'Remaining gas',
       },
       {
+        property: 'maxGasAllowance',
+        text: 'Prepaid gas per month',
+      },
+      {
         property: 'email',
         text: 'Email address',
       },
