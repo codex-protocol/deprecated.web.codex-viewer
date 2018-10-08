@@ -17,17 +17,6 @@
 <script>
 export default {
   name: 'CreateRecordCard',
-
-  data() {
-    return {
-    }
-  },
-
-  computed: {
-  },
-
-  methods: {
-  },
 }
 </script>
 
@@ -37,11 +26,10 @@ export default {
 .faucet-card
   card()
   width: 100%
-  min-width: 180px
+  min-width: 320px
 
 .card
   height: 100%
-  margin: 0
   border: none
   background-color: rgba(white, .1)
 

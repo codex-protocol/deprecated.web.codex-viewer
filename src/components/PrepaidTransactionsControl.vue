@@ -3,11 +3,11 @@
     <div><b>Prepaid Transactions</b></div>
     <b-progress
       class="progress-container"
-      :max="max"
+      :max="parseInt(user.maxGasAllowance, 10)"
     >
       <b-progress-bar
         class="progress-bar"
-        :value="parseInt(user.gasAllowance)"
+        :value="parseInt(user.gasAllowance, 10)"
         :variant="variant"
       />
     </b-progress>
@@ -23,19 +23,13 @@ import {
 export default {
   name: 'PrepaidTransactionsControl',
 
-  data() {
-    return {
-      // @todo: replace with gasMaxAllowance when it's ready
-      max: 4050000,
-    }
-  },
-
   computed: {
     ...mapState('auth', ['user']),
     ...mapGetters('auth', ['isSimpleUser']),
 
     variant() {
-      const percentageRemaining = ((parseInt(this.user.gasAllowance, 10) / this.max) * 100).toFixed(0)
+      const percentageRemaining =
+        ((parseInt(this.user.gasAllowance, 10) / this.user.maxGasAllowance) * 100).toFixed(0)
 
       if (percentageRemaining < 15) {
         return 'danger'
@@ -56,6 +50,7 @@ export default {
 
 .allowance-container
   text-align: center
+  width: 100%
 
 .progress-container
   background-color: rgba(white, .2)
