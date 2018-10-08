@@ -20,6 +20,7 @@ export default () => {
     hideSetup: !!window.localStorage.getItem('hideSetup'),
     authError: null,
 
+    // Break this out into a separate 'app' module if one is ever needed
     isLoaded: false,
   }
 }

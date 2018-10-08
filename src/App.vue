@@ -140,6 +140,10 @@ export default {
 
   watch: {
     $route(newRoute, oldRoute) {
+      // Cached tokens may result in an immediate redirect upon page load
+      // If the route changes as a result of this authentication (i.e., /login to /collection)
+      //  then we only mark loading complete after the new route has been loaded
+      // Other conditions of async loading completion are handled directly within the vuex auth module
       this.$store.commit('auth/SET_IS_LOADED', { isLoaded: true })
     },
   },

@@ -46,6 +46,7 @@ export default {
       return dispatch('FETCH_USER')
     }
 
+    // If no user is present and no errors were triggered during web3 initialization, loading is complete
     commit('SET_IS_LOADED', { isLoaded: true })
     return null
   },
@@ -85,6 +86,8 @@ export default {
             name: rootState.route.meta.ifAuthenticatedRedirectTo,
           })
         } else {
+
+          // If no navigation is happening as a result of authentication, loading is complete
           commit('SET_IS_LOADED', { isLoaded: true })
         }
       })
@@ -92,6 +95,8 @@ export default {
         EventBus.$emit('toast:error', `Could not log in: ${error.message}`)
         Raven.captureException(error)
         commit('CLEAR_USER_STATE')
+
+        // If an error happens during user authentication, loading is complete
         commit('SET_IS_LOADED', { isLoaded: true })
       })
   },
