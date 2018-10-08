@@ -46,6 +46,7 @@ export default {
       return dispatch('FETCH_USER')
     }
 
+    commit('SET_IS_LOADED', { isLoaded: true })
     return null
   },
 
@@ -79,14 +80,19 @@ export default {
         return setUserAndContractState()
       })
       .then(() => {
-        router.replace({
-          name: rootState.route.meta.ifAuthenticatedRedirectTo || rootState.route.name,
-        })
+        if (rootState.route.meta.ifAuthenticatedRedirectTo) {
+          router.replace({
+            name: rootState.route.meta.ifAuthenticatedRedirectTo,
+          })
+        } else {
+          commit('SET_IS_LOADED', { isLoaded: true })
+        }
       })
       .catch((error) => {
         EventBus.$emit('toast:error', `Could not log in: ${error.message}`)
         Raven.captureException(error)
         commit('CLEAR_USER_STATE')
+        commit('SET_IS_LOADED', { isLoaded: true })
       })
   },
 

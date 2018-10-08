@@ -93,7 +93,6 @@ export default {
   data() {
     return {
       showNav: false,
-      isLoaded: false,
       cookieStatus: false,
       showWarningBanner: config.expectedNetworkId !== '1' && config.expectedNetworkId !== '5777',
     }
@@ -122,14 +121,12 @@ export default {
             this.$store.dispatch('auth/INITIALIZE_AUTH'),
           ])
         })
-        .then(() => {
-          this.isLoaded = true
-        })
     })
   },
 
   computed: {
     ...mapGetters('auth', ['isAuthenticated']),
+    ...mapState('auth', ['isLoaded']),
     ...mapState('web3', ['error']),
 
     hideSideBar() {
@@ -138,6 +135,12 @@ export default {
 
     recordId() {
       return this.$route.params.recordId
+    },
+  },
+
+  watch: {
+    $route(newRoute, oldRoute) {
+      this.$store.commit('auth/SET_IS_LOADED', { isLoaded: true })
     },
   },
 

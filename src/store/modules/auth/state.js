@@ -19,5 +19,7 @@ export default () => {
     stakeContractApproved: false,
     hideSetup: !!window.localStorage.getItem('hideSetup'),
     authError: null,
+
+    isLoaded: false,
   }
 }
