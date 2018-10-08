@@ -34,7 +34,8 @@ export default {
     ...mapGetters('oauth2', ['getOAuth2ClientNameFromAddress']),
 
     processedName() {
-      if (this.user && this.selectedName === this.user.address) {
+      // If userObject is defined, show the full selected name instead of 'You'
+      if (this.user && !this.userObject && this.selectedName === this.user.address) {
         return 'You'
       }
 
