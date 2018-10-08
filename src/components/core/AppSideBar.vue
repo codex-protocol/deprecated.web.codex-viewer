@@ -189,9 +189,8 @@ export default {
 @import "../../assets/variables.styl"
 
 hr
-  width: 90%
   border-top: 1px solid rgba($color-light, .5)
-  margin-bottom: 0
+  margin: 1rem 1rem 0
 
 nav
   display: none

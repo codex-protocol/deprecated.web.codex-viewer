@@ -19,6 +19,7 @@ import {
   mapState,
   mapGetters,
 } from 'vuex'
+import BigNumber from 'bignumber.js'
 
 export default {
   name: 'PrepaidTransactionsControl',
@@ -28,8 +29,10 @@ export default {
     ...mapGetters('auth', ['isSimpleUser']),
 
     variant() {
-      const percentageRemaining =
-        ((parseInt(this.user.gasAllowanceRemaining, 10) / this.user.gasAllowance) * 100).toFixed(0)
+      const percentageRemaining = new BigNumber(this.user.gasAllowanceRemaining)
+        .div(this.user.gasAllowance)
+        .mul(100)
+        .toFixed(0)
 
       if (percentageRemaining < 15) {
         return 'danger'
