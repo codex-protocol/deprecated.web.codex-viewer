@@ -68,13 +68,17 @@ export default {
         formatter: formatDate,
       },
       {
-        property: 'allowanceLastResetAt',
+        property: 'gasAllowanceLastResetAt',
         text: 'Allowance reset',
         formatter: formatDate,
       },
       {
-        property: 'gasAllowance',
+        property: 'gasAllowanceRemaining',
         text: 'Remaining gas',
+      },
+      {
+        property: 'gasAllowance',
+        text: 'Prepaid gas per month',
       },
       {
         property: 'email',
