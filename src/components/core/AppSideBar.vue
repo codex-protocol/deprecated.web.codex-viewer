@@ -19,9 +19,11 @@
           {{ numberOfIncomingTransfers }}
         </b-badge>
       </b-link>
+      <hr />
       <div class="contact" v-if="user">
         Logged in as <DisplayName :userObject="user" />
       </div>
+      <PrepaidTransactionsControl />
     </div>
   </nav>
 </template>
@@ -33,6 +35,8 @@ import {
 } from 'vuex'
 
 import DisplayName from '../util/DisplayName'
+import PrepaidTransactionsControl from '../PrepaidTransactionsControl'
+
 import Transfer from '../../util/api/transfer'
 import EventBus from '../../util/eventBus'
 import config from '../../util/config'
@@ -54,6 +58,7 @@ export default {
 
   components: {
     DisplayName,
+    PrepaidTransactionsControl,
   },
 
   data() {
@@ -182,6 +187,11 @@ export default {
 
 <style lang="stylus" scoped>
 @import "../../assets/variables.styl"
+
+hr
+  width: 90%
+  border-top: 1px solid rgba($color-light, .5)
+  margin-bottom: 0
 
 nav
   display: none
