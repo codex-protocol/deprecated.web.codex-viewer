@@ -93,7 +93,6 @@ export default {
   data() {
     return {
       showNav: false,
-      isLoaded: false,
       cookieStatus: false,
       showWarningBanner: config.expectedNetworkId !== '1' && config.expectedNetworkId !== '5777',
     }
@@ -122,14 +121,12 @@ export default {
             this.$store.dispatch('auth/INITIALIZE_AUTH'),
           ])
         })
-        .then(() => {
-          this.isLoaded = true
-        })
     })
   },
 
   computed: {
     ...mapGetters('auth', ['isAuthenticated']),
+    ...mapState('auth', ['isLoaded']),
     ...mapState('web3', ['error']),
 
     hideSideBar() {
@@ -138,6 +135,16 @@ export default {
 
     recordId() {
       return this.$route.params.recordId
+    },
+  },
+
+  watch: {
+    $route(newRoute, oldRoute) {
+      // Cached tokens may result in an immediate redirect upon page load
+      // If the route changes as a result of this authentication (i.e., /login to /collection)
+      //  then we only mark loading complete after the new route has been loaded
+      // Other conditions of async loading completion are handled directly within the vuex auth module
+      this.$store.commit('auth/SET_IS_LOADED', { isLoaded: true })
     },
   },
 

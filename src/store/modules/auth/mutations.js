@@ -104,4 +104,10 @@ export default {
       currentState.user.gasAllowanceRemaining = bnAllowance.sub(estimatedGas).toString()
     }
   },
+
+  SET_IS_LOADED(currentState, { isLoaded }) {
+    logMutation('SET_IS_LOADED', isLoaded)
+
+    currentState.isLoaded = isLoaded
+  },
 }
