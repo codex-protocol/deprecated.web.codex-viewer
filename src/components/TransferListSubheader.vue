@@ -18,10 +18,6 @@
         </b-link>
         <span v-else>Outgoing</span>
       </span>
-      <!--
-        // @TODO: Add at a later point.
-        <span><b-link to="/transfers/completed">Completed</b-link></span>
-      -->
     </div>
 </template>
 

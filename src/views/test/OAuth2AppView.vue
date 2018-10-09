@@ -89,7 +89,6 @@ export default {
 
   methods: {
     showResult(response) {
-      // @TODO: error checking
       this.result = response.data.result
 
       if (this.result.accessToken) {

@@ -34,11 +34,6 @@
       v-model="modifiedDetailsModalVisible"
     >
       <div class="modified-details" v-if="modifiedDetails !== null">
-        <!--
-          @TODO: if the user is the owner or an approved viewer, show them the
-           "details" for this view (i.e. show oldName vs newName if
-           changedData.name === true) this may be overkill though.
-        -->
         <b-table :items="modifiedDetails" outlined></b-table>
       </div>
     </b-modal>

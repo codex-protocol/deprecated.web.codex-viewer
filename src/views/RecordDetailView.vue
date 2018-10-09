@@ -32,12 +32,6 @@
                     Settings
                   </b-button>
 
-                  <!-- @FIXME: Not wired up yet
-                  <b-button variant="primary" v-if="this.isAwaitingApproval">
-                    Remove Approver
-                  </b-button>
-                  -->
-
                   <record-manage-modal :codex-record="codexRecord" />
                   <approve-transfer-modal :codex-record="codexRecord" />
                   <privacy-settings-modal :codex-record="codexRecord" :onUpdated="onSettingsUpdate" />

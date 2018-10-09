@@ -62,13 +62,6 @@ const events = (analytics) => {
 
   // Faucet
   registerEvent('events:view-faucet-page')
-
-  // Codex Quests
-  registerEvent('events:view-codex-quests-page')
-
-  // Unsupported Browsers/Devices
-  registerEvent('events:unsupported-browser')
-  registerEvent('events:unsupported-device')
 }
 
 export default events

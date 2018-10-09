@@ -3,9 +3,7 @@
     <h4>Details</h4>
     <p>Current owner: <DisplayName :name="codexRecord.ownerAddress" /></p>
     <p>Approved owner: <DisplayName :name="codexRecord.approvedAddress" /></p>
-    <!-- @FIXME: Hiding until we bring back Modify option
-      <p>Last updated: {{ this.formatDate(codexRecord.updatedAt) }}</p>
-    -->
+    <p>Last updated: {{ this.formatDate(codexRecord.updatedAt) }}</p>
     <h5>Metadata</h5>
     <p>Name hash: <DisplayName :name="codexRecord.nameHash" /></p>
     <p>Description hash: <DisplayName :name="codexRecord.descriptionHash" /></p>

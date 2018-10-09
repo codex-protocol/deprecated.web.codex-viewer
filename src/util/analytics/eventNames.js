@@ -126,15 +126,6 @@ const actionsLabels = {
     action: 'View',
     label: 'Codex Quests Page',
   },
-
-  'events:unsupported-browser': {
-    action: 'Unsupported',
-    label: 'Browser',
-  },
-  'events:unsupported-device': {
-    action: 'Unsupported',
-    label: 'Device',
-  },
 }
 
 export { category, actionsLabels }

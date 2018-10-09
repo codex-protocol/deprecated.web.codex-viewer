@@ -24,7 +24,6 @@
             :codex-record="record"
             :key="record.tokenId"
           />
-          <!-- TODO: add an "ignored" tab? idk probably not super necessary really -->
         </b-card-group>
         <div v-else>
           You have no {{ transferDirection }} transfers.
