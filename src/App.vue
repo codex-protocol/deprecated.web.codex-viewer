@@ -39,6 +39,7 @@
 
 import 'freshchat-widget'
 import axios from 'axios'
+import Raven from 'raven-js'
 import {
   mapState,
   mapGetters,
@@ -159,6 +160,9 @@ export default {
         }
 
         if (error.response && error.response.data && error.response.data.error && error.response.data.error.message) {
+          // @NOTE: This may become noisy because stuff like 404s are caught here
+          Raven.captureException(error)
+
           throw new Error(error.response.data.error.message)
         }
 
