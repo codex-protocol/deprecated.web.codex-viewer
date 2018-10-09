@@ -87,19 +87,19 @@ export default {
   },
 
   mounted() {
-    // @NOTE: incoming transfers and newly minted Records both have the same
+    // @NOTE: incoming transfers and newly created Records both have the same
     //  effect of pushing the new record onto this.records, so we use the same
     //  handler for both
     //
     // the same concept applies for outgoing transfers and destroyed records
-    EventBus.$on('socket:codex-record:minted', this.addTransferredRecordHandler)
+    EventBus.$on('socket:codex-record:created', this.addTransferredRecordHandler)
     EventBus.$on('socket:codex-record:destroyed', this.removeTransferredRecordHandler)
     EventBus.$on('socket:codex-record:transferred:new-owner', this.addTransferredRecordHandler)
     EventBus.$on('socket:codex-record:transferred:old-owner', this.removeTransferredRecordHandler)
   },
 
   beforeDestroy() {
-    EventBus.$off('socket:codex-record:minted', this.addTransferredRecordHandler)
+    EventBus.$off('socket:codex-record:created', this.addTransferredRecordHandler)
     EventBus.$off('socket:codex-record:destroyed', this.removeTransferredRecordHandler)
     EventBus.$off('socket:codex-record:transferred:new-owner', this.addTransferredRecordHandler)
     EventBus.$off('socket:codex-record:transferred:old-owner', this.removeTransferredRecordHandler)
