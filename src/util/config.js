@@ -11,10 +11,10 @@ const expectedNetworkName = (() => {
 
 const apiUrl = (() => {
   switch (expectedNetworkName) {
-    case 'mainnet': return 'https://codex-registry-api.codexprotocol.com'
-    case 'rinkeby': return 'https://rinkeby-codex-registry-api.codexprotocol.com'
-    case 'ropsten': return 'http://ropsten-codex-registry-api.codexprotocol.com'
     case 'ganache': return 'http://localhost:3001'
+    case 'mainnet': return 'https://api.codexprotocol.com'
+    case 'ropsten': return 'http://ropsten-api.codexprotocol.com'
+    case 'rinkeby': return 'https://rinkeby-api.codexprotocol.com'
     default: return null // do nothing, as an error will be thrown above if network name is invalid
   }
 })()
