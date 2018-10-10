@@ -4,19 +4,6 @@
 const category = 'Codex Viewer'
 
 const actionsLabels = {
-  'events:viewer:view-home-page': {
-    action: 'View',
-    label: 'Home Page',
-  },
-  'events:click-home-login': {
-    action: 'Click',
-    label: 'Homepage Login Button',
-  },
-  'events:click-about-codex': {
-    action: 'Click',
-    label: 'About Codex',
-  },
-
   'events:viewer:view-login-page': {
     action: 'View',
     label: 'Login Page',
@@ -138,15 +125,6 @@ const actionsLabels = {
   'events:view-codex-quests-page': {
     action: 'View',
     label: 'Codex Quests Page',
-  },
-
-  'events:unsupported-browser': {
-    action: 'Unsupported',
-    label: 'Browser',
-  },
-  'events:unsupported-device': {
-    action: 'Unsupported',
-    label: 'Device',
   },
 }
 

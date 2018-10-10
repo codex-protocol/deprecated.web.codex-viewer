@@ -15,7 +15,6 @@ export default {
     logMutation('SET_AUTH_STATE', authToken)
 
     axios.defaults.headers.common.Authorization = authToken
-    SocketService.updateSocket(authToken)
     window.localStorage.setItem('authToken', authToken)
 
     currentState.authToken = authToken
@@ -23,6 +22,8 @@ export default {
 
   SET_USER(currentState, { user }) {
     logMutation('SET_USER', user)
+
+    SocketService.updateSocket(currentState.authToken)
 
     currentState.user = user
   },
@@ -93,5 +94,20 @@ export default {
       code,
       message,
     }
+  },
+
+  SPEND_GAS(currentState, { estimatedGas }) {
+    logMutation('SPEND_GAS', estimatedGas)
+
+    if (currentState.user && currentState.user.gasAllowanceRemaining) {
+      const bnAllowance = new BigNumber(currentState.user.gasAllowanceRemaining)
+      currentState.user.gasAllowanceRemaining = bnAllowance.sub(estimatedGas).toString()
+    }
+  },
+
+  SET_IS_LOADED(currentState, { isLoaded }) {
+    logMutation('SET_IS_LOADED', isLoaded)
+
+    currentState.isLoaded = isLoaded
   },
 }

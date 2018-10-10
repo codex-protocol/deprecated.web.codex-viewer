@@ -68,7 +68,7 @@
       <div class="mt-4">
         <div v-if="whitelistedAddresses.length > 0">
           <div v-for="address in whitelistedAddresses" :key="address">
-            <HashFormatter :data="address" />
+            <DisplayName :name="address" />
             <span class="close" v-on:click="removeWhitelistedAddress(address)">×</span>
           </div>
         </div>
@@ -87,7 +87,7 @@
 import { mapState } from 'vuex'
 import debug from 'debug'
 
-import HashFormatter from '../util/HashFormatter'
+import DisplayName from '../util/DisplayName'
 import Record from '../../util/api/record'
 import EventBus from '../../util/eventBus'
 
@@ -99,7 +99,7 @@ export default {
   props: ['codexRecord', 'onUpdated'],
 
   components: {
-    HashFormatter,
+    DisplayName,
   },
 
   data() {

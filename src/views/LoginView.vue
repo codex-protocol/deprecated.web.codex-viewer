@@ -7,42 +7,24 @@
             <img src="../assets/logos/codex/gold.svg" />
           </b-link>
         </div>
-        <div v-if="isMobile">
-          <h1 v-html="pageContent.title"></h1>
-          <div class="lead" v-html="pageContent.description"></div>
-          <div v-if="showCoinbaseWalletLink">
-            <a href="https://wallet.coinbase.com/">
-              <img src="../assets/images/get-coinbase-wallet@3x.png" width="150">
-            </a>
-            <br /><br />
-          </div>
-          <div v-else>
-            <b-button
-              v-if="buttonTitle"
-              variant="primary"
-              @click="buttonMethod"
-              class="mb-5"
-            >
-              {{ buttonTitle }}
-            </b-button>
-          </div>
-        </div>
-        <div v-else>
-          <h1 v-html="pageContent.title"></h1>
-          <div class="lead" v-html="pageContent.description"></div>
+
+        <h1>{{ title }}</h1>
+        <div class="lead">{{ description }}</div>
+
+        <div class="login-buttons">
+          <a :href="oauthLoginUrl" class="mb-3">
+            <img src="../assets/images/google-signin@2x.png">
+          </a>
           <b-button
             v-if="buttonTitle"
-            variant="primary"
+            variant="outline-primary"
             @click="buttonMethod"
-            class="mb-5"
+            :disabled="buttonDisabled"
           >
             {{ buttonTitle }}
           </b-button>
         </div>
-        <a :href="oauthLoginUrl">
-          <img src="../assets/images/google-signin@2x.png" width="200">
-        </a>
-        <LoginMarketingCard v-if="showLoginMarketingCard" />
+        <p class="mt-3">{{ errorMessage }}</p>
       </div>
       <div class="col-12 col-md-6 secondary">
         <div class="login-art"><img src="../assets/images/login-art.png" /></div>
@@ -60,25 +42,14 @@ import config from '../util/config'
 import EventBus from '../util/eventBus'
 import { Web3Errors, Networks } from '../util/constants/web3'
 
-import LoginMarketingCard from '../components/LoginMarketingCard'
-
 const logger = debug('app:component:login-view')
 
 export default {
   name: 'LoginView',
 
-  components: {
-    LoginMarketingCard,
-  },
-
   data() {
     return {
-      buttonTitle: 'Login',
-      buttonMethod: this.web3Login,
-
-      // @NOTE: Disabled for now, but we'll leave the component around for
-      //  marketing purposes later
-      showLoginMarketingCard: false,
+      // @TODO: See if we can get rid of this dep since this is the only place we use is_js
       isMobile: is.mobile(),
       oauthLoginUrl: `${config.apiUrl}/oauth2/login/google`,
     }
@@ -92,20 +63,71 @@ export default {
     ...mapState('auth', ['authError']),
     ...mapState('web3', ['account', 'instance', 'error']),
 
-    pageContent() {
+    title() {
       if (this.authError) {
-        return this.handleAuthError(this.authError)
+        return 'Error'
       }
 
-      if (this.error) {
-        return this.handleWeb3Error(this.error)
+      return 'Login'
+    },
+
+    description() {
+      if (this.authError) {
+        return 'We were unable to log you in with your Google account. Try again later.'
       }
 
-      this.setButton('Login', this.web3Login)
+      return 'Login to create, view, and transfer Codex Records'
+    },
 
-      return {
-        title: 'Login',
-        description: 'Login to create, view, &amp; transfer Codex Records',
+    buttonTitle() {
+      switch (this.error) {
+        case Web3Errors.Unknown:
+        case Web3Errors.Missing:
+          return this.isMobile
+            ? 'Install Coinbase Wallet'
+            : 'Install MetaMask'
+
+        default:
+          return 'Login with Web3'
+      }
+    },
+
+    buttonMethod() {
+      switch (this.error) {
+        case Web3Errors.Unknown:
+        case Web3Errors.Missing:
+          return this.installWeb3
+
+        default:
+          return this.web3Login
+      }
+    },
+
+    buttonDisabled() {
+      switch (this.error) {
+        case Web3Errors.Locked:
+        case Web3Errors.WrongNetwork:
+          return true
+
+        default:
+          return false
+      }
+    },
+
+    errorMessage() {
+      switch (this.error) {
+        case Web3Errors.Locked:
+          return 'Your Web3 account is locked. To login with Web3, open your Ethereum wallet and follow the instructions to unlock it.'
+
+        case Web3Errors.Unknown:
+        case Web3Errors.Missing:
+          return 'To continue, sign in with Google or install a Web3 wallet to login with Web3.'
+
+        case Web3Errors.WrongNetwork:
+          return `You're on the wrong Ethereum network. The expected network is ${Networks[config.expectedNetworkId]}. Sign in with Google or change the network in your wallet settings.`
+
+        default:
+          return null
       }
     },
 
@@ -115,15 +137,13 @@ export default {
   },
 
   methods: {
-    installMetamask() {
-      window.open('https://www.metamask.io', '_blank')
-      this.setButton('MetaMask has been installed', this.checkMetamask)
-      EventBus.$emit('events:click-install-metamask', this)
-    },
+    installWeb3() {
+      window.open(
+        this.isMobile ? 'https://wallet.coinbase.com' : 'https://www.metamask.io',
+        '_blank'
+      )
 
-    checkMetamask() {
-      EventBus.$emit('events:click-check-metamask', this)
-      window.location.reload(true)
+      EventBus.$emit('events:click-install-metamask', this)
     },
 
     web3Login() {
@@ -159,82 +179,6 @@ export default {
           })
       })
     },
-
-    setButton(title, method) {
-      this.buttonTitle = title
-      this.buttonMethod = method
-    },
-
-    handleAuthError(error) {
-      this.setButton()
-
-      return {
-        title: 'There was a problem logging in',
-        description: error.message
-          || 'We were unable to log you in with your Google account. Try again later.',
-      }
-    },
-
-    handleWeb3Error(error) {
-      let title
-      let description
-
-      switch (error) {
-        case Web3Errors.Locked:
-          title = 'Your account is locked'
-          description = 'Open your Ethereum wallet and follow the instructions to unlock it'
-          this.setButton()
-          break
-
-        case Web3Errors.Unknown:
-          title = 'Let&rsquo;s get started'
-
-          if (this.isMobile) {
-            description = '<p>Use a DApp browser, such as Coinbase Wallet.</p>'
-            this.setButton()
-          } else {
-            description = '<p>To continue, install the MetaMask browser extension.</p>'
-            description += '<p>The best place to store your Codex Records is a secure wallet like MetaMask. This will also be used as your login (no password needed)'
-            this.setButton('Install MetaMask', this.installMetamask)
-          }
-          break
-
-        case Web3Errors.WrongNetwork:
-          title = 'Wrong Ethereum network'
-          description = `You're on the wrong Ethereum network. Expected network is ${Networks[config.expectedNetworkId]}. Sign in with Google or change the network in your wallet settings.`
-          this.setButton()
-          break
-
-        default:
-        case Web3Errors.Missing:
-          title = 'Let&rsquo;s get started'
-
-          if (this.isMobile) {
-            description = '<p>Use a DApp browser, such as Coinbase Wallet or Status.</p>'
-            this.setButton()
-          } else {
-            description = '<p>To continue, install the MetaMask browser extension.</p>'
-            description += '<p>The best place to store your Codex Records is a secure wallet like MetaMask. This will also be used as your login (no password needed)'
-            this.setButton('Install MetaMask', this.installMetamask)
-          }
-
-          if (this.isMobile) {
-            title = 'Login'
-            description = '<p>To create, view, &amp; transfer Codex Records, sign in with Google or a Web3 browser such as Coinbase Wallet.</p>'
-            this.setButton()
-          } else {
-            title = 'Login'
-            description = '<p>To create, view, &amp; transfer Codex Records, sign in with Google or use a Web3 browser extension such as Metamask.</p>'
-            this.setButton('Install MetaMask', this.installMetamask)
-          }
-          break
-      }
-
-      return {
-        title,
-        description,
-      }
-    },
   },
 }
 </script>
@@ -242,20 +186,24 @@ export default {
 <style lang="stylus" scoped>
 @import "../assets/variables.styl"
 
-  .container
-    height: 100%
+  .login-buttons
     display: flex
-    align-items: center
+    flex-wrap: wrap
 
-  .primary
-    margin-bottom: 2rem
+    a
+      background-color: white
+      text-align: center
 
-    @media screen and (min-width: $breakpoint-md)
-      margin-bottom: 0
+    a > img, button
+      height: 3rem
 
-  .secondary
-    text-align: right
-    align-self: center
+    @media(min-width: 600px)
+      a
+        margin-right: 1rem
+
+    @media screen and (max-width: $breakpoint-md)
+      a, button
+        width: 100%
 
   .logo
     max-width: 100px
@@ -272,8 +220,5 @@ export default {
   .login-art img
     width: 100%
     margin-top: 3rem
-
-    @media screen and (max-width: $breakpoint-md)
-      margin-top: 0
 
 </style>

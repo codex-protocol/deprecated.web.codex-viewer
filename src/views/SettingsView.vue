@@ -3,25 +3,41 @@
     <div class="row">
       <div class="col-12">
         <AppHeader title="Settings &amp; Privacy" />
-        <div class="record-list" v-if="records.length">
-          <b-container class="record-settings-row">
-            <b-row>
-              <b-col class="image">Image</b-col>
-              <b-col class="name">Asset Name</b-col>
-              <b-col class="toggle" v-if="user && user.isGalleryEnabled">Include in Gallery</b-col>
-              <b-col class="toggle">Details Public</b-col>
-            </b-row>
-          </b-container>
-          <!-- TODO: Better handling of record w/ no metadata -->
-          <RecordPrivacySettingsRowItem v-for="record in records"
-            v-if="record.metadata"
-            :codex-record="record"
-            :key="record.tokenId"
-          />
-        </div>
-        <div v-else>
-          You have no Records in your collection!
-        </div>
+        <b-tabs>
+          <b-tab title="Profile">
+            <div>
+              <div
+                v-for="(item, index) in profileProperties"
+                :key="index"
+              >
+                {{ item.text }}: {{ item.formatter ? item.formatter(user[item.property]) : user[item.property] }}
+              </div>
+            </div>
+          </b-tab>
+          <b-tab title="Collection">
+            <div
+              class="record-list"
+              v-if="recordList.length"
+            >
+              <b-container class="record-settings-row">
+                <b-row>
+                  <b-col class="image">Image</b-col>
+                  <b-col class="name">Asset Name</b-col>
+                  <b-col class="toggle" v-if="user && user.isGalleryEnabled">Include in Gallery</b-col>
+                  <b-col class="toggle">Details Public</b-col>
+                </b-row>
+              </b-container>
+              <RecordPrivacySettingsRowItem
+                v-for="record in recordList"
+                :codex-record="record"
+                :key="record.tokenId"
+              />
+            </div>
+            <div v-else>
+              You have no Codex Records in your collection!
+            </div>
+          </b-tab>
+        </b-tabs>
       </div>
     </div>
   </div>
@@ -32,6 +48,7 @@ import { mapState } from 'vuex'
 
 import Record from '../util/api/record'
 import EventBus from '../util/eventBus'
+import { formatDate } from '../util/dateHelpers'
 import AppHeader from '../components/core/AppHeader'
 import RecordPrivacySettingsRowItem from '../components/RecordPrivacySettingsRowItem'
 
@@ -44,7 +61,37 @@ export default {
   },
 
   data() {
+    const profileProperties = [
+      {
+        property: 'createdAt',
+        text: 'Created at',
+        formatter: formatDate,
+      },
+      {
+        property: 'gasAllowanceLastResetAt',
+        text: 'Allowance reset',
+        formatter: formatDate,
+      },
+      {
+        property: 'gasAllowanceRemaining',
+        text: 'Remaining gas',
+      },
+      {
+        property: 'gasAllowance',
+        text: 'Prepaid gas per month',
+      },
+      {
+        property: 'email',
+        text: 'Email address',
+      },
+      {
+        property: 'address',
+        text: 'Ethereum address',
+      },
+    ]
+
     return {
+      profileProperties,
       records: [],
     }
   },
@@ -57,6 +104,12 @@ export default {
 
   computed: {
     ...mapState('auth', ['user']),
+
+    recordList() {
+      return this.records.filter((record) => {
+        return !!record.metadata
+      })
+    },
   },
 
   methods: {
@@ -102,4 +155,7 @@ export default {
 
   .toggle
     text-align: center
+
+.tab-pane > div
+  margin-top: 1rem
 </style>

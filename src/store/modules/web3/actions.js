@@ -33,6 +33,10 @@ export default {
         commit('SET_ERROR', {
           message: 'Unable to register',
           error,
+
+          // Most of these errors pertain to Web3 missing or on the wrong network
+          //  so it's not helpful to push them to sentry
+          ignoreInSentry: true,
         })
       })
   },
@@ -65,7 +69,10 @@ export default {
         })
       })
       .catch((error) => {
-        commit('SET_ERROR', { message: 'Unable to register the contract', error })
+        commit('SET_ERROR', {
+          message: 'Unable to register the contract',
+          error,
+        })
       })
   },
 

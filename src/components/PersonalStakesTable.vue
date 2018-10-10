@@ -19,7 +19,7 @@
         :style="{ order: index }"
         :key="'stakedFor' + index"
       >
-        <HashFormatter :data="property" />
+        <DisplayName :name="property" />
       </div>
 
       <div class="table-header">Unlock date</div>
@@ -36,13 +36,13 @@
 
 <script>
 import formatTokenAmount from '../util/formatTokenAmount'
-import HashFormatter from './util/HashFormatter'
+import DisplayName from './util/DisplayName'
 
 export default {
   name: 'PersonalStakesTable',
   props: ['personalStakes'],
   components: {
-    HashFormatter,
+    DisplayName,
   },
   methods: {
     formatTokenAmount(rawAmount) {

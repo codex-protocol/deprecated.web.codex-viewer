@@ -56,7 +56,6 @@ export default {
 .record-carousel
   padding: 1rem 0
 
-// @TODO: Use a better method than sizing the image viewport using `vh`
 .carousel
   width: 100%
   max-width: 100%

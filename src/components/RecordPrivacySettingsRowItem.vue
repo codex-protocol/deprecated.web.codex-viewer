@@ -1,6 +1,5 @@
 <template>
   <b-container class="record-settings-row">
-      <!-- TODO: Better handling of record w/ no metadata -->
       <b-row v-if="codexRecord.metadata">
         <b-col class="image">
           <a href="#" @click.prevent="viewRecord">
@@ -42,7 +41,9 @@ import missingImageHelper from '../util/missingImageHelper'
 
 export default {
   name: 'RecordPrivacySettingsRowItem',
+
   props: ['codexRecord'],
+
   data() {
     return {
       missingImageHelper,
@@ -51,8 +52,10 @@ export default {
       route: { name: 'record-detail', params: { recordId: this.codexRecord.tokenId } },
     }
   },
+
   computed: {
     ...mapState('auth', ['user']),
+
     isPublic: {
       get: function getIsPublic() {
         return !this.isPrivate
@@ -62,22 +65,26 @@ export default {
       },
     },
   },
+
   methods: {
     viewRecord() {
       this.$router.push(this.route)
     },
+
     toggleIsPrivate() {
       if (this.isPrivate) {
         this.isInGallery = false
       }
       return this.updateRecord()
     },
+
     toggleIsInGallery() {
       if (this.isInGallery) {
         this.isPrivate = false
       }
       return this.updateRecord()
     },
+
     updateRecord() {
 
       const dataToUpdate = {
@@ -92,6 +99,7 @@ export default {
           this.reset()
         })
     },
+
     reset() {
       this.isPrivate = this.codexRecord.isPrivate
       this.isInGallery = this.codexRecord.isInGallery

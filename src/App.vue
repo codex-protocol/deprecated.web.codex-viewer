@@ -1,34 +1,37 @@
 <template>
-  <div id="app" :class="{
-    'with-background': this.useBackground(),
-    'show-nav': showNav,
-  }">
-    <template v-if="!hideSideBar">
-      <span class="hamburger" @click="toggleNav">
-        <icon-base
-          iconName="menu"
-          width="28"
-          height="32"
-          class="icon-menu"
-        >
-          <icon-hamburger />
-        </icon-base>
-      </span>
-      <AppSideBar :hideNav="hideNav" />
-    </template>
-    <div class="main-content-wrapper">
-      <div class="main-content">
-        <router-view v-if="isLoaded" />
-        <LoadingOverlay type="global" v-else />
+  <div>
+    <AppWarningBanner v-if="showWarningBanner" />
+    <div id="app" :class="{
+      'with-background': this.useBackground(),
+      'show-nav': showNav,
+    }">
+      <template v-if="!hideSideBar">
+        <span class="hamburger" @click="toggleNav">
+          <icon-base
+            iconName="menu"
+            width="28"
+            height="32"
+            class="icon-menu"
+          >
+            <icon-hamburger />
+          </icon-base>
+        </span>
+        <AppSideBar :hideNav="hideNav" />
+      </template>
+      <div class="main-content-wrapper">
+        <div class="main-content">
+          <router-view v-if="isLoaded" />
+          <LoadingOverlay type="global" v-else />
+        </div>
+        <AppFooter />
       </div>
-      <AppFooter />
+      <ToastContainer />
+      <vue-cookie-accept-decline :disableDecline="true">
+        <div slot="message">
+          This website stores cookies on your computer. Cookies are used to save information about how you interact with our website and allow us to remember you when you return. We never sell this information, and we use it strictly for analytics and metrics. For more information, please see our <a href="https://www.codexprotocol.com/privacy-policy.html" target="_blank">Privacy Policy.</a>
+        </div>
+      </vue-cookie-accept-decline>
     </div>
-    <ToastContainer />
-    <vue-cookie-accept-decline :disableDecline="true">
-      <div slot="message">
-        This website stores cookies on your computer. Cookies are used to save information about how you interact with our website and allow us to remember you when you return. We never sell this information, and we use it strictly for analytics and metrics. For more information, please see our <a href="https://www.codexprotocol.com/privacy-policy.html" target="_blank">Privacy Policy.</a>
-      </div>
-    </vue-cookie-accept-decline>
   </div>
 </template>
 
@@ -36,6 +39,7 @@
 
 import 'freshchat-widget'
 import axios from 'axios'
+import Raven from 'raven-js'
 import {
   mapState,
   mapGetters,
@@ -44,11 +48,15 @@ import VueCookieAcceptDecline from 'vue-cookie-accept-decline'
 
 import config from './util/config'
 import EventBus from './util/eventBus'
+import { Web3Errors } from './util/constants/web3'
 
 import AppFooter from './components/core/AppFooter'
 import AppSideBar from './components/core/AppSideBar'
+import AppWarningBanner from './components/core/AppWarningBanner'
+
 import LoadingOverlay from './components/util/LoadingOverlay'
 import ToastContainer from './components/util/ToastContainer'
+
 import IconHamburger from './components/icons/IconHamburger'
 import IconBase from './components/icons/IconBase'
 
@@ -58,13 +66,17 @@ export default {
   name: 'App',
 
   components: {
-    IconBase,
+    VueCookieAcceptDecline,
+
     AppFooter,
     AppSideBar,
-    IconHamburger,
-    ToastContainer,
+    AppWarningBanner,
+
     LoadingOverlay,
-    VueCookieAcceptDecline,
+    ToastContainer,
+
+    IconHamburger,
+    IconBase,
   },
 
   created() {
@@ -82,8 +94,8 @@ export default {
   data() {
     return {
       showNav: false,
-      isLoaded: false,
       cookieStatus: false,
+      showWarningBanner: config.expectedNetworkId !== '1' && config.expectedNetworkId !== '5777',
     }
   },
 
@@ -99,7 +111,7 @@ export default {
     window.addEventListener('load', () => {
       this.$store.dispatch('web3/REGISTER')
         .then(() => {
-          if (this.error) {
+          if (this.error && (this.error !== Web3Errors.Missing)) {
             this.$store.dispatch('auth/LOGOUT_USER')
           }
         })
@@ -110,14 +122,12 @@ export default {
             this.$store.dispatch('auth/INITIALIZE_AUTH'),
           ])
         })
-        .then(() => {
-          this.isLoaded = true
-        })
     })
   },
 
   computed: {
     ...mapGetters('auth', ['isAuthenticated']),
+    ...mapState('auth', ['isLoaded']),
     ...mapState('web3', ['error']),
 
     hideSideBar() {
@@ -126,6 +136,16 @@ export default {
 
     recordId() {
       return this.$route.params.recordId
+    },
+  },
+
+  watch: {
+    $route(newRoute, oldRoute) {
+      // Cached tokens may result in an immediate redirect upon page load
+      // If the route changes as a result of this authentication (i.e., /login to /collection)
+      //  then we only mark loading complete after the new route has been loaded
+      // Other conditions of async loading completion are handled directly within the vuex auth module
+      this.$store.commit('auth/SET_IS_LOADED', { isLoaded: true })
     },
   },
 
@@ -140,6 +160,9 @@ export default {
         }
 
         if (error.response && error.response.data && error.response.data.error && error.response.data.error.message) {
+          // @NOTE: This may become noisy because stuff like 404s are caught here
+          Raven.captureException(error)
+
           throw new Error(error.response.data.error.message)
         }
 
@@ -155,7 +178,6 @@ export default {
     useBackground() {
       switch (this.$route.name) {
         case 'login':
-        case 'home':
           return true
         default:
           return false

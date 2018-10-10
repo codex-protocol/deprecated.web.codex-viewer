@@ -22,7 +22,7 @@ const showToast = (text, route) => {
 }
 
 export default {
-  'codex-record:minted': (codexRecord) => {
+  'codex-record:created': (codexRecord) => {
     showToast(
       `The Codex Record "${codexRecord.metadata.name}" has been successfully created.\n\nClick this notification to view the Record.`,
       `/record/${codexRecord.tokenId}`

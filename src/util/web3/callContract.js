@@ -8,7 +8,6 @@ const logger = debug('app:util:call-contract')
 // @TODO: This needs to be more finely tuned. For some actions only 10k buffer is needed, and for others 50k+ is needed
 const gasBuffer = 100000
 
-// @TODO: Pull from ethgasstation instead
 // String or BigNumber required for `toWei`
 const recommendedGasPriceInGwei = '10'
 

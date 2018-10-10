@@ -17,11 +17,6 @@ const events = (analytics) => {
 
   // @NOTE: Registering a new event below requires adding the event to `./eventNames.js`
 
-  // Home
-  registerEvent('events:viewer:view-home-page')
-  registerEvent('events:click-home-login')
-  registerEvent('events:click-about-codex')
-
   // Login
   registerEvent('events:viewer:view-login-page')
   registerEvent('events:click-login-button')
@@ -67,13 +62,6 @@ const events = (analytics) => {
 
   // Faucet
   registerEvent('events:view-faucet-page')
-
-  // Codex Quests
-  registerEvent('events:view-codex-quests-page')
-
-  // Unsupported Browsers/Devices
-  registerEvent('events:unsupported-browser')
-  registerEvent('events:unsupported-device')
 }
 
 export default events

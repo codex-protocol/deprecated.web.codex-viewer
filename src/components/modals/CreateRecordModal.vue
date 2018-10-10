@@ -183,17 +183,7 @@ export default {
 
       return Record.createMetadata(metadataToUpload)
         .then((metadata) => {
-
-          // TODO: maybe show somewhere that the locally-calculated hashes match
-          //  the server-side-calculated hashes? e.g.:
-          // const { soliditySha3 } = this.instance.utils
-          //
-          // metadata.nameHash === soliditySha3(metadata.name)
-          // metadata.mainImage.hash === this.uploadedFileHash
-          // metadata.descriptionHash === (metadata.description ? soliditySha3(metadata.description) : NullDescriptionHash)
-
           return this.createRecord(metadata)
-
         })
         .catch((error) => {
           logger('Could not create Record:', error)
@@ -223,7 +213,7 @@ export default {
       ]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return contractHelper('CodexRecord', 'mint', input, this.$store.state)
+      return contractHelper('CodexRecord', 'mint', input, this.$store)
     },
   },
 

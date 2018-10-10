@@ -46,6 +46,8 @@ export default {
       return dispatch('FETCH_USER')
     }
 
+    // If no user is present and no errors were triggered during web3 initialization, loading is complete
+    commit('SET_IS_LOADED', { isLoaded: true })
     return null
   },
 
@@ -69,6 +71,8 @@ export default {
           return dispatch('UPDATE_CONTRACT_STATE')
         }
 
+        // This is to handle where a simple user has a web3 wallet that is in a bad state or on the wrong network
+        // We re-register web3 using Infura as a provider instead of the injected one from their web3 wallet
         if (user.type === 'simple' && rootState.web3.error) {
           return dispatch('web3/REGISTER', true, { root: true })
             .then(setUserAndContractState)
@@ -77,14 +81,23 @@ export default {
         return setUserAndContractState()
       })
       .then(() => {
-        router.replace({
-          name: rootState.route.meta.ifAuthenticatedRedirectTo || rootState.route.name,
-        })
+        if (rootState.route.meta.ifAuthenticatedRedirectTo) {
+          router.replace({
+            name: rootState.route.meta.ifAuthenticatedRedirectTo,
+          })
+        } else {
+
+          // If no navigation is happening as a result of authentication, loading is complete
+          commit('SET_IS_LOADED', { isLoaded: true })
+        }
       })
       .catch((error) => {
         EventBus.$emit('toast:error', `Could not log in: ${error.message}`)
         Raven.captureException(error)
         commit('CLEAR_USER_STATE')
+
+        // If an error happens during user authentication, loading is complete
+        commit('SET_IS_LOADED', { isLoaded: true })
       })
   },
 
@@ -203,7 +216,7 @@ export default {
     commit('CLEAR_USER_STATE')
 
     // if this is an unauthenticated route, clear their auth token (i.e. log
-    //  the user out), but do not redirect them to the homepage
+    //  the user out), but do not redirect them to the login page
     if (router.currentRoute.meta && router.currentRoute.meta.allowUnauthenticatedUsers) {
       return
     }
