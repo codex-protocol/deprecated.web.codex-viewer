@@ -60,6 +60,8 @@ import ToastContainer from './components/util/ToastContainer'
 import IconHamburger from './components/icons/IconHamburger'
 import IconBase from './components/icons/IconBase'
 
+import PartyModeActivator from './directives/PartyModeActivator'
+
 import './util/analytics'
 
 export default {
@@ -77,6 +79,11 @@ export default {
 
     IconHamburger,
     IconBase,
+
+  },
+
+  directives: {
+    PartyModeActivator,
   },
 
   created() {
