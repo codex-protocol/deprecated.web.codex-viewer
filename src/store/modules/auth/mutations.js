@@ -1,6 +1,7 @@
 import axios from 'axios'
 import debug from 'debug'
 import BigNumber from 'bignumber.js'
+import Vue from 'vue'
 
 import getInitialState from './state'
 import SocketService from '../../../util/socket'
@@ -101,7 +102,7 @@ export default {
 
     if (currentState.user && currentState.user.gasAllowanceRemaining) {
       const bnAllowance = new BigNumber(currentState.user.gasAllowanceRemaining)
-      currentState.user.gasAllowanceRemaining = bnAllowance.sub(estimatedGas).toString()
+      Vue.set(currentState.user, 'gasAllowanceRemaining', bnAllowance.sub(estimatedGas).toString())
     }
   },
 
