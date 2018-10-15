@@ -60,6 +60,8 @@ export default {
 
     resetDate() {
       const nextResetDate = new Date(this.user.gasAllowanceLastResetAt)
+
+      // @TODO: this should come from config or API instead of hardcoded
       nextResetDate.setDate(nextResetDate.getDate() + 30)
 
       return formatDate(nextResetDate, true)
