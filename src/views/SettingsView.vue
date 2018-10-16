@@ -69,7 +69,7 @@ export default {
       },
       {
         property: 'gasAllowanceLastResetAt',
-        text: 'Allowance reset',
+        text: 'Last allowance reset',
         formatter: formatDate,
       },
       {

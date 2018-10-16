@@ -1,6 +1,6 @@
 <template>
   <nav>
-    <div class="logo">
+    <div class="logo" v-party-mode-activator>
       <img src="../../assets/logos/codex/gold.svg">
     </div>
     <div class="button-container">

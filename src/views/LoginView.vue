@@ -49,7 +49,6 @@ export default {
 
   data() {
     return {
-      // @TODO: See if we can get rid of this dep since this is the only place we use is_js
       isMobile: is.mobile(),
       oauthLoginUrl: `${config.apiUrl}/oauth2/login/google`,
     }

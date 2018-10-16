@@ -3,15 +3,15 @@
     :ref="id"
     :id="id"
     :title="title"
-    @hidden="onHide"
     :ok-title="okTitle"
     :hide-footer="isFooterHidden"
     :cancel-variant="cancelVariant"
     :ok-disabled="isDisabled"
     :size="modalSize"
     v-model="modalVisible"
-    v-on:shown="shown"
-    v-on:ok.prevent="nextStep"
+    @shown="shown"
+    @hidden="onHide"
+    @ok.prevent="nextStep"
 
     :no-close-on-esc="preventClose"
     :hide-header-close="preventClose"
@@ -27,6 +27,12 @@
       scoped styles if you use a v-if
     -->
     <div v-show="shouldShowMainSlot">
+      <p v-if="errors.length">
+        <span>Please fix these error(s):</span>
+        <ul>
+          <li v-for="(error, index) in errors" :key="index">{{ error }}</li>
+        </ul>
+      </p>
       <slot></slot>
     </div>
 
@@ -73,27 +79,25 @@
 
         <div v-else-if="currentStep === 3">
           <p>
-            Your transaction has been submitted!
+            Your transaction has been submitted to the blockchain!
           </p>
           <p>
-            It will take a few minutes for your transaction to be mined, but you may now close this dialog.
+            Confirming transactions securely on the blockchain can take anywhere from a few minutes to a few hours. Once confirmed, you'll receive a notification on this page.
           </p>
         </div>
       </div>
-
     </div>
-
   </b-modal>
 </template>
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import Raven from 'raven-js'
 
 import config from '../../util/config'
 
 export default {
-  name: 'meta-mask-notification-modal',
+  name: 'MetaMaskNotificationModal',
+
   props: [
     'id',
     'title',
@@ -105,28 +109,69 @@ export default {
     'onShown',
     'onClear',
     'requiresTokens',
+    'validate',
   ],
+
   data() {
+    const noOp = () => {}
+
     return {
       isFooterHidden: false,
       metamaskError: null,
       modalVisible: false,
       preventClose: false,
       currentStep: 0,
+      errors: [],
+      shown: this.onShown || noOp,
     }
   },
+
+  computed: {
+    ...mapState('auth', ['balance', 'registryContractApproved', 'user']),
+    ...mapGetters('auth', ['isSimpleUser']),
+
+    isDisabled() {
+      return this.willTransactionFail || this.okDisabled || false
+    },
+
+    modalSize() {
+      return this.size || ''
+    },
+
+    willTransactionFail() {
+      return config.showFaucet && this.requiresTokens && (!this.registryContractApproved || this.balance.eq(0))
+    },
+
+    shouldShowMainSlot() {
+      return this.currentStep === 0 && !this.willTransactionFail
+    },
+  },
+
   methods: {
     onHide() {
       Object.assign(this.$data, this.$options.data.apply(this))
       if (typeof this.onClear === 'function') this.onClear()
     },
+
     nextStep() {
-      if (!this.isSimpleUser) {
-        this.goToStep(this.currentStep + 1)
-      } else {
+      if (this.validate) {
+        this.errors = this.validate()
+
+        if (this.errors.length) {
+          // rudimentary, but refocuses at the top if we need to scroll
+          this.shown()
+
+          return
+        }
+      }
+
+      if (this.isSimpleUser) {
         this.goToStep(3)
+      } else {
+        this.goToStep(this.currentStep + 1)
       }
     },
+
     goToStep(newCurrentStep) {
 
       switch (newCurrentStep) {
@@ -148,8 +193,6 @@ export default {
               this.goToStep(this.currentStep + 1)
             })
             .catch((error) => {
-              Raven.captureException(error)
-
               this.metamaskError = (error.message || 'An unknown error occurred').replace(/.*Error:(.*)$/, '$1')
               this.goToStep(this.currentStep - 1)
             })
@@ -161,8 +204,6 @@ export default {
           if (this.isSimpleUser) {
             this.okMethod()
               .catch((error) => {
-                Raven.captureException(error)
-
                 this.metamaskError = (error.message || 'An unknown error occurred').replace(/.*Error:(.*)$/, '$1')
               })
           }
@@ -177,29 +218,6 @@ export default {
 
       this.currentStep = newCurrentStep
 
-    },
-  },
-  computed: {
-    ...mapState('auth', ['balance', 'registryContractApproved', 'user']),
-    ...mapGetters('auth', ['isSimpleUser']),
-
-    shown() {
-      return this.onShown || this.noop
-    },
-    noop() {
-      return () => {}
-    },
-    isDisabled() {
-      return this.willTransactionFail || this.okDisabled || false
-    },
-    modalSize() {
-      return this.size || ''
-    },
-    willTransactionFail() {
-      return config.showFaucet && this.requiresTokens && (!this.registryContractApproved || this.balance.eq(0))
-    },
-    shouldShowMainSlot() {
-      return this.currentStep === 0 && !this.willTransactionFail
     },
   },
 }

@@ -33,7 +33,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import Raven from 'raven-js'
 
 import Record from '../util/api/record'
 import EventBus from '../util/eventBus'
@@ -86,7 +85,6 @@ export default {
     },
 
     updateRecord() {
-
       const dataToUpdate = {
         isPrivate: this.isPrivate,
         isInGallery: this.isInGallery,
@@ -95,7 +93,6 @@ export default {
       return Record.updateRecord(this.codexRecord.tokenId, dataToUpdate)
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not update Record: ${error.message}`)
-          Raven.captureException(error)
           this.reset()
         })
     },
