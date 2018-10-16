@@ -61,7 +61,7 @@
           spellcheck="false"
         />
         <b-input-group-append>
-          <b-btn variant="primary" @click="addWhitelistedAddress()">Add</b-btn>
+          <b-button variant="primary" @click="addWhitelistedAddress()">Add</b-button>
         </b-input-group-append>
       </b-input-group>
 
