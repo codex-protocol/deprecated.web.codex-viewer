@@ -18,7 +18,7 @@ export default () => {
     registryContractApproved: false,
     stakeContractApproved: false,
     hideSetup: !!window.localStorage.getItem('hideSetup'),
-    authError: null,
+    apiError: null,
 
     // Break this out into a separate 'app' module if one is ever needed
     isLoaded: false,

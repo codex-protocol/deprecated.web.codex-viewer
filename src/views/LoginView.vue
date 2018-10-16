@@ -59,11 +59,11 @@ export default {
   },
 
   computed: {
-    ...mapState('auth', ['authError']),
+    ...mapState('auth', ['apiError']),
     ...mapState('web3', ['account', 'instance', 'error']),
 
     title() {
-      if (this.authError) {
+      if (this.apiError) {
         return 'Error'
       }
 
@@ -71,7 +71,7 @@ export default {
     },
 
     description() {
-      if (this.authError) {
+      if (this.apiError) {
         return 'We were unable to log you in with your Google account. Try again later.'
       }
 
