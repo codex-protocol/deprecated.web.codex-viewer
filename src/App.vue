@@ -2,7 +2,7 @@
   <div>
     <AppWarningBanner v-if="showWarningBanner" />
     <div id="app" :class="{
-      'with-background': this.useBackground(),
+      'with-background': this.useBackgroundImage(),
       'show-nav': showNav,
     }">
       <template v-if="!hideSideBar">
@@ -178,13 +178,8 @@ export default {
       )
     },
 
-    useBackground() {
-      switch (this.$route.name) {
-        case 'login':
-          return true
-        default:
-          return false
-      }
+    useBackgroundImage() {
+      return this.$route.meta.useBackgroundImage || false
     },
 
     toggleNav() {

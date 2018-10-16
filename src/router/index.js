@@ -29,6 +29,7 @@ const router = new Router({
       component: LoginView,
       meta: {
         hideSideBar: true,
+        useBackgroundImage: true,
         allowUnauthenticatedUsers: true,
         ifAuthenticatedRedirectTo: 'collection',
       },
