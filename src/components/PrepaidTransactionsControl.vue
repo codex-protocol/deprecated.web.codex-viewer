@@ -120,7 +120,7 @@ export default {
 
 </style>
 
-// NOTE: Using unscoped styles here to override the popover theme
+// @NOTE: Using unscoped styles here to override the popover theme
 <style lang="stylus">
 @import "../assets/variables.styl"
 .popover
