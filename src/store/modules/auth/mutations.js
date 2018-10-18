@@ -89,9 +89,9 @@ export default {
   },
 
   SET_ERROR(currentState, { code, message }) {
-    logMutation('SET_ERROR')
+    logMutation('SET_ERROR', message)
 
-    currentState.authError = {
+    currentState.apiError = {
       code,
       message,
     }

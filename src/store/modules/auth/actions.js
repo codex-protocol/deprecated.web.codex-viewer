@@ -19,7 +19,7 @@ export default {
     } = rootState.route.query
 
     if (error || errorCode) {
-      logger('Oauth2 authentication failed with an error', errorCode, error)
+      logger('API returned an error in query string', errorCode, error)
 
       commit('SET_ERROR', {
         code: errorCode,
@@ -30,6 +30,7 @@ export default {
       router.replace({
         name: rootState.route.name,
       })
+
     } else if (authToken) {
       logger('Fetching user state with the query string authToken')
 
