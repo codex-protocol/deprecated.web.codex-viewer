@@ -19,7 +19,6 @@
       <b-form-input
         id="name"
         v-model="name"
-        @input="updateNameHash"
         ref="defaultModalFocus"
         type="text"
       />
@@ -31,7 +30,6 @@
       <b-form-textarea
         id="description"
         v-model="description"
-        @input="updateDescriptionHash"
         :rows="4"
       />
     </b-form-group>
@@ -143,9 +141,7 @@ export default {
 
     return {
       name: this.codexRecord.metadata.name,
-      nameHash: this.codexRecord.metadata.nameHash,
       description: this.codexRecord.metadata.description,
-      descriptionHash: this.codexRecord.metadata.descriptionHash,
       mainImage: this.codexRecord.metadata.mainImage,
       mainImageFileHash: this.codexRecord.metadata.mainImage.hash,
       mainImageId: this.codexRecord.metadata.mainImage.id,
@@ -268,16 +264,6 @@ export default {
       }
     },
 
-    updateNameHash() {
-      this.nameHash = this.instance.utils.soliditySha3(this.name)
-    },
-
-    updateDescriptionHash() {
-      this.descriptionHash = this.description
-        ? this.instance.utils.soliditySha3(this.description)
-        : NullDescriptionHash
-    },
-
     // Main image handlers
     displayAndUploadFile(file) {
       if (!file) {
@@ -366,10 +352,13 @@ export default {
     },
 
     modifyRecord() {
+
+      const { soliditySha3 } = this.instance.utils
+
       const input = [
         this.codexRecord.tokenId,
-        this.nameHash,
-        this.descriptionHash,
+        soliditySha3(this.name),
+        this.description ? soliditySha3(this.description) : NullDescriptionHash,
         this.fileHashes,
         additionalDataHelper.encode([
           process.env.VUE_APP_METADATA_PROVIDER_ID, // providerId
