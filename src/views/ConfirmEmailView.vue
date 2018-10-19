@@ -22,6 +22,16 @@
 
         <ResendConfirmationEmailModal :default-email="this.emailAddress" />
 
+        <b-button
+          size="sm"
+          variant="link"
+          class="pl-0 pr-0"
+          @click.prevent="confirmEmail"
+          v-if="showManualConfirm"
+        >
+          Confirm email
+        </b-button>
+
       </div>
       <div class="col-12 col-md-6 secondary">
         <div class="login-art"><img src="../assets/images/login-art.png" v-party-mode-activator /></div>
@@ -33,7 +43,10 @@
 <script>
 import { mapState } from 'vuex'
 
+import config from '../util/config'
 import EventBus from '../util/eventBus'
+import EmailConfirmation from '../util/api/emailConfirmation'
+
 import ResendConfirmationEmailModal from '../components/modals/ResendConfirmationEmailModal'
 
 export default {
@@ -50,6 +63,7 @@ export default {
       headerText: 'Confirm Your Email Address',
       buttonText: 'Didn\'t receive a confirmation email?',
       bodyText: 'Please check your email for a confirmation link from Codex Protocol. Once your email is confirmed, you\'ll automatically be logged into the Codex Registry.',
+      showManualConfirm: config.showManualConfirm,
     }
   },
 
@@ -75,6 +89,15 @@ export default {
       this.headerText = 'Could Not Confirm Your Email Address'
       this.bodyText = 'There was an error while confirming your email address.'
     }
+  },
+
+  methods: {
+    confirmEmail() {
+      EmailConfirmation.confirm(this.emailAddress)
+        .then(() => {
+          this.$router.replace('/')
+        })
+    },
   },
 }
 </script>

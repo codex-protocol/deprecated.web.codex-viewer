@@ -12,8 +12,11 @@
         <div class="lead">{{ description }}</div>
 
         <div class="login-buttons">
-          <a :href="oauthLoginUrl" class="mb-3">
+          <a :href="googleLoginUrl" class="mb-3">
             <img src="../assets/images/google-signin@2x.png">
+          </a>
+          <a :href="facebookLoginUrl" class="mb-3">
+            Sign in with Facebook
           </a>
           <b-button
             v-if="buttonTitle"
@@ -50,7 +53,8 @@ export default {
   data() {
     return {
       isMobile: is.mobile(),
-      oauthLoginUrl: `${config.apiUrl}/oauth2/login/google`,
+      googleLoginUrl: `${config.apiUrl}/oauth2/login/google`,
+      facebookLoginUrl: `${config.apiUrl}/oauth2/login/facebook`,
     }
   },
 
