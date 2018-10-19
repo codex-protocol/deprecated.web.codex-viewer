@@ -18,6 +18,9 @@
           <a :href="facebookLoginUrl" class="mb-3">
             Sign in with Facebook
           </a>
+          <a :href="microsoftLoginUrl" class="mb-3">
+            Sign in with Microsoft
+          </a>
           <b-button
             v-if="buttonTitle"
             variant="outline-primary"
@@ -55,6 +58,7 @@ export default {
       isMobile: is.mobile(),
       googleLoginUrl: `${config.apiUrl}/oauth2/login/google`,
       facebookLoginUrl: `${config.apiUrl}/oauth2/login/facebook`,
+      microsoftLoginUrl: `${config.apiUrl}/oauth2/login/azure-ad`,
     }
   },
 
