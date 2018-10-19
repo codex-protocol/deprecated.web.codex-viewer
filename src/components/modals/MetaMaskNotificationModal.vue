@@ -28,10 +28,12 @@
     -->
     <div v-show="shouldShowMainSlot">
       <p v-if="errors.length">
-        <span>Please fix these error(s):</span>
-        <ul>
-          <li v-for="(error, index) in errors" :key="index">{{ error }}</li>
-        </ul>
+        <b-alert variant="danger" :show="errors.length !== 0">
+          Please fix these error(s):
+          <ul>
+            <li v-for="(error, index) in errors" :key="index">{{ error }}</li>
+          </ul>
+        </b-alert>
       </p>
       <slot></slot>
     </div>
