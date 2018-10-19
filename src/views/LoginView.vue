@@ -27,7 +27,7 @@
         <p class="mt-3">{{ errorMessage }}</p>
       </div>
       <div class="col-12 col-md-6 secondary">
-        <div class="login-art"><img src="../assets/images/login-art.png" /></div>
+        <div class="login-art"><img src="../assets/images/login-art.png" v-party-mode-activator /></div>
       </div>
     </div>
   </div>
