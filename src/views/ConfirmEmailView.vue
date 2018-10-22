@@ -27,7 +27,7 @@
           variant="link"
           class="pl-0 pr-0"
           @click.prevent="confirmEmail"
-          v-if="showManualConfirm"
+          v-if="showManualConfirm && this.emailAddress"
         >
           Confirm email
         </b-button>
