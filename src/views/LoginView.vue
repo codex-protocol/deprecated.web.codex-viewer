@@ -13,9 +13,8 @@
         <p class="mt-5 mb-3 text-center">
           <b>Sign in below to get started</b>
         </p>
-        <p v-if="errorMessage">{{ errorMessage }}</p>
 
-        <div class="icons">
+        <div class="icons mb-3">
           <a :href="googleLoginUrl">
             <IconBase iconName="google" width="48" height="48" />
           </a>
@@ -38,6 +37,8 @@
             <IconBase iconName="coinbaseWallet" width="48" height="48" />
           </b-link>
         </div>
+
+        <p v-if="errorMessage">{{ errorMessage }}</p>
       </div>
       <div class="col-12 col-md-6 secondary">
         <div class="login-art"><img src="../assets/images/login-art.png" v-party-mode-activator /></div>
