@@ -16,7 +16,7 @@
             <img src="../assets/images/google-signin@2x.png">
           </a>
           <a :href="facebookLoginUrl" class="mb-3">
-            Sign in with Facebook
+            <IconBase iconName="facebook" width="24" height="24" class="icon" />
           </a>
           <a :href="microsoftLoginUrl" class="mb-3">
             Sign in with Microsoft
@@ -48,10 +48,16 @@ import config from '../util/config'
 import EventBus from '../util/eventBus'
 import { Web3Errors, Networks } from '../util/constants/web3'
 
+import IconBase from '../components/icons/IconBase'
+
 const logger = debug('app:component:login-view')
 
 export default {
   name: 'LoginView',
+
+  components: {
+    IconBase,
+  },
 
   data() {
     return {

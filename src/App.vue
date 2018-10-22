@@ -7,14 +7,12 @@
     }">
       <template v-if="!hideSideBar">
         <span class="hamburger" @click="toggleNav">
-          <icon-base
+          <IconBase
             iconName="menu"
             width="28"
             height="32"
             class="icon-menu"
-          >
-            <icon-hamburger />
-          </icon-base>
+          />
         </span>
         <AppSideBar :hideNav="hideNav" />
       </template>
@@ -53,12 +51,9 @@ import AppFooter from './components/core/AppFooter'
 import AppSideBar from './components/core/AppSideBar'
 import AppWarningBanner from './components/core/AppWarningBanner'
 
+import IconBase from './components/icons/IconBase'
 import LoadingOverlay from './components/util/LoadingOverlay'
 import ToastContainer from './components/util/ToastContainer'
-
-import IconHamburger from './components/icons/IconHamburger'
-import IconBase from './components/icons/IconBase'
-
 import PartyModeActivator from './directives/PartyModeActivator'
 
 import './util/analytics'
@@ -73,12 +68,9 @@ export default {
     AppSideBar,
     AppWarningBanner,
 
+    IconBase,
     LoadingOverlay,
     ToastContainer,
-
-    IconHamburger,
-    IconBase,
-
   },
 
   directives: {
