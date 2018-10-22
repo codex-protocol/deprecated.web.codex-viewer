@@ -10,27 +10,24 @@
 
         <h1>{{ title }}</h1>
         <div class="lead">{{ description }}</div>
+        <p class="mt-5 mb-3">{{ errorMessage }}</p>
 
-        <div class="login-buttons">
-          <a :href="googleLoginUrl" class="mb-3">
-            <img src="../assets/images/google-signin@2x.png">
+        <div class="icons">
+          <a :href="googleLoginUrl">
+            <IconBase iconName="google" width="48" height="48" />
           </a>
-          <a :href="facebookLoginUrl" class="mb-3">
-            <IconBase iconName="facebook" width="24" height="24" class="icon" />
+          <a :href="facebookLoginUrl">
+            <IconBase iconName="facebook" width="48" height="48" />
           </a>
-          <a :href="microsoftLoginUrl" class="mb-3">
-            Sign in with Microsoft
+          <a :href="microsoftLoginUrl">
+            <IconBase iconName="microsoft" width="48" height="48" />
           </a>
-          <b-button
-            v-if="buttonTitle"
-            variant="outline-primary"
-            @click="buttonMethod"
+          <b-link
             :disabled="buttonDisabled"
-          >
-            {{ buttonTitle }}
-          </b-button>
+            @click="buttonMethod">
+            <IconBase iconName="metaMask" width="48" height="48" />
+          </b-link>
         </div>
-        <p class="mt-3">{{ errorMessage }}</p>
       </div>
       <div class="col-12 col-md-6 secondary">
         <div class="login-art"><img src="../assets/images/login-art.png" v-party-mode-activator /></div>
@@ -81,28 +78,15 @@ export default {
         return 'Error'
       }
 
-      return 'Login'
+      return 'Sign in'
     },
 
     description() {
       if (this.apiError) {
-        return 'We were unable to log you in with your Google account. Try again later.'
+        return 'We were unable to log you in with your account. Try again later.'
       }
 
-      return 'Login to create, view, and transfer Codex Records'
-    },
-
-    buttonTitle() {
-      switch (this.error) {
-        case Web3Errors.Unknown:
-        case Web3Errors.Missing:
-          return this.isMobile
-            ? 'Install Coinbase Wallet'
-            : 'Install MetaMask'
-
-        default:
-          return 'Login with Web3'
-      }
+      return 'Codex Viewer allows you to create, view, and transfer Codex Records'
     },
 
     buttonMethod() {
@@ -130,14 +114,14 @@ export default {
     errorMessage() {
       switch (this.error) {
         case Web3Errors.Locked:
-          return 'Your Web3 account is locked. To login with Web3, open your Ethereum wallet and follow the instructions to unlock it.'
+          return 'Your Web3 account is locked. To sign in with Web3, open your Ethereum wallet and follow the instructions to unlock it.'
 
         case Web3Errors.Unknown:
         case Web3Errors.Missing:
-          return 'To continue, sign in with Google or install a Web3 wallet to login with Web3.'
+          return 'Sign in below to get started'
 
         case Web3Errors.WrongNetwork:
-          return `You're on the wrong Ethereum network. The expected network is ${Networks[config.expectedNetworkId]}. Sign in with Google or change the network in your wallet settings.`
+          return `You're on the wrong Ethereum network. The expected network is ${Networks[config.expectedNetworkId]}. Sign in with an identity provider or change the network in your wallet settings.`
 
         default:
           return null
@@ -199,24 +183,12 @@ export default {
 <style lang="stylus" scoped>
 @import "../assets/variables.styl"
 
-  .login-buttons
+  .icons
     display: flex
-    flex-wrap: wrap
+    justify-content: center
 
     a
-      background-color: white
-      text-align: center
-
-    a > img, button
-      height: 3rem
-
-    @media(min-width: 600px)
-      a
-        margin-right: 1rem
-
-    @media screen and (max-width: $breakpoint-md)
-      a, button
-        width: 100%
+      margin: 0 1rem
 
   .logo
     max-width: 100px
@@ -226,9 +198,6 @@ export default {
   h1
     font-weight: bold
     font-family: $font-family-serif
-
-  .lead
-    margin-bottom: 3rem
 
   .login-art img
     width: 100%

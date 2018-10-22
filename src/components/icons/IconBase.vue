@@ -15,15 +15,18 @@
 </template>
 
 <script>
-// @TODO: Although this is cleaner code-wise, it means that we are now downloading all the svg icons even if they aren't being used
-//  Instead, we should lazily load these so they only get downloaded at runtime as opposed to getting included in the build
-//  For now, I'm commenting out ones we aren't using explicitly to slightly reduce the bundle size
+// @NOTE: Although this is cleaner code-wise, it means that we are now bundling all the svg icons even if they aren't being used
+// For now, I'm commenting out ones we aren't using explicitly to reduce the bundle size
+
 // import IconPathChrome from './IconPathChrome'
 import IconPathFacebook from './IconPathFacebook'
 // import IconPathFirefox from './IconPathFirefox'
 import IconPathGitHub from './IconPathGitHub'
+import IconPathGoogle from './IconPathGoogle'
 import IconPathMedium from './IconPathMedium'
 import IconPathMenu from './IconPathMenu'
+import IconPathMetaMask from './IconPathMetaMask'
+import IconPathMicrosoft from './IconPathMicrosoft'
 // import IconPathOpera from './IconPathOpera'
 import IconPathTelegram from './IconPathTelegram'
 import IconPathTwitter from './IconPathTwitter'
@@ -65,6 +68,10 @@ export default {
         viewBox: '0 0 496 512',
         component: IconPathGitHub,
       },
+      google: {
+        viewBox: '0 0 488 512',
+        component: IconPathGoogle,
+      },
       medium: {
         viewBox: '0 0 512 512',
         component: IconPathMedium,
@@ -72,6 +79,14 @@ export default {
       menu: {
         viewBox: '0 0 448 512',
         component: IconPathMenu,
+      },
+      metaMask: {
+        viewBox: '0 0 24 24',
+        component: IconPathMetaMask,
+      },
+      microsoft: {
+        viewBox: '0 0 448 512',
+        component: IconPathMicrosoft,
       },
       // opera: {
       //   viewBox: '0 0 496 512',
