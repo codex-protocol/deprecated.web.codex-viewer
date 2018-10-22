@@ -15,24 +15,16 @@
     </div>
     <div class="icons">
       <a href="https://github.com/codex-protocol/">
-        <icon-base iconName="github" width="24" height="24" class="icon">
-          <icon-github />
-        </icon-base>
+        <IconBase iconName="gitHub" width="24" height="24" class="icon" />
       </a>
       <a href="https://twitter.com/codexprotocol">
-        <icon-base iconName="twitter" width="24" height="24" class="icon">
-          <icon-twitter />
-        </icon-base>
+        <IconBase iconName="twitter" width="24" height="24" class="icon" />
       </a>
       <a href="http://t.me/codexprotocol">
-        <icon-base iconName="telegram" width="24" height="24" class="icon">
-          <icon-telegram />
-        </icon-base>
+        <IconBase iconName="telegram" width="24" height="24" class="icon" />
       </a>
       <a href="https://medium.com/codexprotocol">
-        <icon-base iconName="medium" width="24" height="24" class="icon">
-          <icon-medium />
-        </icon-base>
+        <IconBase iconName="medium" width="24" height="24" class="icon" />
       </a>
     </div>
   </div>
@@ -41,22 +33,16 @@
 <script>
 
 import IconBase from '../icons/IconBase'
-import IconGithub from '../icons/IconGithub'
-import IconTwitter from '../icons/IconTwitter'
-import IconTelegram from '../icons/IconTelegram'
-import IconMedium from '../icons/IconMedium'
 
 import config from '../../util/config'
 
 export default {
   name: 'AppFooter',
+
   components: {
     IconBase,
-    IconGithub,
-    IconTwitter,
-    IconTelegram,
-    IconMedium,
   },
+
   data() {
     return {
       showTestApp: config.showTestApp,

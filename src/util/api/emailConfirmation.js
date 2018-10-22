@@ -12,4 +12,17 @@ export default {
 
     return callApi(requestOptions)
   },
+
+  // @NOTE: This is available in development environments only (enforced on the API)
+  confirm: (email) => {
+    const requestOptions = {
+      method: 'post',
+      url: '/test/confirm-email',
+      data: {
+        email,
+      },
+    }
+
+    return callApi(requestOptions)
+  },
 }
