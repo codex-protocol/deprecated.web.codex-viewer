@@ -17,7 +17,7 @@ export default {
   confirm: (email) => {
     const requestOptions = {
       method: 'post',
-      url: '/email-confirmation',
+      url: '/test/confirm-email',
       data: {
         email,
       },
