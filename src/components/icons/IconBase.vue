@@ -7,7 +7,6 @@
     :aria-labelledby="iconName"
     role="presentation"
   >
-    <title :id="iconName" lang="en">{{iconName}} icon</title>
     <g :fill="iconColor">
       <component :is="icons[iconName].component" />
     </g>
@@ -19,6 +18,7 @@
 // For now, I'm commenting out ones we aren't using explicitly to reduce the bundle size
 
 // import IconPathChrome from './IconPathChrome'
+import IconPathCoinbaseWallet from './IconPathCoinbaseWallet'
 import IconPathFacebook from './IconPathFacebook'
 // import IconPathFirefox from './IconPathFirefox'
 import IconPathGitHub from './IconPathGitHub'
@@ -56,6 +56,10 @@ export default {
       //   viewBox: '0 0 496 512',
       //   component: IconPathChrome,
       // },
+      coinbaseWallet: {
+        viewBox: '0 0 32 32',
+        component: IconPathCoinbaseWallet,
+      },
       facebook: {
         viewBox: '0 0 448 512',
         component: IconPathFacebook,

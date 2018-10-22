@@ -10,7 +10,10 @@
 
         <h1>{{ title }}</h1>
         <div class="lead">{{ description }}</div>
-        <p class="mt-5 mb-3">{{ errorMessage }}</p>
+        <p class="mt-5 mb-3 text-center">
+          <b>Sign in below to get started</b>
+        </p>
+        <p v-if="errorMessage">{{ errorMessage }}</p>
 
         <div class="icons">
           <a :href="googleLoginUrl">
@@ -24,8 +27,15 @@
           </a>
           <b-link
             :disabled="buttonDisabled"
-            @click="buttonMethod">
+            @click="loginWithMetaMask"
+          >
             <IconBase iconName="metaMask" width="48" height="48" />
+          </b-link>
+          <b-link
+            :disabled="buttonDisabled"
+            @click="loginWithCoinbase"
+          >
+            <IconBase iconName="coinbaseWallet" width="48" height="48" />
           </b-link>
         </div>
       </div>
@@ -61,7 +71,7 @@ export default {
       isMobile: is.mobile(),
       googleLoginUrl: `${config.apiUrl}/oauth2/login/google`,
       facebookLoginUrl: `${config.apiUrl}/oauth2/login/facebook`,
-      microsoftLoginUrl: `${config.apiUrl}/oauth2/login/microsoft,
+      microsoftLoginUrl: `${config.apiUrl}/oauth2/login/microsoft`,
     }
   },
 
@@ -116,31 +126,30 @@ export default {
         case Web3Errors.Locked:
           return 'Your Web3 account is locked. To sign in with Web3, open your Ethereum wallet and follow the instructions to unlock it.'
 
-        case Web3Errors.Unknown:
-        case Web3Errors.Missing:
-          return 'Sign in below to get started'
-
         case Web3Errors.WrongNetwork:
-          return `You're on the wrong Ethereum network. The expected network is ${Networks[config.expectedNetworkId]}. Sign in with an identity provider or change the network in your wallet settings.`
+          return `You're on the wrong Ethereum network. The expected network is ${Networks[config.expectedNetworkId]}. To sign in with Web3, change the network in your wallet settings.`
 
         default:
           return null
       }
     },
-
-    showCoinbaseWalletLink() {
-      return this.isMobile && this.error === Web3Errors.Missing
-    },
   },
 
   methods: {
-    installWeb3() {
-      window.open(
-        this.isMobile ? 'https://wallet.coinbase.com' : 'https://www.metamask.io',
-        '_blank'
-      )
+    loginWithMetaMask() {
+      if (this.error === Web3Errors.Unknown || this.error === Web3Errors.Missing) {
+        window.open('https://www.metamask.io', '_blank')
+      } else {
+        this.web3Login()
+      }
+    },
 
-      EventBus.$emit('events:click-install-metamask', this)
+    loginWithCoinbase() {
+      if (this.error === Web3Errors.Unknown || this.error === Web3Errors.Missing) {
+        window.open('https://wallet.coinbase.com', '_blank')
+      } else {
+        this.web3Login()
+      }
     },
 
     web3Login() {
