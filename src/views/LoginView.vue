@@ -61,7 +61,7 @@ export default {
       isMobile: is.mobile(),
       googleLoginUrl: `${config.apiUrl}/oauth2/login/google`,
       facebookLoginUrl: `${config.apiUrl}/oauth2/login/facebook`,
-      microsoftLoginUrl: `${config.apiUrl}/oauth2/login/azure-ad`,
+      microsoftLoginUrl: `${config.apiUrl}/oauth2/login/microsoft,
     }
   },
 
