@@ -10,7 +10,7 @@
 
         <h1>{{ title }}</h1>
         <div class="lead">{{ description }}</div>
-        <p class="mt-5 mb-3 text-center">
+        <p class="mt-5 mb-3">
           <b>Sign in below to get started</b>
         </p>
 
@@ -193,12 +193,11 @@ export default {
 <style lang="stylus" scoped>
 @import "../assets/variables.styl"
 
-  .icons
-    display: flex
-    justify-content: center
+  .icons a
+    margin: 0 1rem
 
-    a
-      margin: 0 1rem
+    &:first-child
+      margin-left: 0
 
   .logo
     max-width: 100px

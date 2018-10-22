@@ -20,14 +20,14 @@
           {{ buttonText }}
         </b-button>
 
-        <ResendConfirmationEmailModal :default-email="this.emailAddress" />
+        <ResendConfirmationEmailModal :default-email="emailAddress" />
 
         <b-button
           size="sm"
           variant="link"
           class="pl-0 pr-0"
           @click.prevent="confirmEmail"
-          v-if="showManualConfirm && this.emailAddress"
+          v-if="showManualConfirm && emailAddress"
         >
           Confirm email
         </b-button>
