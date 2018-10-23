@@ -18,10 +18,10 @@
           <a :href="googleLoginUrl">
             <IconBase iconName="google" width="48" height="48" />
           </a>
-          <a :href="facebookLoginUrl">
+          <a :href="facebookLoginUrl" v-if="showFacebook">
             <IconBase iconName="facebook" width="48" height="48" />
           </a>
-          <a :href="microsoftLoginUrl">
+          <a :href="microsoftLoginUrl" v-if="showMicrosoft">
             <IconBase iconName="microsoft" width="48" height="48" />
           </a>
           <b-link
@@ -73,6 +73,10 @@ export default {
       googleLoginUrl: `${config.apiUrl}/oauth2/login/google`,
       facebookLoginUrl: `${config.apiUrl}/oauth2/login/facebook`,
       microsoftLoginUrl: `${config.apiUrl}/oauth2/login/microsoft`,
+
+      // Facebook and Microsoft support HTTPS for redirect_uri so we hide these in ropsten
+      showFacebook: config.expectedNetworkName !== 'ropsten',
+      showMicrosoft: config.expectedNetworkName !== 'ropsten',
     }
   },
 
