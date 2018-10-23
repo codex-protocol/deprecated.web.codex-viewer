@@ -10,21 +10,35 @@
 
         <h1>{{ title }}</h1>
         <div class="lead">{{ description }}</div>
+        <p class="mt-5 mb-3">
+          <b>Sign in below to get started</b>
+        </p>
 
-        <div class="login-buttons">
-          <a :href="oauthLoginUrl" class="mb-3">
-            <img src="../assets/images/google-signin@2x.png">
+        <div class="icons mb-3">
+          <a :href="googleLoginUrl">
+            <IconBase iconName="google" width="48" height="48" />
           </a>
-          <b-button
-            v-if="buttonTitle"
-            variant="outline-primary"
-            @click="buttonMethod"
+          <a :href="facebookLoginUrl">
+            <IconBase iconName="facebook" width="48" height="48" />
+          </a>
+          <a :href="microsoftLoginUrl">
+            <IconBase iconName="microsoft" width="48" height="48" />
+          </a>
+          <b-link
             :disabled="buttonDisabled"
+            @click="loginWithMetaMask"
           >
-            {{ buttonTitle }}
-          </b-button>
+            <IconBase iconName="metaMask" width="48" height="48" />
+          </b-link>
+          <b-link
+            :disabled="buttonDisabled"
+            @click="loginWithCoinbase"
+          >
+            <IconBase iconName="coinbaseWallet" width="48" height="48" />
+          </b-link>
         </div>
-        <p class="mt-3">{{ errorMessage }}</p>
+
+        <p v-if="errorMessage">{{ errorMessage }}</p>
       </div>
       <div class="col-12 col-md-6 secondary">
         <div class="login-art"><img src="../assets/images/login-art.png" v-party-mode-activator /></div>
@@ -42,15 +56,23 @@ import config from '../util/config'
 import EventBus from '../util/eventBus'
 import { Web3Errors, Networks } from '../util/constants/web3'
 
+import IconBase from '../components/icons/IconBase'
+
 const logger = debug('app:component:login-view')
 
 export default {
   name: 'LoginView',
 
+  components: {
+    IconBase,
+  },
+
   data() {
     return {
       isMobile: is.mobile(),
-      oauthLoginUrl: `${config.apiUrl}/oauth2/login/google`,
+      googleLoginUrl: `${config.apiUrl}/oauth2/login/google`,
+      facebookLoginUrl: `${config.apiUrl}/oauth2/login/facebook`,
+      microsoftLoginUrl: `${config.apiUrl}/oauth2/login/microsoft`,
     }
   },
 
@@ -67,28 +89,15 @@ export default {
         return 'Error'
       }
 
-      return 'Login'
+      return 'Sign in'
     },
 
     description() {
       if (this.apiError) {
-        return 'We were unable to log you in with your Google account. Try again later.'
+        return 'We were unable to log you in with your account. Try again later.'
       }
 
-      return 'Login to create, view, and transfer Codex Records'
-    },
-
-    buttonTitle() {
-      switch (this.error) {
-        case Web3Errors.Unknown:
-        case Web3Errors.Missing:
-          return this.isMobile
-            ? 'Install Coinbase Wallet'
-            : 'Install MetaMask'
-
-        default:
-          return 'Login with Web3'
-      }
+      return 'Codex Viewer allows you to create, view, and transfer Codex Records'
     },
 
     buttonMethod() {
@@ -116,33 +125,32 @@ export default {
     errorMessage() {
       switch (this.error) {
         case Web3Errors.Locked:
-          return 'Your Web3 account is locked. To login with Web3, open your Ethereum wallet and follow the instructions to unlock it.'
-
-        case Web3Errors.Unknown:
-        case Web3Errors.Missing:
-          return 'To continue, sign in with Google or install a Web3 wallet to login with Web3.'
+          return 'Your Web3 account is locked. To sign in with Web3, open your Ethereum wallet and follow the instructions to unlock it.'
 
         case Web3Errors.WrongNetwork:
-          return `You're on the wrong Ethereum network. The expected network is ${Networks[config.expectedNetworkId]}. Sign in with Google or change the network in your wallet settings.`
+          return `You're on the wrong Ethereum network. The expected network is ${Networks[config.expectedNetworkId]}. To sign in with Web3, change the network in your wallet settings.`
 
         default:
           return null
       }
     },
-
-    showCoinbaseWalletLink() {
-      return this.isMobile && this.error === Web3Errors.Missing
-    },
   },
 
   methods: {
-    installWeb3() {
-      window.open(
-        this.isMobile ? 'https://wallet.coinbase.com' : 'https://www.metamask.io',
-        '_blank'
-      )
+    loginWithMetaMask() {
+      if (this.error === Web3Errors.Unknown || this.error === Web3Errors.Missing) {
+        window.open('https://www.metamask.io', '_blank')
+      } else {
+        this.web3Login()
+      }
+    },
 
-      EventBus.$emit('events:click-install-metamask', this)
+    loginWithCoinbase() {
+      if (this.error === Web3Errors.Unknown || this.error === Web3Errors.Missing) {
+        window.open('https://wallet.coinbase.com', '_blank')
+      } else {
+        this.web3Login()
+      }
     },
 
     web3Login() {
@@ -185,24 +193,11 @@ export default {
 <style lang="stylus" scoped>
 @import "../assets/variables.styl"
 
-  .login-buttons
-    display: flex
-    flex-wrap: wrap
+  .icons a
+    margin: 0 1rem
 
-    a
-      background-color: white
-      text-align: center
-
-    a > img, button
-      height: 3rem
-
-    @media(min-width: 600px)
-      a
-        margin-right: 1rem
-
-    @media screen and (max-width: $breakpoint-md)
-      a, button
-        width: 100%
+    &:first-child
+      margin-left: 0
 
   .logo
     max-width: 100px
@@ -212,9 +207,6 @@ export default {
   h1
     font-weight: bold
     font-family: $font-family-serif
-
-  .lead
-    margin-bottom: 3rem
 
   .login-art img
     width: 100%

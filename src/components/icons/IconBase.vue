@@ -1,46 +1,35 @@
-<!-- Based on https://vuejs.org/v2/cookbook/editable-svg-icons.html
-      This allows us to easily inline accessible svg icons.
--->
+<!-- Based on https://vuejs.org/v2/cookbook/editable-svg-icons.html -->
 <template>
   <svg xmlns="http://www.w3.org/2000/svg"
     :width="width"
     :height="height"
-    :viewBox="getViewBox"
+    :viewBox="icons[iconName].viewBox"
     :aria-labelledby="iconName"
     role="presentation"
   >
-    <title :id="iconName" lang="en">{{iconName}} icon</title>
     <g :fill="iconColor">
-      <slot />
+      <component :is="icons[iconName].component" />
     </g>
   </svg>
 </template>
 
 <script>
+// @NOTE: Although this is cleaner code-wise, it means that we are now bundling all the svg icons even if they aren't being used
+// For now, I'm commenting out ones we aren't using explicitly to reduce the bundle size
 
-const getViewBox = (iconName) => {
-  // We're mostly using Material Icons which work with `0 0 18 18`.
-  //  But some of our icons are from Font Awesome which have a different base viewbox.
-  switch (iconName) {
-    case 'opera':
-    case 'github':
-    case 'chrome':
-    case 'telegram':
-      return '0 0 496 512'
-
-    case 'firefox':
-      return '0 0 480 512'
-
-    case 'medium':
-    case 'twitter':
-      return '0 0 512 512'
-    case 'menu':
-      return '0 0 448 512'
-
-    default:
-      return '0 0 18 18'
-  }
-}
+// import IconPathChrome from './IconPathChrome'
+import IconPathCoinbaseWallet from './IconPathCoinbaseWallet'
+import IconPathFacebook from './IconPathFacebook'
+// import IconPathFirefox from './IconPathFirefox'
+import IconPathGitHub from './IconPathGitHub'
+import IconPathGoogle from './IconPathGoogle'
+import IconPathMedium from './IconPathMedium'
+import IconPathMenu from './IconPathMenu'
+import IconPathMetaMask from './IconPathMetaMask'
+import IconPathMicrosoft from './IconPathMicrosoft'
+// import IconPathOpera from './IconPathOpera'
+import IconPathTelegram from './IconPathTelegram'
+import IconPathTwitter from './IconPathTwitter'
 
 export default {
   props: {
@@ -55,19 +44,71 @@ export default {
       type: [Number, String],
       default: 18,
     },
-    viewBox: {
-      type: [String],
-      default: '0 0 18 18',
-    },
     iconColor: {
       type: String,
       default: 'currentColor',
     },
   },
-  computed: {
-    getViewBox() {
-      return getViewBox(this.iconName)
-    },
+
+  data() {
+    const icons = {
+      // chrome: {
+      //   viewBox: '0 0 496 512',
+      //   component: IconPathChrome,
+      // },
+      coinbaseWallet: {
+        viewBox: '0 0 32 32',
+        component: IconPathCoinbaseWallet,
+      },
+      facebook: {
+        viewBox: '0 0 448 512',
+        component: IconPathFacebook,
+      },
+      // firefox: {
+      //   viewBox: '0 0 480 512',
+      //   component: IconPathFirefox,
+      // },
+      gitHub: {
+        viewBox: '0 0 496 512',
+        component: IconPathGitHub,
+      },
+      google: {
+        viewBox: '0 0 488 512',
+        component: IconPathGoogle,
+      },
+      medium: {
+        viewBox: '0 0 512 512',
+        component: IconPathMedium,
+      },
+      menu: {
+        viewBox: '0 0 448 512',
+        component: IconPathMenu,
+      },
+      metaMask: {
+        viewBox: '0 0 24 24',
+        component: IconPathMetaMask,
+      },
+      microsoft: {
+        viewBox: '0 0 448 512',
+        component: IconPathMicrosoft,
+      },
+      // opera: {
+      //   viewBox: '0 0 496 512',
+      //   component: IconPathOpera,
+      // },
+      telegram: {
+        viewBox: '0 0 496 512',
+        component: IconPathTelegram,
+      },
+      twitter: {
+        viewBox: '0 0 512 512',
+        component: IconPathTwitter,
+      },
+    }
+
+    return {
+      icons,
+    }
   },
 }
 </script>

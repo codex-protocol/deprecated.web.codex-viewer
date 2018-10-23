@@ -33,6 +33,7 @@ export default {
   showManageTokensPage: false,
   showTestApp: process.env.VUE_APP_TARGET_ENV !== 'production',
   showCodexGalleryInSideBar: false,
+  showManualConfirm: process.env.VUE_APP_TARGET_ENV === 'development',
 
   apiUrl,
   etherScanUrl,
