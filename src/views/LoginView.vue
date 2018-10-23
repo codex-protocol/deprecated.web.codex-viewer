@@ -111,17 +111,6 @@ export default {
       return 'Codex Viewer allows you to create, view, and transfer Codex Records'
     },
 
-    buttonMethod() {
-      switch (this.error) {
-        case Web3Errors.Unknown:
-        case Web3Errors.Missing:
-          return this.installWeb3
-
-        default:
-          return this.web3Login
-      }
-    },
-
     web3LoginDisabled() {
       switch (this.error) {
         case Web3Errors.Locked:
