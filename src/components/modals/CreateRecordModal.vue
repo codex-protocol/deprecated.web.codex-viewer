@@ -75,7 +75,6 @@ import File from '../../util/api/file'
 import Record from '../../util/api/record'
 import EventBus from '../../util/eventBus'
 import contractHelper from '../../util/contractHelper'
-import { NullDescriptionHash } from '../../util/constants/web3'
 import additionalDataHelper from '../../util/additionalDataHelper'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
@@ -93,7 +92,6 @@ export default {
       name: null,
       description: null,
       uploadedFile: null,
-      uploadedFileHash: null,
       imageStreamUri: null,
       progressVisible: false,
       uploadComplete: false,
@@ -132,15 +130,6 @@ export default {
       })
 
       fileReader.readAsDataURL(file)
-
-      // hash the file's binary data
-      const binaryFileReader = new FileReader()
-
-      binaryFileReader.addEventListener('loadend', () => {
-        this.uploadedFileHash = this.instance.utils.soliditySha3(binaryFileReader.result)
-      })
-
-      binaryFileReader.readAsBinaryString(file)
 
     },
 
@@ -203,13 +192,11 @@ export default {
     createRecord(metadata) {
       const account = this.user.address
 
-      const { soliditySha3 } = this.instance.utils
-
       const input = [
         account,
-        soliditySha3(metadata.name),
-        metadata.description ? soliditySha3(metadata.description) : NullDescriptionHash,
-        [this.uploadedFileHash],
+        metadata.nameHash,
+        metadata.descriptionHash,
+        metadata.fileHashes,
         additionalDataHelper.encode([
           process.env.VUE_APP_METADATA_PROVIDER_ID, // providerId
           metadata.id, // providerMetadataId
