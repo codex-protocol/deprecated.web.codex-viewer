@@ -75,6 +75,7 @@ import File from '../../util/api/file'
 import Record from '../../util/api/record'
 import EventBus from '../../util/eventBus'
 import contractHelper from '../../util/contractHelper'
+import { NullDescriptionHash } from '../../util/constants/web3'
 import additionalDataHelper from '../../util/additionalDataHelper'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
@@ -195,7 +196,7 @@ export default {
       const input = [
         account,
         metadata.nameHash,
-        metadata.descriptionHash,
+        metadata.descriptionHash || NullDescriptionHash,
         metadata.fileHashes,
         additionalDataHelper.encode([
           process.env.VUE_APP_METADATA_PROVIDER_ID, // providerId

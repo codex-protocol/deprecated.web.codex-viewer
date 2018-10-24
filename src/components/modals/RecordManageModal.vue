@@ -114,6 +114,7 @@ import config from '../../util/config'
 import Record from '../../util/api/record'
 import EventBus from '../../util/eventBus'
 import contractHelper from '../../util/contractHelper'
+import { NullDescriptionHash } from '../../util/constants/web3'
 import additionalDataHelper from '../../util/additionalDataHelper'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
@@ -135,7 +136,7 @@ export default {
       description: this.codexRecord.metadata.description,
       mainImage: this.codexRecord.metadata.mainImage,
       mainImageId: this.codexRecord.metadata.mainImage.id,
-      images: Array.from(this.codexRecord.metadata.images), // @todo is Array.from needed?
+      images: this.codexRecord.metadata.images,
 
       uploadedMainImageFile: null,
       imageStreamUri: null,
@@ -311,7 +312,7 @@ export default {
       const input = [
         this.codexRecord.tokenId,
         metadata.nameHash,
-        metadata.descriptionHash,
+        metadata.descriptionHash || NullDescriptionHash,
         metadata.fileHashes,
         additionalDataHelper.encode([
           process.env.VUE_APP_METADATA_PROVIDER_ID, // providerId
