@@ -25,20 +25,27 @@
             <IconBase iconName="microsoft" width="48" height="48" />
           </a>
           <b-link
-            :disabled="buttonDisabled"
             @click="loginWithMetaMask"
+            :disabled="web3LoginDisabled"
           >
             <IconBase iconName="metaMask" width="48" height="48" />
           </b-link>
           <b-link
-            :disabled="buttonDisabled"
             @click="loginWithCoinbase"
+            :disabled="web3LoginDisabled"
           >
             <IconBase iconName="coinbaseWallet" width="48" height="48" />
           </b-link>
         </div>
 
-        <p v-if="errorMessage">{{ errorMessage }}</p>
+        <b-alert
+          show
+          class="mt-5"
+          variant="danger"
+          v-if="errorMessage"
+        >
+          {{ errorMessage }}
+        </b-alert>
       </div>
       <div class="col-12 col-md-6 secondary">
         <div class="login-art"><img src="../assets/images/login-art.png" v-party-mode-activator /></div>
@@ -104,18 +111,7 @@ export default {
       return 'Codex Viewer allows you to create, view, and transfer Codex Records'
     },
 
-    buttonMethod() {
-      switch (this.error) {
-        case Web3Errors.Unknown:
-        case Web3Errors.Missing:
-          return this.installWeb3
-
-        default:
-          return this.web3Login
-      }
-    },
-
-    buttonDisabled() {
+    web3LoginDisabled() {
       switch (this.error) {
         case Web3Errors.Locked:
         case Web3Errors.WrongNetwork:
@@ -202,6 +198,9 @@ export default {
 
     &:first-child
       margin-left: 0
+
+    &.disabled
+      opacity: .5
 
   .logo
     max-width: 100px
