@@ -81,7 +81,7 @@
         <b-button
           size="sm"
           variant="danger"
-          @click.prevent="removeImage(image.id)"
+          @click.prevent="removeImage(image)"
         >
           Delete
         </b-button>
@@ -114,7 +114,6 @@ import config from '../../util/config'
 import Record from '../../util/api/record'
 import EventBus from '../../util/eventBus'
 import contractHelper from '../../util/contractHelper'
-import { NullDescriptionHash } from '../../util/constants/web3'
 import additionalDataHelper from '../../util/additionalDataHelper'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
@@ -131,30 +130,20 @@ export default {
   },
 
   data() {
-    // Extra image objects
-    const images = Array.from(this.codexRecord.metadata.images)
-
-    // Extra image `id`s and `hash`s
-    const imageIds = this.codexRecord.metadata.images.map(({ id, hash }) => {
-      return { id, hash }
-    })
-
     return {
       name: this.codexRecord.metadata.name,
       description: this.codexRecord.metadata.description,
       mainImage: this.codexRecord.metadata.mainImage,
-      mainImageFileHash: this.codexRecord.metadata.mainImage.hash,
       mainImageId: this.codexRecord.metadata.mainImage.id,
+      images: Array.from(this.codexRecord.metadata.images), // @todo is Array.from needed?
+
       uploadedMainImageFile: null,
       imageStreamUri: null,
       progressVisible: false,
       uploadMainImageComplete: false,
       uploadMainImageSuccess: false,
       isFileProcessing: false,
-      images,
-      imageIds,
-      fileHashes: this.codexRecord.metadata.fileHashes,
-      providerMetadataId: this.codexRecord.metadata.id,
+      newImages: [],
     }
   },
 
@@ -196,16 +185,21 @@ export default {
     // Vue2-Dropzone Handlers
     fileAdded(file, response) {
       const result = response.result[0]
-      const { uuid } = file.upload
-      const { id } = result
-      this.getFileHash(file, (err, hash) => {
-        this.addImage(id, uuid, hash)
+
+      this.newImages.push({
+        id: result.id,
+        uuid: file.upload.uuid,
       })
     },
 
     fileRemoved(file, error, xhr) {
-      const { uuid } = file.upload
-      this.removeAddedImage(uuid)
+      const indexToRemove = this.newImages.findIndex((image) => {
+        return image.uuid === file.upload.uuid
+      })
+
+      if (indexToRemove !== -1) {
+        this.newImages.splice(indexToRemove, 1)
+      }
     },
 
     onFileProcessing() {
@@ -217,49 +211,13 @@ export default {
     },
     // End Vue2-Dropzone Handlers
 
-    // Record a new extra image which has been added
-    addImage(id, uuid, hash) {
-      this.imageIds.push({ id, uuid, hash })
-      this.fileHashes.push(hash)
-    },
-
-    // Remove a new extra image that was added but not saved
-    removeAddedImage(uuid) {
-      const indexToRemove = this.imageIds.findIndex((imageId) => {
-        return imageId.uuid === uuid
+    // Remove an existing image
+    removeImage(imageToRemove) {
+      const indexToRemove = this.images.findIndex((image) => {
+        return imageToRemove.id === image.id
       })
 
       if (indexToRemove !== -1) {
-        this.removeFileHash(this.imageIds[indexToRemove].hash)
-        this.imageIds.splice(indexToRemove, 1)
-      }
-    },
-
-    getFileHash(file, next) {
-      const binaryFileReader = new FileReader()
-
-      binaryFileReader.addEventListener('loadend', () => {
-        next(null, this.instance.utils.soliditySha3(binaryFileReader.result))
-      })
-
-      binaryFileReader.readAsBinaryString(file)
-    },
-
-    removeFileHash(hash) {
-      this.fileHashes = this.fileHashes.filter((fileHash) => {
-        return fileHash !== hash
-      })
-    },
-
-    // Remove a saved extra image
-    removeImage(id) {
-      const indexToRemove = this.imageIds.findIndex((imageId) => {
-        return imageId.id === id
-      })
-
-      if (indexToRemove !== -1) {
-        this.removeFileHash(this.imageIds[indexToRemove].hash)
-        this.imageIds.splice(indexToRemove, 1)
         this.images.splice(indexToRemove, 1)
       }
     },
@@ -280,13 +238,6 @@ export default {
       })
 
       fileReader.readAsDataURL(file)
-
-      // Remove the hash of the old main image, and push the hash of the new main image
-      this.getFileHash(file, (err, hash) => {
-        this.removeFileHash(this.mainImageFileHash)
-        this.fileHashes.push(hash)
-        this.mainImageFileHash = hash
-      })
     },
 
     uploadFile(file) {
@@ -336,33 +287,35 @@ export default {
     },
 
     updateMetadata() {
+      const imageMap = (image) => {
+        return {
+          id: image.id,
+        }
+      }
+
+      const allImages = this.newImages.map(imageMap).concat(this.images.map(imageMap))
       const updatedMetadata = {
         name: this.name,
-        images: this.imageIds.map((imageId) => {
-          return { id: imageId.id }
-        }),
+        images: allImages,
         mainImage: { id: this.mainImageId },
         description: this.description || null,
       }
 
       return Record.updateMetadata(this.codexRecord.tokenId, updatedMetadata)
-        .then(() => {
-          return this.modifyRecord()
+        .then((metadata) => {
+          return this.modifyRecord(metadata)
         })
     },
 
-    modifyRecord() {
-
-      const { soliditySha3 } = this.instance.utils
-
+    modifyRecord(metadata) {
       const input = [
         this.codexRecord.tokenId,
-        soliditySha3(this.name),
-        this.description ? soliditySha3(this.description) : NullDescriptionHash,
-        this.fileHashes,
+        metadata.nameHash,
+        metadata.descriptionHash,
+        metadata.fileHashes,
         additionalDataHelper.encode([
           process.env.VUE_APP_METADATA_PROVIDER_ID, // providerId
-          this.providerMetadataId, // providerMetadataId
+          this.codexRecord.metadata.id, // providerMetadataId
         ]),
       ]
 
