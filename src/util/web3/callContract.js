@@ -11,28 +11,24 @@ const gasBuffer = 100000
 // String or BigNumber required for `toWei`
 const recommendedGasPriceInGwei = '10'
 
-function callContract(func, args) {
+function callContract(func) {
   const {
     account,
     instance,
   } = store.state.web3
 
-  return func.estimateGas(
-    ...args,
-    { from: account }
-  )
+  return func.estimateGas({
+    from: account,
+  })
     .then((estimatedGas) => {
 
       logger(estimatedGas)
 
-      return func(
-        ...args,
-        {
-          from: account,
-          gas: estimatedGas + gasBuffer,
-          gasPrice: instance.utils.toWei(recommendedGasPriceInGwei, 'gwei'),
-        }
-      )
+      return func.send({
+        from: account,
+        gas: estimatedGas + gasBuffer,
+        gasPrice: instance.utils.toWei(recommendedGasPriceInGwei, 'gwei'),
+      })
     })
     .catch((error) => {
       logger(error)

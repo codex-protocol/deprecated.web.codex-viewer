@@ -63,7 +63,8 @@ export default {
       EventBus.$emit('events:click-unstake-tokens', this)
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return callContract(this.stakeContract.unstake, input)
+      // @TODO: Update
+      return callContract(this.stakeContract.methods.unstake(input))
         .then(() => {
           EventBus.$emit('events:unstake-tokens', this, amount)
         })

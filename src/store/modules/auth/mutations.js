@@ -53,7 +53,7 @@ export default {
   SET_TOKEN_BALANCE(currentState, { balance }) {
     logMutation('SET_TOKEN_BALANCE', balance)
 
-    currentState.balance = balance
+    currentState.balance = new BigNumber(balance)
   },
 
   SET_PERSONAL_STAKES(currentState, { personalStakes }) {
@@ -65,7 +65,7 @@ export default {
   SET_CREDIT_BALANCE(currentState, { balance }) {
     logMutation('SET_CREDIT_BALANCE', balance)
 
-    currentState.creditBalance = balance
+    currentState.creditBalance = new BigNumber(balance)
   },
 
   SET_APPROVAL_STATUS(currentState, { allowance, stateProperty }) {
@@ -77,7 +77,7 @@ export default {
     //  approval has taken place.
     // If somehow the user has used so many tokens that their allowance is now low,
     //  they'll need to re-approve the contract for more.
-    currentState[stateProperty] = allowance.greaterThan(new BigNumber('10e18'))
+    currentState[stateProperty] = new BigNumber(allowance).greaterThan(new BigNumber('10e18'))
   },
 
   SET_HIDE_SETUP(currentState) {

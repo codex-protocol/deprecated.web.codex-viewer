@@ -1,12 +1,9 @@
 import debug from 'debug'
+import contractsByNetwork from '@codex-protocol/ethereum-service/dist/contracts-by-network.json'
 
+import config from '../../../util/config'
 import { Web3Errors } from '../../../util/constants/web3'
 import registerWeb3 from '../../../util/web3/registerWeb3'
-import {
-  getCodexRecordContract,
-  getCodexCoinContract,
-  getStakeContract,
-} from '../../../util/web3/getContract'
 
 const logger = debug('app:store:web3:actions')
 
@@ -41,39 +38,27 @@ export default {
       })
   },
 
-  REGISTER_ALL_CONTRACTS({ dispatch }) {
-    return Promise.all([
-      dispatch('REGISTER_CONTRACT', {
-        registrationFunction: getCodexRecordContract,
-        propertyName: 'recordContract',
-      }),
-      dispatch('REGISTER_CONTRACT', {
-        registrationFunction: getCodexCoinContract,
-        propertyName: 'tokenContract',
-      }),
-      dispatch('REGISTER_CONTRACT', {
-        registrationFunction: getStakeContract,
-        propertyName: 'stakeContract',
-      }),
-    ])
-  },
+  REGISTER_ALL_CONTRACTS({ state, commit }) {
 
-  REGISTER_CONTRACT({ commit, state }, { registrationFunction, propertyName }) {
-    logger('REGISTER_CONTRACT action being executed for contract', registrationFunction.name)
+    const interfaces = contractsByNetwork[config.expectedNetworkId]
 
-    return registrationFunction(state.instance.currentProvider)
-      .then((contract) => {
-        commit('SET_CONTRACT', {
-          propertyName,
-          contract,
-        })
-      })
-      .catch((error) => {
-        commit('SET_ERROR', {
-          message: 'Unable to register the contract',
-          error,
-        })
-      })
+    const recordContract = new state.instance.eth.Contract(interfaces.CodexRecord.abi, interfaces.CodexRecord.address)
+    commit('SET_CONTRACT', {
+      propertyName: 'recordContract',
+      contract: recordContract,
+    })
+
+    const tokenContract = new state.instance.eth.Contract(interfaces.CodexCoin.abi, interfaces.CodexCoin.address)
+    commit('SET_CONTRACT', {
+      propertyName: 'tokenContract',
+      contract: tokenContract,
+    })
+
+    const stakeContract = new state.instance.eth.Contract(interfaces.CodexStakeContract.abi, interfaces.CodexStakeContract.address)
+    commit('SET_CONTRACT', {
+      propertyName: 'stakeContract',
+      contract: stakeContract,
+    })
   },
 
   POLL_WEB3({ commit, dispatch, state, rootGetters }) {
