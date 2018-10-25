@@ -45,7 +45,7 @@ import VueCookieAcceptDecline from 'vue-cookie-accept-decline'
 
 import config from './util/config'
 import EventBus from './util/eventBus'
-import { Web3Errors } from './util/constants/web3'
+// import { Web3Errors } from './util/constants/web3'
 
 import AppFooter from './components/core/AppFooter'
 import AppSideBar from './components/core/AppSideBar'
@@ -98,6 +98,7 @@ export default {
   },
 
   mounted() {
+    // @TODO: Make sure this code isn't getting executed multiple times
     if (process.env.VUE_APP_FRESHCHAT_API_TOKEN && window.fcWidget) {
       window.fcWidget.init({
         token: process.env.VUE_APP_FRESHCHAT_API_TOKEN,
@@ -105,22 +106,56 @@ export default {
       })
     }
 
+    const { query } = this.$route
+
+    // If the user came back from OAuth2 login with an auth token, let's log them in
+    if (query.authToken) {
+      this.$store.dispatch('auth/LOGIN_SIMPLE_USER', {
+        authToken: query.authToken,
+      })
+        .then(() => {
+          return this.$store.dispatch('web3/REGISTER_INFURA_PROVIDER')
+        })
+        .then(() => {
+          return this.$store.dispatch('auth/UPDATE_CONTRACT_STATE')
+        })
+        .then(() => {
+          // @TODO: This could probably be done in the background prior to login. I don't think this endpoint is authenticated
+          //  In fact, I think we need to do this separately because we leverage this information for provenance (un-auth flow)
+          return this.$store.dispatch('oauth2/FETCH_CLIENTS')
+        })
+        .then(() => {
+          // Once we've authenticated the user, take them to the collection page
+          this.$router.replace({
+            name: 'collection',
+          })
+        })
+        .catch((error) => {
+          // @TODO: Show error to user
+          EventBus.$emit('toast:error', `Could not log in: ${error.message}`)
+        })
+    } else {
+      this.$store.commit('auth/SET_IS_LOADED', {
+        isLoaded: true,
+      })
+    }
+
     // Avoid race conditions with web3 injection
-    window.addEventListener('load', () => {
-      this.$store.dispatch('web3/REGISTER')
-        .then(() => {
-          if (this.error && (this.error !== Web3Errors.Missing)) {
-            this.$store.dispatch('auth/LOGOUT_USER')
-          }
-        })
-        .then(() => {
-          return Promise.all([
-            this.$store.dispatch('oauth2/FETCH_CLIENTS'),
-          ], [
-            this.$store.dispatch('auth/INITIALIZE_AUTH'),
-          ])
-        })
-    })
+    // window.addEventListener('load', () => {
+    //   this.$store.dispatch('web3/REGISTER')
+    //     .then(() => {
+    //       if (this.error && (this.error !== Web3Errors.Missing)) {
+    //         this.$store.dispatch('auth/LOGOUT_USER')
+    //       }
+    //     })
+    //     .then(() => {
+    //       return Promise.all([
+    //         this.$store.dispatch('oauth2/FETCH_CLIENTS'),
+    //       ], [
+    //         this.$store.dispatch('auth/INITIALIZE_AUTH'),
+    //       ])
+    //     })
+    // })
   },
 
   computed: {
@@ -139,11 +174,13 @@ export default {
 
   watch: {
     $route(newRoute, oldRoute) {
-      // Cached tokens may result in an immediate redirect upon page load
-      // If the route changes as a result of this authentication (i.e., /login to /collection)
-      //  then we only mark loading complete after the new route has been loaded
-      // Other conditions of async loading completion are handled directly within the vuex auth module
-      this.$store.commit('auth/SET_IS_LOADED', { isLoaded: true })
+      if (!this.isLoaded) {
+        // Cached tokens may result in an immediate redirect upon page load
+        // If the route changes as a result of this authentication (i.e., /login to /collection)
+        //  then we only mark loading complete after the new route has been loaded
+        // Other conditions of async loading completion are handled directly within the vuex auth module
+        this.$store.commit('auth/SET_IS_LOADED', { isLoaded: true })
+      }
     },
   },
 

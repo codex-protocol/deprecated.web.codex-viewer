@@ -8,6 +8,17 @@ import registerWeb3 from '../../../util/web3/registerWeb3'
 const logger = debug('app:store:web3:actions')
 
 export default {
+  REGISTER_INFURA_PROVIDER({ commit, dispatch }) {
+    logger('REGISTER_INFURA_PROVIDER action being executed')
+
+    return registerWeb3(true)
+      .then((result) => {
+        commit('SET_INITIAL_STATE', { result })
+
+        return dispatch('REGISTER_ALL_CONTRACTS')
+      })
+  },
+
   REGISTER({ commit, dispatch, state }, overrideWeb3) {
     logger('REGISTER action being executed')
 
@@ -39,7 +50,6 @@ export default {
   },
 
   REGISTER_ALL_CONTRACTS({ state, commit }) {
-
     const interfaces = contractsByNetwork[config.expectedNetworkId]
 
     const recordContract = new state.instance.eth.Contract(interfaces.CodexRecord.abi, interfaces.CodexRecord.address)

@@ -9,6 +9,28 @@ import EventBus from '../../../util/eventBus'
 const logger = debug('app:store:auth:actions')
 
 export default {
+  LOGIN_SIMPLE_USER({ dispatch, commit }, { authToken }) {
+    logger('LOGIN_SIMPLE_USER action being executed')
+
+    // Save the authToken so that it gets used during subsequent API calls
+    commit('SET_AUTH_STATE', {
+      authToken,
+    })
+
+    return User.getUser()
+      .then((user) => {
+        commit('SET_USER', {
+          user,
+        })
+      })
+      .catch((error) => {
+        Raven.captureException(error)
+        commit('CLEAR_USER_STATE')
+
+        throw error
+      })
+  },
+
   INITIALIZE_AUTH({ dispatch, commit, state, rootState }) {
     logger('INITIALIZE_AUTH action being executed')
 
