@@ -66,7 +66,7 @@ export default {
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
       // @TODO: Update
-      return callContract(this.stakeContract.methods.stake(input))
+      return callContract(this.stakeContract.methods.stake(...input))
         .then(() => {
           EventBus.$emit('events:stake-tokens', this, amount)
         })
