@@ -30,8 +30,6 @@ const registerWeb3 = (overrideWeb3) => {
             hasWeb3Browser,
           })
 
-          // truffle-contract assumes web3@0.2.x which uses sendAsync.
-          returnValue.web3.providers.HttpProvider.prototype.sendAsync = web3.providers.HttpProvider.prototype.send
           return returnValue
         })
     })

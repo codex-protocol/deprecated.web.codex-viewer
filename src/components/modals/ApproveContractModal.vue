@@ -50,7 +50,7 @@ export default {
       const input = [this.contract.address, amount.toFixed()]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return callContract(this.tokenContract.approve, input)
+      return callContract(this.tokenContract.methods.approve(...input))
         .then(() => {
           EventBus.$emit('events:approve-contract', this)
           this.$store.commit('auth/SET_APPROVAL_STATUS', {

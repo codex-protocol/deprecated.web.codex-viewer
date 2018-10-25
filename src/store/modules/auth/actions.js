@@ -154,9 +154,11 @@ export default {
     const { tokenContract } = rootState.web3
     const { address } = state.user
 
-    return tokenContract.balanceOf(address).then((balance) => {
-      commit('SET_TOKEN_BALANCE', { balance })
-    })
+    return tokenContract.methods.balanceOf(address)
+      .call()
+      .then((balance) => {
+        commit('SET_TOKEN_BALANCE', { balance })
+      })
   },
 
   FETCH_STAKE_BALANCES({ commit, rootState, state }) {
@@ -165,14 +167,17 @@ export default {
     const { stakeContract } = rootState.web3
     const { address } = state.user
 
-
     return Promise.all([
-      stakeContract.getPersonalStakes(address).then((personalStakes) => {
-        commit('SET_PERSONAL_STAKES', { personalStakes })
-      }),
-      stakeContract.creditBalanceOf(address).then((balance) => {
-        commit('SET_CREDIT_BALANCE', { balance })
-      }),
+      stakeContract.methods.getPersonalStakes(address)
+        .call()
+        .then((personalStakes) => {
+          commit('SET_PERSONAL_STAKES', { personalStakes })
+        }),
+      stakeContract.methods.creditBalanceOf(address)
+        .call()
+        .then((balance) => {
+          commit('SET_CREDIT_BALANCE', { balance })
+        }),
     ])
   },
 
@@ -187,18 +192,22 @@ export default {
     const { address } = rootState.auth.user
 
     return Promise.all([
-      tokenContract.allowance(address, recordContract.address).then((allowance) => {
-        commit('SET_APPROVAL_STATUS', {
-          allowance,
-          stateProperty: 'registryContractApproved',
-        })
-      }),
-      tokenContract.allowance(address, stakeContract.address).then((allowance) => {
-        commit('SET_APPROVAL_STATUS', {
-          allowance,
-          stateProperty: 'stakeContractApproved',
-        })
-      }),
+      tokenContract.methods.allowance(address, recordContract.address)
+        .call()
+        .then((allowance) => {
+          commit('SET_APPROVAL_STATUS', {
+            allowance,
+            stateProperty: 'registryContractApproved',
+          })
+        }),
+      tokenContract.methods.allowance(address, stakeContract.address)
+        .call()
+        .then((allowance) => {
+          commit('SET_APPROVAL_STATUS', {
+            allowance,
+            stateProperty: 'stakeContractApproved',
+          })
+        }),
     ])
   },
 
