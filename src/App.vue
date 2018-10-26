@@ -24,7 +24,7 @@
         <AppFooter />
       </div>
       <ToastContainer />
-      <vue-cookie-accept-decline :disableDecline="true">
+      <vue-cookie-accept-decline disableDecline>
         <div slot="message">
           This website stores cookies on your computer. Cookies are used to save information about how you interact with our website and allow us to remember you when you return. We never sell this information, and we use it strictly for analytics and metrics. For more information, please see our <a href="https://www.codexprotocol.com/privacy-policy.html" target="_blank">Privacy Policy.</a>
         </div>
@@ -78,6 +78,13 @@ export default {
     PartyModeActivator,
   },
 
+  data() {
+    return {
+      showNav: false,
+      showWarningBanner: config.expectedNetworkId !== '1' && config.expectedNetworkId !== '5777',
+    }
+  },
+
   created() {
     this.initializeApi()
 
@@ -88,17 +95,7 @@ export default {
     EventBus.$on('socket:codex-coin:registry-contract-approved', () => {
       this.$store.dispatch('auth/FETCH_APPROVAL_STATUSES')
     })
-  },
 
-  data() {
-    return {
-      showNav: false,
-      cookieStatus: false,
-      showWarningBanner: config.expectedNetworkId !== '1' && config.expectedNetworkId !== '5777',
-    }
-  },
-
-  mounted() {
     // @TODO: Make sure this code isn't getting executed multiple times
     if (process.env.VUE_APP_FRESHCHAT_API_TOKEN && window.fcWidget) {
       window.fcWidget.init({
@@ -106,11 +103,11 @@ export default {
         host: 'https://wchat.freshchat.com',
       })
     }
+  },
 
+  mounted() {
     const { query } = this.$route
-
     const authToken = query.authToken || this.authToken
-
 
     // If the user has an authToken (either from an IDP or from cache), let's log them in
     if (authToken) {
@@ -129,22 +126,19 @@ export default {
           }
 
           return this.$store.dispatch('web3/REGISTER_WALLET_PROVIDER')
+            .then(() => {
+              this.$store.commit('web3/SET_IS_POLLING', {
+                isPolling: true,
+              })
 
-          // if (user.type === 'savvy'
-          // && user.address
-          // && rootState.web3.account
-          // && user.address.toLowerCase() !== rootState.web3.account.toLowerCase()) {
-          //   return dispatch('LOGOUT_USER')
-          // }
+              this.$store.dispatch('web3/POLL_WEB3')
+            })
         })
-        .then(() => {
-          return this.$store.dispatch('auth/UPDATE_CONTRACT_STATE')
-        })
-        .then(() => {
-          // @TODO: This could probably be done in the background prior to login. I don't think this endpoint is authenticated
-          //  In fact, I think we need to do this separately because we leverage this information for provenance (un-auth flow)
-          return this.$store.dispatch('oauth2/FETCH_CLIENTS')
-        })
+        .then(this.$store.dispatch('auth/UPDATE_CONTRACT_STATE'))
+
+        // @TODO: This could probably be done in the background prior to login. I don't think this endpoint is authenticated
+        //  In fact, I think we need to do this separately because we leverage this information for provenance (un-auth flow)
+        .then(this.$store.dispatch('oauth2/FETCH_CLIENTS'))
         .then(() => {
           // Once we've authenticated the user, take them to the collection page
           if (this.$route.name === 'collection') {
@@ -185,11 +179,11 @@ export default {
   watch: {
     $route(newRoute, oldRoute) {
       if (!this.isLoaded) {
-        // Cached tokens may result in an immediate redirect upon page load
-        // If the route changes as a result of this authentication (i.e., /login to /collection)
+        // If the route changes as a result of authentication (e.g., /login to /collection)
         //  then we only mark loading complete after the new route has been loaded
-        // Other conditions of async loading completion are handled directly within the vuex auth module
-        this.$store.commit('auth/SET_IS_LOADED', { isLoaded: true })
+        this.$store.commit('auth/SET_IS_LOADED', {
+          isLoaded: true,
+        })
       }
     },
   },

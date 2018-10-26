@@ -25,13 +25,13 @@
             <IconBase iconName="microsoft" width="48" height="48" />
           </a>
           <b-link
-            @click="loginWithMetaMask"
+            @click="registerWalletProvider"
             :disabled="web3LoginDisabled"
           >
             <IconBase iconName="metaMask" width="48" height="48" />
           </b-link>
           <b-link
-            @click="loginWithCoinbase"
+            @click="registerWalletProvider"
             :disabled="web3LoginDisabled"
           >
             <IconBase iconName="coinbaseWallet" width="48" height="48" />
@@ -59,8 +59,8 @@ import is from 'is_js'
 import debug from 'debug'
 import { mapState } from 'vuex'
 
+import User from '../util/api/user'
 import config from '../util/config'
-import EventBus from '../util/eventBus'
 import { Web3Errors, Networks } from '../util/constants/web3'
 
 import IconBase from '../components/icons/IconBase'
@@ -76,6 +76,7 @@ export default {
 
   data() {
     return {
+      web3LoginDisabled: false,
       isMobile: is.mobile(),
       googleLoginUrl: `${config.apiUrl}/oauth2/login/google`,
       facebookLoginUrl: `${config.apiUrl}/oauth2/login/facebook`,
@@ -87,13 +88,9 @@ export default {
     }
   },
 
-  created() {
-    EventBus.$emit('events:view-login-page', this)
-  },
-
   computed: {
     ...mapState('auth', ['apiError']),
-    ...mapState('web3', ['account', 'instance', 'error']),
+    ...mapState('web3', ['providerAccount', 'instance', 'registrationError']),
 
     title() {
       if (this.apiError) {
@@ -111,19 +108,8 @@ export default {
       return 'Codex Viewer allows you to create, view, and transfer Codex Records'
     },
 
-    web3LoginDisabled() {
-      switch (this.error) {
-        case Web3Errors.Locked:
-        case Web3Errors.WrongNetwork:
-          return true
-
-        default:
-          return false
-      }
-    },
-
     errorMessage() {
-      switch (this.error) {
+      switch (this.registrationError) {
         case Web3Errors.Locked:
           return 'Your Web3 account is locked. To sign in with Web3, open your Ethereum wallet and follow the instructions to unlock it.'
 
@@ -137,8 +123,16 @@ export default {
   },
 
   methods: {
+    registerWalletProvider() {
+      this.$store.dispatch('web3/REGISTER_WALLET_PROVIDER')
+        .then(this.web3Login)
+        .catch((registrationError) => {
+          console.log(registrationError)
+        })
+    },
+
     loginWithMetaMask() {
-      if (this.error === Web3Errors.Unknown || this.error === Web3Errors.Missing) {
+      if (this.registrationError === Web3Errors.Unknown || this.registrationError === Web3Errors.Missing) {
         window.open('https://www.metamask.io', '_blank')
       } else {
         this.web3Login()
@@ -146,7 +140,7 @@ export default {
     },
 
     loginWithCoinbase() {
-      if (this.error === Web3Errors.Unknown || this.error === Web3Errors.Missing) {
+      if (this.registrationError === Web3Errors.Unknown || this.registrationError === Web3Errors.Missing) {
         window.open('https://wallet.coinbase.com', '_blank')
       } else {
         this.web3Login()
@@ -155,32 +149,48 @@ export default {
 
     web3Login() {
       const personalMessageToSign = 'Please sign this message to authenticate with the Codex Registry.'
-
-      EventBus.$emit('events:click-login-button', this)
-
       const sendAsyncOptions = {
         method: 'personal_sign',
         params: [
-          this.account,
+          this.providerAccount,
           this.instance.utils.toHex(personalMessageToSign),
         ],
       }
 
-      this.instance.currentProvider.sendAsync(sendAsyncOptions, (error, result) => {
-
-        // result.error will be populated if the user rejects the signature
-        //  prompt
+      return this.instance.currentProvider.sendAsync(sendAsyncOptions, (error, result) => {
+        // @TODO: Show a message to the user
+        // result.error will be populated if the user rejects the signature prompt
         if (error || result.error) {
           logger(error || result.error)
           return
         }
 
-        EventBus.$emit('events:login', this)
-
-        this.$store.dispatch('auth/SEND_AUTH_REQUEST', {
-          userAddress: this.account,
+        User.getAuthTokenFromSignedData({
+          userAddress: this.providerAccount,
           signedData: result.result.substr(2),
         })
+          .then((response) => {
+            this.$store.commit('auth/SET_AUTH_STATE', {
+              authToken: response.token,
+            })
+
+            this.$store.commit('auth/SET_USER', {
+              user: response.user,
+            })
+
+            this.$store.commit('web3/SET_IS_POLLING', {
+              isPolling: true,
+            })
+
+            this.$store.dispatch('web3/POLL_WEB3')
+
+            return this.$store.dispatch('auth/UPDATE_CONTRACT_STATE')
+          })
+          .then(() => {
+          // @TODO: This could probably be done in the background prior to login. I don't think this endpoint is authenticated
+          //  In fact, I think we need to do this separately because we leverage this information for provenance (un-auth flow)
+            return this.$store.dispatch('oauth2/FETCH_CLIENTS')
+          })
           .then(() => {
             this.$router.replace({ name: 'collection' })
           })
