@@ -167,6 +167,9 @@ export default {
     updateRecord(event) {
       event.preventDefault()
 
+      // @TODO: figure out how to allow users to specify email addresses as well
+      //  as ethereum addresses for the whitelist addresses
+
       // if they typed in an address but didn't click "add", add it for them
       if (this.newWhitelistedAddress !== null) {
         this.addWhitelistedAddress()
