@@ -27,7 +27,7 @@
         After approving a transfer, the owner of the Ethereum address will have to accept the Record.
       </b-form-text>
     </b-form-group>
-    <!--
+
     <b-form-group
       label="Email address of the wallet owner (optional)"
       label-for="toEmailAddress" label-size="sm"
@@ -43,7 +43,7 @@
         we will send them an email once they've been approved to accept the Record.
       </b-form-text>
     </b-form-group>
-    -->
+
   </MetaMaskNotificationModal>
 </template>
 
@@ -91,11 +91,18 @@ export default {
     validate() {
       const errors = []
 
+      if (this.toEmailAddress) {
+        if (this.toEthAddress) {
+          errors.push('Specify Ethereum address OR email address, but not both')
+        }
+        return errors
+      }
+
       if (!this.toEthAddress) {
-        errors.push('Ethereum address is required')
+        errors.push('Ethereum address or email address is required')
       } else if (this.toEthAddress === this.user.address) {
         errors.push('You cannot transfer to yourself')
-      } else if (this.toEthAddress === this.codexRecord.approvedAddress) {
+      } else if (this.codexRecord.approvedAddress && this.toEthAddress === this.codexRecord.approvedAddress) {
         errors.push('This address has already been approved for transfer')
       } else if (!this.instance.utils.isAddress(this.toEthAddress)) {
         errors.push('Invalid Ethereum address')
@@ -106,7 +113,7 @@ export default {
 
     approveTransfer() {
       EventBus.$emit('events:record-click-transfer', this)
-      const input = [this.toEthAddress, this.codexRecord.tokenId]
+      const input = [this.toEmailAddress || this.toEthAddress, this.codexRecord.tokenId]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
       return contractHelper('CodexRecord', 'approve', input, this.$store)
