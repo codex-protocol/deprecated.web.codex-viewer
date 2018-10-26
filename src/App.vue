@@ -46,6 +46,7 @@ import VueCookieAcceptDecline from 'vue-cookie-accept-decline'
 import config from './util/config'
 import EventBus from './util/eventBus'
 // import { Web3Errors } from './util/constants/web3'
+import User from './util/api/user'
 
 import AppFooter from './components/core/AppFooter'
 import AppSideBar from './components/core/AppSideBar'
@@ -108,13 +109,33 @@ export default {
 
     const { query } = this.$route
 
-    // If the user came back from OAuth2 login with an auth token, let's log them in
-    if (query.authToken) {
-      this.$store.dispatch('auth/LOGIN_SIMPLE_USER', {
-        authToken: query.authToken,
+    const authToken = query.authToken || this.authToken
+
+
+    // If the user has an authToken (either from an IDP or from cache), let's log them in
+    if (authToken) {
+      this.$store.commit('auth/SET_AUTH_STATE', {
+        authToken,
       })
-        .then(() => {
-          return this.$store.dispatch('web3/REGISTER_INFURA_PROVIDER')
+
+      User.getUser()
+        .then((user) => {
+          this.$store.commit('auth/SET_USER', {
+            user,
+          })
+
+          if (user.type === 'simple') {
+            return this.$store.dispatch('web3/REGISTER_INFURA_PROVIDER')
+          }
+
+          return this.$store.dispatch('web3/REGISTER_WALLET_PROVIDER')
+
+          // if (user.type === 'savvy'
+          // && user.address
+          // && rootState.web3.account
+          // && user.address.toLowerCase() !== rootState.web3.account.toLowerCase()) {
+          //   return dispatch('LOGOUT_USER')
+          // }
         })
         .then(() => {
           return this.$store.dispatch('auth/UPDATE_CONTRACT_STATE')
@@ -126,9 +147,15 @@ export default {
         })
         .then(() => {
           // Once we've authenticated the user, take them to the collection page
-          this.$router.replace({
-            name: 'collection',
-          })
+          if (this.$route.name === 'collection') {
+            this.$store.commit('auth/SET_IS_LOADED', {
+              isLoaded: true,
+            })
+          } else {
+            this.$router.replace({
+              name: 'collection',
+            })
+          }
         })
         .catch((error) => {
           // @TODO: Show error to user
@@ -139,28 +166,11 @@ export default {
         isLoaded: true,
       })
     }
-
-    // Avoid race conditions with web3 injection
-    // window.addEventListener('load', () => {
-    //   this.$store.dispatch('web3/REGISTER')
-    //     .then(() => {
-    //       if (this.error && (this.error !== Web3Errors.Missing)) {
-    //         this.$store.dispatch('auth/LOGOUT_USER')
-    //       }
-    //     })
-    //     .then(() => {
-    //       return Promise.all([
-    //         this.$store.dispatch('oauth2/FETCH_CLIENTS'),
-    //       ], [
-    //         this.$store.dispatch('auth/INITIALIZE_AUTH'),
-    //       ])
-    //     })
-    // })
   },
 
   computed: {
     ...mapGetters('auth', ['isAuthenticated']),
-    ...mapState('auth', ['isLoaded']),
+    ...mapState('auth', ['isLoaded', 'authToken']),
     ...mapState('web3', ['error']),
 
     hideSideBar() {

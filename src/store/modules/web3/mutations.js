@@ -1,7 +1,7 @@
 import debug from 'debug'
 import Raven from 'raven-js'
 
-import { Networks, Web3Errors } from '../../../util/constants/web3'
+import { Web3Errors } from '../../../util/constants/web3'
 
 const logger = debug('app:store:web3:mutations')
 const logMutation = (mutationName, ...args) => {
@@ -9,10 +9,17 @@ const logMutation = (mutationName, ...args) => {
 }
 
 export default {
+  SET_WEB3(currentState, { web3 }) {
+    logMutation('SET_WEB3', web3)
+
+    // We call Object.freeze here to prevent any errors from being thrown when
+    //  Vue walks over the object's properties to make them observable
+    // If a new web3 instance is ever needed, a full page refresh has to occur
+    currentState.instance = Object.freeze(web3)
+  },
+
   SET_INITIAL_STATE(currentState, { result }) {
     logMutation('SET_INITIAL_STATE', result)
-
-    currentState.network = Networks[result.networkId]
 
     // We call Object.freeze here to prevent any errors from being thrown when
     //  Vue walks over the object's properties to make them observable

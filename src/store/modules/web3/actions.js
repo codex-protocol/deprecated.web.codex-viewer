@@ -1,3 +1,4 @@
+import Web3 from 'web3'
 import debug from 'debug'
 import contractsByNetwork from '@codex-protocol/ethereum-service/dist/contracts-by-network.json'
 
@@ -11,12 +12,11 @@ export default {
   REGISTER_INFURA_PROVIDER({ commit, dispatch }) {
     logger('REGISTER_INFURA_PROVIDER action being executed')
 
-    return registerWeb3(true)
-      .then((result) => {
-        commit('SET_INITIAL_STATE', { result })
+    commit('SET_WEB3', {
+      web3: new Web3(process.env.VUE_APP_ETHEREUM_RPC_URL),
+    })
 
-        return dispatch('REGISTER_ALL_CONTRACTS')
-      })
+    return dispatch('REGISTER_ALL_CONTRACTS')
   },
 
   REGISTER({ commit, dispatch, state }, overrideWeb3) {
