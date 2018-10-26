@@ -45,7 +45,6 @@ import VueCookieAcceptDecline from 'vue-cookie-accept-decline'
 
 import config from './util/config'
 import EventBus from './util/eventBus'
-// import { Web3Errors } from './util/constants/web3'
 import User from './util/api/user'
 
 import AppFooter from './components/core/AppFooter'
