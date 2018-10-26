@@ -95,14 +95,6 @@ export default {
     EventBus.$on('socket:codex-coin:registry-contract-approved', () => {
       this.$store.dispatch('auth/FETCH_APPROVAL_STATUSES')
     })
-
-    // @TODO: Make sure this code isn't getting executed multiple times
-    if (process.env.VUE_APP_FRESHCHAT_API_TOKEN && window.fcWidget) {
-      window.fcWidget.init({
-        token: process.env.VUE_APP_FRESHCHAT_API_TOKEN,
-        host: 'https://wchat.freshchat.com',
-      })
-    }
   },
 
   mounted() {
@@ -160,6 +152,11 @@ export default {
         isLoaded: true,
       })
     }
+  },
+
+  beforeDestroy() {
+    EventBus.$off('socket:codex-coin:transferred')
+    EventBus.$off('socket:codex-coin:registry-contract-approved')
   },
 
   computed: {
@@ -310,6 +307,10 @@ img
 
   button
     background-color: lighten($color-secondary, 25%) !important
+
+.alert a
+  color: inherit
+  font-weight: 600
 
 // CSS Checkbox toggle
 // <input type="checkbox"> toggle

@@ -15,37 +15,29 @@
         </p>
 
         <div class="icons mb-3">
-          <a :href="googleLoginUrl">
+          <a :href="googleLoginUrl" v-if="supportEmailAccounts">
             <IconBase iconName="google" width="48" height="48" />
           </a>
-          <a :href="facebookLoginUrl" v-if="showFacebook">
+          <a :href="facebookLoginUrl" :disabled="disableFacebook" v-if="supportEmailAccounts">
             <IconBase iconName="facebook" width="48" height="48" />
           </a>
-          <a :href="microsoftLoginUrl" v-if="showMicrosoft">
+          <a :href="microsoftLoginUrl" :disabled="disableMicrosoft" v-if="supportEmailAccounts">
             <IconBase iconName="microsoft" width="48" height="48" />
           </a>
-          <b-link
-            @click="registerWalletProvider"
-            :disabled="web3LoginDisabled"
-          >
+          <b-link @click="registerWalletProvider('metaMask')">
             <IconBase iconName="metaMask" width="48" height="48" />
           </b-link>
-          <b-link
-            @click="registerWalletProvider"
-            :disabled="web3LoginDisabled"
-          >
+          <b-link @click="registerWalletProvider('coinbaseWallet')">
             <IconBase iconName="coinbaseWallet" width="48" height="48" />
           </b-link>
         </div>
 
         <b-alert
-          show
           class="mt-5"
           variant="danger"
-          v-if="errorMessage"
-        >
-          {{ errorMessage }}
-        </b-alert>
+          :show="!!errorMessage"
+          v-html="errorMessage"
+        />
       </div>
       <div class="col-12 col-md-6 secondary">
         <div class="login-art"><img src="../assets/images/login-art.png" v-party-mode-activator /></div>
@@ -56,7 +48,6 @@
 
 <script>
 import is from 'is_js'
-import debug from 'debug'
 import { mapState } from 'vuex'
 
 import User from '../util/api/user'
@@ -64,8 +55,6 @@ import config from '../util/config'
 import { Web3Errors, Networks } from '../util/constants/web3'
 
 import IconBase from '../components/icons/IconBase'
-
-const logger = debug('app:component:login-view')
 
 export default {
   name: 'LoginView',
@@ -76,15 +65,17 @@ export default {
 
   data() {
     return {
-      web3LoginDisabled: false,
       isMobile: is.mobile(),
+      walletProvider: null,
+      supportEmailAccounts: config.supportEmailAccounts,
+
       googleLoginUrl: `${config.apiUrl}/oauth2/login/google`,
       facebookLoginUrl: `${config.apiUrl}/oauth2/login/facebook`,
       microsoftLoginUrl: `${config.apiUrl}/oauth2/login/microsoft`,
 
-      // Facebook and Microsoft support HTTPS for redirect_uri so we hide these in ropsten
-      showFacebook: config.expectedNetworkName !== 'ropsten',
-      showMicrosoft: config.expectedNetworkName !== 'ropsten',
+      // Facebook and Microsoft support HTTPS for redirect_uri so we disable these in ropsten
+      disableFacebook: config.expectedNetworkName === 'ropsten',
+      disableMicrosoft: config.expectedNetworkName === 'ropsten',
     }
   },
 
@@ -109,42 +100,55 @@ export default {
     },
 
     errorMessage() {
+      if (!this.registrationError) {
+        return null
+      }
+
       switch (this.registrationError) {
+        case Web3Errors.Missing:
+          return `You don't have a Web3 wallet installed. To install one, visit <a href="${this.walletProviderUrl}" target="_blank">${this.walletProviderUrl}</a>.`
+
         case Web3Errors.Locked:
           return 'Your Web3 account is locked. To sign in with Web3, open your Ethereum wallet and follow the instructions to unlock it.'
 
         case Web3Errors.WrongNetwork:
           return `You're on the wrong Ethereum network. The expected network is ${Networks[config.expectedNetworkId]}. To sign in with Web3, change the network in your wallet settings.`
 
+        case Web3Errors.UserDeniedSignature:
+          return 'In order to sign in with your Web3, use your wallet to sign the message that you are prompted with. This will not spend any gas.'
+
+        case Web3Errors.AccountChanged:
+          return 'In order to preserve your privacy, we logged you out of Codex Viewer because we detected a change in the Web3 wallet your\'re currently using.'
+
         default:
-          return null
+          return 'Something went wrong with your Web3 login. Try again later.'
+      }
+    },
+
+    walletProviderUrl() {
+      switch (this.walletProvider) {
+        case 'coinbaseWallet':
+          return 'https://wallet.coinbase.com'
+
+        default:
+        case 'metaMask':
+          return 'https://www.metamask.io'
       }
     },
   },
 
   methods: {
-    registerWalletProvider() {
+    registerWalletProvider(provider) {
+      this.walletProvider = provider
+
       this.$store.dispatch('web3/REGISTER_WALLET_PROVIDER')
         .then(this.web3Login)
-        .catch((registrationError) => {
-          console.log(registrationError)
+        .catch((error) => {
+          this.$store.commit('web3/SET_REGISTRATION_ERROR', {
+            error,
+            ignoreInSentry: true,
+          })
         })
-    },
-
-    loginWithMetaMask() {
-      if (this.registrationError === Web3Errors.Unknown || this.registrationError === Web3Errors.Missing) {
-        window.open('https://www.metamask.io', '_blank')
-      } else {
-        this.web3Login()
-      }
-    },
-
-    loginWithCoinbase() {
-      if (this.registrationError === Web3Errors.Unknown || this.registrationError === Web3Errors.Missing) {
-        window.open('https://wallet.coinbase.com', '_blank')
-      } else {
-        this.web3Login()
-      }
     },
 
     web3Login() {
@@ -158,11 +162,12 @@ export default {
       }
 
       return this.instance.currentProvider.sendAsync(sendAsyncOptions, (error, result) => {
-        // @TODO: Show a message to the user
-        // result.error will be populated if the user rejects the signature prompt
-        if (error || result.error) {
-          logger(error || result.error)
-          return
+        if (error) {
+          throw Web3Errors.Unknown
+        }
+
+        if (result.error) {
+          throw Web3Errors.UserDeniedSignature
         }
 
         User.getAuthTokenFromSignedData({
@@ -224,5 +229,4 @@ export default {
   .login-art img
     width: 100%
     margin-top: 3rem
-
 </style>

@@ -8,29 +8,33 @@ import { Web3Errors } from '../../../util/constants/web3'
 const logger = debug('app:store:web3:actions')
 
 const registerWalletProvider = () => {
-  if (typeof window.web3 === 'undefined') {
-    throw Web3Errors.Missing
-  }
+  return new Promise((resolve) => {
+    if (typeof window.web3 === 'undefined') {
+      throw Web3Errors.Missing
+    }
 
-  const web3 = new Web3(window.web3.currentProvider)
-  return web3.eth.net.getId()
-    .then((networkId) => {
-      const networkIdString = String(networkId)
-      if (networkIdString !== config.expectedNetworkId) {
-        throw Web3Errors.WrongNetwork
-      }
+    resolve(new Web3(window.web3.currentProvider))
+  })
+    .then((web3) => {
+      return web3.eth.net.getId()
+        .then((networkId) => {
+          const networkIdString = String(networkId)
+          if (networkIdString !== config.expectedNetworkId) {
+            throw Web3Errors.WrongNetwork
+          }
 
-      return web3.eth.getAccounts()
-    })
-    .then((accounts) => {
-      if (!accounts.length) {
-        throw Web3Errors.Locked
-      }
+          return web3.eth.getAccounts()
+        })
+        .then((accounts) => {
+          if (!accounts.length) {
+            throw Web3Errors.Locked
+          }
 
-      return {
-        web3,
-        account: accounts[0],
-      }
+          return {
+            web3,
+            account: accounts[0],
+          }
+        })
     })
 }
 
@@ -56,12 +60,6 @@ export default {
         })
 
         return dispatch('REGISTER_ALL_CONTRACTS')
-      })
-      .catch((error) => {
-        commit('SET_REGISTRATION_ERROR', {
-          error,
-          ignoreInSentry: true,
-        })
       })
   },
 

@@ -15,6 +15,7 @@ const Web3Errors = {
   Unknown: 3,
   WrongNetwork: 4,
   AccountChanged: 5,
+  UserDeniedSignature: 6,
 }
 
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
