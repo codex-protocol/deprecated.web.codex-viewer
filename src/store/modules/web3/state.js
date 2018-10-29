@@ -1,14 +1,16 @@
-import { Web3Errors } from '../../../util/constants/web3'
-
 export default () => {
   return {
+    // The web3 object
     instance: null,
-    network: null,
-    account: null,
-    error: Web3Errors.None,
+
+    // Smart contract abstractions
     recordContract: null,
     tokenContract: null,
     stakeContract: null,
+
+    // Savvy-user specific state
+    registrationError: null,
+    providerAccount: null,
     isPolling: false,
   }
 }

@@ -11,10 +11,10 @@ const expectedNetworkName = (() => {
 
 const apiUrl = (() => {
   switch (expectedNetworkName) {
-    case 'mainnet': return 'https://codex-registry-api.codexprotocol.com'
-    case 'rinkeby': return 'https://rinkeby-codex-registry-api.codexprotocol.com'
-    case 'ropsten': return 'http://ropsten-codex-registry-api.codexprotocol.com'
     case 'ganache': return 'http://localhost:3001'
+    case 'mainnet': return 'https://api.codexprotocol.com'
+    case 'ropsten': return 'http://ropsten-api.codexprotocol.com'
+    case 'rinkeby': return 'https://rinkeby-api.codexprotocol.com'
     default: return null // do nothing, as an error will be thrown above if network name is invalid
   }
 })()
@@ -27,13 +27,16 @@ const etherScanUrl = (() => {
   }
 })()
 
+const targetEnv = process.env.VUE_APP_TARGET_ENV
 export default {
+  showFaucet: false,
+  showManageTokensPage: false,
+  showCodexGalleryInSideBar: false,
 
-  showFaucet: process.env.VUE_APP_TARGET_ENV !== 'production',
-  showManageTokensPage: process.env.VUE_APP_TARGET_ENV !== 'production',
-  showTestAppInSideBar: process.env.VUE_APP_TARGET_ENV !== 'production',
-  showCreateGiveawayButton: process.env.VUE_APP_TARGET_ENV !== 'production',
-  showCodexGalleryInSideBar: process.env.VUE_APP_TARGET_ENV !== 'production',
+  showManualConfirm: targetEnv === 'development',
+
+  showTestApp: targetEnv !== 'production',
+  supportEmailAccounts: targetEnv !== 'production',
 
   apiUrl,
   etherScanUrl,

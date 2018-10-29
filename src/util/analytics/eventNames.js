@@ -4,20 +4,9 @@
 const category = 'Codex Viewer'
 
 const actionsLabels = {
-  'events:viewer:view-home-page': {
-    action: 'View',
-    label: 'Home Page',
-  },
-  'events:click-home-login': {
-    action: 'Click',
-    label: 'Homepage Login Button',
-  },
-  'events:click-about-codex': {
-    action: 'Click',
-    label: 'About Codex',
-  },
 
-  'events:viewer:view-login-page': {
+  // Login
+  'events:view-login-page': {
     action: 'View',
     label: 'Login Page',
   },
@@ -42,11 +31,23 @@ const actionsLabels = {
     label: 'Logout Button',
   },
 
+  // Confirmation Email
+  'events:view-confirm-email-page': {
+    action: 'View',
+    label: 'Confirm Email Page',
+  },
+  'events:resend-confirmation-email-dialog': {
+    action: 'Click',
+    label: 'Resend Confirmation Email',
+  },
+
+  // Collection
   'events:view-collection-page': {
     action: 'View',
     label: 'Collection Page',
   },
 
+  // Record
   'events:view-record-page': {
     action: 'View',
     label: 'Record Page',
@@ -60,6 +61,7 @@ const actionsLabels = {
     label: 'Record Transfer',
   },
 
+  // Transfer
   'events:view-transfers-page': {
     action: 'View',
     label: 'Transfers Page',
@@ -81,11 +83,13 @@ const actionsLabels = {
     label: 'Cancel Transfer',
   },
 
+  // Settings
   'events:view-settings-page': {
     action: 'View',
     label: 'Settings Page',
   },
 
+  // Manage Tokens
   'events:view-tokens-page': {
     action: 'View',
     label: 'Tokens Page',
@@ -119,6 +123,7 @@ const actionsLabels = {
     label: 'Unstake Tokens',
   },
 
+  // Coming Soon
   'events:view-coming-soon-page': {
     action: 'View',
     label: 'Coming Soon Page',
@@ -127,10 +132,14 @@ const actionsLabels = {
     action: 'Click',
     label: 'Partner Link',
   },
+
+  // Gallery
   'events:view-gallery-page': {
     action: 'View',
     label: 'Gallery Page',
   },
+
+  // Faucet
   'events:view-faucet-page': {
     action: 'View',
     label: 'Faucet Page',
@@ -138,15 +147,6 @@ const actionsLabels = {
   'events:view-codex-quests-page': {
     action: 'View',
     label: 'Codex Quests Page',
-  },
-
-  'events:unsupported-browser': {
-    action: 'Unsupported',
-    label: 'Browser',
-  },
-  'events:unsupported-device': {
-    action: 'Unsupported',
-    label: 'Device',
   },
 }
 

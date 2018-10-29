@@ -61,14 +61,14 @@
           spellcheck="false"
         />
         <b-input-group-append>
-          <b-btn variant="primary" @click="addWhitelistedAddress()">Add</b-btn>
+          <b-button variant="primary" @click="addWhitelistedAddress()">Add</b-button>
         </b-input-group-append>
       </b-input-group>
 
       <div class="mt-4">
         <div v-if="whitelistedAddresses.length > 0">
           <div v-for="address in whitelistedAddresses" :key="address">
-            <HashFormatter :data="address" />
+            <DisplayName :name="address" />
             <span class="close" v-on:click="removeWhitelistedAddress(address)">×</span>
           </div>
         </div>
@@ -87,7 +87,7 @@
 import { mapState } from 'vuex'
 import debug from 'debug'
 
-import HashFormatter from '../util/HashFormatter'
+import DisplayName from '../util/DisplayName'
 import Record from '../../util/api/record'
 import EventBus from '../../util/eventBus'
 
@@ -99,7 +99,7 @@ export default {
   props: ['codexRecord', 'onUpdated'],
 
   components: {
-    HashFormatter,
+    DisplayName,
   },
 
   data() {
@@ -129,16 +129,19 @@ export default {
     onHide() {
       Object.assign(this.$data, this.$options.data.apply(this))
     },
+
     toggleIsPrivate() {
       if (this.isPrivate) {
         this.isInGallery = false
       }
     },
+
     toggleIsInGallery() {
       if (this.isInGallery) {
         this.isPrivate = false
       }
     },
+
     addWhitelistedAddress() {
 
       const addressToAdd = this.newWhitelistedAddress
@@ -154,13 +157,14 @@ export default {
       this.newWhitelistedAddress = null
 
     },
+
     removeWhitelistedAddress(addressToRemove) {
       this.whitelistedAddresses = this.whitelistedAddresses.filter((whitelistedAddress) => {
         return whitelistedAddress !== addressToRemove
       })
     },
-    updateRecord(event) {
 
+    updateRecord(event) {
       event.preventDefault()
 
       // if they typed in an address but didn't click "add", add it for them

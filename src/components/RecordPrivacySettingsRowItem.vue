@@ -1,6 +1,5 @@
 <template>
   <b-container class="record-settings-row">
-      <!-- TODO: Better handling of record w/ no metadata -->
       <b-row v-if="codexRecord.metadata">
         <b-col class="image">
           <a href="#" @click.prevent="viewRecord">
@@ -34,7 +33,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import Raven from 'raven-js'
 
 import Record from '../util/api/record'
 import EventBus from '../util/eventBus'
@@ -42,7 +40,9 @@ import missingImageHelper from '../util/missingImageHelper'
 
 export default {
   name: 'RecordPrivacySettingsRowItem',
+
   props: ['codexRecord'],
+
   data() {
     return {
       missingImageHelper,
@@ -51,8 +51,10 @@ export default {
       route: { name: 'record-detail', params: { recordId: this.codexRecord.tokenId } },
     }
   },
+
   computed: {
     ...mapState('auth', ['user']),
+
     isPublic: {
       get: function getIsPublic() {
         return !this.isPrivate
@@ -62,24 +64,27 @@ export default {
       },
     },
   },
+
   methods: {
     viewRecord() {
       this.$router.push(this.route)
     },
+
     toggleIsPrivate() {
       if (this.isPrivate) {
         this.isInGallery = false
       }
       return this.updateRecord()
     },
+
     toggleIsInGallery() {
       if (this.isInGallery) {
         this.isPrivate = false
       }
       return this.updateRecord()
     },
-    updateRecord() {
 
+    updateRecord() {
       const dataToUpdate = {
         isPrivate: this.isPrivate,
         isInGallery: this.isInGallery,
@@ -88,10 +93,10 @@ export default {
       return Record.updateRecord(this.codexRecord.tokenId, dataToUpdate)
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not update Record: ${error.message}`)
-          Raven.captureException(error)
           this.reset()
         })
     },
+
     reset() {
       this.isPrivate = this.codexRecord.isPrivate
       this.isInGallery = this.codexRecord.isInGallery

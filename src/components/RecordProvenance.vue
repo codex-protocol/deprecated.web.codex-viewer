@@ -5,7 +5,7 @@
       <div class="flex mb-4 pb-1" v-for="row in provenance" :key="row.id">
         <div>{{ getEventDescription(row.type) }}</div>
         <div>
-          <HashFormatter :data="getEventAddress(row)" />
+          <DisplayName :name="getEventAddress(row)" />
         </div>
         <div>{{ getTimeSince(row.createdAt) }}</div>
         <div class="action-buttons">
@@ -34,14 +34,6 @@
       v-model="modifiedDetailsModalVisible"
     >
       <div class="modified-details" v-if="modifiedDetails !== null">
-        <!--
-          @TODO: this layout could use a little love, bootstrap-vue's tables are
-           kind of awful...
-
-          @TODO: if the user is the owner or an approved viewer, show them the
-           "details" for this view (i.e. show oldName vs newName if
-           changedData.name === true) this may be overkill though.
-        -->
         <b-table :items="modifiedDetails" outlined></b-table>
       </div>
     </b-modal>
@@ -49,9 +41,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
-import HashFormatter from './util/HashFormatter'
+import DisplayName from './util/DisplayName'
 import { timeSince } from '../util/dateHelpers'
 import etherscanHelper from '../util/web3/etherscanHelper'
 
@@ -61,7 +51,7 @@ export default {
   props: ['provenance'],
 
   components: {
-    HashFormatter,
+    DisplayName,
   },
 
   data() {
@@ -69,10 +59,6 @@ export default {
       modifiedDetails: null,
       modifiedDetailsModalVisible: false,
     }
-  },
-
-  computed: {
-    ...mapGetters('oauth2', ['getOAuth2ClientNameFromAddress']),
   },
 
   methods: {
@@ -117,7 +103,7 @@ export default {
         default: // do nothing
       }
 
-      return this.getOAuth2ClientNameFromAddress(address)
+      return address
     },
 
     getTransactionUrl(txHash) {

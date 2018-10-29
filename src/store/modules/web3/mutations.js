@@ -1,7 +1,7 @@
 import debug from 'debug'
 import Raven from 'raven-js'
 
-import { Networks, Web3Errors } from '../../../util/constants/web3'
+import { Web3Errors } from '../../../util/constants/web3'
 
 const logger = debug('app:store:web3:mutations')
 const logMutation = (mutationName, ...args) => {
@@ -9,24 +9,15 @@ const logMutation = (mutationName, ...args) => {
 }
 
 export default {
-  SET_INITIAL_STATE(currentState, { result }) {
-    logMutation('SET_INITIAL_STATE', result)
-
-    currentState.network = Networks[result.networkId]
+  SET_WEB3(currentState, { web3, account }) {
+    logMutation('SET_WEB3', web3)
 
     // We call Object.freeze here to prevent any errors from being thrown when
     //  Vue walks over the object's properties to make them observable
     // If a new web3 instance is ever needed, a full page refresh has to occur
-    currentState.instance = Object.freeze(result.web3)
-
-    if (!result.hasWeb3Browser) {
-      currentState.error = Web3Errors.Missing
-    } else if (!result.accounts.length) {
-      currentState.error = Web3Errors.Locked
-    } else {
-      currentState.account = result.accounts[0]
-      currentState.error = Web3Errors.None
-    }
+    currentState.instance = Object.freeze(web3)
+    currentState.providerAccount = account
+    currentState.registrationError = null
   },
 
   // @NOTE: If MetaMask stops refreshing the page when the network changes
@@ -35,8 +26,8 @@ export default {
   SET_POLL_RESULT(currentState, { account }) {
     logMutation('SET_POLL_RESULT', account)
 
-    currentState.error = Web3Errors.None
-    currentState.account = account
+    currentState.registrationError = Web3Errors.None
+    currentState.providerAccount = account
   },
 
   SET_CONTRACT(currentState, { propertyName, contract }) {
@@ -45,15 +36,15 @@ export default {
     currentState[propertyName] = Object.freeze(contract)
   },
 
-  SET_ERROR(currentState, { message, error, ignoreInSentry }) {
-    logMutation('SET_ERROR', message, error, ignoreInSentry)
+  SET_REGISTRATION_ERROR(currentState, { message, error, ignoreInSentry }) {
+    logMutation('SET_REGISTRATION_ERROR', message, error, ignoreInSentry)
 
     if (!ignoreInSentry) {
       Raven.captureException(error)
     }
 
-    currentState.error = error
-    currentState.account = null
+    currentState.registrationError = error
+    currentState.providerAccount = null
   },
 
   SET_IS_POLLING(currentState, { isPolling }) {

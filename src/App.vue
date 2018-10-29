@@ -1,34 +1,35 @@
 <template>
-  <div id="app" :class="{
-    'with-background': this.useBackground(),
-    'show-nav': showNav,
-  }">
-    <template v-if="!hideSideBar">
-      <span class="hamburger" @click="toggleNav">
-        <icon-base
-          iconName="menu"
-          width="28"
-          height="32"
-          class="icon-menu"
-        >
-          <icon-hamburger />
-        </icon-base>
-      </span>
-      <AppSideBar :hideNav="hideNav" />
-    </template>
-    <div class="main-content-wrapper">
-      <div class="main-content">
-        <router-view v-if="isLoaded" />
-        <LoadingOverlay type="global" v-else />
+  <div>
+    <AppWarningBanner v-if="showWarningBanner" />
+    <div id="app" :class="{
+      'with-background': this.useBackgroundImage(),
+      'show-nav': showNav,
+    }">
+      <template v-if="!hideSideBar">
+        <span class="hamburger" @click="toggleNav">
+          <IconBase
+            iconName="menu"
+            width="28"
+            height="32"
+            class="icon-menu"
+          />
+        </span>
+        <AppSideBar :hideNav="hideNav" />
+      </template>
+      <div class="main-content-wrapper">
+        <div class="main-content">
+          <router-view v-if="isLoaded" />
+          <LoadingOverlay type="global" v-else />
+        </div>
+        <AppFooter />
       </div>
-      <AppFooter />
+      <ToastContainer />
+      <vue-cookie-accept-decline disableDecline>
+        <div slot="message">
+          This website stores cookies on your computer. Cookies are used to save information about how you interact with our website and allow us to remember you when you return. We never sell this information, and we use it strictly for analytics and metrics. For more information, please see our <a href="https://www.codexprotocol.com/privacy-policy.html" target="_blank">Privacy Policy.</a>
+        </div>
+      </vue-cookie-accept-decline>
     </div>
-    <ToastContainer />
-    <vue-cookie-accept-decline :disableDecline="true">
-      <div slot="message">
-        This website stores cookies on your computer. Cookies are used to save information about how you interact with our website and allow us to remember you when you return. We never sell this information, and we use it strictly for analytics and metrics. For more information, please see our <a href="https://www.codexprotocol.com/privacy-policy.html" target="_blank">Privacy Policy.</a>
-      </div>
-    </vue-cookie-accept-decline>
   </div>
 </template>
 
@@ -44,13 +45,16 @@ import VueCookieAcceptDecline from 'vue-cookie-accept-decline'
 
 import config from './util/config'
 import EventBus from './util/eventBus'
+import User from './util/api/user'
 
 import AppFooter from './components/core/AppFooter'
 import AppSideBar from './components/core/AppSideBar'
+import AppWarningBanner from './components/core/AppWarningBanner'
+
+import IconBase from './components/icons/IconBase'
 import LoadingOverlay from './components/util/LoadingOverlay'
 import ToastContainer from './components/util/ToastContainer'
-import IconHamburger from './components/icons/IconHamburger'
-import IconBase from './components/icons/IconBase'
+import PartyModeActivator from './directives/PartyModeActivator'
 
 import './util/analytics'
 
@@ -58,13 +62,26 @@ export default {
   name: 'App',
 
   components: {
-    IconBase,
+    VueCookieAcceptDecline,
+
     AppFooter,
     AppSideBar,
-    IconHamburger,
-    ToastContainer,
+    AppWarningBanner,
+
+    IconBase,
     LoadingOverlay,
-    VueCookieAcceptDecline,
+    ToastContainer,
+  },
+
+  directives: {
+    PartyModeActivator,
+  },
+
+  data() {
+    return {
+      showNav: false,
+      showWarningBanner: config.expectedNetworkId !== '1' && config.expectedNetworkId !== '5777',
+    }
   },
 
   created() {
@@ -79,45 +96,87 @@ export default {
     })
   },
 
-  data() {
-    return {
-      showNav: false,
-      isLoaded: false,
-      cookieStatus: false,
+  mounted() {
+    const { query } = this.$route
+    const authToken = query.authToken || this.authToken
+
+    // If the user has an authToken (either from an IDP or from cache), let's log them in
+    if (authToken) {
+      this.$store.commit('auth/SET_AUTH_STATE', {
+        authToken,
+      })
+
+      User.getUser()
+        .then((user) => {
+          this.$store.commit('auth/SET_USER', {
+            user,
+          })
+
+          if (user.type === 'simple') {
+            return this.$store.dispatch('web3/REGISTER_INFURA_PROVIDER')
+          }
+
+          return this.$store.dispatch('web3/REGISTER_WALLET_PROVIDER')
+            .then(() => {
+              this.$store.commit('web3/SET_IS_POLLING', {
+                isPolling: true,
+              })
+
+              this.$store.dispatch('web3/POLL_WEB3')
+            })
+        })
+        .then(this.$store.dispatch('auth/UPDATE_CONTRACT_STATE'))
+
+        // @TODO: This could probably be done in the background prior to login. I don't think this endpoint is authenticated
+        //  In fact, I think we need to do this separately because we leverage this information for provenance (un-auth flow)
+        .then(this.$store.dispatch('oauth2/FETCH_CLIENTS'))
+        .then(() => {
+          // Once we've authenticated the user, take them to the collection page
+          if (this.$route.name === 'collection') {
+            this.$store.commit('auth/SET_IS_LOADED', {
+              isLoaded: true,
+            })
+          } else {
+            console.log(this.$route.meta.ifAuthenticatedRedirectTo)
+            this.$router.replace({
+              name: this.$route.meta.ifAuthenticatedRedirectTo,
+            })
+          }
+        })
+        .catch((error) => {
+          if (this.user) {
+            if (this.user.type === 'savvy') {
+              this.$store.commit('web3/SET_REGISTRATION_ERROR', {
+                message: 'Error while registering Web3',
+                error,
+                ignoreInSentry: true,
+              })
+            } else {
+              this.$store.commit('auth/SET_ERROR', error)
+            }
+
+            this.$store.dispatch('auth/LOGOUT_USER')
+          }
+
+          this.$store.commit('auth/SET_IS_LOADED', {
+            isLoaded: true,
+          })
+        })
+    } else {
+      this.$store.commit('auth/SET_IS_LOADED', {
+        isLoaded: true,
+      })
     }
   },
 
-  mounted() {
-    if (process.env.VUE_APP_FRESHCHAT_API_TOKEN && window.fcWidget) {
-      window.fcWidget.init({
-        token: process.env.VUE_APP_FRESHCHAT_API_TOKEN,
-        host: 'https://wchat.freshchat.com',
-      })
-    }
-
-    // Avoid race conditions with web3 injection
-    window.addEventListener('load', () => {
-      this.$store.dispatch('web3/REGISTER')
-        .then(() => {
-          if (this.error) {
-            this.$store.dispatch('auth/LOGOUT_USER')
-          }
-        })
-        .then(() => {
-          return Promise.all([
-            this.$store.dispatch('oauth2/FETCH_CLIENTS'),
-          ], [
-            this.$store.dispatch('auth/INITIALIZE_AUTH'),
-          ])
-        })
-        .then(() => {
-          this.isLoaded = true
-        })
-    })
+  beforeDestroy() {
+    EventBus.$off('socket:codex-coin:transferred')
+    EventBus.$off('socket:codex-coin:registry-contract-approved')
   },
 
   computed: {
     ...mapGetters('auth', ['isAuthenticated']),
+    ...mapState('auth', ['isLoaded', 'user', 'authToken']),
     ...mapState('web3', ['error']),
 
     hideSideBar() {
@@ -126,6 +185,18 @@ export default {
 
     recordId() {
       return this.$route.params.recordId
+    },
+  },
+
+  watch: {
+    $route(newRoute, oldRoute) {
+      if (!this.isLoaded) {
+        // If the route changes as a result of authentication (e.g., /login to /collection)
+        //  then we only mark loading complete after the new route has been loaded
+        this.$store.commit('auth/SET_IS_LOADED', {
+          isLoaded: true,
+        })
+      }
     },
   },
 
@@ -152,14 +223,8 @@ export default {
       )
     },
 
-    useBackground() {
-      switch (this.$route.name) {
-        case 'login':
-        case 'home':
-          return true
-        default:
-          return false
-      }
+    useBackgroundImage() {
+      return this.$route.meta.useBackgroundImage || false
     },
 
     toggleNav() {
@@ -257,6 +322,10 @@ img
 
   button
     background-color: lighten($color-secondary, 25%) !important
+
+.alert a
+  color: inherit
+  font-weight: 600
 
 // CSS Checkbox toggle
 // <input type="checkbox"> toggle

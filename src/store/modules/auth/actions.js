@@ -1,125 +1,10 @@
-import axios from 'axios'
 import debug from 'debug'
-import Raven from 'raven-js'
 
 import router from '../../../router'
-import User from '../../../util/api/user'
-import EventBus from '../../../util/eventBus'
 
 const logger = debug('app:store:auth:actions')
 
 export default {
-  INITIALIZE_AUTH({ dispatch, commit, state, rootState }) {
-    logger('INITIALIZE_AUTH action being executed')
-
-    const {
-      error,
-      errorCode,
-      authToken,
-    } = rootState.route.query
-
-    if (error || errorCode) {
-      logger('Oauth2 authentication failed with an error', errorCode, error)
-
-      commit('SET_ERROR', {
-        code: errorCode,
-        message: error,
-      })
-
-      // Clear the error params from the query string
-      router.replace({
-        name: rootState.route.name,
-      })
-    } else if (authToken) {
-      logger('Fetching user state with the query string authToken')
-
-      // @TODO: evaluate what happens when a bogus auth token is set in the
-      //  route params
-      commit('SET_AUTH_STATE', {
-        authToken,
-      })
-
-      return dispatch('FETCH_USER')
-    } else if (state.authToken) {
-      logger('Fetching user state with the cached authToken')
-
-      return dispatch('FETCH_USER')
-    }
-
-    return null
-  },
-
-  FETCH_USER({ commit, dispatch, rootState }) {
-    logger('FETCH_USER action being executed')
-
-    return User.getUser()
-      .then((user) => {
-        if (user.type === 'savvy'
-          && user.address
-          && rootState.web3.account
-          && user.address.toLowerCase() !== rootState.web3.account.toLowerCase()) {
-          return dispatch('LOGOUT_USER')
-        }
-
-        const setUserAndContractState = () => {
-          commit('SET_USER', {
-            user,
-          })
-
-          return dispatch('UPDATE_CONTRACT_STATE')
-        }
-
-        if (user.type === 'simple' && rootState.web3.error) {
-          return dispatch('web3/REGISTER', true, { root: true })
-            .then(setUserAndContractState)
-        }
-
-        return setUserAndContractState()
-      })
-      .then(() => {
-        router.replace({
-          name: rootState.route.meta.ifAuthenticatedRedirectTo || rootState.route.name,
-        })
-      })
-      .catch((error) => {
-        EventBus.$emit('toast:error', `Could not log in: ${error.message}`)
-        Raven.captureException(error)
-        commit('CLEAR_USER_STATE')
-      })
-  },
-
-  // Dispatched after a user has signed a string via web3.
-  // This calls the API to retrieve a JWT and the user object.
-  SEND_AUTH_REQUEST({ commit, dispatch }, data) {
-    logger('SEND_AUTH_REQUEST action being executed')
-
-    const requestOptions = {
-      method: 'post',
-      url: '/auth-token',
-      data,
-    }
-
-    return axios(requestOptions)
-      .then((response) => {
-        const { result } = response.data
-
-        commit('SET_AUTH_STATE', {
-          authToken: result.token,
-        })
-
-        commit('SET_USER', {
-          user: result.user,
-        })
-
-        return dispatch('UPDATE_CONTRACT_STATE')
-      })
-      .catch((error) => {
-        EventBus.$emit('toast:error', `Could not log in: ${error.message}`)
-        Raven.captureException(error)
-        commit('CLEAR_USER_STATE')
-      })
-  },
-
   UPDATE_CONTRACT_STATE({ dispatch, state }) {
     if (!state.user) {
       return null
@@ -140,9 +25,11 @@ export default {
     const { tokenContract } = rootState.web3
     const { address } = state.user
 
-    return tokenContract.balanceOf(address).then((balance) => {
-      commit('SET_TOKEN_BALANCE', { balance })
-    })
+    return tokenContract.methods.balanceOf(address)
+      .call()
+      .then((balance) => {
+        commit('SET_TOKEN_BALANCE', { balance })
+      })
   },
 
   FETCH_STAKE_BALANCES({ commit, rootState, state }) {
@@ -151,14 +38,17 @@ export default {
     const { stakeContract } = rootState.web3
     const { address } = state.user
 
-
     return Promise.all([
-      stakeContract.getPersonalStakes(address).then((personalStakes) => {
-        commit('SET_PERSONAL_STAKES', { personalStakes })
-      }),
-      stakeContract.creditBalanceOf(address).then((balance) => {
-        commit('SET_CREDIT_BALANCE', { balance })
-      }),
+      stakeContract.methods.getPersonalStakes(address)
+        .call()
+        .then((personalStakes) => {
+          commit('SET_PERSONAL_STAKES', { personalStakes })
+        }),
+      stakeContract.methods.creditBalanceOf(address)
+        .call()
+        .then((balance) => {
+          commit('SET_CREDIT_BALANCE', { balance })
+        }),
     ])
   },
 
@@ -173,18 +63,22 @@ export default {
     const { address } = rootState.auth.user
 
     return Promise.all([
-      tokenContract.allowance(address, recordContract.address).then((allowance) => {
-        commit('SET_APPROVAL_STATUS', {
-          allowance,
-          stateProperty: 'registryContractApproved',
-        })
-      }),
-      tokenContract.allowance(address, stakeContract.address).then((allowance) => {
-        commit('SET_APPROVAL_STATUS', {
-          allowance,
-          stateProperty: 'stakeContractApproved',
-        })
-      }),
+      tokenContract.methods.allowance(address, recordContract.address)
+        .call()
+        .then((allowance) => {
+          commit('SET_APPROVAL_STATUS', {
+            allowance,
+            stateProperty: 'registryContractApproved',
+          })
+        }),
+      tokenContract.methods.allowance(address, stakeContract.address)
+        .call()
+        .then((allowance) => {
+          commit('SET_APPROVAL_STATUS', {
+            allowance,
+            stateProperty: 'stakeContractApproved',
+          })
+        }),
     ])
   },
 
@@ -203,7 +97,7 @@ export default {
     commit('CLEAR_USER_STATE')
 
     // if this is an unauthenticated route, clear their auth token (i.e. log
-    //  the user out), but do not redirect them to the homepage
+    //  the user out), but do not redirect them to the login page
     if (router.currentRoute.meta && router.currentRoute.meta.allowUnauthenticatedUsers) {
       return
     }

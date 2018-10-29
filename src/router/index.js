@@ -1,12 +1,11 @@
 import Vue from 'vue'
-import is from 'is_js'
 import Router from 'vue-router'
 
 import store from '../store'
 import config from '../util/config'
 
-import HomeView from '../views/HomeView'
 import LoginView from '../views/LoginView'
+import ConfirmEmailView from '../views/ConfirmEmailView'
 import FeatureListView from '../views/FeatureListView'
 import TransferListView from '../views/TransferListView'
 import RecordListView from '../views/RecordListView'
@@ -16,8 +15,6 @@ import ManageTokensView from '../views/ManageTokensView'
 import FaucetView from '../views/FaucetView'
 import GalleryView from '../views/GalleryView'
 import GalleryListView from '../views/GalleryListView'
-import UnsupportedDeviceView from '../views/UnsupportedDeviceView'
-import UnsupportedBrowserView from '../views/UnsupportedBrowserView'
 import OAuth2AppView from '../views/test/OAuth2AppView'
 
 Vue.use(Router)
@@ -25,22 +22,26 @@ Vue.use(Router)
 const router = new Router({
   routes: [
 
-    // home & login routes
-    {
-      name: 'home',
-      path: '/',
-      component: HomeView,
-      meta: {
-        hideSideBar: true,
-        allowUnauthenticatedUsers: true,
-      },
-    },
+    // login routes
     {
       name: 'login',
       path: '/login',
+      alias: '/',
       component: LoginView,
       meta: {
         hideSideBar: true,
+        useBackgroundImage: true,
+        allowUnauthenticatedUsers: true,
+        ifAuthenticatedRedirectTo: 'collection',
+      },
+    },
+    {
+      name: 'confirm-email',
+      path: '/confirm-email',
+      component: ConfirmEmailView,
+      meta: {
+        hideSideBar: true,
+        useBackgroundImage: true,
         allowUnauthenticatedUsers: true,
         ifAuthenticatedRedirectTo: 'collection',
       },
@@ -114,30 +115,6 @@ const router = new Router({
       path: '/test/oauth2-app',
       component: OAuth2AppView,
     },
-
-    // global error routes
-    //
-    // @TODO: abstract these error pages into common ErrorView component that's
-    //  simply passed an errorType prop (e.g. 'unsupported-device' or
-    //  'unsupported-browser')?
-    {
-      name: 'unsupported-device',
-      path: '/error/unsupported-device',
-      component: UnsupportedDeviceView,
-      meta: {
-        allowUnauthenticatedUsers: true,
-        hideSideBar: true,
-      },
-    },
-    {
-      name: 'unsupported-browser',
-      path: '/error/unsupported-browser',
-      component: UnsupportedBrowserView,
-      meta: {
-        allowUnauthenticatedUsers: true,
-        hideSideBar: true,
-      },
-    },
   ],
 })
 
@@ -159,28 +136,15 @@ router.beforeEach((to, from, next) => {
     return next({ name: to.meta.ifAuthenticatedRedirectTo })
   }
 
-  // we need to check if we've already been redirected to an error page,
-  //  otherwise navigating to an error page will result in an endless loop
-  const isErrorPage = /^\/error\//.test(to.path)
-
   const requireAuthentication = to.matched.some((route) => {
     return !route.meta.allowUnauthenticatedUsers
   })
 
-  if (!isErrorPage) {
-    // @TODO: move this logic to the login page instead?
-    // @NOTE: is.chrome() is true in the Brave browser since it's Chromium-based
-    if (requireAuthentication && is.desktop() && !is.firefox() && !is.chrome() && !is.opera()) {
-      return next({ name: 'unsupported-browser' })
-    }
-  }
-
-  // if no route was matched (i.e. a 404), send them to the homepage
-  if (to.matched.length === 0) {
-    return next({ name: 'home' })
-  }
-
-  if (requireAuthentication && !store.getters['auth/isAuthenticated']) {
+  // if no route was matched (i.e. a 404)
+  // or if the user is trying to access an authenticated page but is unauthenticated
+  // then send them to the login page
+  if (to.matched.length === 0
+    || (requireAuthentication && !store.getters['auth/isAuthenticated'])) {
     return next({ name: 'login' })
   }
 

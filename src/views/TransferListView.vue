@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-12">
         <AppHeader title="Transfers" />
-        <AppSubHeader
+        <TransferListSubheader
           :fetchData="this.fetchData"
           :transferDirection="transferDirection"
         />
@@ -24,10 +24,10 @@
             :codex-record="record"
             :key="record.tokenId"
           />
-          <!-- TODO: add an "ignored" tab? idk probably not super necessary really -->
         </b-card-group>
         <div v-else>
           You have no {{ transferDirection }} transfers.
+          To transfer a record you own, go to that record's detail page.
         </div>
       </div>
     </div>
@@ -38,7 +38,7 @@
 import Transfer from '../util/api/transfer'
 import EventBus from '../util/eventBus'
 import AppHeader from '../components/core/AppHeader'
-import AppSubHeader from '../components/core/AppSubHeader'
+import TransferListSubheader from '../components/TransferListSubheader'
 import RecordTransferIncomingListItem from '../components/RecordTransferIncomingListItem'
 import RecordTransferOutgoingListItem from '../components/RecordTransferOutgoingListItem'
 
@@ -51,7 +51,7 @@ export default {
 
   components: {
     AppHeader,
-    AppSubHeader,
+    TransferListSubheader,
     RecordTransferIncomingListItem,
     RecordTransferOutgoingListItem,
   },

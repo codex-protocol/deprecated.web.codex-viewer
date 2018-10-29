@@ -8,6 +8,13 @@ if (cachedAuthToken) {
   axios.defaults.headers.common.Authorization = cachedAuthToken
 }
 
+if (process.env.VUE_APP_FRESHCHAT_API_TOKEN && window.fcWidget) {
+  window.fcWidget.init({
+    token: process.env.VUE_APP_FRESHCHAT_API_TOKEN,
+    host: 'https://wchat.freshchat.com',
+  })
+}
+
 export default () => {
   return {
     user: null,
@@ -18,6 +25,9 @@ export default () => {
     registryContractApproved: false,
     stakeContractApproved: false,
     hideSetup: !!window.localStorage.getItem('hideSetup'),
-    authError: null,
+    apiError: null,
+
+    // Break this out into a separate 'app' module if one is ever needed
+    isLoaded: false,
   }
 }

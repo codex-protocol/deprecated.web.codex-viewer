@@ -5,10 +5,12 @@
     ok-title="Save"
     cancel-variant="outline-primary"
     size="lg"
+    :on-shown="focusModal"
     :ok-disabled="!canSubmit"
     :ok-method="updateMetadata"
     :on-clear="clearModal"
     :requires-tokens="true"
+    :validate="validate"
   >
     <b-form-group
       label="Name"
@@ -17,7 +19,7 @@
       <b-form-input
         id="name"
         v-model="name"
-        @input="updateNameHash"
+        ref="defaultModalFocus"
         type="text"
       />
     </b-form-group>
@@ -28,7 +30,6 @@
       <b-form-textarea
         id="description"
         v-model="description"
-        @input="updateDescriptionHash"
         :rows="4"
       />
     </b-form-group>
@@ -80,7 +81,7 @@
         <b-button
           size="sm"
           variant="danger"
-          @click.prevent="removeImage(image.id)"
+          @click.prevent="removeImage(image)"
         >
           Delete
         </b-button>
@@ -130,33 +131,20 @@ export default {
   },
 
   data() {
-    // Extra image objects
-    const images = Array.from(this.codexRecord.metadata.images)
-
-    // Extra image `id`s and `hash`s
-    const imageIds = this.codexRecord.metadata.images.map(({ id, hash }) => {
-      return { id, hash }
-    })
-
     return {
       name: this.codexRecord.metadata.name,
-      nameHash: this.codexRecord.metadata.nameHash,
       description: this.codexRecord.metadata.description,
-      descriptionHash: this.codexRecord.metadata.descriptionHash,
       mainImage: this.codexRecord.metadata.mainImage,
-      mainImageFileHash: this.codexRecord.metadata.mainImage.hash,
       mainImageId: this.codexRecord.metadata.mainImage.id,
+      images: this.codexRecord.metadata.images,
+
       uploadedMainImageFile: null,
       imageStreamUri: null,
       progressVisible: false,
       uploadMainImageComplete: false,
       uploadMainImageSuccess: false,
       isFileProcessing: false,
-      images,
-      imageIds,
-      fileHashes: this.codexRecord.metadata.fileHashes,
-      tokenId: this.codexRecord.tokenId,
-      providerMetadataId: this.codexRecord.metadata.id,
+      newImages: [],
     }
   },
 
@@ -195,64 +183,47 @@ export default {
   },
 
   methods: {
+    // Vue2-Dropzone Handlers
+    fileAdded(file, response) {
+      const result = response.result[0]
+
+      this.newImages.push({
+        id: result.id,
+        uuid: file.upload.uuid,
+      })
+    },
+
+    fileRemoved(file, error, xhr) {
+      const indexToRemove = this.newImages.findIndex((image) => {
+        return image.uuid === file.upload.uuid
+      })
+
+      if (indexToRemove !== -1) {
+        this.newImages.splice(indexToRemove, 1)
+      }
+    },
+
     onFileProcessing() {
       this.isFileProcessing = true
     },
+
     onQueueComplete() {
       this.isFileProcessing = false
     },
-    getMainImageId() {
-      return { id: this.mainImageId }
-    },
-    setMainImageId(id) {
-      this.mainImageId = id
-    },
-    // Record a new extra image which has been added
-    addImage(id, uuid, hash) {
-      this.imageIds.push({ id, uuid, hash })
-      this.addFileHash(hash)
-    },
-    // Remove a new extra image that was added but not saved
-    removeAddedImage(uuid) {
-      const indexToRemove = this.imageIds.findIndex((imageId) => {
-        return imageId.uuid === uuid
+    // End Vue2-Dropzone Handlers
+
+    // Remove an existing image
+    removeImage(imageToRemove) {
+      const indexToRemove = this.images.findIndex((image) => {
+        return imageToRemove.id === image.id
       })
 
       if (indexToRemove !== -1) {
-        this.removeFileHash(this.imageIds[indexToRemove].hash)
-        this.imageIds.splice(indexToRemove, 1)
-      }
-    },
-    addFileHash(hash) {
-      this.fileHashes.push(hash)
-    },
-    removeFileHash(hash) {
-      this.fileHashes = this.fileHashes.filter((fileHash) => {
-        return fileHash !== hash
-      })
-    },
-    // Remove a saved extra image
-    removeImage(id) {
-      const indexToRemove = this.imageIds.findIndex((imageId) => {
-        return imageId.id === id
-      })
-
-      if (indexToRemove !== -1) {
-        this.removeFileHash(this.imageIds[indexToRemove].hash)
-        this.imageIds.splice(indexToRemove, 1)
         this.images.splice(indexToRemove, 1)
       }
     },
-    updateNameHash() {
-      this.nameHash = this.hash(this.name)
-    },
-    updateDescriptionHash() {
-      this.descriptionHash = this.description ? this.hash(this.description) : NullDescriptionHash
-    },
-    hash(input) {
-      return this.instance.utils.soliditySha3(input)
-    },
-    // Upload a new main image
+
+    // Main image handlers
     displayAndUploadFile(file) {
       if (!file) {
         return
@@ -268,36 +239,18 @@ export default {
       })
 
       fileReader.readAsDataURL(file)
-
-      this.getFileHash(file, (err, hash) => {
-        this.removeFileHash(this.mainImageFileHash)
-        this.addFileHash(hash)
-        this.mainImageFileHash = hash
-      })
     },
-    getFileHash(file, next) {
-      const binaryFileReader = new FileReader()
 
-      binaryFileReader.addEventListener('loadend', () => {
-        next(null, this.instance.utils.soliditySha3(binaryFileReader.result))
-      })
-
-      binaryFileReader.readAsBinaryString(file)
-    },
-    // Handle the upload of a new main image
     uploadFile(file) {
-
       this.progressVisible = true
       this.uploadMainImageSuccess = false
       this.uploadMainImageComplete = false
 
       File.uploadFiles(file)
         .then((uploadedFiles) => {
-
           this.uploadedMainImageFile = uploadedFiles[0]
           this.uploadMainImageSuccess = true
-          this.setMainImageId(this.uploadedMainImageFile.id)
-
+          this.mainImageId = this.uploadedMainImageFile.id
         })
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not upload file: ${error.message}`)
@@ -306,59 +259,69 @@ export default {
           this.uploadMainImageComplete = true
         })
     },
-    getImageIds() {
-      return this.imageIds.map((imageId) => {
-        return { id: imageId.id }
-      })
-    },
-    fileAdded(file, response) {
-      const result = response.result[0]
-      const { uuid } = file.upload
-      const { id } = result
-      this.getFileHash(file, (err, hash) => {
-        this.addImage(id, uuid, hash)
-      })
-    },
-    fileRemoved(file, error, xhr) {
-      const { uuid } = file.upload
-      this.removeAddedImage(uuid)
-    },
+    // End of main image handlers
+
     focusModal() {
       if (this.$refs.defaultModalFocus) {
         this.$refs.defaultModalFocus.focus()
       }
     },
+
     clearModal() {
       Object.assign(this.$data, this.$options.data.apply(this))
-    },
-    updateMetadata() {
 
+      this.$refs.dropzone.removeAllFiles()
+    },
+
+    validate() {
+      const errors = []
+
+      if (!this.name) {
+        errors.push('Name is required')
+      }
+
+      if (!this.mainImageId) {
+        errors.push('Image is required')
+      }
+
+      return errors
+    },
+
+    updateMetadata() {
+      const imageMap = (image) => {
+        return {
+          id: image.id,
+        }
+      }
+
+      const allImages = this.newImages.map(imageMap).concat(this.images.map(imageMap))
       const updatedMetadata = {
         name: this.name,
-        images: this.getImageIds(),
-        mainImage: this.getMainImageId(),
+        images: allImages,
+        mainImage: { id: this.mainImageId },
         description: this.description || null,
       }
 
-      return Record.updateMetadata(this.tokenId, updatedMetadata)
-        .then(() => {
-          return this.modifyRecord()
+      return Record.updateMetadata(this.codexRecord.tokenId, updatedMetadata)
+        .then((metadata) => {
+          return this.modifyRecord(metadata)
         })
     },
-    modifyRecord() {
+
+    modifyRecord(metadata) {
       const input = [
-        this.tokenId,
-        this.nameHash,
-        this.descriptionHash,
-        this.fileHashes,
+        this.codexRecord.tokenId,
+        metadata.nameHash,
+        metadata.descriptionHash || NullDescriptionHash,
+        metadata.fileHashes,
         additionalDataHelper.encode([
           process.env.VUE_APP_METADATA_PROVIDER_ID, // providerId
-          this.providerMetadataId, // providerMetadataId
+          this.codexRecord.metadata.id, // providerMetadataId
         ]),
       ]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return contractHelper('CodexRecord', 'modifyMetadataHashes', input, this.$store.state)
+      return contractHelper('CodexRecord', 'modifyMetadataHashes', input, this.$store)
     },
   },
 }

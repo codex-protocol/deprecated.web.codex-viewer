@@ -7,45 +7,40 @@
             <img src="../assets/logos/codex/gold.svg" />
           </b-link>
         </div>
-        <div v-if="isMobile">
-          <h1 v-html="pageContent.title"></h1>
-          <div class="lead" v-html="pageContent.description"></div>
-          <div v-if="showCoinbaseWalletLink">
-            <a href="https://wallet.coinbase.com/">
-              <img src="../assets/images/get-coinbase-wallet@3x.png" width="150">
-            </a>
-            <br /><br />
-          </div>
-          <div v-else>
-            <b-button
-              v-if="buttonTitle"
-              variant="primary"
-              @click="buttonMethod"
-              class="mb-5"
-            >
-              {{ buttonTitle }}
-            </b-button>
-          </div>
+
+        <h1>{{ title }}</h1>
+        <div class="lead">{{ description }}</div>
+        <p class="mt-5 mb-3">
+          <b>Sign in below to get started</b>
+        </p>
+
+        <div class="icons mb-3">
+          <a :href="googleLoginUrl" v-if="supportEmailAccounts">
+            <IconBase iconName="google" width="48" height="48" />
+          </a>
+          <a :href="facebookLoginUrl" :disabled="disableFacebook" v-if="supportEmailAccounts">
+            <IconBase iconName="facebook" width="48" height="48" />
+          </a>
+          <a :href="microsoftLoginUrl" :disabled="disableMicrosoft" v-if="supportEmailAccounts">
+            <IconBase iconName="microsoft" width="48" height="48" />
+          </a>
+          <b-link @click="registerWalletProvider('metaMask')">
+            <IconBase iconName="metaMask" width="48" height="48" />
+          </b-link>
+          <b-link @click="registerWalletProvider('coinbaseWallet')">
+            <IconBase iconName="coinbaseWallet" width="48" height="48" />
+          </b-link>
         </div>
-        <div v-else>
-          <h1 v-html="pageContent.title"></h1>
-          <div class="lead" v-html="pageContent.description"></div>
-          <b-button
-            v-if="buttonTitle"
-            variant="primary"
-            @click="buttonMethod"
-            class="mb-5"
-          >
-            {{ buttonTitle }}
-          </b-button>
-        </div>
-        <a :href="oauthLoginUrl">
-          <img src="../assets/images/google-signin@2x.png" width="200">
-        </a>
-        <LoginMarketingCard v-if="showLoginMarketingCard" />
+
+        <b-alert
+          class="mt-5"
+          variant="danger"
+          :show="!!errorMessage"
+          v-html="errorMessage"
+        />
       </div>
       <div class="col-12 col-md-6 secondary">
-        <div class="login-art"><img src="../assets/images/login-art.png" /></div>
+        <div class="login-art"><img src="../assets/images/login-art.png" v-party-mode-activator /></div>
       </div>
     </div>
   </div>
@@ -53,187 +48,160 @@
 
 <script>
 import is from 'is_js'
-import debug from 'debug'
 import { mapState } from 'vuex'
 
+import User from '../util/api/user'
 import config from '../util/config'
-import EventBus from '../util/eventBus'
 import { Web3Errors, Networks } from '../util/constants/web3'
 
-import LoginMarketingCard from '../components/LoginMarketingCard'
-
-const logger = debug('app:component:login-view')
+import IconBase from '../components/icons/IconBase'
 
 export default {
   name: 'LoginView',
 
   components: {
-    LoginMarketingCard,
+    IconBase,
   },
 
   data() {
     return {
-      buttonTitle: 'Login',
-      buttonMethod: this.web3Login,
-
-      // @NOTE: Disabled for now, but we'll leave the component around for
-      //  marketing purposes later
-      showLoginMarketingCard: false,
       isMobile: is.mobile(),
-      oauthLoginUrl: `${config.apiUrl}/oauth2/login/google`,
+      walletProvider: null,
+      supportEmailAccounts: config.supportEmailAccounts,
+
+      googleLoginUrl: `${config.apiUrl}/oauth2/login/google`,
+      facebookLoginUrl: `${config.apiUrl}/oauth2/login/facebook`,
+      microsoftLoginUrl: `${config.apiUrl}/oauth2/login/microsoft`,
+
+      // Facebook and Microsoft support HTTPS for redirect_uri so we disable these in ropsten
+      disableFacebook: config.expectedNetworkName === 'ropsten',
+      disableMicrosoft: config.expectedNetworkName === 'ropsten',
     }
   },
 
-  created() {
-    EventBus.$emit('events:viewer:view-login-page', this)
-  },
-
   computed: {
-    ...mapState('auth', ['authError']),
-    ...mapState('web3', ['account', 'instance', 'error']),
+    ...mapState('auth', ['apiError']),
+    ...mapState('web3', ['providerAccount', 'instance', 'registrationError']),
 
-    pageContent() {
-      if (this.authError) {
-        return this.handleAuthError(this.authError)
+    title() {
+      if (this.apiError) {
+        return 'Error'
       }
 
-      if (this.error) {
-        return this.handleWeb3Error(this.error)
+      return 'Sign in'
+    },
+
+    description() {
+      if (this.apiError) {
+        return 'We were unable to log you in with your account. Try again later.'
       }
 
-      this.setButton('Login', this.web3Login)
+      return 'Codex Viewer allows you to create, view, and transfer Codex Records'
+    },
 
-      return {
-        title: 'Login',
-        description: 'Login to create, view, &amp; transfer Codex Records',
+    errorMessage() {
+      if (!this.registrationError) {
+        return null
+      }
+
+      switch (this.registrationError.message) {
+        case Web3Errors.Missing:
+          return `You don't have a Web3 wallet installed. To install one, visit <a href="${this.walletProviderUrl}" target="_blank">${this.walletProviderUrl}</a>.`
+
+        case Web3Errors.Locked:
+          return 'Your Web3 account is locked. To sign in with Web3, open your Ethereum wallet and follow the instructions to unlock it.'
+
+        case Web3Errors.WrongNetwork:
+          return `You're on the wrong Ethereum network. The expected network is ${Networks[config.expectedNetworkId]}. To sign in with Web3, change the network in your wallet settings.`
+
+        case Web3Errors.UserDeniedSignature:
+          return 'In order to sign in with your Web3, use your wallet to sign the message that you are prompted with. This will not spend any gas.'
+
+        case Web3Errors.AccountChanged:
+          return 'In order to preserve your privacy, we logged you out of Codex Viewer because we detected a change in the Web3 wallet your\'re currently using.'
+
+        default:
+          return 'Something went wrong with your Web3 login. Try again later.'
       }
     },
 
-    showCoinbaseWalletLink() {
-      return this.isMobile && this.error === Web3Errors.Missing
+    walletProviderUrl() {
+      switch (this.walletProvider) {
+        case 'coinbaseWallet':
+          return 'https://wallet.coinbase.com'
+
+        default:
+        case 'metaMask':
+          return 'https://www.metamask.io'
+      }
     },
   },
 
   methods: {
-    installMetamask() {
-      window.open('https://www.metamask.io', '_blank')
-      this.setButton('MetaMask has been installed', this.checkMetamask)
-      EventBus.$emit('events:click-install-metamask', this)
-    },
+    registerWalletProvider(provider) {
+      this.walletProvider = provider
 
-    checkMetamask() {
-      EventBus.$emit('events:click-check-metamask', this)
-      window.location.reload(true)
+      this.$store.dispatch('web3/REGISTER_WALLET_PROVIDER')
+        .then(this.web3Login)
+        .catch((error) => {
+          this.$store.commit('web3/SET_REGISTRATION_ERROR', {
+            error,
+            ignoreInSentry: true,
+          })
+        })
     },
 
     web3Login() {
       const personalMessageToSign = 'Please sign this message to authenticate with the Codex Registry.'
-
-      EventBus.$emit('events:click-login-button', this)
-
       const sendAsyncOptions = {
         method: 'personal_sign',
         params: [
-          this.account,
+          this.providerAccount,
           this.instance.utils.toHex(personalMessageToSign),
         ],
       }
 
-      this.instance.currentProvider.sendAsync(sendAsyncOptions, (error, result) => {
-
-        // result.error will be populated if the user rejects the signature
-        //  prompt
-        if (error || result.error) {
-          logger(error || result.error)
-          return
+      return this.instance.currentProvider.sendAsync(sendAsyncOptions, (error, result) => {
+        if (error) {
+          throw new Error(Web3Errors.Unknown)
         }
 
-        EventBus.$emit('events:login', this)
+        if (result.error) {
+          throw new Error(Web3Errors.UserDeniedSignature)
+        }
 
-        this.$store.dispatch('auth/SEND_AUTH_REQUEST', {
-          userAddress: this.account,
+        User.getAuthTokenFromSignedData({
+          userAddress: this.providerAccount,
           signedData: result.result.substr(2),
         })
+          .then((response) => {
+            this.$store.commit('auth/SET_AUTH_STATE', {
+              authToken: response.token,
+            })
+
+            this.$store.commit('auth/SET_USER', {
+              user: response.user,
+            })
+
+            this.$store.commit('web3/SET_IS_POLLING', {
+              isPolling: true,
+            })
+
+            this.$store.dispatch('web3/POLL_WEB3')
+
+            return this.$store.dispatch('auth/UPDATE_CONTRACT_STATE')
+          })
           .then(() => {
-            this.$router.replace({ name: 'collection' })
+            // @TODO: This could probably be done in the background prior to login. I don't think this endpoint is authenticated
+            //  In fact, I think we need to do this separately because we leverage this information for provenance (un-auth flow)
+            return this.$store.dispatch('oauth2/FETCH_CLIENTS')
+          })
+          .then(() => {
+            this.$router.replace({
+              name: this.$route.meta.ifAuthenticatedRedirectTo,
+            })
           })
       })
-    },
-
-    setButton(title, method) {
-      this.buttonTitle = title
-      this.buttonMethod = method
-    },
-
-    handleAuthError(error) {
-      this.setButton()
-
-      return {
-        title: 'There was a problem logging in',
-        description: error.message
-          || 'We were unable to log you in with your Google account. Try again later.',
-      }
-    },
-
-    handleWeb3Error(error) {
-      let title
-      let description
-
-      switch (error) {
-        case Web3Errors.Locked:
-          title = 'Your account is locked'
-          description = 'Open your Ethereum wallet and follow the instructions to unlock it'
-          this.setButton()
-          break
-
-        case Web3Errors.Unknown:
-          title = 'Let&rsquo;s get started'
-
-          if (this.isMobile) {
-            description = '<p>Use a DApp browser, such as Coinbase Wallet.</p>'
-            this.setButton()
-          } else {
-            description = '<p>To continue, install the MetaMask browser extension.</p>'
-            description += '<p>The best place to store your Codex Records is a secure wallet like MetaMask. This will also be used as your login (no password needed)'
-            this.setButton('Install MetaMask', this.installMetamask)
-          }
-          break
-
-        case Web3Errors.WrongNetwork:
-          title = 'Wrong Ethereum network'
-          description = `You're on the wrong Ethereum network. Expected network is ${Networks[config.expectedNetworkId]}. Sign in with Google or change the network in your wallet settings.`
-          this.setButton()
-          break
-
-        default:
-        case Web3Errors.Missing:
-          title = 'Let&rsquo;s get started'
-
-          if (this.isMobile) {
-            description = '<p>Use a DApp browser, such as Coinbase Wallet or Status.</p>'
-            this.setButton()
-          } else {
-            description = '<p>To continue, install the MetaMask browser extension.</p>'
-            description += '<p>The best place to store your Codex Records is a secure wallet like MetaMask. This will also be used as your login (no password needed)'
-            this.setButton('Install MetaMask', this.installMetamask)
-          }
-
-          if (this.isMobile) {
-            title = 'Login'
-            description = '<p>To create, view, &amp; transfer Codex Records, sign in with Google or a Web3 browser such as Coinbase Wallet.</p>'
-            this.setButton()
-          } else {
-            title = 'Login'
-            description = '<p>To create, view, &amp; transfer Codex Records, sign in with Google or use a Web3 browser extension such as Metamask.</p>'
-            this.setButton('Install MetaMask', this.installMetamask)
-          }
-          break
-      }
-
-      return {
-        title,
-        description,
-      }
     },
   },
 }
@@ -242,20 +210,14 @@ export default {
 <style lang="stylus" scoped>
 @import "../assets/variables.styl"
 
-  .container
-    height: 100%
-    display: flex
-    align-items: center
+  .icons a
+    margin: 0 1rem
 
-  .primary
-    margin-bottom: 2rem
+    &:first-child
+      margin-left: 0
 
-    @media screen and (min-width: $breakpoint-md)
-      margin-bottom: 0
-
-  .secondary
-    text-align: right
-    align-self: center
+    &.disabled
+      opacity: .5
 
   .logo
     max-width: 100px
@@ -266,14 +228,7 @@ export default {
     font-weight: bold
     font-family: $font-family-serif
 
-  .lead
-    margin-bottom: 3rem
-
   .login-art img
     width: 100%
     margin-top: 3rem
-
-    @media screen and (max-width: $breakpoint-md)
-      margin-top: 0
-
 </style>

@@ -13,22 +13,28 @@
           <b-button
             variant="outline-primary"
             @click="createGiveaway"
-            v-if="showCreateGiveawayButton && !giveaway"
+            v-if="showCreateGiveawayButton"
           >
             Create giveaway
           </b-button>
         </AppHeader>
         <b-card-group deck class="record-list">
-          <FaucetMarketingCard :giveaway="giveaway" v-if="showFaucetMarketingCard" />
-          <ClaimGiveawayCard :giveaway="giveaway" />
-          <GiveawayInfoCard :giveaway="giveaway" />
+          <FaucetMarketingCard v-if="showFaucetMarketingCard" />
 
-          <RecordListItem
-            v-if="record.metadata"
-            v-for="record in records"
-            :codex-record="record"
-            :key="record.tokenId"
-          />
+          <template v-if="giveaway">
+            <ClaimGiveawayCard :giveaway="giveaway" />
+            <GiveawayInfoCard :giveaway="giveaway" />
+          </template>
+
+          <!-- If there are no marketing cards displayed the user has no records, show a 'how-to' card -->
+          <CreateRecordCard v-if="!giveaway && recordList.length === 0" />
+          <template v-else>
+            <RecordListItem
+              v-for="record in recordList"
+              :codex-record="record"
+              :key="record.tokenId"
+            />
+          </template>
         </b-card-group>
         <create-record-modal />
       </div>
@@ -37,7 +43,10 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import {
+  mapState,
+  mapGetters,
+} from 'vuex'
 
 import config from '../util/config'
 import EventBus from '../util/eventBus'
@@ -45,10 +54,14 @@ import Record from '../util/api/record'
 import Giveaway from '../util/api/giveaway'
 
 import AppHeader from '../components/core/AppHeader'
+
+import GiveawayInfoCard from '../components/cards/GiveawayInfoCard'
+import CreateRecordCard from '../components/cards/CreateRecordCard'
+import ClaimGiveawayCard from '../components/cards/ClaimGiveawayCard'
+import FaucetMarketingCard from '../components/cards/FaucetMarketingCard'
+
+
 import RecordListItem from '../components/RecordListItem'
-import GiveawayInfoCard from '../components/GiveawayInfoCard'
-import ClaimGiveawayCard from '../components/ClaimGiveawayCard'
-import FaucetMarketingCard from '../components/FaucetMarketingCard'
 import CreateRecordModal from '../components/modals/CreateRecordModal'
 
 export default {
@@ -56,10 +69,13 @@ export default {
 
   components: {
     AppHeader,
-    RecordListItem,
-    FaucetMarketingCard,
-    ClaimGiveawayCard,
+
     GiveawayInfoCard,
+    CreateRecordCard,
+    ClaimGiveawayCard,
+    FaucetMarketingCard,
+
+    RecordListItem,
     CreateRecordModal,
   },
 
@@ -67,38 +83,51 @@ export default {
     return {
       records: [],
       giveaway: null,
-      showCreateGiveawayButton: config.showCreateGiveawayButton,
     }
   },
 
   mounted() {
-    // @NOTE: incoming transfers and newly minted Records both have the same
+    // @NOTE: incoming transfers and newly created Records both have the same
     //  effect of pushing the new record onto this.records, so we use the same
     //  handler for both
     //
     // the same concept applies for outgoing transfers and destroyed records
-    EventBus.$on('socket:codex-record:minted', this.addTransferredRecordHandler)
+    EventBus.$on('socket:codex-record:created', this.addTransferredRecordHandler)
     EventBus.$on('socket:codex-record:destroyed', this.removeTransferredRecordHandler)
     EventBus.$on('socket:codex-record:transferred:new-owner', this.addTransferredRecordHandler)
     EventBus.$on('socket:codex-record:transferred:old-owner', this.removeTransferredRecordHandler)
   },
+
   beforeDestroy() {
-    EventBus.$off('socket:codex-record:minted', this.addTransferredRecordHandler)
+    EventBus.$off('socket:codex-record:created', this.addTransferredRecordHandler)
     EventBus.$off('socket:codex-record:destroyed', this.removeTransferredRecordHandler)
     EventBus.$off('socket:codex-record:transferred:new-owner', this.addTransferredRecordHandler)
     EventBus.$off('socket:codex-record:transferred:old-owner', this.removeTransferredRecordHandler)
   },
+
   created() {
     this.getRecords()
     this.getGiveaways()
+
     EventBus.$emit('events:view-collection-page', this)
   },
 
   computed: {
     ...mapState('auth', ['hideSetup']),
+    ...mapGetters('auth', ['isAdmin', 'isSimpleUser']),
+
+    recordList() {
+      return this.records.filter((record) => {
+        return !!record.metadata
+      })
+    },
+
+    showCreateGiveawayButton() {
+      return this.isAdmin && !this.giveaway
+    },
 
     showFaucetMarketingCard() {
-      return config.showFaucet && !this.hideSetup && !this.giveaway
+      return config.showFaucet && !this.isSimpleUser && !this.hideSetup && !this.giveaway
     },
   },
 
