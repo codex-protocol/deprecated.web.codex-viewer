@@ -144,8 +144,23 @@ export default {
           }
         })
         .catch((error) => {
-          // @TODO: Show error to user
-          EventBus.$emit('toast:error', `Could not log in: ${error.message}`)
+          if (this.user) {
+            if (this.user.type === 'savvy') {
+              this.$store.commit('web3/SET_REGISTRATION_ERROR', {
+                message: 'Error while registering Web3',
+                error,
+                ignoreInSentry: true,
+              })
+            } else {
+              this.$store.commit('auth/SET_ERROR', error)
+            }
+
+            this.$store.dispatch('auth/LOGOUT_USER')
+          }
+
+          this.$store.commit('auth/SET_IS_LOADED', {
+            isLoaded: true,
+          })
         })
     } else {
       this.$store.commit('auth/SET_IS_LOADED', {
@@ -161,7 +176,7 @@ export default {
 
   computed: {
     ...mapGetters('auth', ['isAuthenticated']),
-    ...mapState('auth', ['isLoaded', 'authToken']),
+    ...mapState('auth', ['isLoaded', 'user', 'authToken']),
     ...mapState('web3', ['error']),
 
     hideSideBar() {

@@ -45,8 +45,7 @@ export default {
 
   data() {
     return {
-      showTestApp: config.showTestApp,
-      showBugBountyInfo: config.showBugBountyMarketingCard,
+      showTestApp: config.showTestApp && config.supportEmailAccounts,
     }
   },
 }
