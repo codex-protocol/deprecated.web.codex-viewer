@@ -104,7 +104,7 @@ export default {
         return null
       }
 
-      switch (this.registrationError) {
+      switch (this.registrationError.message) {
         case Web3Errors.Missing:
           return `You don't have a Web3 wallet installed. To install one, visit <a href="${this.walletProviderUrl}" target="_blank">${this.walletProviderUrl}</a>.`
 
@@ -163,11 +163,11 @@ export default {
 
       return this.instance.currentProvider.sendAsync(sendAsyncOptions, (error, result) => {
         if (error) {
-          throw Web3Errors.Unknown
+          throw new Error(Web3Errors.Unknown)
         }
 
         if (result.error) {
-          throw Web3Errors.UserDeniedSignature
+          throw new Error(Web3Errors.UserDeniedSignature)
         }
 
         User.getAuthTokenFromSignedData({

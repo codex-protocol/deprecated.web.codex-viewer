@@ -8,11 +8,10 @@ import { Web3Errors } from '../../../util/constants/web3'
 const logger = debug('app:store:web3:actions')
 
 const registerWalletProvider = () => {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     if (typeof window.web3 === 'undefined') {
 
-      // @TODO: Do we need to reject here?
-      throw Web3Errors.Missing
+      reject(new Error(Web3Errors.Missing))
     }
 
     resolve(new Web3(window.web3.currentProvider))
@@ -22,14 +21,14 @@ const registerWalletProvider = () => {
         .then((networkId) => {
           const networkIdString = String(networkId)
           if (networkIdString !== config.expectedNetworkId) {
-            throw Web3Errors.WrongNetwork
+            throw new Error(Web3Errors.WrongNetwork)
           }
 
           return web3.eth.getAccounts()
         })
         .then((accounts) => {
           if (!accounts.length) {
-            throw Web3Errors.Locked
+            throw new Error(Web3Errors.Locked)
           }
 
           return {
@@ -57,7 +56,7 @@ export default {
     return registerWalletProvider()
       .then(({ web3, account }) => {
         if (rootState.auth.user && rootState.auth.user.address !== account) {
-          throw Web3Errors.AccountChanged
+          throw new Error(Web3Errors.AccountChanged)
         }
 
         commit('SET_WEB3', {
@@ -74,7 +73,7 @@ export default {
       registerWalletProvider()
         .then(({ account }) => {
           if (state.providerAccount !== account) {
-            throw Web3Errors.AccountChanged
+            throw new Error(Web3Errors.AccountChanged)
           }
         })
         .catch((error) => {

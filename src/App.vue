@@ -157,6 +157,10 @@ export default {
 
             this.$store.dispatch('auth/LOGOUT_USER')
           }
+
+          this.$store.commit('auth/SET_IS_LOADED', {
+            isLoaded: true,
+          })
         })
     } else {
       this.$store.commit('auth/SET_IS_LOADED', {
