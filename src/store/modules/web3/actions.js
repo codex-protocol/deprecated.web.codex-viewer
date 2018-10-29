@@ -10,6 +10,8 @@ const logger = debug('app:store:web3:actions')
 const registerWalletProvider = () => {
   return new Promise((resolve) => {
     if (typeof window.web3 === 'undefined') {
+
+      // @TODO: Do we need to reject here?
       throw Web3Errors.Missing
     }
 
@@ -49,11 +51,15 @@ export default {
     return dispatch('REGISTER_ALL_CONTRACTS')
   },
 
-  REGISTER_WALLET_PROVIDER({ commit, dispatch, state }) {
+  REGISTER_WALLET_PROVIDER({ commit, dispatch, rootState }) {
     logger('REGISTER_WALLET_PROVIDER action being executed')
 
     return registerWalletProvider()
       .then(({ web3, account }) => {
+        if (rootState.auth.user && rootState.auth.user.address !== account) {
+          throw Web3Errors.AccountChanged
+        }
+
         commit('SET_WEB3', {
           web3,
           account,
