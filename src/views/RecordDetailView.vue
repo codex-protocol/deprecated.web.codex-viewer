@@ -119,12 +119,11 @@ export default {
   },
 
   computed: {
-    ...mapState('auth', ['user', 'authToken']),
+    ...mapState('auth', ['user']),
 
     isOwner() {
       return (
         this.user &&
-        this.authToken &&
         this.codexRecord.ownerAddress &&
         this.user.address.toLowerCase() === this.codexRecord.ownerAddress.toLowerCase()
       )

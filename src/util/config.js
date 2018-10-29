@@ -27,13 +27,16 @@ const etherScanUrl = (() => {
   }
 })()
 
+const targetEnv = process.env.VUE_APP_TARGET_ENV
 export default {
-
   showFaucet: false,
   showManageTokensPage: false,
-  showTestApp: process.env.VUE_APP_TARGET_ENV !== 'production',
   showCodexGalleryInSideBar: false,
-  showManualConfirm: process.env.VUE_APP_TARGET_ENV === 'development',
+
+  showManualConfirm: targetEnv === 'development',
+
+  showTestApp: targetEnv !== 'production',
+  supportEmailAccounts: !(targetEnv === 'production' || targetEnv === 'staging'),
 
   apiUrl,
   etherScanUrl,
