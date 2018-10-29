@@ -137,8 +137,9 @@ export default {
               isLoaded: true,
             })
           } else {
+            console.log(this.$route.meta.ifAuthenticatedRedirectTo)
             this.$router.replace({
-              name: 'collection',
+              name: this.$route.meta.ifAuthenticatedRedirectTo,
             })
           }
         })
