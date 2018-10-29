@@ -9,4 +9,14 @@ export default {
 
     return callApi(requestOptions)
   },
+
+  getAuthTokenFromSignedData: (data) => {
+    const requestOptions = {
+      method: 'post',
+      url: '/auth-token',
+      data,
+    }
+
+    return callApi(requestOptions)
+  },
 }

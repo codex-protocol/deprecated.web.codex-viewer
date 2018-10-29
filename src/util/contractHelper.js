@@ -17,7 +17,7 @@ const contractHelper = ((contractName, functionName, args, store) => {
 
     case 'savvy':
       if (contractName === 'CodexRecord') {
-        return callContract(recordContract[functionName], args)
+        return callContract(recordContract.methods[functionName](...args))
       }
       break
 

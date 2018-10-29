@@ -12,6 +12,7 @@ export default {
     const newClientNameMap = {}
 
     clients.forEach((oAuth2Client) => {
+      if (!oAuth2Client.user) return
       newClientNameMap[oAuth2Client.user.address] = oAuth2Client.user.name
     })
 

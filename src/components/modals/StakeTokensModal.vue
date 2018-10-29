@@ -65,7 +65,7 @@ export default {
       EventBus.$emit('events:click-stake-tokens', this)
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
-      return callContract(this.stakeContract.stake, input)
+      return callContract(this.stakeContract.methods.stake(...input))
         .then(() => {
           EventBus.$emit('events:stake-tokens', this, amount)
         })

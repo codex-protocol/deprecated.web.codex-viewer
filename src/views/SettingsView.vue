@@ -46,6 +46,7 @@
 <script>
 import { mapState } from 'vuex'
 
+import config from '../util/config'
 import Record from '../util/api/record'
 import EventBus from '../util/eventBus'
 import { formatDate } from '../util/dateHelpers'
@@ -67,28 +68,34 @@ export default {
         text: 'Created at',
         formatter: formatDate,
       },
-      {
-        property: 'gasAllowanceLastResetAt',
-        text: 'Last allowance reset',
-        formatter: formatDate,
-      },
-      {
-        property: 'gasAllowanceRemaining',
-        text: 'Remaining gas',
-      },
-      {
-        property: 'gasAllowance',
-        text: 'Prepaid gas per month',
-      },
-      {
-        property: 'email',
-        text: 'Email address',
-      },
+
       {
         property: 'address',
         text: 'Ethereum address',
       },
     ]
+
+    if (config.supportEmailAccounts) {
+      profileProperties.push(
+        {
+          property: 'gasAllowanceLastResetAt',
+          text: 'Last allowance reset',
+          formatter: formatDate,
+        },
+        {
+          property: 'gasAllowanceRemaining',
+          text: 'Remaining gas',
+        },
+        {
+          property: 'gasAllowance',
+          text: 'Prepaid gas per month',
+        },
+        {
+          property: 'email',
+          text: 'Email address',
+        },
+      )
+    }
 
     return {
       profileProperties,
