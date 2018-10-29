@@ -13,19 +13,19 @@ const recommendedGasPriceInGwei = '10'
 
 function callContract(func) {
   const {
-    account,
+    providerAccount,
     instance,
   } = store.state.web3
 
   return func.estimateGas({
-    from: account,
+    from: providerAccount,
   })
     .then((estimatedGas) => {
 
       logger(estimatedGas)
 
       return func.send({
-        from: account,
+        from: providerAccount,
         gas: estimatedGas + gasBuffer,
         gasPrice: instance.utils.toWei(recommendedGasPriceInGwei, 'gwei'),
       })
