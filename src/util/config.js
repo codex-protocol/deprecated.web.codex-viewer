@@ -36,7 +36,7 @@ export default {
   showManualConfirm: targetEnv === 'development',
 
   showTestApp: targetEnv !== 'production',
-  supportEmailAccounts: !(targetEnv === 'production' || targetEnv === 'staging'),
+  supportEmailAccounts: targetEnv !== 'production',
 
   apiUrl,
   etherScanUrl,
