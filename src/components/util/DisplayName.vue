@@ -31,7 +31,7 @@ export default {
 
   computed: {
     ...mapState('auth', ['user']),
-    ...mapGetters('oauth2', ['getOAuth2ClientNameFromAddress']),
+    ...mapGetters('verified-users', ['getVerifiedNameFromAddress']),
 
     processedName() {
       // If userObject is defined, show the full selected name instead of 'You'
@@ -39,7 +39,7 @@ export default {
         return 'You'
       }
 
-      return this.getOAuth2ClientNameFromAddress(this.selectedName)
+      return this.getVerifiedNameFromAddress(this.selectedName)
     },
   },
 

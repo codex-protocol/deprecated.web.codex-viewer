@@ -129,17 +129,12 @@ export default {
 
         // @TODO: This could probably be done in the background prior to login. I don't think this endpoint is authenticated
         //  In fact, I think we need to do this separately because we leverage this information for provenance (un-auth flow)
-        .then(this.$store.dispatch('oauth2/FETCH_CLIENTS'))
+        .then(this.$store.dispatch('verified-users/FETCH_ADDRESS_NAME_MAP'))
         .then(() => {
-          // Once we've authenticated the user, take them to the collection page
-          if (this.$route.name === 'collection') {
-            this.$store.commit('auth/SET_IS_LOADED', {
-              isLoaded: true,
-            })
+          if (this.$route.meta.ifAuthenticatedRedirectTo) {
+            this.$router.replace({ name: this.$route.meta.ifAuthenticatedRedirectTo })
           } else {
-            this.$router.replace({
-              name: this.$route.meta.ifAuthenticatedRedirectTo || 'collection',
-            })
+            this.$store.commit('auth/SET_IS_LOADED', { isLoaded: true })
           }
         })
         .catch((error) => {
