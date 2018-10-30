@@ -55,7 +55,8 @@ export default {
 
     return registerWalletProvider()
       .then(({ web3, account }) => {
-        if (rootState.auth.user && rootState.auth.user.address !== account) {
+        // If we reached this point, we know account is defined (since we would have thrown otherwise)
+        if (rootState.auth.user && rootState.auth.user.address.toLowerCase() !== account.toLowerCase()) {
           throw new Error(Web3Errors.AccountChanged)
         }
 
