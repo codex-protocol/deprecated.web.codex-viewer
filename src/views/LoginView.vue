@@ -197,9 +197,10 @@ export default {
             return this.$store.dispatch('oauth2/FETCH_CLIENTS')
           })
           .then(() => {
-            this.$router.replace({
-              name: this.$route.meta.ifAuthenticatedRedirectTo || 'collection',
-            })
+            if (this.$route.meta.ifAuthenticatedRedirectTo) {
+              this.$router.replace({ name: this.$route.meta.ifAuthenticatedRedirectTo })
+            }
+            this.$store.commit('auth/SET_IS_LOADED', { isLoaded: true })
           })
       })
     },

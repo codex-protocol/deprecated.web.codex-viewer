@@ -131,16 +131,10 @@ export default {
         //  In fact, I think we need to do this separately because we leverage this information for provenance (un-auth flow)
         .then(this.$store.dispatch('oauth2/FETCH_CLIENTS'))
         .then(() => {
-          // Once we've authenticated the user, take them to the collection page
-          if (this.$route.name === 'collection') {
-            this.$store.commit('auth/SET_IS_LOADED', {
-              isLoaded: true,
-            })
-          } else {
-            this.$router.replace({
-              name: this.$route.meta.ifAuthenticatedRedirectTo || 'collection',
-            })
+          if (this.$route.meta.ifAuthenticatedRedirectTo) {
+            this.$router.replace({ name: this.$route.meta.ifAuthenticatedRedirectTo })
           }
+          this.$store.commit('auth/SET_IS_LOADED', { isLoaded: true })
         })
         .catch((error) => {
           if (this.user) {
