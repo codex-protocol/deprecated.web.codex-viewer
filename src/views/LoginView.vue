@@ -194,12 +194,14 @@ export default {
           .then(() => {
             // @TODO: This could probably be done in the background prior to login. I don't think this endpoint is authenticated
             //  In fact, I think we need to do this separately because we leverage this information for provenance (un-auth flow)
-            return this.$store.dispatch('oauth2/FETCH_CLIENTS')
+            return this.$store.dispatch('verified-users/FETCH_ADDRESS_NAME_MAP')
           })
           .then(() => {
-            this.$router.replace({
-              name: this.$route.meta.ifAuthenticatedRedirectTo || 'collection',
-            })
+            if (this.$route.meta.ifAuthenticatedRedirectTo) {
+              this.$router.replace({ name: this.$route.meta.ifAuthenticatedRedirectTo })
+            } else {
+              this.$store.commit('auth/SET_IS_LOADED', { isLoaded: true })
+            }
           })
       })
     },
