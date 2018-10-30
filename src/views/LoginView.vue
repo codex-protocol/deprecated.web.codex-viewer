@@ -197,9 +197,11 @@ export default {
             return this.$store.dispatch('verified-users/FETCH_ADDRESS_NAME_MAP')
           })
           .then(() => {
-            this.$router.replace({
-              name: this.$route.meta.ifAuthenticatedRedirectTo || 'collection',
-            })
+            if (this.$route.meta.ifAuthenticatedRedirectTo) {
+              this.$router.replace({ name: this.$route.meta.ifAuthenticatedRedirectTo })
+            } else {
+              this.$store.commit('auth/SET_IS_LOADED', { isLoaded: true })
+            }
           })
       })
     },
