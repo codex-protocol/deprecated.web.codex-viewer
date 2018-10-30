@@ -198,7 +198,7 @@ export default {
           })
           .then(() => {
             this.$router.replace({
-              name: this.$route.meta.ifAuthenticatedRedirectTo,
+              name: this.$route.meta.ifAuthenticatedRedirectTo || 'collection',
             })
           })
       })
