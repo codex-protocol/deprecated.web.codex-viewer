@@ -199,8 +199,9 @@ export default {
           .then(() => {
             if (this.$route.meta.ifAuthenticatedRedirectTo) {
               this.$router.replace({ name: this.$route.meta.ifAuthenticatedRedirectTo })
+            } else {
+              this.$store.commit('auth/SET_IS_LOADED', { isLoaded: true })
             }
-            this.$store.commit('auth/SET_IS_LOADED', { isLoaded: true })
           })
       })
     },
