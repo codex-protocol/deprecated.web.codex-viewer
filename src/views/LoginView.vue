@@ -183,6 +183,10 @@ export default {
           // We don't have to worry about the isLoading flag here since it is already set to true
           this.$router.replace({ name: this.$route.meta.ifAuthenticatedRedirectTo || 'collection' })
         })
+        .catch(() => {
+          // do nothing since the LOGIN_FROM_SIGNED_DATA action will catch
+          //  errors and dispatch the HANDLE_LOGIN_ERROR action for us
+        })
     },
     getPendingUserStats(pendingUserCode) {
       PendingUser.getStats(pendingUserCode)
