@@ -24,10 +24,10 @@
           <a :href="microsoftLoginUrl" :disabled="disableMicrosoft" v-if="supportEmailAccounts">
             <IconBase iconName="microsoft" width="48" height="48" />
           </a>
-          <b-link @click.prevent="registerWalletProvider('metaMask')">
+          <b-link @click="registerWalletProvider('metaMask')">
             <IconBase iconName="metaMask" width="48" height="48" />
           </b-link>
-          <b-link @click.stop="registerWalletProvider('coinbaseWallet')">
+          <b-link @click="registerWalletProvider('coinbaseWallet')">
             <IconBase iconName="coinbaseWallet" width="48" height="48" />
           </b-link>
         </div>
