@@ -10,6 +10,22 @@
 
         <h1>{{ title }}</h1>
         <div class="lead">{{ description }}</div>
+
+        <b-alert
+          show
+          class="mt-5"
+          variant="secondary"
+          v-if="pendingUserStats && pendingUserStats.email"
+        >
+          You have {{ pendingUserStats.numApproved }}
+          Codex {{ pendingUserStats.numApproved === 1 ? 'Record' : 'Records' }}
+          waiting to be claimed. Log in with an Identity Provider below
+          associated with the email <strong>{{ pendingUserStats.email }}</strong> to
+          claim them!
+
+          <!-- add a "claim with a different email" link here if/when that flow is implemented -->
+        </b-alert>
+
         <p class="mt-5 mb-3">
           <b>Sign in below to get started</b>
         </p>
@@ -48,13 +64,17 @@
 
 <script>
 import is from 'is_js'
+import debug from 'debug'
 import { mapState } from 'vuex'
 
 import User from '../util/api/user'
 import config from '../util/config'
+import PendingUser from '../util/api/pendingUser'
 import { Web3Errors, Networks } from '../util/constants/web3'
 
 import IconBase from '../components/icons/IconBase'
+
+const logger = debug('app:component:login-view')
 
 export default {
   name: 'LoginView',
@@ -76,6 +96,20 @@ export default {
       // Facebook and Microsoft support HTTPS for redirect_uri so we disable these in ropsten
       disableFacebook: config.expectedNetworkName === 'ropsten',
       disableMicrosoft: config.expectedNetworkName === 'ropsten',
+
+      pendingUserStats: null,
+    }
+  },
+
+  created() {
+    // remove pendingUserCode from the query params if specified
+    if (this.$route.query.pendingUserCode) {
+      const oAuth2LoginQueryString = `?pendingUserCode=${this.$route.query.pendingUserCode}`
+      this.googleLoginUrl += oAuth2LoginQueryString
+      this.facebookLoginUrl += oAuth2LoginQueryString
+      this.microsoftLoginUrl += oAuth2LoginQueryString
+      this.getPendingUserStats(this.$route.query.pendingUserCode)
+      this.$router.replace({ name: this.$route.name })
     }
   },
 
@@ -204,6 +238,17 @@ export default {
             }
           })
       })
+    },
+    getPendingUserStats(pendingUserCode) {
+      PendingUser.getStats(pendingUserCode)
+        .then((pendingUserStats) => {
+          this.pendingUserStats = pendingUserStats
+        })
+        .catch((error) => {
+          // do nothing, since this likely means the pending user code was
+          //  invalid
+          logger(error)
+        })
     },
   },
 }

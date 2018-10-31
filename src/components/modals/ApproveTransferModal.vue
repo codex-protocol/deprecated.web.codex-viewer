@@ -10,7 +10,9 @@
     :requires-tokens="true"
     :validate="validate"
   >
+
     <b-form-group
+      v-if="showEthereumAddressField"
       label="Type or paste wallet address"
       label-for="toEthAddress"
       label-size="sm"
@@ -24,12 +26,14 @@
         spellcheck="false"
       />
       <b-form-text>
-        After approving a transfer, the owner of the Ethereum address will have to accept the Record.
+        After approving a transfer, the owner of the Ethereum address can accept
+        the Record.
       </b-form-text>
     </b-form-group>
-    <!--
+
     <b-form-group
-      label="Email address of the wallet owner (optional)"
+      v-else
+      label="Email address of the wallet owner"
       label-for="toEmailAddress" label-size="sm"
     >
       <b-form-input
@@ -39,11 +43,21 @@
         v-model="toEmailAddress"
       />
       <b-form-text>
-        If you know the email address of the person you are approving,
-        we will send them an email once they've been approved to accept the Record.
+        If you know the email address of the person you are approving, we will
+        send them an email once they've been approved to accept the Record.
       </b-form-text>
     </b-form-group>
-    -->
+
+    <b-button
+      size="sm"
+      variant="link"
+      class="pl-0 pr-0"
+      v-if="user.type !== 'savvy'"
+      @click="toggleField()"
+    >
+      Transfer to an {{ showEthereumAddressField ? 'email' : 'Ethereum' }} address instead?
+    </b-button>
+
   </MetaMaskNotificationModal>
 </template>
 
@@ -69,6 +83,7 @@ export default {
     return {
       toEthAddress: null,
       toEmailAddress: null,
+      showEthereumAddressField: false,
     }
   },
 
@@ -77,7 +92,14 @@ export default {
     ...mapState('web3', ['instance']),
   },
 
+  mounted() {
+    if (this.user.type === 'savvy') {
+      this.showEthereumAddressField = true
+    }
+  },
+
   methods: {
+
     focusModal() {
       if (this.$refs.defaultModalFocus) {
         this.$refs.defaultModalFocus.focus()
@@ -88,17 +110,40 @@ export default {
       Object.assign(this.$data, this.$options.data.apply(this))
     },
 
+    toggleField() {
+
+      // savvy users aren't allowed to switch fields, since they can only
+      //  specify Ethereum addresses for approve()
+      if (this.user.type === 'savvy') {
+        this.showEthereumAddressField = true
+        return
+      }
+
+      this.toEthAddress = null
+      this.toEmailAddress = null
+      this.showEthereumAddressField = !this.showEthereumAddressField
+    },
+
     validate() {
       const errors = []
 
-      if (!this.toEthAddress) {
-        errors.push('Ethereum address is required')
-      } else if (this.toEthAddress === this.user.address) {
+      if (this.showEthereumAddressField) {
+        if (!this.toEthAddress) {
+          errors.push('Ethereum address is required')
+        } else if (this.toEthAddress === this.user.address) {
+          errors.push('You cannot transfer to yourself')
+        } else if (this.toEthAddress === this.codexRecord.approvedAddress) {
+          errors.push('This address has already been approved for transfer')
+        } else if (!this.instance.utils.isAddress(this.toEthAddress)) {
+          errors.push('Invalid Ethereum address')
+        }
+        return errors
+      }
+
+      if (!this.toEmailAddress) {
+        errors.push('Email address is required')
+      } else if (this.toEmailAddress === this.user.email) {
         errors.push('You cannot transfer to yourself')
-      } else if (this.toEthAddress === this.codexRecord.approvedAddress) {
-        errors.push('This address has already been approved for transfer')
-      } else if (!this.instance.utils.isAddress(this.toEthAddress)) {
-        errors.push('Invalid Ethereum address')
       }
 
       return errors
@@ -106,7 +151,11 @@ export default {
 
     approveTransfer() {
       EventBus.$emit('events:record-click-transfer', this)
-      const input = [this.toEthAddress, this.codexRecord.tokenId]
+
+      const input = [
+        this.showEthereumAddressField ? this.toEthAddress : this.toEmailAddress,
+        this.codexRecord.tokenId,
+      ]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
       return contractHelper('CodexRecord', 'approve', input, this.$store)
