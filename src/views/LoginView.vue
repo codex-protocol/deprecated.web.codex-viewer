@@ -23,10 +23,7 @@
           associated with the email <strong>{{ pendingUserStats.email }}</strong> to
           claim them!
 
-          <!--
-            @TODO: add a "claim with a different email?" link here when that
-            flow is implemented
-          -->
+          <!-- add a "claim with a different email" link here if/when that flow is implemented -->
         </b-alert>
 
         <p class="mt-5 mb-3">
