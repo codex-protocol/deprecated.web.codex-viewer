@@ -67,7 +67,6 @@ import is from 'is_js'
 import debug from 'debug'
 import { mapState } from 'vuex'
 
-import User from '../util/api/user'
 import config from '../util/config'
 import PendingUser from '../util/api/pendingUser'
 import { Web3Errors, Networks } from '../util/constants/web3'
@@ -104,17 +103,20 @@ export default {
   created() {
     // remove pendingUserCode from the query params if specified
     if (this.$route.query.pendingUserCode) {
-      const oAuth2LoginQueryString = `?pendingUserCode=${this.$route.query.pendingUserCode}`
+      this.$store.commit('app/SET_PENDING_USER_CODE', this.$route.query.pendingUserCode)
+      this.$router.replace({ name: this.$route.name })
+    } else if (this.pendingUserCode) {
+      const oAuth2LoginQueryString = `?pendingUserCode=${this.pendingUserCode}`
       this.googleLoginUrl += oAuth2LoginQueryString
       this.facebookLoginUrl += oAuth2LoginQueryString
       this.microsoftLoginUrl += oAuth2LoginQueryString
-      this.getPendingUserStats(this.$route.query.pendingUserCode)
-      this.$router.replace({ name: this.$route.name })
+      this.getPendingUserStats(this.pendingUserCode)
     }
   },
 
   computed: {
-    ...mapState('auth', ['apiError']),
+    ...mapState('app', ['apiError', 'pendingUserCode']),
+    ...mapState('auth', ['user']),
     ...mapState('web3', ['providerAccount', 'instance', 'registrationError']),
 
     title() {
@@ -175,69 +177,12 @@ export default {
     registerWalletProvider(provider) {
       this.walletProvider = provider
 
-      this.$store.dispatch('web3/REGISTER_WALLET_PROVIDER')
-        .then(this.web3Login)
-        .catch((error) => {
-          this.$store.commit('web3/SET_REGISTRATION_ERROR', {
-            error,
-            ignoreInSentry: true,
-          })
+      this.$store.dispatch('auth/LOGIN_FROM_SIGNED_DATA')
+        .then(() => {
+          // We know this authentication happened from the Login view, so we can send the user directly to the collection page
+          // We don't have to worry about the isLoading flag here since it is already set to true
+          this.$router.replace({ name: this.$route.meta.ifAuthenticatedRedirectTo || 'collection' })
         })
-    },
-
-    web3Login() {
-      const personalMessageToSign = 'Please sign this message to authenticate with the Codex Registry.'
-      const sendAsyncOptions = {
-        method: 'personal_sign',
-        params: [
-          this.instance.utils.toHex(personalMessageToSign),
-          this.providerAccount,
-        ],
-      }
-
-      return this.instance.currentProvider.sendAsync(sendAsyncOptions, (error, result) => {
-        if (error) {
-          throw new Error(Web3Errors.Unknown)
-        }
-
-        if (result.error) {
-          throw new Error(Web3Errors.UserDeniedSignature)
-        }
-
-        User.getAuthTokenFromSignedData({
-          userAddress: this.providerAccount,
-          signedData: result.result.substr(2),
-        })
-          .then((response) => {
-            this.$store.commit('auth/SET_AUTH_STATE', {
-              authToken: response.token,
-            })
-
-            this.$store.commit('auth/SET_USER', {
-              user: response.user,
-            })
-
-            this.$store.commit('web3/SET_IS_POLLING', {
-              isPolling: true,
-            })
-
-            this.$store.dispatch('web3/POLL_WEB3')
-
-            return this.$store.dispatch('auth/UPDATE_CONTRACT_STATE')
-          })
-          .then(() => {
-            // @TODO: This could probably be done in the background prior to login. I don't think this endpoint is authenticated
-            //  In fact, I think we need to do this separately because we leverage this information for provenance (un-auth flow)
-            return this.$store.dispatch('verified-users/FETCH_ADDRESS_NAME_MAP')
-          })
-          .then(() => {
-            if (this.$route.meta.ifAuthenticatedRedirectTo) {
-              this.$router.replace({ name: this.$route.meta.ifAuthenticatedRedirectTo })
-            } else {
-              this.$store.commit('auth/SET_IS_LOADED', { isLoaded: true })
-            }
-          })
-      })
     },
     getPendingUserStats(pendingUserCode) {
       PendingUser.getStats(pendingUserCode)

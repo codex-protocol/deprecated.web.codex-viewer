@@ -2,17 +2,17 @@ export default {
   getVerifiedNameFromAddress(currentState) {
     return (address = '', includeCheckmark = false) => {
 
-      if (!currentState.addressNameMap || !address) {
+      if (!currentState.verifiedUsers || !address) {
         return address
       }
 
-      const name = currentState.addressNameMap[address.toLowerCase()]
+      const name = currentState.verifiedUsers[address.toLowerCase()]
 
       if (!name) {
         return address
       }
 
-      return `${includeCheckmark ? '✅ ' : ''}${currentState.addressNameMap[address]}`
+      return `${includeCheckmark ? '✅ ' : ''}${currentState.verifiedUsers[address]}`
 
     }
   },
