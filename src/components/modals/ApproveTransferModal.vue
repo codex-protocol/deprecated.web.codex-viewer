@@ -102,7 +102,7 @@ export default {
         errors.push('Ethereum address or email address is required')
       } else if (this.toEthAddress === this.user.address) {
         errors.push('You cannot transfer to yourself')
-      } else if (this.codexRecord.approvedAddress && this.toEthAddress === this.codexRecord.approvedAddress) {
+      } else if (this.toEthAddress === this.codexRecord.approvedAddress) {
         errors.push('This address has already been approved for transfer')
       } else if (!this.instance.utils.isAddress(this.toEthAddress)) {
         errors.push('Invalid Ethereum address')
