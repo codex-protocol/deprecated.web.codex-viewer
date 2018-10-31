@@ -19,7 +19,7 @@
       />
     </b-form-group>
     <b-form-group
-      label="Receiving Ethereum address"
+      label="Receiving Ethereum or Email Address"
       label-for="receivingAddress"
     >
       <b-form-input
@@ -27,7 +27,7 @@
         type="text"
         v-model="receivingAddress"
         required
-        placeholder="Enter the Ethereum address to send the record to"
+        placeholder="Enter the Ethereum or email address to send the record to"
       />
     </b-form-group>
     <b-button type="submit" variant="primary">Submit</b-button>
@@ -54,8 +54,11 @@ export default {
 
   methods: {
     onSubmit() {
+
+      const addressKey = this.receivingAddress.includes('@') ? 'email' : 'address'
+
       axios.put(`/v1/client/record/${this.recordId}/transfer/approve`, {
-        address: this.receivingAddress,
+        [addressKey]: this.receivingAddress,
       }, {
         headers: {
           Authorization: `Bearer ${this.accessToken}`,

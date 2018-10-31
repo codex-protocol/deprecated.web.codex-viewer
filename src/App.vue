@@ -18,7 +18,7 @@
       </template>
       <div class="main-content-wrapper">
         <div class="main-content">
-          <router-view v-if="isLoaded" />
+          <router-view :key="$route.fullPath" v-if="isLoaded" />
           <LoadingOverlay type="global" v-else />
         </div>
         <AppFooter />
@@ -45,7 +45,6 @@ import VueCookieAcceptDecline from 'vue-cookie-accept-decline'
 
 import config from './util/config'
 import EventBus from './util/eventBus'
-import User from './util/api/user'
 
 import AppFooter from './components/core/AppFooter'
 import AppSideBar from './components/core/AppSideBar'
@@ -87,6 +86,8 @@ export default {
   created() {
     this.initializeApi()
 
+    this.$store.dispatch('app/FETCH_VERIFIED_USERS')
+
     EventBus.$on('socket:codex-coin:transferred', () => {
       this.$store.dispatch('auth/FETCH_TOKEN_BALANCE')
     })
@@ -97,69 +98,25 @@ export default {
   },
 
   mounted() {
+    const setIsLoaded = () => {
+      this.$store.commit('app/SET_IS_LOADED', { isLoaded: true })
+    }
+
     const { query } = this.$route
     const authToken = query.authToken || this.authToken
 
-    // If the user has an authToken (either from an IDP or from cache), let's log them in
     if (authToken) {
-      this.$store.commit('auth/SET_AUTH_STATE', {
-        authToken,
-      })
-
-      User.getUser()
-        .then((user) => {
-          this.$store.commit('auth/SET_USER', {
-            user,
-          })
-
-          if (user.type === 'simple') {
-            return this.$store.dispatch('web3/REGISTER_INFURA_PROVIDER')
-          }
-
-          return this.$store.dispatch('web3/REGISTER_WALLET_PROVIDER')
-            .then(() => {
-              this.$store.commit('web3/SET_IS_POLLING', {
-                isPolling: true,
-              })
-
-              this.$store.dispatch('web3/POLL_WEB3')
-            })
-        })
-        .then(this.$store.dispatch('auth/UPDATE_CONTRACT_STATE'))
-
-        // @TODO: This could probably be done in the background prior to login. I don't think this endpoint is authenticated
-        //  In fact, I think we need to do this separately because we leverage this information for provenance (un-auth flow)
-        .then(this.$store.dispatch('verified-users/FETCH_ADDRESS_NAME_MAP'))
+      this.$store.dispatch('auth/LOGIN_FROM_CACHED_TOKEN', authToken)
         .then(() => {
           if (this.$route.meta.ifAuthenticatedRedirectTo) {
             this.$router.replace({ name: this.$route.meta.ifAuthenticatedRedirectTo })
           } else {
-            this.$store.commit('auth/SET_IS_LOADED', { isLoaded: true })
+            setIsLoaded()
           }
         })
-        .catch((error) => {
-          if (this.user) {
-            if (this.user.type === 'savvy') {
-              this.$store.commit('web3/SET_REGISTRATION_ERROR', {
-                message: 'Error while registering Web3',
-                error,
-                ignoreInSentry: true,
-              })
-            } else {
-              this.$store.commit('auth/SET_ERROR', error)
-            }
-
-            this.$store.dispatch('auth/LOGOUT_USER')
-          }
-
-          this.$store.commit('auth/SET_IS_LOADED', {
-            isLoaded: true,
-          })
-        })
+        .catch(setIsLoaded)
     } else {
-      this.$store.commit('auth/SET_IS_LOADED', {
-        isLoaded: true,
-      })
+      setIsLoaded()
     }
   },
 
@@ -170,8 +127,8 @@ export default {
 
   computed: {
     ...mapGetters('auth', ['isAuthenticated']),
-    ...mapState('auth', ['isLoaded', 'user', 'authToken']),
-    ...mapState('web3', ['error']),
+    ...mapState('app', ['isLoaded']),
+    ...mapState('auth', ['user', 'authToken']),
 
     hideSideBar() {
       return this.$route.meta && this.$route.meta.hideSideBar
@@ -187,7 +144,7 @@ export default {
       if (!this.isLoaded) {
         // If the route changes as a result of authentication (e.g., /login to /collection)
         //  then we only mark loading complete after the new route has been loaded
-        this.$store.commit('auth/SET_IS_LOADED', {
+        this.$store.commit('app/SET_IS_LOADED', {
           isLoaded: true,
         })
       }
