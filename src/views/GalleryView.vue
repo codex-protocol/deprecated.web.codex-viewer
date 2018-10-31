@@ -98,10 +98,14 @@ export default {
     getGallery() {
       Gallery.getGallery(this.galleryShareCode)
         .then((gallery) => {
+          if (!gallery.codexRecords || gallery.codexRecords.length === 0) {
+            throw new Error(`${gallery.name} has no Codex Records to show.`)
+          }
           this.gallery = gallery
         })
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not get gallery: ${error.message}`)
+          this.$router.replace({ name: 'galleries' })
         })
     },
   },

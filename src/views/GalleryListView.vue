@@ -7,7 +7,7 @@
         <div v-if="galleries.length">
           <b-card-group deck>
             <GalleryListItem
-              v-if="gallery.codexRecords"
+              v-if="gallery.codexRecords && gallery.codexRecords.length !== 0"
               v-for="gallery in galleries"
               :gallery="gallery"
               :key="gallery.id"
