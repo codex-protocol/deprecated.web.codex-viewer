@@ -156,8 +156,8 @@ export default {
       const sendAsyncOptions = {
         method: 'personal_sign',
         params: [
-          this.providerAccount,
           this.instance.utils.toHex(personalMessageToSign),
+          this.providerAccount,
         ],
       }
 
