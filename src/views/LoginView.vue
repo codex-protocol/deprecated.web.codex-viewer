@@ -17,11 +17,11 @@
           variant="secondary"
           v-if="pendingUserStats && pendingUserStats.email"
         >
-          You have {{ pendingUserStats.numApproved }}
+          You have {{ pendingUserStats.numApproved > 0 ? pendingUserStats.numApproved : '' }}
           Codex {{ pendingUserStats.numApproved === 1 ? 'Record' : 'Records' }}
           waiting to be claimed. Log in with an Identity Provider below
           associated with the email <strong>{{ pendingUserStats.email }}</strong> to
-          claim them!
+          claim {{ pendingUserStats.numApproved === 1 ? 'it' : 'them' }}!
 
           <!-- add a "claim with a different email" link here if/when that flow is implemented -->
         </b-alert>
