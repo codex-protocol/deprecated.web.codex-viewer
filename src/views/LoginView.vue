@@ -64,6 +64,7 @@
 
 <script>
 import is from 'is_js'
+import debug from 'debug'
 import { mapState } from 'vuex'
 
 import User from '../util/api/user'
@@ -72,6 +73,8 @@ import PendingUser from '../util/api/pendingUser'
 import { Web3Errors, Networks } from '../util/constants/web3'
 
 import IconBase from '../components/icons/IconBase'
+
+const logger = debug('app:component:login-view')
 
 export default {
   name: 'LoginView',
@@ -242,7 +245,8 @@ export default {
           this.pendingUserStats = pendingUserStats
         })
         .catch((error) => {
-          // @TODO: should anything else happen here?
+          // do nothing, since this likely means the pending user code was
+          //  invalid
           logger(error)
         })
     },
