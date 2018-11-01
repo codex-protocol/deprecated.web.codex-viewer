@@ -24,6 +24,7 @@ export default {
 
   props: {
     showResult: Function,
+    accessToken: String,
   },
 
   data() {
@@ -34,8 +35,11 @@ export default {
 
   methods: {
     onSubmit() {
-      axios.get(`v1/record/${this.recordId}`)
-        .then(this.showResult)
+      axios.get(`v1/record/${this.recordId}`, {
+        headers: {
+          Authorization: `Bearer ${this.accessToken}`,
+        },
+      }).then(this.showResult)
     },
   },
 }
