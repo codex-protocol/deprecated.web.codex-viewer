@@ -31,7 +31,7 @@ const targetEnv = process.env.VUE_APP_TARGET_ENV
 export default {
   showFaucet: false,
   showManageTokensPage: false,
-  showCodexGalleryInSideBar: false,
+  showCodexGalleryInSideBar: true,
 
   showManualConfirm: targetEnv === 'development',
 
