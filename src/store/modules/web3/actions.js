@@ -9,12 +9,22 @@ const logger = debug('app:store:web3:actions')
 
 const registerWalletProvider = () => {
   return new Promise((resolve, reject) => {
-    if (typeof window.web3 === 'undefined') {
+    // @TODO: Test this when the new custom build becomes stable
+    if (window.ethereum) {
+      window.ethereum.enable()
+        .then(() => {
+          resolve(new Web3(window.ethereum))
+        })
+        .catch((error) => {
+          logger(error)
 
+          reject(new Error(Web3Errors.UserDeniedSignature))
+        })
+    } else if (typeof window.web3 === 'undefined') {
       reject(new Error(Web3Errors.Missing))
+    } else {
+      resolve(new Web3(window.web3.currentProvider))
     }
-
-    resolve(new Web3(window.web3.currentProvider))
   })
     .then((web3) => {
       return web3.eth.net.getId()
@@ -69,6 +79,34 @@ export default {
       })
   },
 
+  PROMPT_FOR_SIGNED_DATA({ state }) {
+    logger('PROMPT_FOR_SIGNED_DATA action being executed')
+
+    const personalMessageToSign = 'Please sign this message to authenticate with the Codex Registry.'
+    const sendAsyncOptions = {
+      method: 'personal_sign',
+      params: [
+        state.instance.utils.toHex(personalMessageToSign),
+        state.providerAccount,
+      ],
+    }
+
+    return new Promise((resolve, reject) => {
+      state.instance.currentProvider.sendAsync(sendAsyncOptions, (error, result) => {
+        if (error) {
+          reject(new Error(Web3Errors.Unknown))
+        } else if (result.error) {
+          reject(new Error(Web3Errors.UserDeniedSignature))
+        } else {
+          resolve({
+            userAddress: state.providerAccount,
+            signedData: result.result.substr(2),
+          })
+        }
+      })
+    })
+  },
+
   POLL_WEB3({ commit, dispatch, state }) {
     if (state.instance && state.isPolling) {
       registerWalletProvider()
@@ -81,7 +119,6 @@ export default {
           commit('SET_REGISTRATION_ERROR', {
             message: 'Error while polling',
             error,
-            ignoreInSentry: true,
           })
 
           commit('SET_IS_POLLING', {
@@ -90,11 +127,11 @@ export default {
 
           dispatch('auth/LOGOUT_USER', null, { root: true })
         })
-    }
 
-    window.setTimeout(() => {
-      dispatch('POLL_WEB3')
-    }, 1000)
+      window.setTimeout(() => {
+        dispatch('POLL_WEB3')
+      }, 1000)
+    }
   },
 
   REGISTER_ALL_CONTRACTS({ state, commit }) {

@@ -57,10 +57,12 @@ import RecordListItem from '../components/RecordListItem'
 
 export default {
   name: 'GalleryView',
+
   components: {
     AppHeader,
     RecordListItem,
   },
+
   data() {
     return {
       gallery: null,
@@ -69,39 +71,51 @@ export default {
       browserSupportsFullscreen: fullscreenHelper.browserSupportsFullscreen,
     }
   },
+
   created() {
     this.getGallery()
-    EventBus.$emit('events:view-gallery-page', this)
   },
-  watch: {
-    $route: 'getGallery',
-  },
+
   computed: {
     galleryShareCode() {
       return this.$route.params.galleryShareCode
     },
+
     currentCodexRecord() {
       return this.gallery.codexRecords[this.slideIndex]
     },
   },
+
   methods: {
     viewFullscreen() {
       fullscreenHelper.requestFullscreen(this.$refs['carousel-container'])
     },
+
     copyShareLink() {
       copyToClipboard(window.location.href, 'Share link copied to clipboard!')
       this.$refs['copy-share-link-button'].focus()
     },
+
     viewRecord(tokenId) {
-      this.$router.push({ name: 'record-detail', params: { recordId: tokenId } })
+      this.$router.push({
+        name: 'record-detail',
+        params: {
+          recordId: tokenId,
+        },
+      })
     },
+
     getGallery() {
       Gallery.getGallery(this.galleryShareCode)
         .then((gallery) => {
+          if (!gallery.codexRecords || gallery.codexRecords.length === 0) {
+            throw new Error(`${gallery.name} has no Codex Records to show.`)
+          }
           this.gallery = gallery
         })
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not get gallery: ${error.message}`)
+          this.$router.replace({ name: 'galleries' })
         })
     },
   },

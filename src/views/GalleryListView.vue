@@ -7,7 +7,7 @@
         <div v-if="galleries.length">
           <b-card-group deck>
             <GalleryListItem
-              v-if="gallery.codexRecords"
+              v-if="gallery.codexRecords && gallery.codexRecords.length !== 0"
               v-for="gallery in galleries"
               :gallery="gallery"
               :key="gallery.id"
@@ -43,19 +43,22 @@ import GalleryListItem from '../components/GalleryListItem'
 
 export default {
   name: 'GalleryListView',
+
   components: {
     AppHeader,
     GalleryListItem,
   },
+
   data() {
     return {
       galleries: [],
     }
   },
+
   created() {
     this.getGalleries()
-    EventBus.$emit('events:view-gallery-list-page', this)
   },
+
   methods: {
     getGalleries() {
       Gallery.getGalleries()
