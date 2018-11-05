@@ -70,12 +70,14 @@ export default {
 @import "../../assets/variables.styl"
 
 .hash-short
+  max-width: 100%
 
   @media screen and (min-width: $breakpoint-xl)
     display: none
 
 .hash-large
   display: none
+  max-width: 100%
 
   @media screen and (min-width: $breakpoint-xl)
     display: inline-block
