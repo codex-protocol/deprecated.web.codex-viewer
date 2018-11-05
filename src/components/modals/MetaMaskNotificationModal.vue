@@ -233,9 +233,9 @@ export default {
 .metamask-error
   color: white
   padding: 1em
-  word-wrap: break-word
   white-space: pre-wrap
   border-radius: .25rem
+  overflow-wrap: break-word
   background-color: rgba(white, .1)
 
 </style>

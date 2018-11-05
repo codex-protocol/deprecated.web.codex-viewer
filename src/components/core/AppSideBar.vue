@@ -260,6 +260,6 @@ a
 .contact
   text-align: center
   padding: 1rem
-  word-break: break-word
+  overflow-wrap: break-word
 
 </style>
