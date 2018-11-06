@@ -130,7 +130,7 @@ export default {
 
   computed: {
     ...mapGetters('auth', ['isAuthenticated']),
-    ...mapState('app', ['isLoaded', 'isRefreshing']),
+    ...mapState('app', ['isLoaded']),
     ...mapState('auth', ['user', 'authToken']),
 
     hideSideBar() {

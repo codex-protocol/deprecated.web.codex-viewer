@@ -133,7 +133,6 @@ if (config.showManageTokensPage) {
 router.beforeEach((to, from, next) => {
 
   if (to.meta.ifAuthenticatedRedirectTo && store.getters['auth/isAuthenticated']) {
-    // debugger // eslint-disable-line
     return next({ name: to.meta.ifAuthenticatedRedirectTo })
   }
 

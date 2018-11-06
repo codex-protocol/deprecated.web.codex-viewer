@@ -33,7 +33,6 @@ export default {
   HANDLE_QUERY_PARAMS({ commit, rootState }) {
     logger('HANDLE_QUERY_PARAMS action being executed')
 
-    let paramRemoved = false
     const { query } = rootState.route
 
     Object.keys(queryParamsToHandle).forEach((key) => {
@@ -41,13 +40,10 @@ export default {
         const param = queryParamsToHandle[key]
 
         commit(param.mutationName, query[key], param.mutationConfiguration)
-        paramRemoved = true
       }
     })
 
-    if (paramRemoved) {
-      router.replace(rootState.route.name)
-    }
+    router.replace(rootState.route.name)
   },
 
   FETCH_VERIFIED_USERS({ commit }) {
