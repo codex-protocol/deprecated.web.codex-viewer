@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Codex Viewer</title>
+  </head>
+  <body>
+    <div id="container"></div>
+    <script>
+
+      var $container = document.getElementById('container');
+
+      var protocolAndHost = window.location.protocol + '//' + window.location.host;
+      var theRest = window.location.href.replace(protocolAndHost, '');
+      var url = protocolAndHost + '/#' + theRest;
+
+      $container.innerHTML = 'Redirecting to <a href="' + url + '">' + url + '</a>';
+
+      window.location = url;
+
+    </script>
+  </body>
+</html>
