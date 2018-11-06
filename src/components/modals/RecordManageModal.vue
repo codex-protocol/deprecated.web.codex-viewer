@@ -136,7 +136,12 @@ export default {
       description: this.codexRecord.metadata.description,
       mainImage: this.codexRecord.metadata.mainImage,
       mainImageId: this.codexRecord.metadata.mainImage.id,
-      images: this.codexRecord.metadata.images,
+
+      // @NOTE: the Array.from() here is necessary to make a copy of the array
+      //  so when we modify this.images in this modal it doesn't also modify the
+      //  parent component's array (the detail page shouldn't update until the
+      //  modified event is emitted by the API)
+      images: Array.from(this.codexRecord.metadata.images),
 
       uploadedMainImageFile: null,
       imageStreamUri: null,
