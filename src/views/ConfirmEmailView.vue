@@ -69,14 +69,6 @@ export default {
     ...mapState('app', ['apiError', 'emailAddressToConfirm']),
   },
 
-  created() {
-    // remove email from the query params if specified
-    if (this.$route.query.email) {
-      this.$store.commit('app/SET_EMAIL_ADDRESS_TO_CONFIRM', this.$route.query.email)
-      this.$router.replace({ name: this.$route.name })
-    }
-  },
-
   mounted() {
     if (this.apiError) {
       this.buttonText = 'Resend Confirmation Email?'

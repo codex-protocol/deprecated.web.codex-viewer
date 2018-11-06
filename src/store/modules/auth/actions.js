@@ -11,12 +11,8 @@ export default {
   //  from the API. If it's a simple user, we register Web3 using Infura. If it's a savvy user
   //  we attempt to register Web3 using their wallet provider. If there is no wallet provider,
   //  we kick them back to the login page with an error.
-  LOGIN_FROM_CACHED_TOKEN({ commit, dispatch, state }, authToken) {
+  LOGIN_FROM_CACHED_TOKEN({ commit, dispatch }) {
     logger('LOGIN_FROM_CACHED_TOKEN action being executed')
-
-    commit('SET_AUTH_STATE', {
-      authToken,
-    })
 
     return User.getUser()
       .then((user) => {

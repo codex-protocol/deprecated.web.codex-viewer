@@ -101,11 +101,7 @@ export default {
   },
 
   created() {
-    // remove pendingUserCode from the query params if specified
-    if (this.$route.query.pendingUserCode) {
-      this.$store.commit('app/SET_PENDING_USER_CODE', this.$route.query.pendingUserCode)
-      this.$router.replace({ name: this.$route.name })
-    } else if (this.pendingUserCode) {
+    if (this.pendingUserCode) {
       const oAuth2LoginQueryString = `?pendingUserCode=${this.pendingUserCode}`
       this.googleLoginUrl += oAuth2LoginQueryString
       this.facebookLoginUrl += oAuth2LoginQueryString
