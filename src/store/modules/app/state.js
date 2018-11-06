@@ -3,7 +3,8 @@ export default () => {
     emailAddressToConfirm: null,
     pendingUserCode: null,
     verifiedUsers: null,
-    apiError: null,
+    apiErrorCode: null,
+    apiErrorMessage: null,
     isLoaded: false,
   }
 }
