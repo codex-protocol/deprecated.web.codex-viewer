@@ -88,11 +88,12 @@ export default {
   },
 
   HANDLE_LOGIN_ERROR({ commit, dispatch, state }, error) {
-    logger('HANDLE_LOGIN_ERROR action being executed')
+    logger('HANDLE_LOGIN_ERROR action being executed', error)
 
     if (state.user && state.user.type === 'simple') {
-      // @TODO: Fix
-      // commit('app/SET_API_ERROR', error, { root: true })
+      // @TODO: Right now we're just sending the entire error object
+      //  Once the API has been updated to return specific error codes we can pass that along instead
+      commit('app/SET_API_ERROR_CODE', error, { root: true })
     } else {
       commit('web3/SET_REGISTRATION_ERROR', {
         message: 'Error while registering Web3',
