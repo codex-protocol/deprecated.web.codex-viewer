@@ -6,11 +6,7 @@
         <h5 class="mb-5">Upcoming extensions and features</h5>
         <b-card-group deck>
           <div class="deck-item" v-for="feature in features" :key="feature.description">
-            <a
-              :href="feature.url"
-              target="_blank"
-              @click="clickPartner(feature.url)"
-            >
+            <a :href="feature.url" target="_blank">
               <b-card>
                 <img :src="feature.image" />
                 <p class="card-text" slot="footer">{{ feature.description }}</p>
