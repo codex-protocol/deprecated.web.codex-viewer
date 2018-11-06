@@ -8,8 +8,8 @@
           </b-link>
         </div>
 
-        <h1>{{ title }}</h1>
-        <div class="lead">{{ description }}</div>
+        <h1>Sign in</h1>
+        <div class="lead">Codex Viewer allows you to create, view, and transfer Codex Records</div>
 
         <b-alert
           show
@@ -111,28 +111,25 @@ export default {
   },
 
   computed: {
-    ...mapState('app', ['apiError', 'pendingUserCode']),
+    ...mapState('app', ['apiErrorCode', 'pendingUserCode']),
     ...mapState('auth', ['user']),
     ...mapState('web3', ['providerAccount', 'instance', 'registrationError']),
 
-    title() {
-      if (this.apiError) {
-        return 'Error'
-      }
-
-      return 'Sign in'
-    },
-
-    description() {
-      if (this.apiError) {
-        return 'We were unable to log you in with your account. Try again later.'
-      }
-
-      return 'Codex Viewer allows you to create, view, and transfer Codex Records'
-    },
-
     errorMessage() {
-      if (!this.registrationError) {
+      return this.web3ErrorMessage || this.apiErrorMessage
+    },
+
+    apiErrorMessage() {
+      // Even though we read the error message from the QS, we use a generic one as opposed to rendering
+      //  arbitrary text from the query string. Later we'll deprecate the message param and just pivot
+      //  based on error codes.
+      return this.apiErrorCode
+        ? 'We were unable to log you in with your account. Try again later.'
+        : null
+    },
+
+    web3ErrorMessage() {
+      if (!this.registrationError && !this.apiErrorCod) {
         return null
       }
 
@@ -173,6 +170,11 @@ export default {
     registerWalletProvider(provider) {
       this.walletProvider = provider
 
+      // Clear out error state now that an action has taken place by the user
+      if (this.apiErrorCode) {
+        this.$store.commit('app/SET_API_ERROR_CODE', null)
+      }
+
       this.$store.dispatch('auth/LOGIN_FROM_SIGNED_DATA')
         .then(() => {
           // We know this authentication happened from the Login view, so we can send the user directly to the collection page
@@ -184,6 +186,7 @@ export default {
           //  errors and dispatch the HANDLE_LOGIN_ERROR action for us
         })
     },
+
     getPendingUserStats(pendingUserCode) {
       PendingUser.getStats(pendingUserCode)
         .then((pendingUserStats) => {

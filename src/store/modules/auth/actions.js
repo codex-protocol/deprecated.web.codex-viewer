@@ -63,9 +63,7 @@ export default {
           signedData,
         })
           .then((response) => {
-            commit('SET_AUTH_STATE', {
-              authToken: response.token,
-            })
+            commit('SET_AUTH_STATE', response.token)
 
             commit('SET_USER', {
               user: response.user,
@@ -93,7 +91,8 @@ export default {
     logger('HANDLE_LOGIN_ERROR action being executed')
 
     if (state.user && state.user.type === 'simple') {
-      commit('app/SET_API_ERROR', error, { root: true })
+      // @TODO: Fix
+      // commit('app/SET_API_ERROR', error, { root: true })
     } else {
       commit('web3/SET_REGISTRATION_ERROR', {
         message: 'Error while registering Web3',

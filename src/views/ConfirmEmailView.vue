@@ -66,11 +66,11 @@ export default {
   },
 
   computed: {
-    ...mapState('app', ['apiError', 'emailAddressToConfirm']),
+    ...mapState('app', ['apiErrorCode', 'emailAddressToConfirm']),
   },
 
   mounted() {
-    if (this.apiError) {
+    if (this.apiErrorCode) {
       this.buttonText = 'Resend Confirmation Email?'
       this.headerText = 'Could Not Confirm Your Email Address'
       this.bodyText = 'There was an error while confirming your email address.'
