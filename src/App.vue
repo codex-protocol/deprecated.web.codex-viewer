@@ -98,31 +98,29 @@ export default {
   },
 
   mounted() {
-    const setIsLoaded = () => {
-      this.$store.commit('app/SET_IS_LOADED', { isLoaded: true })
-    }
-
     this.$store.dispatch('app/HANDLE_QUERY_PARAMS')
       .then(() => {
-        return new Promise((resolve) => {
-          if (this.authToken) {
-            this.$store.dispatch('auth/LOGIN_FROM_CACHED_TOKEN')
-              .then(() => {
-                if (this.$route.meta.ifAuthenticatedRedirectTo) {
-                  this.$router.replace({
-                    name: this.$route.meta.ifAuthenticatedRedirectTo,
-                  }, resolve)
-                } else {
-                  resolve()
-                }
-              })
-          } else {
-            resolve()
-          }
-        })
+        if (!this.authToken) {
+          return null
+        }
+
+        return this.$store.dispatch('auth/LOGIN_FROM_CACHED_TOKEN')
+          .then(() => {
+            if (!this.$route.meta.ifAuthenticatedRedirectTo) {
+              return null
+            }
+
+            return new Promise((resolve, reject) => {
+              this.$router.replace({ name: this.$route.meta.ifAuthenticatedRedirectTo }, resolve, reject)
+            })
+          })
       })
-      .then(setIsLoaded)
-      .catch(setIsLoaded)
+      .catch(() => {
+        // Do nothing, any caught errors will be rendered on the page
+      })
+      .finally(() => {
+        this.$store.commit('app/SET_IS_LOADED', { isLoaded: true })
+      })
   },
 
   beforeDestroy() {
