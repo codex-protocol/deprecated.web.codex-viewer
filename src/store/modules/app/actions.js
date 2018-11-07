@@ -8,9 +8,11 @@ const logger = debug('app:store:app:actions')
 const queryParamsToHandle = {
   email: {
     mutationName: 'SET_EMAIL_ADDRESS_TO_CONFIRM',
+    clearUserState: true,
   },
   pendingUserCode: {
     mutationName: 'SET_PENDING_USER_CODE',
+    clearUserState: true,
   },
 
   // If there's a cached authToken in localstorage this will replace it with
@@ -40,10 +42,14 @@ export default {
         const param = queryParamsToHandle[key]
 
         commit(param.mutationName, query[key], param.mutationConfiguration)
+
+        if (param.clearUserState) {
+          commit('auth/CLEAR_USER_STATE', null, { root: true })
+        }
       }
     })
 
-    router.replace(rootState.route.name)
+    router.replace(rootState.route.path)
   },
 
   FETCH_VERIFIED_USERS({ commit }) {
