@@ -11,21 +11,26 @@
             <p>Use the widget at the bottom to chat with one of the team members. We'll respond as fast as possible!</p>
 
             <h6>Email</h6>
-            <p>If you prefer email, our support team can be reached at <a href="mailto:support@codexprotocol.com">support@codexprotocol.com</a>.</p>
+            <p>If you prefer email, our support team can be reached at <a :href="supportHref">support@codexprotocol.com</a>.</p>
 
             <h6>Twitter</h6>
             <p>Our team is also actively engaged on Twitter <a href="https://twitter.com/codexprotocol" target="_blank">@codexprotocol</a>.</p>
           </div>
 
           <div>
+            <h4>Developers</h4>
+            <p>For any development related questions, email our engineers at <a :href="developersHref">developers@codexprotocol.com</a>.</p>
+          </div>
+
+          <div>
             <h4>Business inquiries</h4>
-            <p>For any business inquiries, our business team can be reached at <a href="mailto:contact@codexprotocol.com">contact@codexprotocol.com</a>.</p>
+            <p>For any business inquiries, our business team can be reached at <a :href="contactHref">contact@codexprotocol.com</a>.</p>
           </div>
 
           <div>
             <h4>Security disclosures</h4>
             <p>
-              Security disclosures can reported to <a href="mailto:disclosures@codexprotocol.com">disclosures@codexprotocol.com</a>.
+              Security disclosures can reported to <a :href="disclosuresHref">disclosures@codexprotocol.com</a>.
               We follow the W3C Security Disclosures Best Practices for our disclosure policy. See below.
             </p>
 
@@ -52,6 +57,15 @@ export default {
 
   components: {
     AppHeader,
+  },
+
+  data() {
+    return {
+      supportHref: `mailto:support@codexprotocol.com?subject=${encodeURIComponent('Codex Viewer Support')}`,
+      developersHref: `mailto:support@developers.com?subject=${encodeURIComponent('Codex Viewer Developer Support')}`,
+      contactHref: `mailto:contact@codexprotocol.com?subject=${encodeURIComponent('Codex Protocol Business Inquiry')}`,
+      disclosuresHref: `mailto:disclosures@codexprotocol.com?subject=${encodeURIComponent('Codex Viewer Security Disclosure')}`,
+    }
   },
 }
 </script>
