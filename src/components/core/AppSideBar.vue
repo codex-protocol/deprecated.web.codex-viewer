@@ -63,83 +63,16 @@ export default {
 
   data() {
     return {
-      navItems: [],
       numberOfIncomingTransfers: 0,
       showFaucet: config.showFaucet,
       showCodexGallery: config.showCodexGalleryInSideBar,
     }
   },
 
-  created() {
+  mounted() {
     if (this.isAuthenticated) {
       this.updateIncomingTransfersCount()
     }
-  },
-
-  mounted() {
-    this.navItems = [
-      {
-        to: '/login',
-        condition: !this.isAuthenticated,
-        icon: iconHome,
-        text: 'Home',
-      },
-      {
-        to: '/collection',
-        condition: this.isAuthenticated,
-        icon: iconCollection,
-        text: 'Collection',
-      },
-      {
-        to: '/transfers',
-        condition: this.isAuthenticated,
-        icon: iconTransfers,
-        text: 'Transfers',
-      },
-      {
-        to: '/manage-tokens',
-        condition: this.showManageTokensPage,
-        icon: codxIcon,
-        text: 'ManageTokens',
-      },
-      {
-        to: '/faucet',
-        condition: this.showFaucet,
-        icon: faucetIcon,
-        text: 'Faucet',
-      },
-      {
-        to: '/extensions',
-        condition: this.isAuthenticated,
-        icon: starIcon,
-        text: 'Extensions',
-      },
-      {
-        to: '/galleries',
-        condition: this.showCodexGallery,
-        icon: galleryIcon,
-        text: 'Galleries',
-      },
-      {
-        to: '/settings',
-        condition: this.isAuthenticated,
-        icon: settingsIcon,
-        text: 'Settings',
-      },
-      {
-        to: '/logout',
-        action: this.logout,
-        condition: this.isAuthenticated,
-        icon: logoutIcon,
-        text: 'Logout',
-      },
-      {
-        to: '/login',
-        condition: !this.isAuthenticated,
-        icon: logoutIcon,
-        text: 'Login',
-      },
-    ]
 
     EventBus.$on('socket:codex-record:address-approved:approved', this.updateIncomingTransfersCount)
     EventBus.$on('socket:codex-record:transferred:new-owner', this.updateIncomingTransfersCount)
@@ -156,6 +89,72 @@ export default {
 
     showManageTokensPage() {
       return this.user && this.user.type === 'savvy' && config.showManageTokensPage
+    },
+
+    navItems() {
+      return [
+        {
+          to: '/login',
+          condition: !this.isAuthenticated,
+          icon: iconHome,
+          text: 'Home',
+        },
+        {
+          to: '/collection',
+          condition: this.isAuthenticated,
+          icon: iconCollection,
+          text: 'Collection',
+        },
+        {
+          to: '/transfers',
+          condition: this.isAuthenticated,
+          icon: iconTransfers,
+          text: 'Transfers',
+        },
+        {
+          to: '/manage-tokens',
+          condition: this.showManageTokensPage,
+          icon: codxIcon,
+          text: 'ManageTokens',
+        },
+        {
+          to: '/faucet',
+          condition: this.showFaucet,
+          icon: faucetIcon,
+          text: 'Faucet',
+        },
+        {
+          to: '/extensions',
+          condition: this.isAuthenticated,
+          icon: starIcon,
+          text: 'Extensions',
+        },
+        {
+          to: '/galleries',
+          condition: this.showCodexGallery,
+          icon: galleryIcon,
+          text: 'Galleries',
+        },
+        {
+          to: '/settings',
+          condition: this.isAuthenticated,
+          icon: settingsIcon,
+          text: 'Settings',
+        },
+        {
+          to: '/logout',
+          action: this.logout,
+          condition: this.isAuthenticated,
+          icon: logoutIcon,
+          text: 'Logout',
+        },
+        {
+          to: '/login',
+          condition: !this.isAuthenticated,
+          icon: logoutIcon,
+          text: 'Login',
+        },
+      ]
     },
   },
 
@@ -260,6 +259,6 @@ a
 .contact
   text-align: center
   padding: 1rem
-  word-break: break-word
+  overflow-wrap: break-word
 
 </style>

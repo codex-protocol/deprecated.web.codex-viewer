@@ -32,7 +32,7 @@ const router = new Router({
         hideSideBar: true,
         useBackgroundImage: true,
         allowUnauthenticatedUsers: true,
-        ifAuthenticatedRedirectTo: 'collection',
+        ifAuthenticatedRedirect: true,
       },
     },
     {
@@ -43,7 +43,7 @@ const router = new Router({
         hideSideBar: true,
         useBackgroundImage: true,
         allowUnauthenticatedUsers: true,
-        ifAuthenticatedRedirectTo: 'collection',
+        ifAuthenticatedRedirect: true,
       },
     },
 
@@ -131,9 +131,8 @@ if (config.showManageTokensPage) {
 }
 
 router.beforeEach((to, from, next) => {
-
-  if (to.meta.ifAuthenticatedRedirectTo && store.getters['auth/isAuthenticated']) {
-    return next({ name: to.meta.ifAuthenticatedRedirectTo })
+  if (to.meta.ifAuthenticatedRedirect && store.getters['auth/isAuthenticated']) {
+    return next({ name: 'collection' })
   }
 
   const requireAuthentication = to.matched.some((route) => {
@@ -143,9 +142,13 @@ router.beforeEach((to, from, next) => {
   // if no route was matched (i.e. a 404)
   // or if the user is trying to access an authenticated page but is unauthenticated
   // then send them to the login page
-  if (to.matched.length === 0
-    || (requireAuthentication && !store.getters['auth/isAuthenticated'])) {
-    return next({ name: 'login' })
+  if (to.matched.length === 0 || (requireAuthentication && !store.getters['auth/isAuthenticated'])) {
+    const nextRoute = { name: 'login' }
+
+    // If a route was matched but the request is unauthenticated, then cache the original destination for post-authentication
+    if (to.matched.length > 0) {
+      nextRoute.query = { destination: to.fullPath }
+    }
   }
 
   return next()

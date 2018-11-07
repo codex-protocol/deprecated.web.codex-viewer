@@ -71,7 +71,7 @@ export default {
       formData.append('name', this.name)
       formData.append('description', this.description)
 
-      axios.put(`/v1/client/record-metadata/${this.recordId}`, formData, {
+      axios.put(`/v1/client/record/${this.recordId}/metadata`, formData, {
         headers: {
           Authorization: `Bearer ${this.accessToken}`,
           'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
