@@ -11,12 +11,8 @@ export default {
   //  from the API. If it's a simple user, we register Web3 using Infura. If it's a savvy user
   //  we attempt to register Web3 using their wallet provider. If there is no wallet provider,
   //  we kick them back to the login page with an error.
-  LOGIN_FROM_CACHED_TOKEN({ commit, dispatch, state }, authToken) {
+  LOGIN_FROM_CACHED_TOKEN({ commit, dispatch }) {
     logger('LOGIN_FROM_CACHED_TOKEN action being executed')
-
-    commit('SET_AUTH_STATE', {
-      authToken,
-    })
 
     return User.getUser()
       .then((user) => {
@@ -67,9 +63,7 @@ export default {
           signedData,
         })
           .then((response) => {
-            commit('SET_AUTH_STATE', {
-              authToken: response.token,
-            })
+            commit('SET_AUTH_STATE', response.token)
 
             commit('SET_USER', {
               user: response.user,
@@ -94,10 +88,12 @@ export default {
   },
 
   HANDLE_LOGIN_ERROR({ commit, dispatch, state }, error) {
-    logger('HANDLE_LOGIN_ERROR action being executed')
+    logger('HANDLE_LOGIN_ERROR action being executed', error)
 
     if (state.user && state.user.type === 'simple') {
-      commit('app/SET_API_ERROR', error, { root: true })
+      // @TODO: Right now we're just sending the entire error object
+      //  Once the API has been updated to return specific error codes we can pass that along instead
+      commit('app/SET_API_ERROR_CODE', error, { root: true })
     } else {
       commit('web3/SET_REGISTRATION_ERROR', {
         message: 'Error while registering Web3',

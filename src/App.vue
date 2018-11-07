@@ -98,26 +98,33 @@ export default {
   },
 
   mounted() {
-    const setIsLoaded = () => {
-      this.$store.commit('app/SET_IS_LOADED', { isLoaded: true })
-    }
+    this.$store.dispatch('app/HANDLE_QUERY_PARAMS')
+      .then(() => {
+        if (!this.authToken) {
+          return null
+        }
 
-    const { query } = this.$route
-    const authToken = query.authToken || this.authToken
+        return this.$store.dispatch('auth/LOGIN_FROM_CACHED_TOKEN')
+          .then(() => {
+            if (!this.$route.meta.ifAuthenticatedRedirect && !this.postLoginDestination) {
+              return null
+            }
 
-    if (authToken) {
-      this.$store.dispatch('auth/LOGIN_FROM_CACHED_TOKEN', authToken)
-        .then(() => {
-          if (this.$route.meta.ifAuthenticatedRedirectTo) {
-            this.$router.replace({ name: this.$route.meta.ifAuthenticatedRedirectTo })
-          } else {
-            setIsLoaded()
-          }
-        })
-        .catch(setIsLoaded)
-    } else {
-      setIsLoaded()
-    }
+            return new Promise((resolve, reject) => {
+              if (this.postLoginDestination) {
+                this.$router.replace({ path: this.postLoginDestination }, resolve, reject)
+              } else {
+                this.$router.replace({ name: 'collection' }, resolve, reject)
+              }
+            })
+          })
+      })
+      .catch(() => {
+        // Do nothing, any caught errors will be rendered on the page
+      })
+      .finally(() => {
+        this.$store.commit('app/SET_IS_LOADED', true)
+      })
   },
 
   beforeDestroy() {
@@ -127,27 +134,11 @@ export default {
 
   computed: {
     ...mapGetters('auth', ['isAuthenticated']),
-    ...mapState('app', ['isLoaded']),
+    ...mapState('app', ['isLoaded', 'postLoginDestination']),
     ...mapState('auth', ['user', 'authToken']),
 
     hideSideBar() {
       return this.$route.meta && this.$route.meta.hideSideBar
-    },
-
-    recordId() {
-      return this.$route.params.recordId
-    },
-  },
-
-  watch: {
-    $route(newRoute, oldRoute) {
-      if (!this.isLoaded) {
-        // If the route changes as a result of authentication (e.g., /login to /collection)
-        //  then we only mark loading complete after the new route has been loaded
-        this.$store.commit('app/SET_IS_LOADED', {
-          isLoaded: true,
-        })
-      }
     },
   },
 
