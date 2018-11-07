@@ -62,7 +62,7 @@ export default {
   data() {
     return {
       supportHref: `mailto:support@codexprotocol.com?subject=${encodeURIComponent('Codex Viewer Support')}`,
-      developersHref: `mailto:support@developers.com?subject=${encodeURIComponent('Codex Viewer Developer Support')}`,
+      developersHref: `mailto:developers@codexprotocol.com?subject=${encodeURIComponent('Codex Viewer Developer Support')}`,
       contactHref: `mailto:contact@codexprotocol.com?subject=${encodeURIComponent('Codex Protocol Business Inquiry')}`,
       disclosuresHref: `mailto:disclosures@codexprotocol.com?subject=${encodeURIComponent('Codex Viewer Security Disclosure')}`,
     }
