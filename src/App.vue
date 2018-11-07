@@ -106,12 +106,16 @@ export default {
 
         return this.$store.dispatch('auth/LOGIN_FROM_CACHED_TOKEN')
           .then(() => {
-            if (!this.$route.meta.ifAuthenticatedRedirectTo) {
+            if (!this.$route.meta.ifAuthenticatedRedirect && !this.postLoginDestination) {
               return null
             }
 
             return new Promise((resolve, reject) => {
-              this.$router.replace({ name: this.$route.meta.ifAuthenticatedRedirectTo }, resolve, reject)
+              if (this.postLoginDestination) {
+                this.$router.replace({ path: this.postLoginDestination }, resolve, reject)
+              } else {
+                this.$router.replace({ name: 'collection' }, resolve, reject)
+              }
             })
           })
       })
@@ -119,7 +123,7 @@ export default {
         // Do nothing, any caught errors will be rendered on the page
       })
       .finally(() => {
-        this.$store.commit('app/SET_IS_LOADED', { isLoaded: true })
+        this.$store.commit('app/SET_IS_LOADED', true)
       })
   },
 
@@ -130,7 +134,7 @@ export default {
 
   computed: {
     ...mapGetters('auth', ['isAuthenticated']),
-    ...mapState('app', ['isLoaded']),
+    ...mapState('app', ['isLoaded', 'postLoginDestination']),
     ...mapState('auth', ['user', 'authToken']),
 
     hideSideBar() {

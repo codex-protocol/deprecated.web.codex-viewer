@@ -6,5 +6,6 @@ export default () => {
     apiErrorCode: null,
     apiErrorMessage: null,
     isLoaded: false,
+    postLoginDestination: null,
   }
 }

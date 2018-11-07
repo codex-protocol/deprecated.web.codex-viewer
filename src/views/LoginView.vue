@@ -234,7 +234,7 @@ export default {
         .then(() => {
           // We know this authentication happened from the Login view, so we can send the user directly to the collection page
           // We don't have to worry about the isLoading flag here since it is already set to true
-          this.$router.replace({ name: this.$route.meta.ifAuthenticatedRedirectTo || 'collection' })
+          this.$router.replace({ name: 'collection' })
         })
         .catch(() => {
           // do nothing since the LOGIN_FROM_SIGNED_DATA action will catch
