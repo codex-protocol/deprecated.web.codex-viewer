@@ -8,21 +8,25 @@
           </b-link>
         </div>
 
-        <h1>{{ title }}</h1>
-        <div class="lead">{{ description }}</div>
+        <h1>Sign in</h1>
+        <div class="lead">Codex Viewer allows you to create, view, and transfer Codex Records</div>
 
         <b-alert
           show
           class="mt-5"
           variant="secondary"
-          v-if="pendingUserStats && pendingUserStats.email"
+          v-if="pendingUserMessage"
         >
-          You have {{ pendingUserStats.numApproved > 0 ? pendingUserStats.numApproved : '' }}
-          Codex {{ pendingUserStats.numApproved === 1 ? 'Record' : 'Records' }}
-          waiting to be claimed. Log in with an Identity Provider below
-          associated with the email <strong>{{ pendingUserStats.email }}</strong> to
-          claim {{ pendingUserStats.numApproved === 1 ? 'it' : 'them' }}!
+          <!--
+            @NOTE: using v-html here should be fine, since the only user-defined
+            data is the email address... and the database verifies all email
+            addresses when creating users
 
+            even if someone could put some malicious text into an invited user's
+            email field, nobody would ever actually recieve an email with a link
+            that would generate this page since the email would be invalid...
+          -->
+          <span v-html="pendingUserMessage"></span>
           <!-- add a "claim with a different email" link here if/when that flow is implemented -->
         </b-alert>
 
@@ -101,11 +105,7 @@ export default {
   },
 
   created() {
-    // remove pendingUserCode from the query params if specified
-    if (this.$route.query.pendingUserCode) {
-      this.$store.commit('app/SET_PENDING_USER_CODE', this.$route.query.pendingUserCode)
-      this.$router.replace({ name: this.$route.name })
-    } else if (this.pendingUserCode) {
+    if (this.pendingUserCode) {
       const oAuth2LoginQueryString = `?pendingUserCode=${this.pendingUserCode}`
       this.googleLoginUrl += oAuth2LoginQueryString
       this.facebookLoginUrl += oAuth2LoginQueryString
@@ -115,28 +115,25 @@ export default {
   },
 
   computed: {
-    ...mapState('app', ['apiError', 'pendingUserCode']),
+    ...mapState('app', ['apiErrorCode', 'pendingUserCode']),
     ...mapState('auth', ['user']),
     ...mapState('web3', ['providerAccount', 'instance', 'registrationError']),
 
-    title() {
-      if (this.apiError) {
-        return 'Error'
-      }
-
-      return 'Sign in'
-    },
-
-    description() {
-      if (this.apiError) {
-        return 'We were unable to log you in with your account. Try again later.'
-      }
-
-      return 'Codex Viewer allows you to create, view, and transfer Codex Records'
-    },
-
     errorMessage() {
-      if (!this.registrationError) {
+      return this.web3ErrorMessage || this.apiErrorMessage
+    },
+
+    apiErrorMessage() {
+      // Even though we read the error message from the QS, we use a generic one as opposed to rendering
+      //  arbitrary text from the query string. Later we'll deprecate the message param and just pivot
+      //  based on error codes.
+      return this.apiErrorCode
+        ? 'We were unable to log you in with your account. Try again later.'
+        : null
+    },
+
+    web3ErrorMessage() {
+      if (!this.registrationError && !this.apiErrorCod) {
         return null
       }
 
@@ -171,23 +168,80 @@ export default {
           return 'https://www.metamask.io'
       }
     },
+
+    pendingUserMessage() {
+
+      const { numApproved, numWhitelisted, email } = this.pendingUserStats || {}
+
+      if (!email) {
+        return null
+      }
+
+      // always show the "you have X records waiting to be claimed" message,
+      //  even if they also have some whitelisted records, since this is the
+      //  "most important" message to show and combining the two is kind of
+      //  complicated
+      if (numApproved > 0) {
+
+        const [recordOrRecords, itOrThem] = numApproved > 1
+          ? ['Records', 'them']
+          : ['Record', 'it']
+
+        return `
+          You have ${numApproved} Codex ${recordOrRecords} waiting to be
+          claimed. Log in with an Identity Provider associated with the
+          email <strong>${email}</strong> below to claim ${itOrThem}!
+        `
+      }
+
+      if (numWhitelisted > 0) {
+
+        const [recordOrRecords, hasOrHave, itOrThem] = numWhitelisted > 1
+          ? ['Records', 'have', 'them']
+          : ['Record', 'has', 'it']
+
+        return `
+          ${numWhitelisted} Codex ${recordOrRecords} ${hasOrHave} been shared
+          with you. Log in with an Identity Provider associated with the
+          email <strong>${email}</strong> below to view ${itOrThem}!
+        `
+      }
+
+      // this is a generic message that will show if this pending user has
+      //  nothing available... which can only really happen if someone approves
+      //  an unregistered email address, then they approve someone else before
+      //  the invited user can click the link in thier email
+      //
+      // this message is a little missleading, but I suppose it's better than
+      //  showing nothing
+      return `
+        Log in with an Identity Provider associated with the email
+        <strong>${email}</strong> below to see what's waiting for you!
+      `
+    },
   },
 
   methods: {
     registerWalletProvider(provider) {
       this.walletProvider = provider
 
+      // Clear out error state now that an action has taken place by the user
+      if (this.apiErrorCode) {
+        this.$store.commit('app/SET_API_ERROR_CODE', null)
+      }
+
       this.$store.dispatch('auth/LOGIN_FROM_SIGNED_DATA')
         .then(() => {
           // We know this authentication happened from the Login view, so we can send the user directly to the collection page
           // We don't have to worry about the isLoading flag here since it is already set to true
-          this.$router.replace({ name: this.$route.meta.ifAuthenticatedRedirectTo || 'collection' })
+          this.$router.replace({ name: 'collection' })
         })
         .catch(() => {
           // do nothing since the LOGIN_FROM_SIGNED_DATA action will catch
           //  errors and dispatch the HANDLE_LOGIN_ERROR action for us
         })
     },
+
     getPendingUserStats(pendingUserCode) {
       PendingUser.getStats(pendingUserCode)
         .then((pendingUserStats) => {

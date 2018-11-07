@@ -9,7 +9,6 @@ const logger = debug('app:store:web3:actions')
 
 const registerWalletProvider = () => {
   return new Promise((resolve, reject) => {
-    // @TODO: Test this when the new custom build becomes stable
     if (window.ethereum) {
       window.ethereum.enable()
         .then(() => {

@@ -12,7 +12,7 @@ const logMutation = (mutationName, payload) => {
 }
 
 export default {
-  SET_AUTH_STATE(currentState, { authToken }) {
+  SET_AUTH_STATE(currentState, authToken) {
     logMutation('SET_AUTH_STATE', authToken)
 
     axios.defaults.headers.common.Authorization = authToken

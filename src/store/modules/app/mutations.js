@@ -32,18 +32,27 @@ export default {
     currentState.emailAddressToConfirm = emailAddress
   },
 
-  SET_API_ERROR(currentState, { code, message }) {
-    logMutation('SET_API_ERROR', message)
+  SET_API_ERROR_CODE(currentState, code) {
+    logMutation('SET_API_ERROR_CODE', code)
 
-    currentState.apiError = {
-      code,
-      message,
-    }
+    currentState.apiErrorCode = code
   },
 
-  SET_IS_LOADED(currentState, { isLoaded }) {
+  SET_API_ERROR_MESSAGE(currentState, message) {
+    logMutation('SET_API_ERROR_MESSAGE', message)
+
+    currentState.apiErrorMessage = message
+  },
+
+  SET_IS_LOADED(currentState, isLoaded) {
     logMutation('SET_IS_LOADED', isLoaded)
 
     currentState.isLoaded = isLoaded
+  },
+
+  SET_POST_LOGIN_DESTINATION(currentState, destination) {
+    logMutation('SET_POST_LOGIN_DESTINATION', destination)
+
+    currentState.postLoginDestination = destination
   },
 }
