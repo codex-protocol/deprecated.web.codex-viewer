@@ -44,9 +44,15 @@ export default {
     currentState.apiErrorMessage = message
   },
 
-  SET_IS_LOADED(currentState, { isLoaded }) {
+  SET_IS_LOADED(currentState, isLoaded) {
     logMutation('SET_IS_LOADED', isLoaded)
 
     currentState.isLoaded = isLoaded
+  },
+
+  SET_POST_LOGIN_DESTINATION(currentState, destination) {
+    logMutation('SET_POST_LOGIN_DESTINATION', destination)
+
+    currentState.postLoginDestination = destination
   },
 }

@@ -14,6 +14,9 @@ const queryParamsToHandle = {
     mutationName: 'SET_PENDING_USER_CODE',
     clearUserState: true,
   },
+  destination: {
+    mutationName: 'SET_POST_LOGIN_DESTINATION',
+  },
 
   // If there's a cached authToken in localstorage this will replace it with
   //  the one from the query string
