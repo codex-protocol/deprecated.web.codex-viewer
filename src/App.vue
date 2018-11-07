@@ -136,10 +136,6 @@ export default {
     hideSideBar() {
       return this.$route.meta && this.$route.meta.hideSideBar
     },
-
-    recordId() {
-      return this.$route.params.recordId
-    },
   },
 
   methods: {
