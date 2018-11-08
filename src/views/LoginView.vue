@@ -35,15 +35,20 @@
         </p>
 
         <div class="icons mb-3">
-          <a :href="getOAuth2LoginUrl('google')" v-if="supportEmailAccounts">
-            <IconBase iconName="google" width="48" height="48" />
-          </a>
-          <a :href="getOAuth2LoginUrl('facebook')" :disabled="disableFacebook" v-if="supportEmailAccounts">
-            <IconBase iconName="facebook" width="48" height="48" />
-          </a>
-          <a :href="getOAuth2LoginUrl('microsoft')" :disabled="disableMicrosoft" v-if="supportEmailAccounts">
-            <IconBase iconName="microsoft" width="48" height="48" />
-          </a>
+
+          <!-- oauth2 login buttons -->
+          <template v-if="supportEmailAccounts">
+            <b-link
+              :key="index"
+              :disabled="provider.isDisabled"
+              :href="getOAuth2LoginUrl(provider)"
+              v-for="(provider, index) in oAuth2Providers"
+            >
+              <IconBase :iconName="provider.name" width="48" height="48" />
+            </b-link>
+          </template>
+
+          <!-- web3 login buttons -->
           <b-link @click="registerWalletProvider('metaMask')">
             <IconBase iconName="metaMask" width="48" height="48" />
           </b-link>
@@ -92,9 +97,22 @@ export default {
       walletProvider: null,
       supportEmailAccounts: config.supportEmailAccounts,
 
-      // Facebook and Microsoft support HTTPS for redirect_uri so we disable these in ropsten
-      disableFacebook: config.expectedNetworkName === 'ropsten',
-      disableMicrosoft: config.expectedNetworkName === 'ropsten',
+      oAuth2Providers: [
+        {
+          name: 'google',
+          isDisabled: false,
+        },
+        // facebook and microsoft only support https for redirect_uri so we
+        //  disable these in ropsten
+        {
+          name: 'facebook',
+          isDisabled: config.expectedNetworkName === 'ropsten',
+        },
+        {
+          name: 'microsoft',
+          isDisabled: config.expectedNetworkName === 'ropsten',
+        },
+      ],
 
       pendingUserStats: null,
     }
@@ -255,11 +273,11 @@ export default {
 
     getOAuth2LoginUrl(provider) {
 
-      if (!['google', 'facebook', 'microsoft'].includes(provider)) {
+      if (!this.oAuth2Providers.includes(provider)) {
         return null
       }
 
-      return `${config.apiUrl}/oauth2/login/${provider}?${this.oAuth2LoginQueryString}`
+      return `${config.apiUrl}/oauth2/login/${provider.name}?${this.oAuth2LoginQueryString}`
     },
 
     getPendingUserStats(pendingUserCode) {
@@ -287,7 +305,13 @@ export default {
       margin-left: 0
 
     &.disabled
+    &[disabled]
       opacity: .5
+
+      // disable hover state changes
+      &:hover
+        cursor: unset
+        color: $color-primary
 
   .logo
     max-width: 100px
