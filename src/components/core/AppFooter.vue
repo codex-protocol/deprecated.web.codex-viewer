@@ -5,7 +5,7 @@
       <a href="https://www.codexprotocol.com/Terms-of-Service.pdf">Terms of Use</a>
       <a href="https://www.codexprotocol.com/privacy-policy.html">Privacy Policy</a>
       <a href="https://dev.codexprotocol.com">Documentation</a>
-      <a href="mailto:support@codexprotocol.com">Contact Us</a>
+      <b-link to="/contact">Contact Us</b-link>
     </div>
     <div class="links mb-3">
       <a href="https://codex-viewer.com">Mainnet</a>
