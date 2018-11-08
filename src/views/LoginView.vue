@@ -35,13 +35,13 @@
         </p>
 
         <div class="icons mb-3">
-          <a :href="googleLoginUrl" v-if="supportEmailAccounts">
+          <a :href="getOAuth2LoginUrl('google')" v-if="supportEmailAccounts">
             <IconBase iconName="google" width="48" height="48" />
           </a>
-          <a :href="facebookLoginUrl" :disabled="disableFacebook" v-if="supportEmailAccounts">
+          <a :href="getOAuth2LoginUrl('facebook')" :disabled="disableFacebook" v-if="supportEmailAccounts">
             <IconBase iconName="facebook" width="48" height="48" />
           </a>
-          <a :href="microsoftLoginUrl" :disabled="disableMicrosoft" v-if="supportEmailAccounts">
+          <a :href="getOAuth2LoginUrl('microsoft')" :disabled="disableMicrosoft" v-if="supportEmailAccounts">
             <IconBase iconName="microsoft" width="48" height="48" />
           </a>
           <b-link @click="registerWalletProvider('metaMask')">
@@ -92,10 +92,6 @@ export default {
       walletProvider: null,
       supportEmailAccounts: config.supportEmailAccounts,
 
-      googleLoginUrl: `${config.apiUrl}/oauth2/login/google`,
-      facebookLoginUrl: `${config.apiUrl}/oauth2/login/facebook`,
-      microsoftLoginUrl: `${config.apiUrl}/oauth2/login/microsoft`,
-
       // Facebook and Microsoft support HTTPS for redirect_uri so we disable these in ropsten
       disableFacebook: config.expectedNetworkName === 'ropsten',
       disableMicrosoft: config.expectedNetworkName === 'ropsten',
@@ -106,18 +102,33 @@ export default {
 
   created() {
     if (this.pendingUserCode) {
-      const oAuth2LoginQueryString = `?pendingUserCode=${this.pendingUserCode}`
-      this.googleLoginUrl += oAuth2LoginQueryString
-      this.facebookLoginUrl += oAuth2LoginQueryString
-      this.microsoftLoginUrl += oAuth2LoginQueryString
       this.getPendingUserStats(this.pendingUserCode)
     }
   },
 
   computed: {
-    ...mapState('app', ['apiErrorCode', 'pendingUserCode']),
     ...mapState('auth', ['user']),
     ...mapState('web3', ['providerAccount', 'instance', 'registrationError']),
+    ...mapState('app', ['apiErrorCode', 'pendingUserCode', 'postLoginDestination']),
+
+    oAuth2LoginQueryString() {
+
+      const oAuth2LoginQueryParams = {
+        destination: this.postLoginDestination,
+        pendingUserCode: this.pendingUserCode,
+      }
+
+      return Object
+        .keys(oAuth2LoginQueryParams)
+        .filter((key) => {
+          return !!oAuth2LoginQueryParams[key] // remove any empty values
+        })
+        .map((key) => {
+          return `${key}=${encodeURIComponent(oAuth2LoginQueryParams[key])}`
+        })
+        .join('&')
+
+    },
 
     errorMessage() {
       return this.web3ErrorMessage || this.apiErrorMessage
@@ -240,6 +251,15 @@ export default {
           // do nothing since the LOGIN_FROM_SIGNED_DATA action will catch
           //  errors and dispatch the HANDLE_LOGIN_ERROR action for us
         })
+    },
+
+    getOAuth2LoginUrl(provider) {
+
+      if (!['google', 'facebook', 'microsoft'].includes(provider)) {
+        return null
+      }
+
+      return `${config.apiUrl}/oauth2/login/${provider}?${this.oAuth2LoginQueryString}`
     },
 
     getPendingUserStats(pendingUserCode) {
