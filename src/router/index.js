@@ -16,6 +16,7 @@ import FaucetView from '../views/FaucetView'
 import GalleryView from '../views/GalleryView'
 import GalleryListView from '../views/GalleryListView'
 import OAuth2AppView from '../views/test/OAuth2AppView'
+import ContactUsView from '../views/ContactUsView'
 
 Vue.use(Router)
 
@@ -57,6 +58,11 @@ const router = new Router({
       name: 'collection',
       path: '/collection',
       component: RecordListView,
+    },
+    {
+      name: 'contact',
+      path: '/contact',
+      component: ContactUsView,
     },
     {
       name: 'record-detail',
