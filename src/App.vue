@@ -95,6 +95,11 @@ export default {
     EventBus.$on('socket:codex-coin:registry-contract-approved', () => {
       this.$store.dispatch('auth/FETCH_APPROVAL_STATUSES')
     })
+
+    EventBus.$on('socket:codex-record:created', this.addTransferredRecordHandler)
+    EventBus.$on('socket:codex-record:destroyed', this.removeTransferredRecordHandler)
+    EventBus.$on('socket:codex-record:transferred:new-owner', this.addTransferredRecordHandler)
+    EventBus.$on('socket:codex-record:transferred:old-owner', this.removeTransferredRecordHandler)
   },
 
   mounted() {
@@ -106,6 +111,9 @@ export default {
 
         return this.$store.dispatch('auth/LOGIN_FROM_CACHED_TOKEN')
           .then(() => {
+            // Start fetching user data
+            this.$store.dispatch('records/GET_USER_DATA')
+
             if (!this.$route.meta.ifAuthenticatedRedirect && !this.postLoginDestination) {
               return null
             }
@@ -130,6 +138,11 @@ export default {
   beforeDestroy() {
     EventBus.$off('socket:codex-coin:transferred')
     EventBus.$off('socket:codex-coin:registry-contract-approved')
+
+    EventBus.$off('socket:codex-record:created', this.addTransferredRecordHandler)
+    EventBus.$off('socket:codex-record:destroyed', this.removeTransferredRecordHandler)
+    EventBus.$off('socket:codex-record:transferred:new-owner', this.addTransferredRecordHandler)
+    EventBus.$off('socket:codex-record:transferred:old-owner', this.removeTransferredRecordHandler)
   },
 
   computed: {
@@ -163,6 +176,28 @@ export default {
         (response) => { return response }, // @NOTE: use a no-op here since we're only interested in intercepting errors
         authErrorHandler
       )
+    },
+
+    // add the record to the collection if it was just transferred
+    addTransferredRecordHandler(codexRecordToAdd) {
+
+      // if this was the record created by the giveaway, hide the giveaway card
+      // if (this.giveaway && codexRecordToAdd.metadata.description === this.giveaway.editionDetails.description) {
+      //   this.giveaway = null
+      // }
+
+      this.$store.commit('records/ADD_RECORD_TO_LIST', {
+        listName: 'userRecords',
+        record: codexRecordToAdd,
+      })
+    },
+
+    // remove the record from the collection if it was just transferred
+    removeTransferredRecordHandler(codexRecordToRemove) {
+      this.$store.commit('records/REMOVE_RECORD_FROM_LIST', {
+        listName: 'userRecords',
+        record: codexRecordToRemove,
+      })
     },
 
     useBackgroundImage() {

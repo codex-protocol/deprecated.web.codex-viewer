@@ -17,7 +17,7 @@
           <b-tab title="Collection">
             <div
               class="record-list"
-              v-if="recordList.length"
+              v-if="filteredUserRecords.length"
             >
               <b-container class="record-settings-row">
                 <b-row>
@@ -28,7 +28,7 @@
                 </b-row>
               </b-container>
               <RecordPrivacySettingsRowItem
-                v-for="record in recordList"
+                v-for="record in filteredUserRecords"
                 :codex-record="record"
                 :key="record.tokenId"
               />
@@ -44,11 +44,12 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import {
+  mapState,
+  mapGetters,
+} from 'vuex'
 
 import config from '../util/config'
-import Record from '../util/api/record'
-import EventBus from '../util/eventBus'
 import { formatDate } from '../util/dateHelpers'
 import AppHeader from '../components/core/AppHeader'
 import RecordPrivacySettingsRowItem from '../components/RecordPrivacySettingsRowItem'
@@ -99,35 +100,12 @@ export default {
 
     return {
       profileProperties,
-      records: [],
     }
-  },
-
-  created() {
-    // @TODO: add the same socket event handlers as the collection page here too?
-    this.getRecords()
   },
 
   computed: {
     ...mapState('auth', ['user']),
-
-    recordList() {
-      return this.records.filter((record) => {
-        return !!record.metadata
-      })
-    },
-  },
-
-  methods: {
-    getRecords() {
-      Record.getUserRecords()
-        .then((records) => {
-          this.records = records
-        })
-        .catch((error) => {
-          EventBus.$emit('toast:error', `Could not get collection: ${error.message}`)
-        })
-    },
+    ...mapGetters('records', ['filteredUserRecords']),
   },
 }
 </script>

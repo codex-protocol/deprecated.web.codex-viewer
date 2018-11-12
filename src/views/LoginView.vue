@@ -261,6 +261,9 @@ export default {
 
       this.$store.dispatch('auth/LOGIN_FROM_SIGNED_DATA')
         .then(() => {
+          // Start fetching user data
+          this.$store.dispatch('records/GET_USER_DATA')
+
           // We know this authentication happened from the Login view, so we can send the user directly to the collection page
           // We don't have to worry about the isLoading flag here since it is already set to true
           this.$router.replace({ name: 'collection' })

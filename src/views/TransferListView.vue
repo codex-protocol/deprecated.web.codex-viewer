@@ -56,12 +56,6 @@ export default {
     RecordTransferOutgoingListItem,
   },
 
-  data() {
-    return {
-      records: [],
-    }
-  },
-
   mounted() {
     EventBus.$on('socket:codex-record:address-approved:owner', this.addOutgoingRecordHandler)
     EventBus.$on('socket:codex-record:address-approved:approved', this.addIncomingRecordHandler)
