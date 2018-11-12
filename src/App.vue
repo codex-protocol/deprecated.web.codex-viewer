@@ -124,7 +124,7 @@ export default {
 
   computed: {
     ...mapGetters('auth', ['isAuthenticated']),
-    ...mapState('app', ['isLoaded', 'postLoginDestination']),
+    ...mapState('app', ['isLoaded', 'postLoginDestination', 'giveaway']),
     ...mapState('auth', ['user', 'authToken']),
 
     hideSideBar() {
@@ -164,8 +164,10 @@ export default {
 
           return this.$store.dispatch('auth/LOGIN_FROM_CACHED_TOKEN')
             .then(() => {
-            // Start fetching user data
-              this.$store.dispatch('records/GET_USER_DATA')
+              // Start fetching app & user data that is dependent on authentication
+              // No need to block on these async actions
+              this.$store.dispatch('records/FETCH_USER_DATA')
+              this.$store.dispatch('app/FETCH_ELIGIBLE_GIVEAWAY')
 
               if (!this.$route.meta.ifAuthenticatedRedirect && !this.postLoginDestination) {
                 return null
@@ -189,11 +191,10 @@ export default {
     },
 
     addUserRecord(codexRecord) {
-
       // if this was the record created by the giveaway, hide the giveaway card
-      // if (this.giveaway && codexRecordToAdd.metadata.description === this.giveaway.editionDetails.description) {
-      //   this.giveaway = null
-      // }
+      if (this.giveaway && codexRecord.metadata.description === this.giveaway.editionDetails.description) {
+        this.$store.commit('app/SET_GIVEAWAY', null)
+      }
 
       this.$store.commit('records/ADD_RECORD_TO_LIST', {
         listName: 'userRecords',

@@ -6,7 +6,7 @@ import Transfer from '../../../util/api/transfer'
 const logger = debug('app:store:records:actions')
 
 export default {
-  GET_USER_DATA({ dispatch }) {
+  FETCH_USER_DATA({ dispatch }) {
 
     // Don't block on any of these async actions
     // The UI will fill in as they are populated
@@ -57,8 +57,18 @@ export default {
       })
   },
 
-  GET_RECORD({ commit }, tokenId) {
+  GET_RECORD({ commit, state }, tokenId) {
     logger('GET_RECORD action being executed', tokenId)
+
+    // First, check to see if we've cached this in the userRecords array
+    const existingRecord = state.userRecords.find((userRecord) => {
+      return userRecord.tokenId === tokenId
+    })
+
+    if (existingRecord) {
+      commit('SET_ACTIVE_RECORD', existingRecord)
+      return null
+    }
 
     return Record.getRecord(tokenId)
       .then((record) => {

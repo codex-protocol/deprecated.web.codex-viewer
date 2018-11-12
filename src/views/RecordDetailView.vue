@@ -102,7 +102,7 @@ export default {
   },
 
   created() {
-    // We always fetch the latest record when looking at the details page
+    // This will try to pull one of the cached records, otherwise it will fetch it from the API
     this.$store.dispatch('records/GET_RECORD', this.recordId)
   },
 

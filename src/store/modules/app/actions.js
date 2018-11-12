@@ -2,6 +2,7 @@ import axios from 'axios'
 import debug from 'debug'
 
 import router from '../../../router'
+import Giveaway from '../../../util/api/giveaway'
 
 const logger = debug('app:store:app:actions')
 
@@ -71,6 +72,14 @@ export default {
       })
       .catch((error) => {
         logger('Error retrieving the Verified Users address map, ignoring.', error)
+      })
+  },
+
+  FETCH_ELIGIBLE_GIVEAWAY({ commit }) {
+    Giveaway.getAllEligibleGiveaways()
+      .then((giveaways) => {
+        // For now, just select the first giveaway that is available
+        commit('SET_GIVEAWAY', giveaways[0])
       })
   },
 }

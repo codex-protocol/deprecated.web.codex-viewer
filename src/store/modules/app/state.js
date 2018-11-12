@@ -7,5 +7,7 @@ export default () => {
     apiErrorMessage: null,
     isLoaded: false,
     postLoginDestination: null,
+    giveaway: null,
+    galleries: [],
   }
 }

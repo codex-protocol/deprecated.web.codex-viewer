@@ -55,4 +55,10 @@ export default {
 
     currentState.postLoginDestination = destination
   },
+
+  SET_GIVEAWAY(currentState, giveaway) {
+    logMutation('SET_GIVEAWAY', giveaway)
+
+    currentState.giveaway = giveaway
+  },
 }

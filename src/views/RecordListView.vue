@@ -78,17 +78,8 @@ export default {
     CreateRecordModal,
   },
 
-  data() {
-    return {
-      giveaway: null,
-    }
-  },
-
-  created() {
-    this.getGiveaways()
-  },
-
   computed: {
+    ...mapState('app', ['giveaway']),
     ...mapState('auth', ['hideSetup']),
     ...mapState('records', ['userRecords']),
     ...mapGetters('auth', ['isAdmin', 'isSimpleUser']),
@@ -103,14 +94,6 @@ export default {
   },
 
   methods: {
-    getGiveaways() {
-      Giveaway.getAllEligibleGiveaways()
-        .then((giveaways) => {
-          // For now, just select the first giveaway that is available
-          this.giveaway = giveaways[0]
-        })
-    },
-
     createGiveaway() {
       Giveaway.createNewGiveaway()
         .catch((error) => {
