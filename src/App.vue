@@ -96,53 +96,30 @@ export default {
       this.$store.dispatch('auth/FETCH_APPROVAL_STATUSES')
     })
 
-    EventBus.$on('socket:codex-record:created', this.addTransferredRecordHandler)
-    EventBus.$on('socket:codex-record:destroyed', this.removeTransferredRecordHandler)
-    EventBus.$on('socket:codex-record:transferred:new-owner', this.addTransferredRecordHandler)
-    EventBus.$on('socket:codex-record:transferred:old-owner', this.removeTransferredRecordHandler)
+    EventBus.$on('socket:codex-record:created', this.addUserRecord)
+    EventBus.$on('socket:codex-record:destroyed', this.removeUserRecord)
+    EventBus.$on('socket:codex-record:transferred:new-owner', this.addUserRecord)
+    EventBus.$on('socket:codex-record:transferred:old-owner', this.removeUserRecord)
+
+    EventBus.$on('socket:codex-record:address-approved:owner', this.addOutgoingTransfer)
+    EventBus.$on('socket:codex-record:address-approved:approved', this.addIncomingTransfer)
   },
 
   mounted() {
-    this.$store.dispatch('app/HANDLE_QUERY_PARAMS')
-      .then(() => {
-        if (!this.authToken) {
-          return null
-        }
-
-        return this.$store.dispatch('auth/LOGIN_FROM_CACHED_TOKEN')
-          .then(() => {
-            // Start fetching user data
-            this.$store.dispatch('records/GET_USER_DATA')
-
-            if (!this.$route.meta.ifAuthenticatedRedirect && !this.postLoginDestination) {
-              return null
-            }
-
-            return new Promise((resolve, reject) => {
-              if (this.postLoginDestination) {
-                this.$router.replace({ path: this.postLoginDestination }, resolve, reject)
-              } else {
-                this.$router.replace({ name: 'collection' }, resolve, reject)
-              }
-            })
-          })
-      })
-      .catch(() => {
-        // Do nothing, any caught errors will be rendered on the page
-      })
-      .finally(() => {
-        this.$store.commit('app/SET_IS_LOADED', true)
-      })
+    this.initializeApp()
   },
 
   beforeDestroy() {
     EventBus.$off('socket:codex-coin:transferred')
     EventBus.$off('socket:codex-coin:registry-contract-approved')
 
-    EventBus.$off('socket:codex-record:created', this.addTransferredRecordHandler)
-    EventBus.$off('socket:codex-record:destroyed', this.removeTransferredRecordHandler)
-    EventBus.$off('socket:codex-record:transferred:new-owner', this.addTransferredRecordHandler)
-    EventBus.$off('socket:codex-record:transferred:old-owner', this.removeTransferredRecordHandler)
+    EventBus.$off('socket:codex-record:created', this.addUserRecord)
+    EventBus.$off('socket:codex-record:destroyed', this.removeUserRecord)
+    EventBus.$off('socket:codex-record:transferred:new-owner', this.addUserRecord)
+    EventBus.$off('socket:codex-record:transferred:old-owner', this.removeUserRecord)
+
+    EventBus.$off('socket:codex-record:address-approved:owner', this.addOutgoingTransfer)
+    EventBus.$off('socket:codex-record:address-approved:approved', this.addIncomingTransfer)
   },
 
   computed: {
@@ -178,8 +155,40 @@ export default {
       )
     },
 
-    // add the record to the collection if it was just transferred
-    addTransferredRecordHandler(codexRecordToAdd) {
+    initializeApp() {
+      this.$store.dispatch('app/HANDLE_QUERY_PARAMS')
+        .then(() => {
+          if (!this.authToken) {
+            return null
+          }
+
+          return this.$store.dispatch('auth/LOGIN_FROM_CACHED_TOKEN')
+            .then(() => {
+            // Start fetching user data
+              this.$store.dispatch('records/GET_USER_DATA')
+
+              if (!this.$route.meta.ifAuthenticatedRedirect && !this.postLoginDestination) {
+                return null
+              }
+
+              return new Promise((resolve, reject) => {
+                if (this.postLoginDestination) {
+                  this.$router.replace({ path: this.postLoginDestination }, resolve, reject)
+                } else {
+                  this.$router.replace({ name: 'collection' }, resolve, reject)
+                }
+              })
+            })
+        })
+        .catch(() => {
+        // Do nothing, any caught errors will be rendered on the page
+        })
+        .finally(() => {
+          this.$store.commit('app/SET_IS_LOADED', true)
+        })
+    },
+
+    addUserRecord(codexRecord) {
 
       // if this was the record created by the giveaway, hide the giveaway card
       // if (this.giveaway && codexRecordToAdd.metadata.description === this.giveaway.editionDetails.description) {
@@ -188,15 +197,33 @@ export default {
 
       this.$store.commit('records/ADD_RECORD_TO_LIST', {
         listName: 'userRecords',
-        record: codexRecordToAdd,
+        record: codexRecord,
       })
     },
 
-    // remove the record from the collection if it was just transferred
-    removeTransferredRecordHandler(codexRecordToRemove) {
+    addIncomingTransfer(codexRecord) {
+      this.$store.commit('records/ADD_RECORD_TO_LIST', {
+        listName: 'incomingTransfers',
+        record: codexRecord,
+      })
+    },
+
+    addOutgoingTransfer(codexRecord) {
+      this.$store.commit('records/ADD_RECORD_TO_LIST', {
+        listName: 'outgoingTransfers',
+        record: codexRecord,
+      })
+    },
+
+    removeUserRecord(codexRecord) {
       this.$store.commit('records/REMOVE_RECORD_FROM_LIST', {
         listName: 'userRecords',
-        record: codexRecordToRemove,
+        record: codexRecord,
+      })
+
+      this.$store.commit('records/REMOVE_RECORD_FROM_LIST', {
+        listName: 'outgoingTransfers',
+        record: codexRecord,
       })
     },
 

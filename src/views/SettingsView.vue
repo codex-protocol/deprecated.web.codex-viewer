@@ -17,7 +17,7 @@
           <b-tab title="Collection">
             <div
               class="record-list"
-              v-if="filteredUserRecords.length"
+              v-if="userRecords.length > 0"
             >
               <b-container class="record-settings-row">
                 <b-row>
@@ -28,7 +28,7 @@
                 </b-row>
               </b-container>
               <RecordPrivacySettingsRowItem
-                v-for="record in filteredUserRecords"
+                v-for="record in userRecords"
                 :codex-record="record"
                 :key="record.tokenId"
               />
@@ -44,10 +44,7 @@
 </template>
 
 <script>
-import {
-  mapState,
-  mapGetters,
-} from 'vuex'
+import { mapState } from 'vuex'
 
 import config from '../util/config'
 import { formatDate } from '../util/dateHelpers'
@@ -105,7 +102,7 @@ export default {
 
   computed: {
     ...mapState('auth', ['user']),
-    ...mapGetters('records', ['filteredUserRecords']),
+    ...mapState('records', ['userRecords']),
   },
 }
 </script>

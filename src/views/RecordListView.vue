@@ -27,10 +27,10 @@
           </template>
 
           <!-- If there are no marketing cards displayed the user has no records, show a 'how-to' card -->
-          <CreateRecordCard v-if="!giveaway && filteredUserRecords.length === 0" />
+          <CreateRecordCard v-if="!giveaway && userRecords.length === 0" />
           <template v-else>
             <RecordListItem
-              v-for="record in filteredUserRecords"
+              v-for="record in userRecords"
               :codex-record="record"
               :key="record.tokenId"
             />
@@ -90,8 +90,8 @@ export default {
 
   computed: {
     ...mapState('auth', ['hideSetup']),
+    ...mapState('records', ['userRecords']),
     ...mapGetters('auth', ['isAdmin', 'isSimpleUser']),
-    ...mapGetters('records', ['filteredUserRecords']),
 
     showCreateGiveawayButton() {
       return this.isAdmin && !this.giveaway
