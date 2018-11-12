@@ -10,13 +10,13 @@ export default {
 
     // Don't block on any of these async actions
     // The UI will fill in as they are populated
-    dispatch('GET_USER_RECORDS')
-    dispatch('GET_INCOMING_TRANSFERS')
-    dispatch('GET_OUTGOING_TRANSFERS')
+    dispatch('FETCH_USER_RECORDS')
+    dispatch('FETCH_INCOMING_TRANSFERS')
+    dispatch('FETCH_OUTGOING_TRANSFERS')
   },
 
-  GET_USER_RECORDS({ commit }) {
-    logger('GET_USER_RECORDS action being executed')
+  FETCH_USER_RECORDS({ commit }) {
+    logger('FETCH_USER_RECORDS action being executed')
 
     return Record.getUserRecords()
       .then((records) => {
@@ -25,13 +25,10 @@ export default {
           records,
         })
       })
-      // .catch((error) => {
-      //   EventBus.$emit('toast:error', `Could not get collection: ${error.message}`)
-      // })
   },
 
-  GET_INCOMING_TRANSFERS({ commit }) {
-    logger('GET_INCOMING_TRANSFERS action being executed')
+  FETCH_INCOMING_TRANSFERS({ commit }) {
+    logger('FETCH_INCOMING_TRANSFERS action being executed')
 
     return Transfer.getIncomingTransfers()
       .then((records) => {
@@ -40,13 +37,10 @@ export default {
           records,
         })
       })
-      // .catch((error) => {
-      //   EventBus.$emit('toast:error', `Could not fetch ${transferDirection} transfers: ${error.message}`)
-      // })
   },
 
-  GET_OUTGOING_TRANSFERS({ commit }) {
-    logger('GET_OUTGOING_TRANSFERS action being executed')
+  FETCH_OUTGOING_TRANSFERS({ commit }) {
+    logger('FETCH_OUTGOING_TRANSFERS action being executed')
 
     return Transfer.getOutgoingTransfers()
       .then((records) => {
@@ -57,8 +51,8 @@ export default {
       })
   },
 
-  GET_RECORD({ commit, state }, tokenId) {
-    logger('GET_RECORD action being executed', tokenId)
+  FETCH_RECORD({ commit, state }, tokenId) {
+    logger('FETCH_RECORD action being executed', tokenId)
 
     // First, check to see if we've cached this in the userRecords array
     const existingRecord = state.userRecords.find((userRecord) => {
