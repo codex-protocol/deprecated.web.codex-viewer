@@ -70,7 +70,6 @@
 <script>
 import { mapState } from 'vuex'
 
-import Record from '../util/api/record'
 import EventBus from '../util/eventBus'
 import { ZeroAddress } from '../util/constants/web3'
 import contractHelper from '../util/contractHelper'
@@ -98,27 +97,26 @@ export default {
   data() {
     return {
       error: null,
-      codexRecord: null,
       showDetails: false,
     }
   },
 
   created() {
-    this.getRecord()
-  },
-
-  mounted() {
-    EventBus.$on('socket:codex-record:modified', this.recordModifiedHandler)
-    EventBus.$on('socket:codex-record:destroyed', this.recordDestroyedHandler)
+    // We always fetch the latest record when looking at the details page
+    this.$store.dispatch('records/GET_RECORD', this.recordId)
   },
 
   beforeDestroy() {
-    EventBus.$off('socket:codex-record:modified', this.recordModifiedHandler)
-    EventBus.$off('socket:codex-record:destroyed', this.recordDestroyedHandler)
+    this.$store.commit('records/SET_ACTIVE_RECORD', null)
   },
 
   computed: {
     ...mapState('auth', ['user']),
+    ...mapState('records', {
+      codexRecord: (state) => {
+        return state.activeRecord
+      },
+    }),
 
     isOwner() {
       return (
@@ -145,41 +143,10 @@ export default {
         this.codexRecord.approvedAddress !== ZeroAddress
     },
   },
-  watch: {
-    $route: 'getRecord',
-  },
 
   methods: {
-    recordModifiedHandler(updatedCodexRecord) {
-      if (updatedCodexRecord.tokenId !== this.recordId) {
-        return
-      }
-      this.codexRecord = updatedCodexRecord
-    },
-
-    recordDestroyedHandler(destroyedCodexRecord) {
-      if (destroyedCodexRecord.tokenId !== this.recordId) {
-        return
-      }
-      // if they're viewing a record that has just been destroyed, send them
-      //  back to their collection
-      this.$router.replace({ name: 'collection' })
-    },
-
-    onSettingsUpdate(newCodexRecord) {
-      this.codexRecord = newCodexRecord
-    },
-
-    getRecord() {
-      Record.getRecord(this.recordId)
-        .then((record) => {
-          this.codexRecord = record
-        })
-        .catch((error) => {
-          EventBus.$emit('toast:error', `Could not get Record: ${error.message}`)
-          this.codexRecord = null
-          this.error = error
-        })
+    onSettingsUpdate(codexRecord) {
+      this.$store.commit('records/UPDATE_RECORD_IN_LISTS', codexRecord)
     },
 
     acceptTransfer() {

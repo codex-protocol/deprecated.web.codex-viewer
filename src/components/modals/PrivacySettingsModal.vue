@@ -261,7 +261,10 @@ export default {
       Record.updateRecord(this.codexRecord.tokenId, dataToUpdate)
         .then((result) => {
           this.modalVisible = false
-          if (typeof this.onUpdated === 'function') this.onUpdated(result)
+
+          if (typeof this.onUpdated === 'function') {
+            this.onUpdated(result)
+          }
         })
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not update Record: ${error.message}`)

@@ -14,9 +14,9 @@
         <img :src="navItem.icon">{{ navItem.text }}
         <b-badge
           variant="danger"
-          v-if="navItem.text === 'Transfers' && numberOfIncomingTransfers > 0"
+          v-if="navItem.text === 'Transfers' && incomingTransfers.length > 0"
         >
-          {{ numberOfIncomingTransfers }}
+          {{ incomingTransfers.length }}
         </b-badge>
       </b-link>
       <hr />
@@ -37,8 +37,6 @@ import {
 import DisplayName from '../util/DisplayName'
 import PrepaidTransactionsControl from '../PrepaidTransactionsControl'
 
-import Transfer from '../../util/api/transfer'
-import EventBus from '../../util/eventBus'
 import config from '../../util/config'
 
 import iconHome from '../../assets/icons/home.svg'
@@ -63,28 +61,14 @@ export default {
 
   data() {
     return {
-      numberOfIncomingTransfers: 0,
       showFaucet: config.showFaucet,
       showCodexGallery: config.showCodexGalleryInSideBar,
     }
   },
 
-  mounted() {
-    if (this.isAuthenticated) {
-      this.updateIncomingTransfersCount()
-    }
-
-    EventBus.$on('socket:codex-record:address-approved:approved', this.updateIncomingTransfersCount)
-    EventBus.$on('socket:codex-record:transferred:new-owner', this.updateIncomingTransfersCount)
-  },
-
-  beforeDestroy() {
-    EventBus.$off('socket:codex-record:address-approved:approved', this.updateIncomingTransfersCount)
-    EventBus.$off('socket:codex-record:transferred:new-owner', this.updateIncomingTransfersCount)
-  },
-
   computed: {
     ...mapState('auth', ['user']),
+    ...mapState('records', ['incomingTransfers']),
     ...mapGetters('auth', ['isAuthenticated']),
 
     showManageTokensPage() {
@@ -161,24 +145,7 @@ export default {
   methods: {
     logout() {
       this.hideNav()
-      EventBus.$emit('events:click-logout-button', this)
       this.$store.dispatch('auth/LOGOUT_USER')
-    },
-
-    // @TODO: instead of requesting these independently of
-    //  src/views/TransferListView.vue, the list of transfers should really be
-    //  retrieved & cached in vuex (or Resource pattern)
-    //
-    // @NOTE: this is also not responsive when a user ignores a transfer (until
-    //  they refresh the page of course), and the TODO above would address that
-    updateIncomingTransfersCount() {
-      return Transfer.getIncomingTransfers()
-        .then((transfers) => {
-          this.numberOfIncomingTransfers = transfers.length
-        })
-        .catch(() => {
-          // @NOTE: This is a non-essential action, so prevent any errors from bubbling further
-        })
     },
   },
 }

@@ -3,5 +3,6 @@ export default () => {
     userRecords: [],
     incomingTransfers: [],
     outgoingTransfers: [],
+    activeRecord: null,
   }
 }

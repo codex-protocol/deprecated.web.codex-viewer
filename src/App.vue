@@ -98,6 +98,7 @@ export default {
 
     EventBus.$on('socket:codex-record:created', this.addUserRecord)
     EventBus.$on('socket:codex-record:destroyed', this.removeUserRecord)
+    EventBus.$on('socket:codex-record:modified', this.updateUserRecord)
     EventBus.$on('socket:codex-record:transferred:new-owner', this.addUserRecord)
     EventBus.$on('socket:codex-record:transferred:old-owner', this.removeUserRecord)
 
@@ -115,6 +116,7 @@ export default {
 
     EventBus.$off('socket:codex-record:created', this.addUserRecord)
     EventBus.$off('socket:codex-record:destroyed', this.removeUserRecord)
+    EventBus.$off('socket:codex-record:modified', this.updateUserRecord)
     EventBus.$off('socket:codex-record:transferred:new-owner', this.addUserRecord)
     EventBus.$off('socket:codex-record:transferred:old-owner', this.removeUserRecord)
 
@@ -213,6 +215,10 @@ export default {
         listName: 'outgoingTransfers',
         record: codexRecord,
       })
+    },
+
+    updateUserRecord(codexRecord) {
+      this.$store.commit('records/UPDATE_RECORD_IN_LISTS', codexRecord)
     },
 
     removeUserRecord(codexRecord) {
