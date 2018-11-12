@@ -61,4 +61,10 @@ export default {
 
     currentState.giveaway = giveaway
   },
+
+  SET_GALLERIES(currentState, galleries) {
+    logMutation('SET_GALLERIES', galleries)
+
+    currentState.galleries = galleries || []
+  },
 }

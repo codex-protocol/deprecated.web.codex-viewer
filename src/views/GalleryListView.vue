@@ -35,8 +35,7 @@
 </template>
 
 <script>
-import EventBus from '../util/eventBus'
-import Gallery from '../util/api/gallery'
+import { mapState } from 'vuex'
 
 import AppHeader from '../components/core/AppHeader'
 import GalleryListItem from '../components/GalleryListItem'
@@ -49,26 +48,15 @@ export default {
     GalleryListItem,
   },
 
-  data() {
-    return {
-      galleries: [],
+  created() {
+    // Only fetch galleries once per app-load
+    if (this.galleries.length === 0) {
+      this.$store.dispatch('app/FETCH_GALLERIES')
     }
   },
 
-  created() {
-    this.getGalleries()
-  },
-
-  methods: {
-    getGalleries() {
-      Gallery.getGalleries()
-        .then((galleries) => {
-          this.galleries = galleries
-        })
-        .catch((error) => {
-          EventBus.$emit('toast:error', `Could not get galleries: ${error.message}`)
-        })
-    },
+  computed: {
+    ...mapState('app', ['galleries']),
   },
 }
 </script>

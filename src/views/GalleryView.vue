@@ -73,6 +73,7 @@ export default {
   },
 
   created() {
+    // @TODO: Add caching for individual galleries?
     this.getGallery()
   },
 
