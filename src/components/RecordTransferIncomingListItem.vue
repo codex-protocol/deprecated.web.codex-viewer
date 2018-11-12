@@ -28,7 +28,12 @@ import missingImageHelper from '../util/missingImageHelper'
 export default {
   name: 'RecordTransferIncomingListItem',
 
-  props: ['codexRecord'],
+  props: {
+    codexRecord: {
+      type: Object,
+      required: true,
+    },
+  },
 
   data() {
     return {
@@ -45,6 +50,15 @@ export default {
 
   beforeDestroy() {
     EventBus.$off('socket:codex-record:transferred:new-owner', this.recordTransferredHandler)
+
+    // If the transfer was accepted, remove it from the incoming transfers list
+    //  We do this only after leaving the page so that the overlay can still be shown
+    if (this.transferAccepted) {
+      this.$store.commit('records/REMOVE_RECORD_FROM_LIST', {
+        listName: 'incomingTransfers',
+        record: this.codexRecord,
+      })
+    }
   },
 
   computed: {
@@ -61,6 +75,7 @@ export default {
       if (this.codexRecord.tokenId !== codexRecord.tokenId) {
         return
       }
+
       this.transferAccepted = true
       this.isLoading = false
     },
@@ -73,13 +88,10 @@ export default {
       ]
 
       this.isLoading = true
-      EventBus.$emit('events:click-accept-transfer', this)
 
       return contractHelper('CodexRecord', 'safeTransferFrom', input, this.$store)
         .then(() => {
-
           EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
-          EventBus.$emit('events:accept-transfer', this)
 
           // @NOTE: leave the in the loading state so that they can't click the
           //  buttons while the transaction is waiting to be mined
