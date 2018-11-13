@@ -21,9 +21,15 @@ import missingImageHelper from '../util/missingImageHelper'
 
 export default {
   name: 'RecordListItem',
-  props: ['codexRecord'],
-  data() {
 
+  props: {
+    codexRecord: {
+      type: Object,
+      required: true,
+    },
+  },
+
+  data() {
     if (!this.codexRecord.metadata) {
       Raven.captureMessage('found Record with no metadata', this.codexRecord, {
         level: 'warning',
