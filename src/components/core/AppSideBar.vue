@@ -14,9 +14,9 @@
         <img :src="navItem.icon">{{ navItem.text }}
         <b-badge
           variant="danger"
-          v-if="navItem.text === 'Transfers' && filteredIncomingTransfers.length > 0"
+          v-if="navItem.text === 'Transfers' && incomingTransfers.length > 0"
         >
-          {{ filteredIncomingTransfers.length }}
+          {{ incomingTransfers.length }}
         </b-badge>
       </b-link>
       <hr />
@@ -68,8 +68,12 @@ export default {
 
   computed: {
     ...mapState('auth', ['user']),
+    ...mapState('records', {
+      incomingTransfers: (state) => {
+        return state.lists.incomingTransfers
+      },
+    }),
     ...mapGetters('auth', ['isAuthenticated']),
-    ...mapGetters('records', ['filteredIncomingTransfers']),
 
     showManageTokensPage() {
       return this.user && this.user.type === 'savvy' && config.showManageTokensPage

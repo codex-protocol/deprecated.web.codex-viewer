@@ -51,7 +51,7 @@ export default {
   computed: {
     records() {
       return this.transferDirection === 'incoming'
-        ? this.$store.getters['records/filteredIncomingTransfers']
+        ? this.$store.state.records.lists.incomingTransfers
         : this.$store.state.records.lists.outgoingTransfers
     },
 
