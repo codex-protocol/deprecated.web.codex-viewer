@@ -56,7 +56,10 @@ export default {
 
     // Strip the query string by navigating to route.path (as opposed
     //  to route.fullPath, which preserves the query string)
-    router.replace({ path: rootState.route.path })
+    // router.replace({ path: rootState.route.path })
+
+    // @TODO: Strip the query string
+    router.replace({ path: window.location.hash.substr(1) })
   },
 
   FETCH_VERIFIED_USERS({ commit }) {
