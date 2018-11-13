@@ -81,7 +81,11 @@ export default {
   computed: {
     ...mapState('app', ['giveaway']),
     ...mapState('auth', ['hideSetup']),
-    ...mapState('records', ['userRecords']),
+    ...mapState('records', {
+      userRecords: (state) => {
+        return state.lists.userRecords
+      },
+    }),
     ...mapGetters('auth', ['isAdmin', 'isSimpleUser']),
 
     showCreateGiveawayButton() {

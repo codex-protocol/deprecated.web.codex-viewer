@@ -26,8 +26,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-
 import AppHeader from '../components/core/AppHeader'
 import TransferListSubheader from '../components/TransferListSubheader'
 import RecordTransferIncomingListItem from '../components/RecordTransferIncomingListItem'
@@ -51,18 +49,16 @@ export default {
   },
 
   computed: {
-    ...mapState('records', ['incomingTransfers', 'outgoingTransfers']),
+    records() {
+      return this.transferDirection === 'incoming'
+        ? this.$store.getters['records/filteredIncomingTransfers']
+        : this.$store.state.records.lists.outgoingTransfers
+    },
 
     listItemComponent() {
       return this.transferDirection === 'incoming'
         ? RecordTransferIncomingListItem
         : RecordTransferOutgoingListItem
-    },
-
-    records() {
-      return this.transferDirection === 'incoming'
-        ? this.incomingTransfers
-        : this.outgoingTransfers
     },
   },
 }

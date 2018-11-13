@@ -102,7 +102,11 @@ export default {
 
   computed: {
     ...mapState('auth', ['user']),
-    ...mapState('records', ['userRecords']),
+    ...mapState('records', {
+      userRecords: (state) => {
+        return state.lists.userRecords
+      },
+    }),
   },
 }
 </script>

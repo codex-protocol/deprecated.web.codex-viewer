@@ -55,7 +55,7 @@ export default {
     logger('FETCH_RECORD action being executed', tokenId)
 
     // First, check to see if we've cached this in the userRecords array
-    const existingRecord = state.userRecords.find((userRecord) => {
+    const existingRecord = state.lists.userRecords.find((userRecord) => {
       return userRecord.tokenId === tokenId
     })
 
@@ -76,6 +76,18 @@ export default {
     return Record.updateRecord(codexRecord.tokenId, dataToUpdate)
       .then((updatedRecord) => {
         commit('UPDATE_RECORD_IN_LISTS', updatedRecord)
+      })
+  },
+
+  IGNORE_RECORD({ commit }, codexRecord) {
+    Transfer.ignoreIncomingTransfer(codexRecord.tokenId)
+      .then((record) => {
+        commit('UPDATE_RECORD_IN_LISTS', record)
+
+        commit('REMOVE_RECORD_FROM_LIST', {
+          listName: 'incomingTransfers',
+          record,
+        })
       })
   },
 }

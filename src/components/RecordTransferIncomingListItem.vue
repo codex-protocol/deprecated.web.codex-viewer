@@ -1,6 +1,5 @@
 <template>
   <b-card
-    v-if="!codexRecord.isIgnored"
     :img-src="missingImageHelper.getMainImageUri(codexRecord.metadata)"
     img-top
   >
@@ -20,7 +19,6 @@
 <script>
 import { mapState } from 'vuex'
 
-import Transfer from '../util/api/transfer'
 import EventBus from '../util/eventBus'
 import contractHelper from '../util/contractHelper'
 import missingImageHelper from '../util/missingImageHelper'
@@ -109,12 +107,10 @@ export default {
     },
 
     ignoreTransfer() {
-
       this.isLoading = true
 
-      Transfer.ignoreIncomingTransfer(this.codexRecord.tokenId)
-        .then((record) => {
-          this.codexRecord.isIgnored = record.isIgnored
+      this.$store.dispatch('records/IGNORE_RECORD', this.codexRecord)
+        .then(() => {
           EventBus.$emit('toast:success', 'Transfer ignored successfully!', 5000)
         })
         .catch((error) => {

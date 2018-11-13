@@ -12,9 +12,9 @@ export default {
 
     // Filter out any records that don't have metadata attached to them.
     //  These are records that were created by other providers.
-    currentState[listName] = records.filter((record) => {
+    currentState.lists[listName] = records.filter((record) => {
       return !!record.metadata
-    }) || []
+    })
   },
 
   ADD_RECORD_TO_LIST(currentState, { listName, record }) {
@@ -26,19 +26,19 @@ export default {
       return
     }
 
-    const exists = currentState[listName].find((existingRecord) => {
+    const exists = currentState.lists[listName].find((existingRecord) => {
       return existingRecord.tokenId === record.tokenId
     })
 
     if (!exists) {
-      currentState[listName].push(record)
+      currentState.lists[listName].push(record)
     }
   },
 
   REMOVE_RECORD_FROM_LIST(currentState, { listName, record }) {
     logMutation('REMOVE_RECORD_FROM_LIST', listName, record)
 
-    currentState[listName] = currentState[listName].filter((codexRecord) => {
+    currentState.lists[listName] = currentState.lists[listName].filter((codexRecord) => {
       return codexRecord.tokenId !== record.tokenId
     })
   },
@@ -58,24 +58,15 @@ export default {
       return
     }
 
-    const listNames = [
-      'userRecords',
-      'incomingTransfers',
-      'outgoingTransfers',
-    ]
-
     // Update the record in each list that we've cached
-    listNames.forEach((listName) => {
-      let index = -1
-      for (let i = 0; i < currentState[listName].length; i++) {
-        if (currentState[listName][i].tokenId === record.tokenId) {
-          index = i
-          break
-        }
-      }
+    Object.keys(currentState.lists).forEach((listName) => {
+      const listRecords = currentState.lists[listName]
+      const index = listRecords.findIndex((listRecord) => {
+        return listRecord.tokenId === record.tokenId
+      })
 
-      if (index > -1) {
-        Vue.set(currentState[listName], index, record)
+      if (index !== -1) {
+        Vue.set(listRecords, index, record)
       }
     })
 

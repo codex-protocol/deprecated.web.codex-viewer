@@ -1,8 +1,10 @@
 export default () => {
   return {
-    userRecords: [],
-    incomingTransfers: [],
-    outgoingTransfers: [],
+    lists: {
+      userRecords: [],
+      incomingTransfers: [],
+      outgoingTransfers: [],
+    },
     activeRecord: null,
   }
 }
