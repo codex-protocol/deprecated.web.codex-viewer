@@ -95,46 +95,36 @@ export default {
     EventBus.$on('socket:codex-coin:registry-contract-approved', () => {
       this.$store.dispatch('auth/FETCH_APPROVAL_STATUSES')
     })
+
+    EventBus.$on('socket:codex-record:created', this.addUserRecord)
+    EventBus.$on('socket:codex-record:modified', this.updateUserRecord)
+    EventBus.$on('socket:codex-record:transferred:new-owner', this.addUserRecord)
+    EventBus.$on('socket:codex-record:transferred:old-owner', this.removeUserRecord)
+
+    EventBus.$on('socket:codex-record:address-approved:owner', this.addOutgoingTransfer)
+    EventBus.$on('socket:codex-record:address-approved:approved', this.addIncomingTransfer)
   },
 
   mounted() {
-    this.$store.dispatch('app/HANDLE_QUERY_PARAMS')
-      .then(() => {
-        if (!this.authToken) {
-          return null
-        }
-
-        return this.$store.dispatch('auth/LOGIN_FROM_CACHED_TOKEN')
-          .then(() => {
-            if (!this.$route.meta.ifAuthenticatedRedirect && !this.postLoginDestination) {
-              return null
-            }
-
-            return new Promise((resolve, reject) => {
-              if (this.postLoginDestination) {
-                this.$router.replace({ path: this.postLoginDestination }, resolve, reject)
-              } else {
-                this.$router.replace({ name: 'collection' }, resolve, reject)
-              }
-            })
-          })
-      })
-      .catch(() => {
-        // Do nothing, any caught errors will be rendered on the page
-      })
-      .finally(() => {
-        this.$store.commit('app/SET_IS_LOADED', true)
-      })
+    this.initializeApp()
   },
 
   beforeDestroy() {
     EventBus.$off('socket:codex-coin:transferred')
     EventBus.$off('socket:codex-coin:registry-contract-approved')
+
+    EventBus.$off('socket:codex-record:created', this.addUserRecord)
+    EventBus.$off('socket:codex-record:modified', this.updateUserRecord)
+    EventBus.$off('socket:codex-record:transferred:new-owner', this.addUserRecord)
+    EventBus.$off('socket:codex-record:transferred:old-owner', this.removeUserRecord)
+
+    EventBus.$off('socket:codex-record:address-approved:owner', this.addOutgoingTransfer)
+    EventBus.$off('socket:codex-record:address-approved:approved', this.addIncomingTransfer)
   },
 
   computed: {
     ...mapGetters('auth', ['isAuthenticated']),
-    ...mapState('app', ['isLoaded', 'postLoginDestination']),
+    ...mapState('app', ['isLoaded', 'postLoginDestination', 'giveaway']),
     ...mapState('auth', ['user', 'authToken']),
 
     hideSideBar() {
@@ -163,6 +153,83 @@ export default {
         (response) => { return response }, // @NOTE: use a no-op here since we're only interested in intercepting errors
         authErrorHandler
       )
+    },
+
+    initializeApp() {
+      this.$store.dispatch('app/HANDLE_QUERY_PARAMS')
+        .then(() => {
+          if (!this.authToken) {
+            return null
+          }
+
+          return this.$store.dispatch('auth/LOGIN_FROM_CACHED_TOKEN')
+            .then(() => {
+              // Start fetching app & user data that is dependent on authentication
+              // No need to block on these async actions
+              this.$store.dispatch('records/FETCH_USER_DATA')
+              this.$store.dispatch('app/FETCH_ELIGIBLE_GIVEAWAY')
+
+              if (!this.$route.meta.ifAuthenticatedRedirect && !this.postLoginDestination) {
+                return null
+              }
+
+              return new Promise((resolve, reject) => {
+                if (this.postLoginDestination) {
+                  this.$router.replace({ path: this.postLoginDestination }, resolve, reject)
+                } else {
+                  this.$router.replace({ name: 'collection' }, resolve, reject)
+                }
+              })
+            })
+        })
+        .catch(() => {
+        // Do nothing, any caught errors will be rendered on the page
+        })
+        .finally(() => {
+          this.$store.commit('app/SET_IS_LOADED', true)
+        })
+    },
+
+    addUserRecord(codexRecord) {
+      // if this was the record created by the giveaway, hide the giveaway card
+      if (this.giveaway && codexRecord.metadata.description === this.giveaway.editionDetails.description) {
+        this.$store.commit('app/SET_GIVEAWAY', null)
+      }
+
+      this.$store.commit('records/ADD_RECORD_TO_LIST', {
+        listName: 'userRecords',
+        record: codexRecord,
+      })
+    },
+
+    addIncomingTransfer(codexRecord) {
+      this.$store.commit('records/ADD_RECORD_TO_LIST', {
+        listName: 'incomingTransfers',
+        record: codexRecord,
+      })
+    },
+
+    addOutgoingTransfer(codexRecord) {
+      this.$store.commit('records/ADD_RECORD_TO_LIST', {
+        listName: 'outgoingTransfers',
+        record: codexRecord,
+      })
+    },
+
+    updateUserRecord(codexRecord) {
+      this.$store.commit('records/UPDATE_RECORD_IN_LISTS', codexRecord)
+    },
+
+    removeUserRecord(codexRecord) {
+      this.$store.commit('records/REMOVE_RECORD_FROM_LIST', {
+        listName: 'userRecords',
+        record: codexRecord,
+      })
+
+      this.$store.commit('records/REMOVE_RECORD_FROM_LIST', {
+        listName: 'outgoingTransfers',
+        record: codexRecord,
+      })
     },
 
     useBackgroundImage() {

@@ -55,4 +55,16 @@ export default {
 
     currentState.postLoginDestination = destination
   },
+
+  SET_GIVEAWAY(currentState, giveaway) {
+    logMutation('SET_GIVEAWAY', giveaway)
+
+    currentState.giveaway = giveaway
+  },
+
+  SET_GALLERIES(currentState, galleries) {
+    logMutation('SET_GALLERIES', galleries)
+
+    currentState.galleries = galleries || []
+  },
 }

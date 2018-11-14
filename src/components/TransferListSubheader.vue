@@ -24,10 +24,11 @@
 <script>
 export default {
   name: 'TransferListSubheader',
-  props: ['transferDirection', 'fetchData'],
-  watch: {
-    transferDirection(newTransferDirection) {
-      this.fetchData(newTransferDirection)
+
+  props: {
+    transferDirection: {
+      type: String,
+      required: true,
     },
   },
 }

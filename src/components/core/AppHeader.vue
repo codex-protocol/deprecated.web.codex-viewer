@@ -10,7 +10,13 @@
 <script>
 export default {
   name: 'AppHeader',
-  props: ['title'],
+
+  props: {
+    title: {
+      type: String,
+      required: true,
+    },
+  },
 }
 </script>
 
