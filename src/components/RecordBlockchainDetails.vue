@@ -3,7 +3,7 @@
     <h4>Details</h4>
     <p>Current owner: <DisplayName :name="codexRecord.ownerAddress" /></p>
     <p>Approved owner: <DisplayName :name="codexRecord.approvedAddress" /></p>
-    <p>Last updated: {{ this.formatDate(codexRecord.updatedAt) }}</p>
+    <p>Last updated: {{ formatDate(codexRecord.updatedAt) }}</p>
     <h5>Metadata</h5>
     <p>Name hash: <DisplayName :name="codexRecord.nameHash" /></p>
     <p>Description hash: <DisplayName :name="codexRecord.descriptionHash" /></p>
@@ -19,10 +19,18 @@ import { formatDate } from '../util/dateHelpers'
 
 export default {
   name: 'RecordBlockchainDetails',
-  props: ['codexRecord'],
+
+  props: {
+    codexRecord: {
+      type: Object,
+      required: true,
+    },
+  },
+
   components: {
     DisplayName,
   },
+
   methods: {
     formatDate(date) {
       return formatDate(date)

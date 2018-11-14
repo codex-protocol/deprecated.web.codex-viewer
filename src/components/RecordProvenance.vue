@@ -25,7 +25,11 @@
       </div>
     </div>
     <div v-else>
-      <p>You must be logged in to view provenance.</p>
+      <!--
+        this would be an anomoly, since all records have at least one provenance
+        event (the minted event)
+      -->
+      <p>There is no provenance to display for this Codex Record.</p>
     </div>
     <b-modal
       ok-only

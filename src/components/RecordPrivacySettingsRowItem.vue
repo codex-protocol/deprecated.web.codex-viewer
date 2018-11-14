@@ -34,14 +34,18 @@
 <script>
 import { mapState } from 'vuex'
 
-import Record from '../util/api/record'
 import EventBus from '../util/eventBus'
 import missingImageHelper from '../util/missingImageHelper'
 
 export default {
   name: 'RecordPrivacySettingsRowItem',
 
-  props: ['codexRecord'],
+  props: {
+    codexRecord: {
+      type: Object,
+      required: true,
+    },
+  },
 
   data() {
     return {
@@ -74,6 +78,7 @@ export default {
       if (this.isPrivate) {
         this.isInGallery = false
       }
+
       return this.updateRecord()
     },
 
@@ -81,16 +86,18 @@ export default {
       if (this.isInGallery) {
         this.isPrivate = false
       }
+
       return this.updateRecord()
     },
 
     updateRecord() {
-      const dataToUpdate = {
-        isPrivate: this.isPrivate,
-        isInGallery: this.isInGallery,
-      }
-
-      return Record.updateRecord(this.codexRecord.tokenId, dataToUpdate)
+      this.$store.dispatch('records/UPDATE_RECORD', {
+        codexRecord: this.codexRecord,
+        dataToUpdate: {
+          isPrivate: this.isPrivate,
+          isInGallery: this.isInGallery,
+        },
+      })
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not update Record: ${error.message}`)
           this.reset()
