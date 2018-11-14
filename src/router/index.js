@@ -4,21 +4,19 @@ import Router from 'vue-router'
 import store from '../store'
 import config from '../util/config'
 
-// Always include LoginView in the main bundle
 import LoginView from '../views/LoginView'
-
-const ConfirmEmailView = () => { return import('../views/ConfirmEmailView') }
-const FeatureListView = () => { return import('../views/FeatureListView') }
-const TransferListView = () => { return import('../views/TransferListView') }
-const RecordListView = () => { return import('../views/RecordListView') }
-const RecordDetailView = () => { return import('../views/RecordDetailView') }
-const SettingsView = () => { return import('../views/SettingsView') }
-const ManageTokensView = () => { return import('../views/ManageTokensView') }
-const FaucetView = () => { return import('../views/FaucetView') }
-const GalleryView = () => { return import('../views/GalleryView') }
-const GalleryListView = () => { return import('../views/GalleryListView') }
-const OAuth2AppView = () => { return import('../views/test/OAuth2AppView') }
-const ContactUsView = () => { return import('../views/ContactUsView') }
+import ConfirmEmailView from '../views/ConfirmEmailView'
+import FeatureListView from '../views/FeatureListView'
+import TransferListView from '../views/TransferListView'
+import RecordListView from '../views/RecordListView'
+import RecordDetailView from '../views/RecordDetailView'
+import SettingsView from '../views/SettingsView'
+import ManageTokensView from '../views/ManageTokensView'
+import FaucetView from '../views/FaucetView'
+import GalleryView from '../views/GalleryView'
+import GalleryListView from '../views/GalleryListView'
+import OAuth2AppView from '../views/test/OAuth2AppView'
+import ContactUsView from '../views/ContactUsView'
 
 Vue.use(Router)
 

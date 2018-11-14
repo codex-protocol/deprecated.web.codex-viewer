@@ -54,13 +54,9 @@ export default {
       }
     })
 
-    // @NOTE: The route may be 'pending' at this point, so we refresh with window.location
-    //  instead of rootState.route.path
-    const indexOf = window.location.hash.indexOf('?')
-    const path = indexOf === -1
-      ? window.location.hash.substr(1)
-      : window.location.hash.substr(1, indexOf - 1)
-    router.replace({ path })
+    // Strip the query string by navigating to route.path (as opposed
+    //  to route.fullPath, which preserves the query string)
+    router.replace({ path: rootState.route.path })
   },
 
   FETCH_VERIFIED_USERS({ commit }) {
