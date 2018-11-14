@@ -261,6 +261,11 @@ export default {
 
       this.$store.dispatch('auth/LOGIN_FROM_SIGNED_DATA')
         .then(() => {
+          // Start fetching app & user data that is dependent on authentication
+          // No need to block on these async actions
+          this.$store.dispatch('records/FETCH_USER_DATA')
+          this.$store.dispatch('app/FETCH_ELIGIBLE_GIVEAWAY')
+
           // We know this authentication happened from the Login view, so we can send the user directly to the collection page
           // We don't have to worry about the isLoading flag here since it is already set to true
           this.$router.replace({ name: 'collection' })

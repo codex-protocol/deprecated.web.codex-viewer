@@ -2,6 +2,8 @@ import axios from 'axios'
 import debug from 'debug'
 
 import router from '../../../router'
+import Giveaway from '../../../util/api/giveaway'
+import Gallery from '../../../util/api/gallery'
 
 const logger = debug('app:store:app:actions')
 
@@ -52,9 +54,13 @@ export default {
       }
     })
 
-    // Strip the query string by navigating to route.path (as opposed
-    //  to route.fullPath, which preserves the query string)
-    router.replace({ path: rootState.route.path })
+    // @NOTE: The route may be 'pending' at this point, so we refresh with window.location
+    //  instead of rootState.route.path
+    const indexOf = window.location.hash.indexOf('?')
+    const path = indexOf === -1
+      ? window.location.hash.substr(1)
+      : window.location.hash.substr(1, indexOf - 1)
+    router.replace({ path })
   },
 
   FETCH_VERIFIED_USERS({ commit }) {
@@ -71,6 +77,25 @@ export default {
       })
       .catch((error) => {
         logger('Error retrieving the Verified Users address map, ignoring.', error)
+      })
+  },
+
+  FETCH_ELIGIBLE_GIVEAWAY({ commit }) {
+    logger('FETCH_ELIGIBLE_GIVEAWAY action being executed')
+
+    Giveaway.getAllEligibleGiveaways()
+      .then((giveaways) => {
+        // For now, just select the first giveaway that is available
+        commit('SET_GIVEAWAY', giveaways[0])
+      })
+  },
+
+  FETCH_GALLERIES({ commit }) {
+    logger('FETCH_GALLERIES action being executed')
+
+    Gallery.getGalleries()
+      .then((galleries) => {
+        commit('SET_GALLERIES', galleries)
       })
   },
 }
