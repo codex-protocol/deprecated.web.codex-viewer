@@ -36,6 +36,9 @@
               You have no Codex Records in your collection!
             </div>
           </b-tab>
+          <b-tab title="Email Subscriptions" v-if="supportEmailAccounts">
+            <EventEmailSettings />
+          </b-tab>
         </b-tabs>
       </div>
     </div>
@@ -48,6 +51,7 @@ import { mapState } from 'vuex'
 import config from '../util/config'
 import { formatDate } from '../util/dateHelpers'
 import AppHeader from '../components/core/AppHeader'
+import EventEmailSettings from '../components/EventEmailSettings'
 import RecordPrivacySettingsRowItem from '../components/RecordPrivacySettingsRowItem'
 
 export default {
@@ -55,6 +59,7 @@ export default {
 
   components: {
     AppHeader,
+    EventEmailSettings,
     RecordPrivacySettingsRowItem,
   },
 
@@ -96,6 +101,7 @@ export default {
 
     return {
       profileProperties,
+      supportEmailAccounts: config.supportEmailAccounts,
     }
   },
 
