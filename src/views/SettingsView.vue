@@ -5,22 +5,20 @@
         <AppHeader title="Settings &amp; Privacy" />
         <b-tabs>
           <b-tab title="Profile">
-            <div>
-              <div
-                v-for="(item, index) in profileProperties"
-                :key="index"
-              >
-                {{ item.text }}: {{ item.formatter ? item.formatter(user[item.property]) : user[item.property] }}
-              </div>
+            <div
+              v-for="(item, index) in profileProperties"
+              :key="index"
+            >
+              {{ item.text }}: {{ item.formatter ? item.formatter(user[item.property]) : user[item.property] }}
             </div>
           </b-tab>
           <b-tab title="Collection">
             <div
-              class="record-list"
+              class="list-container"
               v-if="userRecords.length > 0"
             >
-              <b-container class="record-settings-row">
-                <b-row>
+              <b-container>
+                <b-row class="list-header-row">
                   <b-col class="image">Image</b-col>
                   <b-col class="name">Asset Name</b-col>
                   <b-col class="toggle" v-if="user && user.isGalleryEnabled">Include in Gallery</b-col>
@@ -29,6 +27,7 @@
               </b-container>
               <RecordPrivacySettingsRowItem
                 v-for="record in userRecords"
+                v-if="record.metadata"
                 :codex-record="record"
                 :key="record.tokenId"
               />
@@ -114,7 +113,7 @@ export default {
 <style lang="stylus" scoped>
 @import "../assets/variables.styl"
 
-.record-list
+.list-container
   display: flex
   flex-wrap: wrap
   flex-direction: row
@@ -123,17 +122,15 @@ export default {
 
   background-color: white
 
-.record-settings-row
-  height: 3.5rem
+.list-header-row
+  display: flex
+  align-items: center
+
+  height: 3rem
   max-width: 100%
   font-weight: 600
   color: $color-gray
   font-size: 0.875rem
-
-  .row
-    display: flex
-    height: 3.5rem
-    align-items: center
 
   .name
     flex-grow: 5
@@ -141,6 +138,6 @@ export default {
   .toggle
     text-align: center
 
-.tab-pane > div
+.tab-pane
   margin-top: 1rem
 </style>
