@@ -33,7 +33,7 @@ export default {
     logMutation('SET_USER_PROPERTIES', newProperties)
 
     // https://vuejs.org/v2/guide/list.html#Object-Change-Detection-Caveats
-    Object.assign({}, currentState.user, newProperties)
+    currentState.user = Object.assign({}, currentState.user, newProperties)
   },
 
   CLEAR_USER_STATE(currentState) {

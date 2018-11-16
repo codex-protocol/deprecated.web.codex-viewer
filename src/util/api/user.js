@@ -19,4 +19,14 @@ export default {
 
     return callApi(requestOptions)
   },
+
+  update: (data) => {
+    const requestOptions = {
+      method: 'put',
+      url: '/user',
+      data,
+    }
+
+    return callApi(requestOptions)
+  },
 }
