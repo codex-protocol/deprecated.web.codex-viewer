@@ -183,6 +183,38 @@ export default {
     ])
   },
 
+  TOGGLE_EVENT_EMAIL_BLACKLIST({ commit, state }, eventEmail) {
+    logger('TOGGLE_EVENT_EMAIL_BLACKLIST action being executed')
+
+    // we can safely start by removing the email from the blacklist because:
+    //  1. if it's already blacklisted, then we want to remove it as part of the
+    //     toggle
+    //  2. if it's NOT already blacklist, then it won't get removed by the
+    //     filter here and it'll get added by the push below
+    const eventEmailBlacklist = Array.from(state.user.eventEmailBlacklist)
+      .filter((eventName) => {
+        return eventName !== eventEmail.eventName
+      })
+
+    // if it's not already blacklisted, then blacklist it
+    if (!state.user.eventEmailBlacklist.includes(eventEmail.eventName)) {
+      eventEmailBlacklist.push(eventEmail.eventName)
+    }
+
+    return User.update({ eventEmailBlacklist })
+      .then((user) => {
+        return commit('SET_USER_PROPERTIES', {
+          eventEmailBlacklist: user.eventEmailBlacklist,
+        })
+      })
+  },
+
+  UPDATE_USER({ commit }, newUserData) {
+    logger('UPDATE_USER action being executed')
+
+    commit('SET_USER_PROPERTIES', newUserData)
+  },
+
   HIDE_SETUP({ commit }) {
     logger('HIDE_SETUP action being executed')
 

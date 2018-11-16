@@ -67,4 +67,10 @@ export default {
 
     currentState.galleries = galleries || []
   },
+
+  SET_EVENT_EMAILS(currentState, eventEmails) {
+    logMutation('SET_EVENT_EMAILS', eventEmails)
+
+    currentState.eventEmails = eventEmails || []
+  },
 }

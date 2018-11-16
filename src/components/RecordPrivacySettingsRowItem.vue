@@ -1,33 +1,33 @@
 <template>
-  <b-container class="record-settings-row">
-      <b-row v-if="codexRecord.metadata">
-        <b-col class="image">
-          <a href="#" @click.prevent="viewRecord">
-            <img :src="missingImageHelper.getMainImageUri(codexRecord.metadata)" />
-          </a>
-        </b-col>
-        <b-col class="name">
-          <a href="#" @click.prevent="viewRecord">
-            {{ codexRecord.metadata.name }}
-          </a>
-        </b-col>
-        <b-col class="toggle" v-if="user && user.isGalleryEnabled">
-          <input
-            type="checkbox"
-            class="toggle-checkbox"
-            v-model="isInGallery"
-            @change="toggleIsInGallery"
-          />
-        </b-col>
-        <b-col class="toggle">
-          <input
-            type="checkbox"
-            class="toggle-checkbox"
-            v-model="isPublic"
-            @change="toggleIsPrivate"
-          />
-        </b-col>
-      </b-row>
+  <b-container class="row-container">
+    <b-row>
+      <b-col class="image">
+        <a href="#" @click.prevent="viewRecord">
+          <img :src="missingImageHelper.getMainImageUri(codexRecord.metadata)" />
+        </a>
+      </b-col>
+      <b-col class="name">
+        <a href="#" @click.prevent="viewRecord">
+          {{ codexRecord.metadata.name }}
+        </a>
+      </b-col>
+      <b-col class="toggle" v-if="user && user.isGalleryEnabled">
+        <input
+          type="checkbox"
+          class="toggle-checkbox"
+          v-model="isInGallery"
+          @change="toggleIsInGallery"
+        />
+      </b-col>
+      <b-col class="toggle">
+        <input
+          type="checkbox"
+          class="toggle-checkbox"
+          v-model="isPublic"
+          @change="toggleIsPrivate"
+        />
+      </b-col>
+    </b-row>
   </b-container>
 </template>
 
@@ -115,16 +115,18 @@ export default {
 <style lang="stylus" scoped>
 @import "../assets/variables.styl"
 
-.record-settings-row
+.row-container
   height: 6rem
-
-  +.record-settings-row
-    border-top: 1px solid $color-light-gray
+  max-width: 100%
+  font-weight: 600
+  color: $color-gray
+  font-size: 0.875rem
+  border-top: 1px solid $color-light-gray
 
 .row
   height: 100%
   display: flex
-  padding: 1rem 0
+  padding: .5rem 0
   align-items: center
 
 .name
