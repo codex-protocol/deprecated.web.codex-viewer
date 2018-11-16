@@ -9,5 +9,6 @@ export default () => {
     postLoginDestination: null,
     giveaway: null,
     galleries: [],
+    eventEmails: [],
   }
 }

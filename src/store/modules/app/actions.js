@@ -4,6 +4,7 @@ import debug from 'debug'
 import router from '../../../router'
 import Giveaway from '../../../util/api/giveaway'
 import Gallery from '../../../util/api/gallery'
+import EventEmail from '../../../util/api/event-email'
 
 const logger = debug('app:store:app:actions')
 
@@ -92,6 +93,15 @@ export default {
     Gallery.getGalleries()
       .then((galleries) => {
         commit('SET_GALLERIES', galleries)
+      })
+  },
+
+  FETCH_EVENT_EMAILS({ commit }) {
+    logger('FETCH_EVENT_EMAILS action being executed')
+
+    EventEmail.getEventEmails()
+      .then((eventEmails) => {
+        commit('SET_EVENT_EMAILS', eventEmails)
       })
   },
 }
