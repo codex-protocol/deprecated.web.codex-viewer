@@ -12,20 +12,15 @@
       :key="eventEmail.eventName"
       v-for="eventEmail in eventEmails"
     >
-      <!-- make the whole row clickable -->
-      <b-row @click.prevent="toggleBlacklist(eventEmail)">
+      <!-- make the whole row clickable and stop the event from propgating to the checkbox -->
+      <b-row @click.prevent.stop="toggleBlacklist(eventEmail)">
         <b-col class="description">
           {{ eventEmail.description }}
         </b-col>
         <b-col class="toggle">
-          <!--
-            since the whole row is clickable, we need to suppress clicks on the
-            toggle itself otherwise two click events would fire
-          -->
           <input
             type="checkbox"
             class="toggle-checkbox"
-            @click.prevent="() => {}"
             :checked="!isBlacklisted(eventEmail)"
           />
         </b-col>
@@ -58,6 +53,7 @@ export default {
     isBlacklisted(eventEmail) {
       return this.user.eventEmailBlacklist.includes(eventEmail.eventName)
     },
+
     toggleBlacklist(eventEmail) {
       this.$store.dispatch('auth/TOGGLE_EVENT_EMAIL_BLACKLIST', eventEmail)
         .catch((error) => {
