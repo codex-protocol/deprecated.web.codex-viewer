@@ -35,7 +35,6 @@
 
 <script>
 
-import 'freshchat-widget'
 import axios from 'axios'
 import {
   mapState,
