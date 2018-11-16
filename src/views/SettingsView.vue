@@ -36,7 +36,7 @@
               You have no Codex Records in your collection!
             </div>
           </b-tab>
-          <b-tab title="Email Subscriptions" v-if="supportEmailAccounts">
+          <b-tab title="Email Subscriptions" v-if="user && user.email && supportEmailAccounts">
             <EventEmailSettings />
           </b-tab>
         </b-tabs>
