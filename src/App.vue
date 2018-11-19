@@ -362,7 +362,7 @@ img
     z-index: 2
     width: 22px
     height: 22px
-    background: $color-gray
+    background-color: $color-gray
     left: 2px
     top: 2px
     border-radius: 50%
@@ -383,6 +383,21 @@ img
 
     &::before
       left: 32px
-      background: $color-success
+      background-color: $color-success
+
+  // lighten all the border & background colors when disabled
+  &:disabled
+    border-color: lighten($color-gray, 25%)
+
+    &::before
+      color: lighten($color-light, 25%)
+      background-color: lighten($color-gray, 25%)
+
+    &:checked
+      border-color: lighten($color-success, 25%)
+
+      &::before
+        background-color: lighten($color-success, 25%)
+
 // End CSS Checkbox toggle
 </style>

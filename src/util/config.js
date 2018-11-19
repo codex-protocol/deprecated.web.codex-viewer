@@ -35,7 +35,7 @@ export default {
 
   showManualConfirm: targetEnv === 'development',
 
-  showTestApp: targetEnv !== 'production',
+  showTestApp: expectedNetworkId !== '1',
   supportEmailAccounts: expectedNetworkId !== '1',
 
   apiUrl,

@@ -4,7 +4,7 @@ import debug from 'debug'
 import router from '../../../router'
 import Giveaway from '../../../util/api/giveaway'
 import Gallery from '../../../util/api/gallery'
-import EventEmail from '../../../util/api/event-email'
+import EventEmail from '../../../util/api/eventEmail'
 
 const logger = debug('app:store:app:actions')
 
