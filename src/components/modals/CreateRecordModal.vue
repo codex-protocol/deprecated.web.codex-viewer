@@ -246,9 +246,8 @@ export default {
       width: 50%
 
 .image-container
-  height: 100%
   display: flex
-  margin: 0 1rem
+  margin: 1rem 0
   align-items: center
   justify-content: center
 
@@ -256,7 +255,8 @@ export default {
     border: 1px solid rgba(white, .25)
 
   img
-    max-width: 20rem
+    max-width: 100%
+    max-height: 40vh
     object-fit: contain
 
 </style>
