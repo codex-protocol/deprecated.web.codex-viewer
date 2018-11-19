@@ -12,8 +12,8 @@
       :key="eventEmail.eventName"
       v-for="eventEmail in eventEmails"
     >
-      <!-- make the whole row clickable and stop the event from propgating to the checkbox -->
-      <b-row @click.prevent.stop="toggleBlacklist(eventEmail)">
+      <!-- make the whole row clickable -->
+      <b-row @click.prevent="toggleBlacklist(eventEmail)">
         <b-col class="description">
           {{ eventEmail.description }}
         </b-col>
