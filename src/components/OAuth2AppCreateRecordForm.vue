@@ -7,15 +7,15 @@
       <div v-text="accessToken"></div>
     </b-form-group>
     <b-form-group
-      label="Title"
-      label-for="title"
+      label="Name"
+      label-for="name"
     >
       <b-form-input
-        id="title"
+        id="name"
         type="text"
-        v-model="title"
+        v-model="name"
         required
-        placeholder="Enter the title"
+        placeholder="Enter the name"
       />
     </b-form-group>
     <b-form-group
@@ -59,18 +59,18 @@ export default {
 
   data() {
     return {
-      title: null,
-      description: null,
+      name: null,
       image: null,
+      description: null,
     }
   },
 
   methods: {
     onSubmit() {
       const formData = new FormData()
-      formData.append('name', this.title)
-      formData.append('description', this.description)
+      formData.append('name', this.name)
       formData.append('mainImage', this.image)
+      formData.append('description', this.description)
 
       axios.post('v1/client/record', formData, {
         headers: {

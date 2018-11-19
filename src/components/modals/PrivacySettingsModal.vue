@@ -22,7 +22,7 @@
         @change="toggleIsPrivate"
       />
       <b-form-text>
-        By making this Record public, everyone can view the title, description and images for this Record.
+        By making this Record public, anyone can view the name, description and images.
       </b-form-text>
     </b-form-group>
     <b-form-group
