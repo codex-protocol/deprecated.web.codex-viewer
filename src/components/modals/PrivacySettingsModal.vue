@@ -22,7 +22,7 @@
         @change="toggleIsPrivate"
       />
       <b-form-text>
-        By making this Record public, everyone can view the title, description and images for this Record.
+        By making this Record public, anyone can view the name, description and images.
       </b-form-text>
     </b-form-group>
     <b-form-group
@@ -158,6 +158,8 @@ export default {
     ...mapState('auth', ['user']),
     ...mapState('web3', ['instance']),
 
+    // it's more verbose to do this, but it makes passing isPrivate much more
+    //  intuitive than isPublic
     isPublic: {
       get: function getIsPublic() {
         return !this.isPrivate
