@@ -20,6 +20,7 @@
         <b-col class="toggle">
           <input
             type="checkbox"
+            :disabled="isLoading"
             class="toggle-checkbox"
             :checked="!isBlacklisted(eventEmail)"
           />
@@ -42,6 +43,12 @@ export default {
     ...mapState('app', ['eventEmails']),
   },
 
+  data() {
+    return {
+      isLoading: false,
+    }
+  },
+
   created() {
     // only fetch event emails once per app-load
     if (this.eventEmails.length === 0) {
@@ -55,9 +62,13 @@ export default {
     },
 
     toggleBlacklist(eventEmail) {
+      this.isLoading = true
       this.$store.dispatch('auth/TOGGLE_EVENT_EMAIL_BLACKLIST', eventEmail)
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not update email subscription: ${error.message}`)
+        })
+        .finally(() => {
+          this.isLoading = false
         })
     },
   },
