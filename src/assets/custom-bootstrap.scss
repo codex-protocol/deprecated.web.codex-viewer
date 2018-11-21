@@ -188,3 +188,21 @@ hr {
     margin-bottom: 0;
   }
 }
+
+.popover {
+  border: none;
+  box-shadow: 0.25rem 0.25rem .5rem rgba($color-dark, .8);
+}
+
+.popover-body {
+  padding: 1rem;
+  background-color: desaturate($color-secondary, 15%);
+}
+
+.bs-popover-right .arrow::after {
+  border-right-color: desaturate($color-secondary, 15%);
+}
+
+.bs-popover-top .arrow::after {
+  border-top-color: desaturate($color-secondary, 15%);
+}

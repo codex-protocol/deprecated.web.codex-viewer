@@ -114,20 +114,3 @@ export default {
 
 
 </style>
-
-// @NOTE: Using unscoped styles here to override the popover theme
-<style lang="stylus">
-@import "../assets/variables.styl"
-.popover
-  box-shadow: 0.25rem 0.25rem 0.25rem $color-dark
-
-.popover-body
-  background-color: $color-secondary
-  padding: 1rem
-
-.bs-popover-right .arrow::after
-  border-right-color: $color-secondary
-
-.bs-popover-top .arrow::after
-  border-top-color: $color-secondary
-</style>
