@@ -1,8 +1,8 @@
 <template>
   <div class="allowance-container" v-if="isSimpleUser">
-    <div class="mb-3">
-      <b class="mr-2">Prepaid Transactions</b>
-      <img id="info" src="../assets/icons/info.svg">
+    <div>
+      Prepaid Transactions
+      <img id="prepaid-transactions-info" src="../assets/icons/info.svg">
     </div>
     <b-progress
       class="progress-container"
@@ -14,7 +14,7 @@
         :variant="variant"
       />
       <b-popover
-        target="info"
+        target="prepaid-transactions-info"
         :placement="popoverPlacement"
         triggers="hover click"
         class="popover-theme"
@@ -97,20 +97,20 @@ export default {
 <style lang="stylus" scoped>
 @import "../assets/variables.styl"
 
+#prepaid-transactions-info
+  width: 1.2em
+  height: @width
+  vertical-align: text-bottom
+
 .allowance-container
-  text-align: center
   width: 100%
-  margin-top: 1rem
 
 .progress-container
+  height: 1.5rem
   background-color: rgba(white, .2)
-  height: 2rem
-  margin: 0.5rem
 
 .progress-bar
   color: black
   font-weight: bold
-  margin: 0.5rem
-
 
 </style>

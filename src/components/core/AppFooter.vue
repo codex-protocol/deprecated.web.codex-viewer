@@ -57,7 +57,7 @@ export default {
 .footer
   display: flex
   padding: 1rem 0
-  font-size: 1rem
+  font-size: small
   align-items: center
   flex-direction: column
 
@@ -84,9 +84,8 @@ export default {
     max-width: 30rem
 
     a
-      font-size: .8em
-      text-align: center
       width: 100%
+      text-align: center
 
       @media(min-width: $breakpoint-md)
         width: auto

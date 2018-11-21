@@ -19,13 +19,14 @@
           {{ incomingTransfers.length }}
         </b-badge>
       </b-link>
-      <template v-if="user">
-        <hr>
+      <span class="spacer"></span>
+      <footer class="sidebar-footer" v-if="user">
         <div class="contact">
-          Logged in as <DisplayName :userObject="user" />
+          <div>Logged in as</div>
+          <DisplayName :userObject="user" />
         </div>
         <PrepaidTransactionsControl />
-      </template>
+      </footer>
     </div>
   </nav>
 </template>
@@ -160,13 +161,6 @@ export default {
 <style lang="stylus" scoped>
 @import "../../assets/variables.styl"
 
-hr
-  flex-grow: 1
-  border-top: none
-  margin: 1rem auto
-  width: calc(100% - 2rem)
-  border-bottom: 1px solid rgba($color-light, .25)
-
 nav
   width: 100%
   flex-grow: 1
@@ -228,9 +222,19 @@ a
   margin-left: .25em
   border-radius: .25em
 
-.contact
-  text-align: center
+.spacer
+  flex-grow: 1
+
+.sidebar-footer
+  width: 100%
   padding: 1rem
-  overflow-wrap: break-word
+  font-size: small
+  background-color: rgba(white, .01)
+  border-top: 1px solid rgba(white, .05)
+
+  // every top level element inside the sidebar footer that's preceeded by
+  //  another top level element...
+  > * + *
+    margin-top: 1rem
 
 </style>
