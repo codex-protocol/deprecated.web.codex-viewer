@@ -1,34 +1,36 @@
 <template>
   <div>
-    <AppWarningBanner v-if="showWarningBanner" />
     <div id="app" :class="{
       'with-background': this.useBackgroundImage(),
       'show-nav': showNav,
     }">
-      <template v-if="!hideSideBar">
-        <span class="hamburger" @click="toggleNav">
-          <IconBase
-            iconName="menu"
-            width="28"
-            height="32"
-            class="icon-menu"
-          />
-        </span>
-        <AppSideBar :hideNav="hideNav" />
-      </template>
-      <div class="main-content-wrapper">
-        <div class="main-content">
-          <router-view :key="$route.fullPath" v-if="isLoaded" />
-          <LoadingOverlay type="global" v-else />
+      <AppWarningBanner v-if="showWarningBanner" />
+      <div class="app-wrapper">
+        <template v-if="!hideSideBar">
+          <span class="hamburger" @click="toggleNav">
+            <IconBase
+              iconName="menu"
+              width="28"
+              height="32"
+              class="icon-menu"
+            />
+          </span>
+          <AppSideBar :hideNav="hideNav" />
+        </template>
+        <div class="main-content-wrapper">
+          <div class="main-content">
+            <router-view :key="$route.fullPath" v-if="isLoaded" />
+            <LoadingOverlay type="global" v-else />
+          </div>
+          <AppFooter />
         </div>
-        <AppFooter />
+        <ToastContainer />
+        <vue-cookie-accept-decline disableDecline>
+          <div slot="message">
+            This website stores cookies on your computer. Cookies are used to save information about how you interact with our website and allow us to remember you when you return. We never sell this information, and we use it strictly for analytics and metrics. For more information, please see our <a href="https://www.codexprotocol.com/privacy-policy.html" target="_blank">Privacy Policy.</a>
+          </div>
+        </vue-cookie-accept-decline>
       </div>
-      <ToastContainer />
-      <vue-cookie-accept-decline disableDecline>
-        <div slot="message">
-          This website stores cookies on your computer. Cookies are used to save information about how you interact with our website and allow us to remember you when you return. We never sell this information, and we use it strictly for analytics and metrics. For more information, please see our <a href="https://www.codexprotocol.com/privacy-policy.html" target="_blank">Privacy Policy.</a>
-        </div>
-      </vue-cookie-accept-decline>
     </div>
   </div>
 </template>
@@ -255,9 +257,11 @@ html
 
 html
 body
+body > div:first-child
   margin: 0
   padding: 0
   width: 100%
+  height: 100%
 
 body
   font-size: 1em
@@ -273,7 +277,10 @@ img
 
 #app
   width: 100%
+  height: 100%
   display: flex
+  overflow: hidden
+  flex-direction: column
   background-color: $color-dark
 
   &.with-background
@@ -288,11 +295,17 @@ img
     .main-content-wrapper
       display: none
 
-    // On larger screens always show the side menu and content
+    // on larger screens always show the side menu and content
     @media screen and (min-width: $breakpoint-md)
       nav
       .main-content-wrapper
         display: flex
+
+.app-wrapper
+  width: 100%
+  flex-grow: 1
+  display: flex
+  overflow: hidden
 
 .hamburger
   color: $color-primary
@@ -308,15 +321,20 @@ img
 
 .main-content-wrapper
   width: 100%
-  display: flex
-  min-height: 100vh
-  flex-direction: column
-  padding-bottom: $bottom-nav-height
+  flex-grow: 1
+  max-height: 100%
+  overflow-x: hidden
+  overflow-y: scroll
+
+  @media screen and (min-width: $breakpoint-md)
+    display: flex
+    flex-direction: column
 
 .main-content
-  flex: 1
   width: 100%
-  overflow: auto
+  flex-grow: 1
+  overflow-x: hidden
+  overflow-y: scroll
 
 .cookie
   color: $color-dark

@@ -116,8 +116,8 @@ export default {
 @import "../assets/variables.styl"
 
 .row-container
-  height: 6rem
   max-width: 100%
+  min-height: 6rem
   font-weight: 600
   color: $color-gray
   font-size: 0.875rem

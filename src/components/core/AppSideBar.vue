@@ -19,7 +19,7 @@
           {{ incomingTransfers.length }}
         </b-badge>
       </b-link>
-      <hr />
+      <hr>
       <div class="contact" v-if="user">
         Logged in as <DisplayName :userObject="user" />
       </div>
@@ -159,23 +159,25 @@ export default {
 @import "../../assets/variables.styl"
 
 hr
-  border-top: 1px solid rgba($color-light, .5)
-  margin: 1rem 1rem 0
+  flex-grow: 1
+  border-top: none
+  margin: 1rem auto
+  width: calc(100% - 2rem)
+  border-bottom: 1px solid rgba($color-light, .25)
 
 nav
+  width: 100%
+  flex-grow: 1
   display: none
+  overflow-y: scroll
   flex-direction: column
   background-color: rgba(white, .05)
-  width: 100%
 
   @media screen and (min-width: $breakpoint-md)
-    display: flex
     width: $side-nav-width
-    min-height: 100%
     min-width: @width
     max-width: @width
-    overflow-y: auto
-    padding-top: 0
+    display: flex
 
 a
   padding: 1rem
@@ -207,21 +209,18 @@ a
 .button-container
   flex-grow: 1
   display: flex
-  flex-direction: column
   align-items: center
+  flex-direction: column
 
   @media screen and (min-width: $breakpoint-md)
     align-items: normal
 
   a
-    text-align: center
     width: 100%
-    margin-bottom: 0.5rem
+    text-align: center
 
     @media screen and (min-width: $breakpoint-md)
       text-align: left
-      width: auto
-      margin-bottom: 0
 
 .badge
   margin-left: .25em

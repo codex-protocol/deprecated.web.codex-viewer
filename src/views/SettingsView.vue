@@ -132,8 +132,8 @@ export default {
   display: flex
   align-items: center
 
-  height: 3rem
   max-width: 100%
+  min-height: 3rem
   font-weight: 600
   color: $color-gray
   font-size: 0.875rem

@@ -1,13 +1,13 @@
 <template>
-  <div class="footer mt-3 mb-3">
-    <div class="links mb-1">
+  <div class="footer">
+    <div class="links">
       <a href="https://www.codexprotocol.com/">Home</a>
       <a href="https://www.codexprotocol.com/Terms-of-Service.pdf">Terms of Use</a>
       <a href="https://www.codexprotocol.com/privacy-policy.html">Privacy Policy</a>
       <a href="https://dev.codexprotocol.com">Documentation</a>
       <b-link to="/contact">Contact Us</b-link>
     </div>
-    <div class="links mb-3">
+    <div class="links">
       <a href="https://codex-viewer.com">Mainnet</a>
       <a href="https://rinkeby.codex-viewer.com">Rinkeby</a>
       <a href="http://ropsten.codex-viewer.com">Ropsten</a>
@@ -56,9 +56,18 @@ export default {
 
 .footer
   display: flex
+  padding: 1rem 0
+  font-size: 1rem
   align-items: center
   flex-direction: column
-  font-size: 1rem
+
+  @media screen and (min-width: $breakpoint-md)
+    height: 8rem
+    min-height: @height
+    max-height: @height
+
+  > div:not(:first-child)
+    margin-top: 1rem
 
   .links
   .icons
