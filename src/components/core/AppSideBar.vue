@@ -19,11 +19,13 @@
           {{ incomingTransfers.length }}
         </b-badge>
       </b-link>
-      <hr>
-      <div class="contact" v-if="user">
-        Logged in as <DisplayName :userObject="user" />
-      </div>
-      <PrepaidTransactionsControl />
+      <template v-if="user">
+        <hr>
+        <div class="contact">
+          Logged in as <DisplayName :userObject="user" />
+        </div>
+        <PrepaidTransactionsControl />
+      </template>
     </div>
   </nav>
 </template>
