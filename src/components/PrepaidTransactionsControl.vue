@@ -1,9 +1,9 @@
 <template>
   <div class="allowance-container" v-if="isSimpleUser">
-    <div>
+    <h4>
       Prepaid Transactions
       <img id="prepaid-transactions-info" src="../assets/icons/info.svg">
-    </div>
+    </h4>
     <b-progress
       class="progress-container"
       :max="parseInt(user.gasAllowance, 10)"

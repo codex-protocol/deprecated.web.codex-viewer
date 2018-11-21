@@ -22,7 +22,7 @@
       <span class="spacer"></span>
       <footer class="sidebar-footer" v-if="user">
         <div class="contact">
-          <div>Logged in as</div>
+          <h4>Logged in as</h4>
           <DisplayName :userObject="user" />
         </div>
         <PrepaidTransactionsControl />
@@ -236,5 +236,23 @@ a
   //  another top level element...
   > * + *
     margin-top: 1rem
+
+</style>
+
+<style lang="stylus">
+
+// @NOTE: we're using an unscoped style tag here so the styles apply to all
+//  components in the sidebar footer
+
+@import "../../assets/variables.styl"
+
+.sidebar-footer
+  h4
+    font-size: small
+    color: $color-primary
+    margin: 1rem 0 .25rem 0
+
+    &:first-of-type
+      margin-top: 0
 
 </style>
