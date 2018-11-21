@@ -97,18 +97,26 @@
       </b-button>
 
       <div class="mt-4">
-        <div v-if="whitelistedAddresses.length > 0">
-          <div v-for="address in whitelistedAddresses" :key="address">
+        <template v-if="whitelistedAddresses.length > 0">
+          <div
+            :key="address"
+            class="whitelist-row"
+            v-for="address in whitelistedAddresses"
+          >
             <DisplayName :name="address" />
             <span class="close" v-on:click="removeWhitelistedAddress(address)">×</span>
           </div>
-        </div>
-        <div v-if="whitelistedEmails.length > 0">
-          <div v-for="email in whitelistedEmails" :key="email">
+        </template>
+        <template v-if="whitelistedEmails.length > 0">
+          <div
+            :key="email"
+            class="whitelist-row"
+            v-for="email in whitelistedEmails"
+          >
             <DisplayName :name="email" />
             <span class="close" @click="removeWhitelistedEmail(email)">×</span>
           </div>
-        </div>
+        </template>
         <div v-if="whitelistedAddresses.length === 0 && whitelistedEmails.length === 0">
           <small class="text-muted">
             You have not shared this record with any other addresses. Add one above to allow read-only access for that address.
@@ -299,11 +307,16 @@ export default {
       margin-bottom: 0
       margin-right: 1rem
 
-.close
-  position: relative
-  margin-top: -15px !important
+.whitelist-row
+  display: flex
+  align-items: center
 
-  @media screen and (min-width: $breakpoint-sm)
-    margin-top: -3px !important
+  .display-name
+    flex-grow: 1
+
+  .close
+    margin: 0
+    float: unset
+    font-size: 2rem
 
 </style>
