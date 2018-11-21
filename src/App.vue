@@ -333,8 +333,13 @@ img
 .main-content
   width: 100%
   flex-grow: 1
-  overflow-x: hidden
-  overflow-y: scroll
+
+  // uncommenting these will cause the footer to stay positioned at the bottom
+  //  of the main content area instead of being pushed down by a tall
+  //  .main-content div
+  //
+  // overflow-x: hidden
+  // overflow-y: scroll
 
 .cookie
   color: $color-dark
