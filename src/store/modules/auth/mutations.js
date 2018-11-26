@@ -50,12 +50,6 @@ export default {
     currentState.authToken = null
   },
 
-  SET_TOKEN_BALANCE(currentState, { balance }) {
-    logMutation('SET_TOKEN_BALANCE', balance)
-
-    currentState.balance = new BigNumber(balance)
-  },
-
   SET_PERSONAL_STAKES(currentState, { personalStakes }) {
     logMutation('SET_PERSONAL_STAKES', personalStakes)
 
@@ -88,12 +82,21 @@ export default {
     window.localStorage.setItem('hideSetup', true)
   },
 
-  SPEND_GAS(currentState, { estimatedGas }) {
-    logMutation('SPEND_GAS', estimatedGas)
+  SPEND_CODX(currentState, { codxCost }) {
+    logMutation('SPEND_CODX', codxCost)
 
-    if (currentState.user && currentState.user.gasAllowanceRemaining) {
-      const bnAllowance = new BigNumber(currentState.user.gasAllowanceRemaining)
-      Vue.set(currentState.user, 'gasAllowanceRemaining', bnAllowance.sub(estimatedGas).toString())
+    if (currentState.user && currentState.user.codxBalance) {
+      const bnCODXBalance = new BigNumber(currentState.user.codxBalance)
+      Vue.set(currentState.user, 'codxBalance', bnCODXBalance.sub(codxCost).toString())
+    }
+  },
+
+  REFUND_CODX(currentState, { codxCost }) {
+    logMutation('REFUND_CODX', codxCost)
+
+    if (currentState.user && currentState.user.codxBalance) {
+      const bnCODXBalance = new BigNumber(currentState.user.codxBalance)
+      Vue.set(currentState.user, 'codxBalance', bnCODXBalance.plus(codxCost).toString())
     }
   },
 }

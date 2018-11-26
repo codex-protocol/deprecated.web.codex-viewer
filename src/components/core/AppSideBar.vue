@@ -25,7 +25,7 @@
           <h4>Logged in as</h4>
           <DisplayName :userObject="user" />
         </div>
-        <PrepaidTransactionsControl />
+        <CODXBalanceControl v-if="user.type !== 'savvy'" />
       </footer>
     </div>
   </nav>
@@ -38,7 +38,7 @@ import {
 } from 'vuex'
 
 import DisplayName from '../util/DisplayName'
-import PrepaidTransactionsControl from '../PrepaidTransactionsControl'
+import CODXBalanceControl from '../CODXBalanceControl'
 
 import config from '../../util/config'
 
@@ -59,7 +59,7 @@ export default {
 
   components: {
     DisplayName,
-    PrepaidTransactionsControl,
+    CODXBalanceControl,
   },
 
   data() {

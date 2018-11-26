@@ -89,8 +89,8 @@ export default {
 
     this.$store.dispatch('app/FETCH_VERIFIED_USERS')
 
-    EventBus.$on('socket:codex-coin:transferred', () => {
-      this.$store.dispatch('auth/FETCH_TOKEN_BALANCE')
+    EventBus.$on('socket:codex-coin:transferred', (codxCost) => {
+      this.$store.commit('auth/REFUND_CODX', { codxCost })
     })
 
     EventBus.$on('socket:codex-coin:registry-contract-approved', () => {
