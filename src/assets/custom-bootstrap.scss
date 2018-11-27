@@ -189,6 +189,8 @@ hr {
   }
 }
 
+$popover-color: desaturate(lighten($color-secondary, 10%), 30%);
+
 .popover {
   border: none;
   box-shadow: 0.25rem 0.25rem .5rem rgba($color-dark, .8);
@@ -196,13 +198,21 @@ hr {
 
 .popover-body {
   padding: 1rem;
-  background-color: desaturate($color-secondary, 15%);
-}
-
-.bs-popover-right .arrow::after {
-  border-right-color: desaturate($color-secondary, 15%);
+  background-color: $popover-color;
 }
 
 .bs-popover-top .arrow::after {
-  border-top-color: desaturate($color-secondary, 15%);
+  border-top-color: $popover-color;
+}
+
+.bs-popover-right .arrow::after {
+  border-right-color: $popover-color;
+}
+
+.bs-popover-bottom .arrow::after {
+  border-bottom-color: $popover-color;
+}
+
+.bs-popover-left .arrow::after {
+  border-left-color: $popover-color;
 }
