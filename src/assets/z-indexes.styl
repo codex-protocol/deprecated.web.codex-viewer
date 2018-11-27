@@ -1,0 +1,26 @@
+@import "./assets/variables.styl"
+
+// the popover z-index must be at least the same z-index as the nav since
+//  there's a popover in the mobile nav
+nav
+.popover
+  z-index: $freshchat-z-index + 1
+
+.hamburger
+  z-index: $freshchat-z-index + 2
+
+// make modals apear over the hamburger and freshchat icons so you can't click
+//  them (because they're hidden) while a modal is open
+.modal-backdrop
+  z-index: $freshchat-z-index + 3
+
+.modal
+  z-index: $freshchat-z-index + 4
+
+// toasts should be above modals since we need to see errors inside of modals
+.toast-container
+  z-index: $freshchat-z-index + 5
+
+// the cookie banner should show above everything
+.cookie
+  z-index: $freshchat-z-index + 10 !important

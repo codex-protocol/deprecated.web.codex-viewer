@@ -1,5 +1,5 @@
 <template>
-  <div class="ToastContainer">
+  <div class="toast-container">
     <div
       v-for="(toast, index) in toasts" :key="index"
       @click="typeof toast.clickHandler === 'function' ? toast.clickHandler.call(toast, toast) : undefined"
@@ -94,7 +94,7 @@ export default {
 
 @import "../../assets/variables.styl"
 
-.ToastContainer
+.toast-container
   top: 0
   right: 0
   width: 25rem
@@ -104,10 +104,6 @@ export default {
   overflow-y: hidden
   pointer-events: none
   box-sizing: border-box
-
-  // this brings the toasts above the modal z-index, since we need to see errors
-  //  while inside of a modal... (maybe?)
-  z-index: 1050
 
   @media screen and (max-width: $breakpoint-sm)
     width: 100%

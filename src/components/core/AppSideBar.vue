@@ -169,6 +169,7 @@ nav
   width: 100%
   flex-grow: 1
   display: none
+  position: relative
   overflow-y: scroll
   flex-direction: column
   background-color: rgba(white, .05)

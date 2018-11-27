@@ -261,6 +261,7 @@ export default {
 <style lang="stylus">
 
 @import "./assets/variables.styl"
+@import "./assets/z-indexes.styl"
 
 html
   font-size 16px
@@ -278,6 +279,15 @@ body
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
   font-family: $font-family-sans-serif
+
+  // "visually disable" the application when the freshchat widget is open
+  &.fc-widget-open
+    #app
+      opacity: .5
+      filter: blur(2px)
+      user-select: none
+      pointer-events: none
+      transition: opacity ease 1s, filter ease 1s
 
 // this will properly rotate images with EXIF data (i.e. photos taken on a
 //  phone) in FireFox - unfortunately it doesn't work in Chrome, so such images
@@ -298,33 +308,30 @@ img
 
   // On smaller screens, handle the toggle of showing the side menu
   &.show-nav
-
     nav
+      width: 100%
+      height: 100%
       display: flex
+      position: absolute
+      background-color: rgba(darken($color-dark, 25%), .95)
 
     .main-content-wrapper
-      display: none
-
-    // on larger screens always show the side menu and content
-    @media screen and (min-width: $breakpoint-md)
-      nav
-      .main-content-wrapper
-        display: flex
+      filter: blur(4px)
 
 .app-wrapper
   width: 100%
   flex-grow: 1
   display: flex
   overflow: hidden
+  position: relative
 
 .hamburger
-  color: $color-primary
-  position: fixed
-  right: 20px
   top: 10px
-  z-index: 10
+  right: 20px
   padding: 10px
   cursor: pointer
+  position: absolute
+  color: $color-primary
 
   @media screen and (min-width: $breakpoint-md)
     display: none
@@ -354,7 +361,6 @@ img
 .cookie
   color: $color-dark
   padding: 2rem !important
-  z-index: 2147483601 !important // freshchat sets their button's z-index to 2147483600 lol
   background-color: $color-light !important
 
   a
