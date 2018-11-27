@@ -90,13 +90,9 @@ export default {
 
     this.$store.dispatch('app/FETCH_VERIFIED_USERS')
 
-    EventBus.$on('socket:codex-coin:transferred', (codxCost) => {
-      this.$store.commit('auth/REFUND_CODX', { codxCost })
-    })
-
-    EventBus.$on('socket:codex-coin:registry-contract-approved', () => {
-      this.$store.dispatch('auth/FETCH_APPROVAL_STATUSES')
-    })
+    EventBus.$on('socket:codex-coin:savvy-spend', this.spendCODX)
+    EventBus.$on('socket:codex-coin:transferred', this.refundCODX)
+    EventBus.$on('socket:codex-coin:registry-contract-approved', this.fetchApprovalStatuses)
 
     EventBus.$on('socket:codex-record:created', this.addUserRecord)
     EventBus.$on('socket:codex-record:modified', this.updateUserRecord)
@@ -112,8 +108,9 @@ export default {
   },
 
   beforeDestroy() {
-    EventBus.$off('socket:codex-coin:transferred')
-    EventBus.$off('socket:codex-coin:registry-contract-approved')
+    EventBus.$off('socket:codex-coin:savvy-spend', this.spendCODX)
+    EventBus.$off('socket:codex-coin:transferred', this.refundCODX)
+    EventBus.$off('socket:codex-coin:registry-contract-approved', this.fetchApprovalStatuses)
 
     EventBus.$off('socket:codex-record:created', this.addUserRecord)
     EventBus.$off('socket:codex-record:modified', this.updateUserRecord)
@@ -232,6 +229,18 @@ export default {
         listName: 'outgoingTransfers',
         record: codexRecord,
       })
+    },
+
+    fetchApprovalStatuses() {
+      this.$store.dispatch('auth/FETCH_APPROVAL_STATUSES')
+    },
+
+    refundCODX(codxCost) {
+      this.$store.commit('auth/REFUND_CODX', { codxCost })
+    },
+
+    spendCODX(codxCost) {
+      this.$store.commit('auth/SPEND_CODX', { codxCost })
     },
 
     useBackgroundImage() {
