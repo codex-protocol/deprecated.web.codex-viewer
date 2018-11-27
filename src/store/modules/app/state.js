@@ -1,3 +1,22 @@
+import User from '../../../util/api/user'
+
+const stripeHandler = !process.env.VUE_APP_STRIPE_PUBLIC_KEY
+  ? null
+  : window.StripeCheckout.configure({
+    key: process.env.VUE_APP_STRIPE_PUBLIC_KEY,
+    image: 'https://stripe.com/img/documentation/checkout/marketplace.png',
+    locale: 'auto',
+    zipCode: true,
+    billingAddress: process.env.VUE_APP_TARGET_ENV === 'production',
+    token: (token) => {
+      User.buyTokens(token.id)
+        .catch((error) => {
+          console.log(JSON.stringify(error))
+          throw error
+        })
+    },
+  })
+
 export default () => {
   return {
     emailAddressToConfirm: null,
@@ -11,5 +30,6 @@ export default () => {
     galleries: [],
     eventEmails: [],
     codxCosts: null,
+    stripeHandler,
   }
 }

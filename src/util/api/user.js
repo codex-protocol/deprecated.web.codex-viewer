@@ -29,4 +29,15 @@ export default {
 
     return callApi(requestOptions)
   },
+
+  buyTokens: (source) => {
+    const requestOptions = {
+      method: 'post',
+      url: '/user/codex-coin',
+      data: {
+        source,
+      },
+    }
+    return callApi(requestOptions)
+  },
 }

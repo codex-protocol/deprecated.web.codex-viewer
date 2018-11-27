@@ -29,7 +29,7 @@ const etherScanUrl = (() => {
 
 const targetEnv = process.env.VUE_APP_TARGET_ENV
 export default {
-  showFaucet: false,
+  showFaucet: process.env.VUE_APP_TARGET_ENV !== 'production',
   showManageTokensPage: false,
   showCodexGalleryInSideBar: true,
 

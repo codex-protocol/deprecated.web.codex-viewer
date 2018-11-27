@@ -2,60 +2,58 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">
-        <AppHeader title="CODX Faucet" />
+        <AppHeader title="Get more CODX" />
 
         <div class="content">
-          <p>
-            Welcome to the CodexCoin (CODX) Faucet.
-            In the blockchain space, a faucet is an application that issues tokens to requesting users for free.
-          </p>
-          <p>
-            Click the button below to request the Codex Protocol ERC-20 token, CodexCoin.
-            After requesting a drip from the faucet, CodexCoin will be sent to the MetaMask account you are currently logged in to.
-            You can request 1 drip every 24 hours.
-          </p>
-          <p>
-            Make sure to get some CodexCoin from the faucet!
-            When fees are enabled, you'll be required to have CodexCoin to transact with the protocol.
-          </p>
-          <p v-if="!user">
-            You need to be logged in before you can request tokens from the faucet!
-            Login using the button on the side.
-          </p>
-          <div v-else>
+          <div v-if="showFaucet">
+            <p>
+              Click the button below to request the Codex Protocol ERC-20 token, CodexCoin.
+              After requesting a drip from the faucet, CodexCoin will be sent to the account you are currently logged in to.
+              You can request 1 drip every 24 hours.
+            </p>
+            <b-button
+              class="mb-3"
+              variant="primary"
+              v-b-modal.faucetModal
+              :disabled="!user.canRequestFaucetTokens"
+            >
+              Get more CODX
+            </b-button>
 
-            <hr>
+            <p>Your balance: {{ user.codxBalance | formatCODXBalance }} CODX</p>
+            <p v-if="!user.canRequestFaucetTokens">
+              <strong>You'll be able to request more CODX in {{ nextRequestIn }}</strong>
+            </p>
 
-            <div>
-              <b-button
-                class="mb-3"
-                variant="primary"
-                v-b-modal.faucetModal
-                :disabled="!user.canRequestFaucetDrip"
-              >
-                Get more CODX
-              </b-button>
+            <faucet-modal />
 
-              <p>Your balance: {{ user.codxBalance | formatCODXBalance }}</p>
-              <p v-if="!user.canRequestFaucetDrip">
-                <strong>You'll be able to request more CODX in {{ nextRequestIn }}</strong>
-              </p>
+            <hr />
 
-              <FaucetModal />
-            </div>
-
-            <hr>
-
-            <div>
+            <div v-if="!isSimpleUser">
               <p>Registry contract approved? {{ registryContractApproved ? 'Yes!' : 'No' }}</p>
               <b-button variant="primary" v-b-modal.approveRegistryModal :disabled="registryContractApproved">
                 Approve the registry contract
               </b-button>
 
-              <ApproveContractModal id="approveRegistryModal" :contract="recordContract" stateProperty="registryContractApproved">
+              <approve-contract-modal id="approveRegistryModal" :contract="recordContract" stateProperty="registryContractApproved">
                 This will grant the Codex Viewer permission to spend CODX on your behalf.
-              </ApproveContractModal>
+              </approve-contract-modal>
+
+              <hr />
             </div>
+          </div>
+
+          <div v-if="stripeHandler">
+            <p>
+              Click the button below to purchase the Codex Protocol ERC-20 token, CodexCoin.
+            </p>
+            <b-button
+              id="codex-payment"
+              @click.prevent="promptForPayment"
+              variant="primary"
+            >
+              Pay with Stripe
+            </b-button>
           </div>
         </div>
       </div>
@@ -64,8 +62,12 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import {
+  mapState,
+  mapGetters,
+} from 'vuex'
 
+import config from '../util/config'
 import { timeSince } from '../util/dateHelpers'
 
 import AppHeader from '../components/core/AppHeader'
@@ -81,14 +83,38 @@ export default {
     ApproveContractModal,
   },
 
+  data() {
+    return {
+      showFaucet: config.showFaucet,
+    }
+  },
+
+  beforeDestroy() {
+    if (this.stripeHandler) {
+      this.stripeHandler.close()
+    }
+  },
+
   computed: {
     ...mapState('auth', ['registryContractApproved', 'user']),
+    ...mapState('app', ['stripeHandler']),
     ...mapState('web3', ['recordContract']),
+    ...mapGetters('auth', ['isSimpleUser']),
 
     nextRequestIn() {
       const now = Date.now()
       const faucetDripNextRequestAt = new Date(this.user.faucetDripNextRequestAt).getTime()
       return timeSince(new Date(now - (faucetDripNextRequestAt - now)))
+    },
+  },
+
+  methods: {
+    promptForPayment() {
+      this.stripeHandler.open({
+        name: 'Codex Labs, Inc',
+        description: 'CodexCoin',
+        amount: 2000,
+      })
     },
   },
 }

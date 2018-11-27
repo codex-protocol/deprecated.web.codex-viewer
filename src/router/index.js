@@ -93,6 +93,12 @@ const router = new Router({
         transferDirection: 'outgoing',
       },
     },
+    {
+      name: 'faucet',
+      path: '/faucet',
+      component: FaucetView,
+      meta: { allowUnauthenticatedUsers: true },
+    },
 
     // gallery routes
     {
@@ -105,7 +111,6 @@ const router = new Router({
       name: 'gallery',
       path: '/galleries/:galleryShareCode',
       component: GalleryView,
-      meta: { allowUnauthenticatedUsers: true },
     },
 
     // other non-application routes
@@ -123,12 +128,6 @@ const router = new Router({
     },
   ],
 })
-
-if (config.showFaucet) {
-  router.addRoutes([
-    { name: 'faucet', path: '/faucet', component: FaucetView, meta: { allowUnauthenticatedUsers: true } },
-  ])
-}
 
 if (config.showManageTokensPage) {
   router.addRoutes([
