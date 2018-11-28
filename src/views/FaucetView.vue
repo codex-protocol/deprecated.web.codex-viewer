@@ -20,7 +20,7 @@
               Get more CODX
             </b-button>
 
-            <p>Your balance: {{ user.codxBalance | formatCODXBalance }} CODX</p>
+            <p>Your balance: {{ user.codxBalance | formatCODXBalance }}</p>
             <p v-if="!user.canRequestFaucetTokens">
               <strong>You'll be able to request more CODX in {{ nextRequestIn }}</strong>
             </p>

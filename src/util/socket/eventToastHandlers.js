@@ -77,7 +77,7 @@ export default {
   },
 
   'codex-coin:transferred': (value) => {
-    showToast(`You have successfully recieved ${formatCODXBalance(value)} CODX from the faucet.`)
+    showToast(`You have successfully recieved ${formatCODXBalance(value)} from the faucet.`)
   },
 
   'codex-coin:registry-contract-approved': (value) => {
