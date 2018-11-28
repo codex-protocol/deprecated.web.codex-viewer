@@ -3,7 +3,7 @@
     :ref="id"
     :id="id"
     :title="title"
-    :ok-title="okTitle"
+    :ok-title="buttonTitle"
     :hide-footer="isFooterHidden"
     :cancel-variant="cancelVariant"
     :ok-disabled="isDisabled"
@@ -80,6 +80,10 @@
         </div>
 
         <div v-else-if="currentStep === 3">
+          <slot name="checkout"></slot>
+        </div>
+
+        <div v-else-if="currentStep === 4">
           <p>
             Your transaction has been submitted to the blockchain!
           </p>
@@ -150,6 +154,14 @@ export default {
     shouldShowMainSlot() {
       return this.currentStep === 0 && !this.willTransactionFail
     },
+
+    buttonTitle() {
+      if (this.isSimpleUser && this.currentStep === 0) {
+        return 'Proceed to checkout'
+      }
+
+      return this.okTitle
+    },
   },
 
   methods: {
@@ -171,7 +183,13 @@ export default {
       }
 
       if (this.isSimpleUser) {
-        this.goToStep(3)
+        if (this.currentStep === 0) {
+          this.goToStep(3)
+        } else {
+          this.goToStep(this.currentStep + 1)
+        }
+      } else if (this.currentStep === 2) {
+        this.goToStep(4)
       } else {
         this.goToStep(this.currentStep + 1)
       }
@@ -195,7 +213,7 @@ export default {
 
           this.okMethod()
             .then(() => {
-              this.goToStep(this.currentStep + 1)
+              this.nextStep()
             })
             .catch((error) => {
               this.metamaskError = (error.message || 'An unknown error occurred').replace(/.*Error:(.*)$/, '$1')
@@ -204,8 +222,16 @@ export default {
 
           break
 
-        // transaction submitted, waiting for mine
+        // @todo: validate this with savvy users
+        // @todo: pass metadata from modal here
+        // checkout flow
         case 3:
+          this.preventClose = false
+          this.isFooterHidden = false
+          break
+
+        // transaction submitted, waiting for mine
+        case 4:
           if (this.isSimpleUser) {
             this.okMethod()
               .catch((error) => {

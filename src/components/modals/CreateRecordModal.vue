@@ -4,13 +4,38 @@
     title="Create Record"
     ok-title="Create"
     cancel-variant="outline-primary"
-    size="lg"
     :on-shown="focusModal"
     :ok-method="createMetadata"
     :on-clear="clearModal"
     :requires-tokens="true"
     :validate="validate"
   >
+    <div class="checkout-container" slot="checkout">
+      <div class="column">
+        <h3>{{ name }}</h3>
+        <h5>Description:</h5>
+        <div>{{ description }}</div>
+        <div class="image-container-xs">
+          <img :src="imageStreamUri" />
+        </div>
+      </div>
+      <div class="column">
+        <h3>Summary</h3>
+        <div class="row">
+          <p>Create Codex Record x1</p>
+          <p>1 CODX</p>
+        </div>
+        <div class="row">
+          <p>Total</p>
+          <p>1 CODX</p>
+        </div>
+        <div class="row">
+          <p>Remaining credits after</p>
+          <p>9 CODX</p>
+        </div>
+      </div>
+    </div>
+
     <div class="flex-container">
       <div class="image-container" :class="{ 'no-image': !imageStreamUri }">
         <img :src="imageStreamUri" />
@@ -270,7 +295,8 @@ export default {
     > div
       width: 50%
 
-.image-container
+.image-container,
+.image-container-xs
   display: flex
   margin: 1rem 0
   align-items: center
@@ -283,5 +309,26 @@ export default {
     max-width: 100%
     max-height: 40vh
     object-fit: contain
+
+.image-container-xs img
+  width: 50%
+
+.checkout-container
+  display: flex
+  flex-direction: row
+  font-size: 80%
+  text-align: left
+
+  .column
+    width: 50%
+
+    .row
+      justify-content: space-between
+      margin: 0
+      width: 80%
+
+      @media screen and (min-width: $breakpoint-sm)
+        flex-direction: column
+        background-color: red
 
 </style>
