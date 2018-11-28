@@ -62,15 +62,15 @@ export default {
     currentState.giveaway = giveaway
   },
 
-  SET_GALLERIES(currentState, galleries) {
+  SET_GALLERIES(currentState, galleries = []) {
     logMutation('SET_GALLERIES', galleries)
 
-    currentState.galleries = galleries || []
+    currentState.galleries = galleries
   },
 
-  SET_EVENT_EMAILS(currentState, eventEmails) {
+  SET_EVENT_EMAILS(currentState, eventEmails = []) {
     logMutation('SET_EVENT_EMAILS', eventEmails)
 
-    currentState.eventEmails = eventEmails || []
+    currentState.eventEmails = eventEmails
   },
 }
