@@ -20,7 +20,7 @@
         </b-badge>
       </b-link>
       <span class="spacer"></span>
-      <footer class="sidebar-footer" v-if="user">
+      <footer class="sidebar-footer" v-if="isLoaded && user">
         <div class="contact">
           <h4>Logged in as</h4>
           <DisplayName :userObject="user" />
@@ -71,6 +71,7 @@ export default {
 
   computed: {
     ...mapState('auth', ['user']),
+    ...mapState('app', ['isLoaded']),
     ...mapState('records', {
       incomingTransfers: (state) => {
         return state.lists.incomingTransfers
