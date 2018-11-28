@@ -192,13 +192,19 @@ hr {
 $popover-color: desaturate(lighten($color-secondary, 10%), 30%);
 
 .popover {
-  border: none;
-  box-shadow: 0.25rem 0.25rem .5rem rgba($color-dark, .8);
+  background-color: $popover-color;
+  border-color: rgba($color-dark, .25);
+  box-shadow: 0 0 1rem rgba($color-dark, .6);
+}
+
+.popover-header {
+  background-color: rgba($color-dark, .25);
+  border-bottom-color: rgba($color-dark, .25);
 }
 
 .popover-body {
   padding: 1rem;
-  background-color: $popover-color;
+  background-color: transparent;
 }
 
 .bs-popover-top .arrow::after {
