@@ -33,7 +33,7 @@ export default {
   buyTokens: (source) => {
     const requestOptions = {
       method: 'post',
-      url: '/user/codex-coin',
+      url: '/user/faucet/purchase',
       data: {
         source,
       },
