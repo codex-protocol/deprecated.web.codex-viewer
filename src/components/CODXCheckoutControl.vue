@@ -17,13 +17,15 @@
         <p>Remaining credits after</p>
         <p>{{ newBalance | formatCODXBalance }}</p>
       </div>
+
+      <div v-if="insufficientCODX">
+        Buy more CODX!
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import BigNumber from 'bignumber.js'
-
 export default {
   name: 'CODXCheckoutControl',
 
@@ -38,18 +40,15 @@ export default {
       required: true,
     },
 
-    currentBalance: {
-      type: String,
+    newBalance: {
+      type: Object,
       required: true,
     },
-  },
 
-  data() {
-    const newBalance = new BigNumber(this.currentBalance).sub(this.cost)
-
-    return {
-      newBalance,
-    }
+    insufficientCODX: {
+      type: Boolean,
+      required: true,
+    },
   },
 }
 </script>

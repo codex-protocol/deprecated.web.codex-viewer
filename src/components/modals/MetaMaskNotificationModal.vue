@@ -83,7 +83,8 @@
           <CODXCheckoutControl
             :action="checkoutTitle"
             :cost="checkoutCost"
-            :currentBalance="user.codxBalance"
+            :newBalance="newBalance"
+            :insufficientCODX="insufficientCODX"
           >
             <slot name="checkout"></slot>
           </CODXCheckoutControl>
@@ -144,6 +145,7 @@ export default {
       currentStep: 0,
       errors: [],
       shown: this.onShown || noOp,
+      disableButton: false,
     }
   },
 
@@ -151,8 +153,18 @@ export default {
     ...mapState('auth', ['registryContractApproved', 'user']),
     ...mapGetters('auth', ['isSimpleUser']),
 
+    newBalance() {
+      return this.checkoutCost
+        ? new BigNumber(this.user.codxBalance).sub(this.checkoutCost)
+        : new BigNumber(0)
+    },
+
+    insufficientCODX() {
+      return this.newBalance.lt(0)
+    },
+
     isDisabled() {
-      return this.willTransactionFail || this.okDisabled || false
+      return this.willTransactionFail || this.okDisabled || this.disableButton
     },
 
     modalSize() {
@@ -241,9 +253,12 @@ export default {
           break
 
         // @todo: validate this with savvy users
-        // @todo: pass metadata from modal here
         // checkout flow
         case 3:
+          if (this.insufficientCODX) {
+            this.disableButton = true
+          }
+
           this.preventClose = false
           this.isFooterHidden = false
           break
