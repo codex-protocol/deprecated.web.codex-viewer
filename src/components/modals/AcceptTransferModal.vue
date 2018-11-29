@@ -6,8 +6,24 @@
     cancel-variant="outline-primary"
     :ok-method="acceptTransfer"
     :requires-tokens="true"
+    :checkout-cost="codxCosts.CodexRecord.safeTransferFrom"
+    checkout-title="Accept Codex Record"
   >
-    Accept transfer
+    <template slot="checkout" v-if="codexRecord">
+      <h3>{{ codexRecord.metadata.name }}</h3>
+      <h5>Description:</h5>
+      <div>{{ codexRecord.metadata.description }}</div>
+      <div class="image-container">
+        <img :src="codexRecord.metadata | getMainImageUri" />
+      </div>
+    </template>
+
+    <p>
+      Accepting this Codex Record will add it to your collection.
+      As soon as it is added to your collection it will become private for others.
+    </p>
+
+    <p>You have full control over what you can do with the Codex Record after it's added to your collection.</p>
   </MetaMaskNotificationModal>
 </template>
 
@@ -30,6 +46,7 @@ export default {
   },
 
   computed: {
+    ...mapState('app', ['codxCosts']),
     ...mapState('auth', ['user']),
     ...mapState('records', ['onTransferCallback']),
   },

@@ -9,33 +9,17 @@
     :on-clear="clearModal"
     :requires-tokens="true"
     :validate="validate"
+    :checkout-cost="codxCosts.CodexRecord.mint"
+    checkout-title="Create Codex Record"
   >
-    <div class="checkout-container" slot="checkout">
-      <div class="column">
-        <h3>{{ name }}</h3>
-        <h5>Description:</h5>
-        <div>{{ description }}</div>
-        <div class="image-container-xs">
-          <img :src="imageStreamUri" />
-        </div>
+    <template slot="checkout">
+      <h3>{{ name }}</h3>
+      <h5>Description:</h5>
+      <div>{{ description }}</div>
+      <div class="image-container-xs">
+        <img :src="imageStreamUri" />
       </div>
-      <div class="column">
-        <!-- @todo: break this out into a component that also has a button to buy more if they need -->
-        <h3>Summary</h3>
-        <div class="row">
-          <p>Create Codex Record x1</p>
-          <p>{{ codxCosts.CodexRecord.mint | formatCODXBalance }}</p>
-        </div>
-        <div class="row">
-          <p>Total</p>
-          <p>{{ codxCosts.CodexRecord.mint | formatCODXBalance }}</p>
-        </div>
-        <div class="row">
-          <p>Remaining credits after</p>
-          <p>9 CODX</p>
-        </div>
-      </div>
-    </div>
+    </template>
 
     <div class="flex-container">
       <div class="image-container" :class="{ 'no-image': !imageStreamUri }">
@@ -118,6 +102,7 @@ import EventBus from '../../util/eventBus'
 import contractHelper from '../../util/contractHelper'
 import { NullDescriptionHash } from '../../util/constants/web3'
 import additionalDataHelper from '../../util/additionalDataHelper'
+
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
 const logger = debug('app:component:create-record-modal')
@@ -314,23 +299,4 @@ export default {
 
 .image-container-xs img
   width: 50%
-
-.checkout-container
-  display: flex
-  flex-direction: row
-  font-size: 80%
-  text-align: left
-
-  .column
-    width: 50%
-
-    .row
-      justify-content: space-between
-      margin: 0
-      width: 80%
-
-      @media screen and (min-width: $breakpoint-sm)
-        flex-direction: column
-        background-color: red
-
 </style>

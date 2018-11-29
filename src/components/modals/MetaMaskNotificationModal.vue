@@ -80,7 +80,13 @@
         </div>
 
         <div v-else-if="currentStep === 3">
-          <slot name="checkout"></slot>
+          <CODXCheckoutControl
+            :action="checkoutTitle"
+            :cost="checkoutCost"
+            :currentBalance="user.codxBalance"
+          >
+            <slot name="checkout"></slot>
+          </CODXCheckoutControl>
         </div>
 
         <div v-else-if="currentStep === 4">
@@ -102,6 +108,8 @@ import { mapState, mapGetters } from 'vuex'
 
 import config from '../../util/config'
 
+import CODXCheckoutControl from '../CODXCheckoutControl'
+
 export default {
   name: 'MetaMaskNotificationModal',
 
@@ -117,7 +125,13 @@ export default {
     'onClear',
     'requiresTokens',
     'validate',
+    'checkoutTitle',
+    'checkoutCost',
   ],
+
+  components: {
+    CODXCheckoutControl,
+  },
 
   data() {
     const noOp = () => {}

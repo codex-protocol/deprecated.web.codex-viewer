@@ -1,6 +1,6 @@
 <template>
   <b-card
-    :img-src="missingImageHelper.getMainImageUri(codexRecord.metadata)"
+    :img-src="codexRecord.metadata | getMainImageUri"
     img-top
   >
     <div class="accepted-overlay" v-if="this.transferAccepted">
@@ -20,7 +20,6 @@
 import { mapState } from 'vuex'
 
 import EventBus from '../util/eventBus'
-import missingImageHelper from '../util/missingImageHelper'
 
 export default {
   name: 'RecordTransferIncomingListItem',
@@ -37,7 +36,6 @@ export default {
       route: { name: 'record-detail', params: { recordId: this.codexRecord.tokenId } },
       transferAccepted: false,
       isLoading: false,
-      missingImageHelper,
     }
   },
 
@@ -85,7 +83,10 @@ export default {
         },
       })
 
-      this.$root.$emit('bv::show::modal', 'acceptTransferModal')
+      // The modal depends on the call from above to resolve first before being shown
+      setTimeout(() => {
+        this.$root.$emit('bv::show::modal', 'acceptTransferModal')
+      }, 0)
     },
 
     ignoreTransfer() {
