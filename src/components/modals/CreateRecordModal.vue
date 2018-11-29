@@ -24,11 +24,11 @@
         <h3>Summary</h3>
         <div class="row">
           <p>Create Codex Record x1</p>
-          <p>{{ codxCosts['mint'] | formatCODXBalance }}</p>
+          <p>{{ codxCosts.CodexRecord.mint | formatCODXBalance }}</p>
         </div>
         <div class="row">
           <p>Total</p>
-          <p>{{ codxCosts['mint'] | formatCODXBalance }}</p>
+          <p>{{ codxCosts.CodexRecord.mint | formatCODXBalance }}</p>
         </div>
         <div class="row">
           <p>Remaining credits after</p>

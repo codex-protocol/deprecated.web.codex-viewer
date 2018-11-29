@@ -184,7 +184,11 @@ export default {
 
       if (this.isSimpleUser) {
         if (this.currentStep === 0) {
-          this.goToStep(3)
+          if (this.requiresTokens) {
+            this.goToStep(3)
+          } else {
+            this.goToStep(4)
+          }
         } else {
           this.goToStep(this.currentStep + 1)
         }
