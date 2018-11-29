@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import BigNumber from 'bignumber.js'
 
-export default Vue.filter('formatCODXBalance', (value, numDecimals = 3, showCODXLabel = true) => {
+export default Vue.filter('formatCODXBalance', (value, label = 'CODX', numDecimals = 3) => {
 
   const reducedValue = new BigNumber(value || 0).div('1e18')
   const fixedValue = reducedValue.toFixed(numDecimals)
@@ -11,8 +11,8 @@ export default Vue.filter('formatCODXBalance', (value, numDecimals = 3, showCODX
     ? reducedValue.toString()
     : fixedValue
 
-  return showCODXLabel
-    ? `${codxAmount} CODX`
+  return label
+    ? `${codxAmount} ${label}`
     : codxAmount
 
 })
