@@ -1,7 +1,8 @@
 import callApi from './callApi'
 
 export default {
-  getDripFromFaucet: () => {
+
+  requestDrip: () => {
     const requestOptions = {
       url: '/user/faucet/drip',
       method: 'get',

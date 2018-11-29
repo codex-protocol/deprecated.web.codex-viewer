@@ -5,7 +5,7 @@
     ok-title="Request tokens"
     cancel-variant="outline-primary"
     v-model="modalVisible"
-    v-on:ok="requestTokens"
+    v-on:ok="requestDrip"
   >
     <div class="text-center">
       <img class="token-icon" src="../../assets/icons/codx-token.svg">
@@ -30,17 +30,18 @@ export default {
   },
 
   methods: {
-    requestTokens(event) {
+    requestDrip(event) {
+
       event.preventDefault()
       EventBus.$emit('events:faucet-request', this)
 
-      Faucet.getDripFromFaucet()
+      return Faucet.requestDrip()
         .then(() => {
-          EventBus.$emit('toast:success', 'Tokens requested successfully! Your balance will update soon.', 5000)
+          EventBus.$emit('toast:success', 'CODX requested successfully! Your balance will update soon.', 5000)
           this.modalVisible = false
         })
         .catch((error) => {
-          EventBus.$emit('toast:error', `Could not request tokens: ${error.message}`)
+          EventBus.$emit('toast:error', `Could not request CODX: ${error.message}`)
         })
     },
   },
