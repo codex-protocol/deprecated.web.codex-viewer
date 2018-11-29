@@ -5,7 +5,7 @@
         <AppHeader title="Get CODX" />
 
         <div class="content">
-          <div v-if="faucetDripEnabled">
+          <section class="request-faucet-drip" v-if="showFaucetDripForm">
             <p>
               Click the button below to request the Codex Protocol ERC-20 token, CodexCoin.
               After requesting a drip from the faucet, CodexCoin will be sent to the account you are currently logged in to.
@@ -26,34 +26,28 @@
 
             <FaucetDripModal />
 
-            <hr />
+          </section>
 
-            <div v-if="!isSimpleUser">
-              <p>Registry contract approved? {{ registryContractApproved ? 'Yes!' : 'No' }}</p>
-              <b-button variant="primary" v-b-modal.approveRegistryModal :disabled="registryContractApproved">
-                Approve the registry contract
-              </b-button>
+          <section class="buy-on-exchange" v-if="!isSimpleUser && !faucetDripEnabled">
+            <!--  @TODO: add info here about where savvy users can purchase CODX from an exchange -->
+            <p>
+              Buy CODX on an exchange.
+            </p>
+          </section>
 
-              <ApproveContractModal id="approveRegistryModal" :contract="recordContract" stateProperty="registryContractApproved">
-                This will grant the Codex Viewer permission to spend CODX on your behalf.
-              </ApproveContractModal>
-
-              <hr />
-            </div>
-          </div>
-
-          <div v-if="stripeHandler">
+          <section class="pay-with-stripe" v-if="stripeHandler && isSimpleUser">
             <p>
               Click the button below to purchase the Codex Protocol ERC-20 token, CodexCoin.
             </p>
             <b-button
               id="codex-payment"
-              @click.prevent="promptForPayment"
               variant="primary"
+              @click.prevent="promptForPayment"
             >
               Pay with Stripe
             </b-button>
-          </div>
+          </section>
+
         </div>
       </div>
     </div>
@@ -100,6 +94,13 @@ export default {
     ...mapState('web3', ['recordContract']),
     ...mapGetters('auth', ['isSimpleUser']),
 
+    showFaucetDripForm() {
+      return (
+        (config.faucetDripEnabled && this.isSimpleUser) ||
+        (config.faucetDripEnabled && config.feesEnabled && !this.isSimpleUser)
+      )
+    },
+
     nextRequestIn() {
       const now = Date.now()
       const faucetDripNextRequestAt = new Date(this.user.faucetDripNextRequestAt).getTime()
@@ -127,9 +128,8 @@ export default {
   @media screen and (min-width: $breakpoint-lg)
     max-width: 50%
 
-hr
-  width: 100%
+section + section
   margin-top: 2rem
-  margin-bottom: 2rem
-  border-color: rgba($color-primary, .25)
+  padding-top: 2rem
+  border-top: 1px solid rgba($color-primary, .25)
 </style>

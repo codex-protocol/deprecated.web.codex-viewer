@@ -25,7 +25,7 @@
           <h4>Logged in as</h4>
           <DisplayName :userObject="user" />
         </div>
-        <CODXBalanceControl v-if="isSimpleUser" />
+        <CODXBalanceControl v-if="isSimpleUser || feesEnabled" />
       </footer>
     </div>
   </nav>
@@ -63,6 +63,7 @@ export default {
 
   data() {
     return {
+      feesEnabled: config.feesEnabled,
       showCodexGallery: config.showCodexGalleryInSideBar,
     }
   },
@@ -111,7 +112,7 @@ export default {
           to: '/get-codx',
           icon: codxIcon,
           text: 'Get CODX',
-          condition: this.isSimpleUser,
+          condition: this.isSimpleUser || config.feesEnabled,
         },
         {
           to: '/extensions',
