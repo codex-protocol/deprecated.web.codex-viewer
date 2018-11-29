@@ -111,6 +111,7 @@ const router = new Router({
       name: 'gallery',
       path: '/galleries/:galleryShareCode',
       component: GalleryView,
+      meta: { allowUnauthenticatedUsers: true },
     },
 
     // other non-application routes

@@ -15,17 +15,17 @@
               class="mb-3"
               variant="primary"
               v-b-modal.faucetModal
-              :disabled="!user.canRequestFaucetTokens"
+              :disabled="!user.canRequestFaucetDrip"
             >
               Get more CODX
             </b-button>
 
             <p>Your balance: {{ user.codxBalance | formatCODXBalance }}</p>
-            <p v-if="!user.canRequestFaucetTokens">
+            <p v-if="!user.canRequestFaucetDrip">
               <strong>You'll be able to request more CODX in {{ nextRequestIn }}</strong>
             </p>
 
-            <faucet-modal />
+            <FaucetModal />
 
             <hr />
 
@@ -35,9 +35,9 @@
                 Approve the registry contract
               </b-button>
 
-              <approve-contract-modal id="approveRegistryModal" :contract="recordContract" stateProperty="registryContractApproved">
+              <ApproveContractModal id="approveRegistryModal" :contract="recordContract" stateProperty="registryContractApproved">
                 This will grant the Codex Viewer permission to spend CODX on your behalf.
-              </approve-contract-modal>
+              </ApproveContractModal>
 
               <hr />
             </div>
