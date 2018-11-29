@@ -15,6 +15,7 @@
             :key="record.tokenId"
             :is="listItemComponent"
           />
+          <AcceptTransferModal :codexRecord="selectedRecordToTransfer" />
         </b-card-group>
         <div v-else>
           You have no {{ transferDirection }} transfers.
@@ -26,10 +27,14 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import AppHeader from '../components/core/AppHeader'
 import TransferListSubheader from '../components/TransferListSubheader'
 import RecordTransferIncomingListItem from '../components/RecordTransferIncomingListItem'
 import RecordTransferOutgoingListItem from '../components/RecordTransferOutgoingListItem'
+
+import AcceptTransferModal from '../components/modals/AcceptTransferModal'
 
 export default {
   name: 'TransferListView',
@@ -39,6 +44,7 @@ export default {
     TransferListSubheader,
     RecordTransferIncomingListItem,
     RecordTransferOutgoingListItem,
+    AcceptTransferModal,
   },
 
   props: {
@@ -49,6 +55,8 @@ export default {
   },
 
   computed: {
+    ...mapState('records', ['selectedRecordToTransfer']),
+
     records() {
       return this.transferDirection === 'incoming'
         ? this.$store.state.records.lists.incomingTransfers

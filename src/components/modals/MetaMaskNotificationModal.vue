@@ -148,7 +148,7 @@ export default {
     // @TODO: instead of checking for a balance of 0, this should really check
     //  for a balance "gte" the cost of the transaction
     willTransactionFail() {
-      return config.showFaucet && this.requiresTokens && (!this.registryContractApproved || new BigNumber(this.user.codxBalance).eq(0))
+      return !this.isSimpleUser && config.showFaucet && this.requiresTokens && (!this.registryContractApproved || new BigNumber(this.user.codxBalance).eq(0))
     },
 
     shouldShowMainSlot() {

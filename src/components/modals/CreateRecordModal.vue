@@ -20,14 +20,15 @@
         </div>
       </div>
       <div class="column">
+        <!-- @todo: break this out into a component that also has a button to buy more if they need -->
         <h3>Summary</h3>
         <div class="row">
           <p>Create Codex Record x1</p>
-          <p>1 CODX</p>
+          <p>{{ codxCosts['mint'] | formatCODXBalance }}</p>
         </div>
         <div class="row">
           <p>Total</p>
-          <p>1 CODX</p>
+          <p>{{ codxCosts['mint'] | formatCODXBalance }}</p>
         </div>
         <div class="row">
           <p>Remaining credits after</p>
@@ -254,6 +255,7 @@ export default {
   },
 
   computed: {
+    ...mapState('app', ['codxCosts']),
     ...mapState('auth', ['user']),
     ...mapState('web3', ['instance']),
 

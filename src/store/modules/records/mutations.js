@@ -49,6 +49,13 @@ export default {
     currentState.activeRecord = record
   },
 
+  SET_SELECTED_RECORD_TO_TRANSFER(currentState, { codexRecord, callback }) {
+    logMutation('SET_SELECTED_RECORD_TO_TRANSFER', codexRecord)
+
+    currentState.selectedRecordToTransfer = codexRecord
+    currentState.onTransferCallback = callback
+  },
+
   UPDATE_RECORD_IN_LISTS(currentState, record) {
     logMutation('UPDATE_RECORD_IN_LISTS', record)
 
