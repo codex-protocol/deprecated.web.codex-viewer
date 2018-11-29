@@ -12,7 +12,7 @@ import RecordListView from '../views/RecordListView'
 import RecordDetailView from '../views/RecordDetailView'
 import SettingsView from '../views/SettingsView'
 import ManageTokensView from '../views/ManageTokensView'
-import FaucetView from '../views/FaucetView'
+import GetCODXView from '../views/GetCODXView'
 import GalleryView from '../views/GalleryView'
 import GalleryListView from '../views/GalleryListView'
 import OAuth2AppView from '../views/test/OAuth2AppView'
@@ -94,9 +94,9 @@ const router = new Router({
       },
     },
     {
-      name: 'faucet',
-      path: '/faucet',
-      component: FaucetView,
+      name: 'get-codx',
+      path: '/get-codx',
+      component: GetCODXView,
       meta: { allowUnauthenticatedUsers: true },
     },
 

@@ -25,7 +25,7 @@
           <h4>Logged in as</h4>
           <DisplayName :userObject="user" />
         </div>
-        <CODXBalanceControl v-if="showCODXBalance" />
+        <CODXBalanceControl v-if="isSimpleUser" />
       </footer>
     </div>
   </nav>
@@ -46,7 +46,6 @@ import iconHome from '../../assets/icons/home.svg'
 import iconCollection from '../../assets/icons/collection.svg'
 import iconTransfers from '../../assets/icons/transfers.svg'
 import codxIcon from '../../assets/icons/codx-token.svg'
-import faucetIcon from '../../assets/icons/faucet.svg'
 import starIcon from '../../assets/icons/star.svg'
 import galleryIcon from '../../assets/icons/gallery.svg'
 import settingsIcon from '../../assets/icons/settings.svg'
@@ -64,7 +63,6 @@ export default {
 
   data() {
     return {
-      showFaucet: config.showFaucet,
       showCodexGallery: config.showCodexGalleryInSideBar,
     }
   },
@@ -77,14 +75,10 @@ export default {
         return state.lists.incomingTransfers
       },
     }),
-    ...mapGetters('auth', ['isAuthenticated']),
+    ...mapGetters('auth', ['isAuthenticated', 'isSimpleUser']),
 
     showManageTokensPage() {
       return this.user && this.user.type === 'savvy' && config.showManageTokensPage
-    },
-
-    showCODXBalance() {
-      return config.showFaucet || (this.user && this.user.type !== 'savvy')
     },
 
     navItems() {
@@ -114,10 +108,10 @@ export default {
           text: 'ManageTokens',
         },
         {
-          to: '/faucet',
-          condition: this.showFaucet,
-          icon: faucetIcon,
-          text: 'Faucet',
+          to: '/get-codx',
+          icon: codxIcon,
+          text: 'Get CODX',
+          condition: this.isSimpleUser,
         },
         {
           to: '/extensions',

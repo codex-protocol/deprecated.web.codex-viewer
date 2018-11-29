@@ -56,7 +56,7 @@
           You haven't finished setting up your account so the transaction will fail.
         </p>
         <p>
-          Make sure to <b-link :to="{ name: 'faucet' }">get CODX from the faucet and approve the registry contract.</b-link>
+          Make sure to <b-link :to="{ name: 'get-codx' }">get CODX and approve the registry contract.</b-link>
         </p>
       </div>
 
@@ -174,7 +174,12 @@ export default {
     // @TODO: instead of checking for a balance of 0, this should really check
     //  for a balance "gte" the cost of the transaction
     willTransactionFail() {
-      return !this.isSimpleUser && config.showFaucet && this.requiresTokens && (!this.registryContractApproved || new BigNumber(this.user.codxBalance).eq(0))
+      return (
+        !this.isSimpleUser &&
+        config.feesEnabled &&
+        this.requiresTokens &&
+        (!this.registryContractApproved || new BigNumber(this.user.codxBalance).eq(0))
+      )
     },
 
     shouldShowMainSlot() {

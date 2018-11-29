@@ -1,7 +1,7 @@
 <template>
-  <div class="faucet-card">
+  <div class="savvy-setup">
     <b-card no-body>
-      <div class="faucet-card-body">
+      <div class="savvy-setup-body">
         <h2>Finish setting up your account</h2>
         <b-progress
           class="mt-4 mb-4"
@@ -14,7 +14,6 @@
           <li :class="{ 'completed': currentStep >= 2 }">Get CODX from the faucet</li>
           <li :class="{ 'completed': currentStep >= 3 }">Approve the registry contract</li>
         </ul>
-        <p>Your balance: {{ user.codxBalance | formatCODXBalance }}</p>
       </div>
       <b-button
         variant="primary"
@@ -28,14 +27,14 @@
       </p>
     </b-card>
 
-    <approve-contract-modal
+    <ApproveContractModal
       id="approveRegistryModal"
       :contract="recordContract"
       stateProperty="registryContractApproved"
     >
       This will grant the Codex Viewer permission to spend CODX on your behalf.
-    </approve-contract-modal>
-    <faucet-modal />
+    </ApproveContractModal>
+    <FaucetDripModal />
   </div>
 </template>
 
@@ -43,14 +42,14 @@
 import { mapState } from 'vuex'
 import BigNumber from 'bignumber.js'
 
-import FaucetModal from './../modals/FaucetModal'
+import FaucetDripModal from './../modals/FaucetDripModal'
 import ApproveContractModal from './../modals/ApproveContractModal'
 
 export default {
-  name: 'FaucetMarketingCard',
+  name: 'SavvySetupCard',
   components: {
     ApproveContractModal,
-    FaucetModal,
+    FaucetDripModal,
   },
   data() {
     return {
@@ -58,8 +57,8 @@ export default {
     }
   },
   computed: {
-    ...mapState('auth', ['registryContractApproved', 'user']),
     ...mapState('web3', ['recordContract']),
+    ...mapState('auth', ['registryContractApproved', 'user']),
 
     done() {
       return this.currentStep === this.numSteps
@@ -95,7 +94,7 @@ export default {
     completeStep() {
       switch (this.currentStep) {
         case 1:
-          this.$root.$emit('bv::show::modal', 'faucetModal')
+          this.$root.$emit('bv::show::modal', 'faucetDripModal')
           break
 
         case 2:
@@ -116,7 +115,7 @@ export default {
 <style lang="stylus" scoped>
 @import "../../assets/variables.styl"
 
-.faucet-card
+.savvy-setup
   card()
   margin-left: 0
   margin-right: 0
@@ -133,7 +132,7 @@ export default {
   border: none
   background-color: rgba(white, .1)
 
-.faucet-card-body
+.savvy-setup-body
   flex: 1
   text-align: left
   padding: 1.25rem 1.25rem 0

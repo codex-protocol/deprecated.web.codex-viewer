@@ -19,7 +19,7 @@
           </b-button>
         </AppHeader>
         <b-card-group deck class="record-list">
-          <FaucetMarketingCard v-if="showFaucetMarketingCard" />
+          <SavvySetupCard v-if="showSavvySetupCard" />
 
           <template v-if="giveaway">
             <ClaimGiveawayCard :giveaway="giveaway" />
@@ -54,10 +54,10 @@ import Giveaway from '../util/api/giveaway'
 
 import AppHeader from '../components/core/AppHeader'
 
+import SavvySetupCard from '../components/cards/SavvySetupCard'
 import GiveawayInfoCard from '../components/cards/GiveawayInfoCard'
 import CreateRecordCard from '../components/cards/CreateRecordCard'
 import ClaimGiveawayCard from '../components/cards/ClaimGiveawayCard'
-import FaucetMarketingCard from '../components/cards/FaucetMarketingCard'
 
 
 import RecordListItem from '../components/RecordListItem'
@@ -69,10 +69,10 @@ export default {
   components: {
     AppHeader,
 
+    SavvySetupCard,
     GiveawayInfoCard,
     CreateRecordCard,
     ClaimGiveawayCard,
-    FaucetMarketingCard,
 
     RecordListItem,
     CreateRecordModal,
@@ -92,8 +92,8 @@ export default {
       return this.isAdmin && !this.giveaway
     },
 
-    showFaucetMarketingCard() {
-      return config.showFaucet && !this.isSimpleUser && !this.hideSetup && !this.giveaway
+    showSavvySetupCard() {
+      return config.feesEnabled && !this.isSimpleUser && !this.hideSetup && !this.giveaway
     },
   },
 

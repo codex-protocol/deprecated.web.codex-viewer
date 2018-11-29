@@ -102,9 +102,9 @@ const actionsLabels = {
     action: 'Web3',
     label: 'Approve Contract',
   },
-  'events:faucet-request': {
+  'events:faucet-drip-request': {
     action: 'Web3',
-    label: 'Faucet Request',
+    label: 'Faucet Drip Request',
   },
   'events:click-stake-tokens': {
     action: 'Click',
@@ -139,10 +139,10 @@ const actionsLabels = {
     label: 'Gallery Page',
   },
 
-  // Faucet
-  'events:view-faucet-page': {
+  // Get CODX
+  'events:view-get-codx-page': {
     action: 'View',
-    label: 'Faucet Page',
+    label: 'Get CODX Page',
   },
   'events:view-codex-quests-page': {
     action: 'View',

@@ -1,7 +1,7 @@
 <template>
   <b-modal
-    id="faucetModal"
-    title="Get CODX tokens"
+    title="Get CODX"
+    id="faucetDripModal"
     ok-title="Request tokens"
     cancel-variant="outline-primary"
     v-model="modalVisible"
@@ -21,7 +21,7 @@ import Faucet from '../../util/api/faucet'
 import EventBus from '../../util/eventBus'
 
 export default {
-  name: 'faucetModal',
+  name: 'FaucetDripModal',
 
   data() {
     return {
@@ -33,7 +33,7 @@ export default {
     requestDrip(event) {
 
       event.preventDefault()
-      EventBus.$emit('events:faucet-request', this)
+      EventBus.$emit('events:faucet-drip-request', this)
 
       return Faucet.requestDrip()
         .then(() => {

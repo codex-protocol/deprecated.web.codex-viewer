@@ -2,10 +2,10 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">
-        <AppHeader title="Get more CODX" />
+        <AppHeader title="Get CODX" />
 
         <div class="content">
-          <div v-if="showFaucet">
+          <div v-if="faucetDripEnabled">
             <p>
               Click the button below to request the Codex Protocol ERC-20 token, CodexCoin.
               After requesting a drip from the faucet, CodexCoin will be sent to the account you are currently logged in to.
@@ -14,18 +14,17 @@
             <b-button
               class="mb-3"
               variant="primary"
-              v-b-modal.faucetModal
+              v-b-modal.faucetDripModal
               :disabled="!user.canRequestFaucetDrip"
             >
-              Get more CODX
+              Request CODX from faucet
             </b-button>
 
-            <p>Your balance: {{ user.codxBalance | formatCODXBalance }}</p>
             <p v-if="!user.canRequestFaucetDrip">
               <strong>You'll be able to request more CODX in {{ nextRequestIn }}</strong>
             </p>
 
-            <FaucetModal />
+            <FaucetDripModal />
 
             <hr />
 
@@ -71,7 +70,7 @@ import config from '../util/config'
 import { timeSince } from '../util/dateHelpers'
 
 import AppHeader from '../components/core/AppHeader'
-import FaucetModal from '../components/modals/FaucetModal'
+import FaucetDripModal from '../components/modals/FaucetDripModal'
 import ApproveContractModal from '../components/modals/ApproveContractModal'
 
 export default {
@@ -79,13 +78,13 @@ export default {
 
   components: {
     AppHeader,
-    FaucetModal,
+    FaucetDripModal,
     ApproveContractModal,
   },
 
   data() {
     return {
-      showFaucet: config.showFaucet,
+      faucetDripEnabled: config.faucetDripEnabled,
     }
   },
 

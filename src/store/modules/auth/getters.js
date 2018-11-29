@@ -8,6 +8,6 @@ export default {
   },
 
   isSimpleUser: (state) => {
-    return state.user && state.user.type === 'simple'
+    return state.user && state.user.type !== 'savvy'
   },
 }
