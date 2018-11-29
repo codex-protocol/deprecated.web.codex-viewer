@@ -9,7 +9,7 @@ const stripeHandler = !process.env.VUE_APP_STRIPE_PUBLIC_KEY
     zipCode: true,
     billingAddress: process.env.VUE_APP_TARGET_ENV === 'production',
     token: (token) => {
-      Faucet.purchaseCODX(token.id)
+      Faucet.purchaseCODX(token.id, 'alpha')
         .catch((error) => {
           console.log(JSON.stringify(error))
           throw error

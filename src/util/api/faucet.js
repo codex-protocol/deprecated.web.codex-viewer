@@ -11,13 +11,14 @@ export default {
     return callApi(requestOptions)
   },
 
-  purchaseCODX: (source) => {
+  purchaseCODX: (source, packageName) => {
 
     const requestOptions = {
       method: 'post',
       url: '/user/faucet/purchase',
       data: {
         source,
+        packageName,
       },
     }
 
