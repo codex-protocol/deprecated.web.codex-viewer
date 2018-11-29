@@ -29,15 +29,4 @@ export default {
 
     return callApi(requestOptions)
   },
-
-  buyTokens: (source) => {
-    const requestOptions = {
-      method: 'post',
-      url: '/user/faucet/purchase',
-      data: {
-        source,
-      },
-    }
-    return callApi(requestOptions)
-  },
 }

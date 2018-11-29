@@ -1,4 +1,4 @@
-import User from '../../../util/api/user'
+import Faucet from '../../../util/api/faucet'
 
 const stripeHandler = !process.env.VUE_APP_STRIPE_PUBLIC_KEY
   ? null
@@ -9,7 +9,7 @@ const stripeHandler = !process.env.VUE_APP_STRIPE_PUBLIC_KEY
     zipCode: true,
     billingAddress: process.env.VUE_APP_TARGET_ENV === 'production',
     token: (token) => {
-      User.buyTokens(token.id)
+      Faucet.purchaseCODX(token.id)
         .catch((error) => {
           console.log(JSON.stringify(error))
           throw error

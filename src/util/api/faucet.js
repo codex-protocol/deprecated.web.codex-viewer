@@ -10,4 +10,17 @@ export default {
 
     return callApi(requestOptions)
   },
+
+  purchaseCODX: (source) => {
+
+    const requestOptions = {
+      method: 'post',
+      url: '/user/faucet/purchase',
+      data: {
+        source,
+      },
+    }
+
+    return callApi(requestOptions)
+  },
 }
