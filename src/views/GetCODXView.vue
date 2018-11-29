@@ -74,7 +74,7 @@ import FaucetDripModal from '../components/modals/FaucetDripModal'
 import ApproveContractModal from '../components/modals/ApproveContractModal'
 
 export default {
-  name: 'FaucetView',
+  name: 'GetCODXView',
 
   components: {
     AppHeader,

@@ -19,7 +19,7 @@
       </div>
 
       <div v-if="insufficientCODX">
-        <b-button to="/faucet">
+        <b-button to="/get-codx">
           Buy more CODX
         </b-button>
       </div>

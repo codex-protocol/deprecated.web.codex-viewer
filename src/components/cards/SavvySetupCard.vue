@@ -11,7 +11,7 @@
         />
         <ul>
           <li :class="{ 'completed': currentStep >= 1 }">Create account</li>
-          <li :class="{ 'completed': currentStep >= 2 }">Get CODX from the faucet</li>
+          <li :class="{ 'completed': currentStep >= 2 }">Get CODX</li>
           <li :class="{ 'completed': currentStep >= 3 }">Approve the registry contract</li>
         </ul>
       </div>
