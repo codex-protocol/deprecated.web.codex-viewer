@@ -4,7 +4,7 @@ export default {
 
   requestDrip: () => {
     const requestOptions = {
-      url: '/user/faucet/drip',
+      url: '/user/faucet',
       method: 'get',
     }
 

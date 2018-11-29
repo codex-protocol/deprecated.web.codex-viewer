@@ -210,7 +210,7 @@ export default {
 
       if (this.isSimpleUser) {
         if (this.currentStep === 0) {
-          if (this.requiresTokens) {
+          if (this.requiresTokens && this.checkoutCost) {
             this.goToStep(3)
           } else {
             this.goToStep(4)
