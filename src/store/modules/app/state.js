@@ -31,5 +31,6 @@ export default () => {
     eventEmails: [],
     codxCosts: null,
     stripeHandler,
+    showNav: false,
   }
 }

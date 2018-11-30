@@ -50,6 +50,12 @@ export default {
     currentState.isLoaded = isLoaded
   },
 
+  SET_SHOW_NAV(currentState, showNav) {
+    logMutation('SET_SHOW_NAV', showNav)
+
+    currentState.showNav = showNav
+  },
+
   SET_POST_LOGIN_DESTINATION(currentState, destination) {
     logMutation('SET_POST_LOGIN_DESTINATION', destination)
 

@@ -5,11 +5,11 @@
     </div>
     <div class="button-container">
       <b-link
-        v-for="(navItem, index) in navItems"
         :key="index"
         :to="navItem.to"
-        @click.prevent="navItem.action ? navItem.action() : hideNav()"
         v-if="navItem.condition"
+        v-for="(navItem, index) in navItems"
+        @click.prevent="navItem.action ? navItem.action() : TOGGLE_NAV(false)"
       >
         <img :src="navItem.icon">{{ navItem.text }}
         <b-badge
@@ -35,6 +35,7 @@
 import {
   mapState,
   mapGetters,
+  mapActions,
 } from 'vuex'
 
 import DisplayName from '../util/DisplayName'
@@ -53,8 +54,6 @@ import logoutIcon from '../../assets/icons/logout.svg'
 
 export default {
   name: 'AppSideBar',
-
-  props: ['hideNav'],
 
   components: {
     DisplayName,
@@ -150,8 +149,9 @@ export default {
   },
 
   methods: {
+    ...mapActions('app', ['TOGGLE_NAV']),
     logout() {
-      this.hideNav()
+      this.TOGGLE_NAV(false)
       this.$store.dispatch('auth/LOGOUT_USER')
     },
   },

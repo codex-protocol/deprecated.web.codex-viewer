@@ -89,4 +89,14 @@ export default {
         commit('SET_GIVEAWAY', giveaways[0])
       })
   },
+
+  TOGGLE_NAV({ commit, state }, newState) {
+    logger('TOGGLE_NAV action being executed')
+
+    const newShowNav = typeof newState !== 'boolean'
+      ? !state.showNav
+      : newState
+
+    commit('SET_SHOW_NAV', newShowNav)
+  },
 }
