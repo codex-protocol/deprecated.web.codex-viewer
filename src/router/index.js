@@ -97,7 +97,6 @@ const router = new Router({
       name: 'get-codx',
       path: '/get-codx',
       component: GetCODXView,
-      meta: { allowUnauthenticatedUsers: true },
     },
 
     // gallery routes

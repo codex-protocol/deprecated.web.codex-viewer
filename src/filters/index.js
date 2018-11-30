@@ -1,2 +1,2 @@
-import './format-codx-balance'
+import './format-codx-amount'
 import './get-main-image-uri'

@@ -2,7 +2,7 @@
   <div class="codx-balance-container">
     <div class="balance-wrapper">
       <h4>Credit Balance</h4>
-      <div>{{ user.codxBalance | formatCODXBalance }}</div>
+      <div>{{ user.codxBalance | formatCODXAmount }}</div>
     </div>
     <img
       @click.stop
@@ -16,6 +16,7 @@
       boundary="viewport"
       placement="righttop"
       title="What is CODX?"
+      :show.sync="showPopover"
       target="codx-balance-popover-trigger"
     >
       <div class="codx-balance-popover">
@@ -25,14 +26,14 @@
           :key="methodName"
           v-for="(description, methodName) in orderedMethodDescriptions"
         >
-          <strong>{{ description }}:</strong> {{ codxCosts.CodexRecord[methodName] | formatCODXBalance }}
+          <strong>{{ description }}:</strong> {{ codxCosts.CodexRecord[methodName] | formatCODXAmount }}
         </div>
 
         <b-button
           to="/get-codx"
           :active="false"
           variant="primary"
-          @click="TOGGLE_NAV(false)"
+          @click="getCODXButtonClicked"
         >
           Get More CODX
         </b-button>
@@ -61,6 +62,8 @@ export default {
         modifyMetadataHashes: 'Modify a Codex Record',
         safeTransferFrom: 'Accept a Transfer',
       },
+
+      showPopover: false,
     }
   },
 
@@ -71,6 +74,11 @@ export default {
 
   methods: {
     ...mapActions('app', ['TOGGLE_NAV']),
+
+    getCODXButtonClicked() {
+      this.TOGGLE_NAV(false)
+      this.showPopover = false
+    }
   },
 }
 </script>

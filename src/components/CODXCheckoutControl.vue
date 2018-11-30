@@ -7,15 +7,15 @@
       <h3>Summary</h3>
       <div class="row">
         <p>{{ action }}</p>
-        <p>{{ cost | formatCODXBalance }}</p>
+        <p>{{ cost | formatCODXAmount }}</p>
       </div>
       <div class="row">
         <p>Total</p>
-        <p>{{ cost | formatCODXBalance }}</p>
+        <p>{{ cost | formatCODXAmount }}</p>
       </div>
       <div class="row">
         <p>Remaining credits after</p>
-        <p>{{ newBalance | formatCODXBalance }}</p>
+        <p>{{ newBalance | formatCODXAmount }}</p>
       </div>
 
       <div v-if="insufficientCODX">

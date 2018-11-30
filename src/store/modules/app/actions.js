@@ -72,6 +72,7 @@ export default {
         commit('SET_GALLERIES', bootstrapData.galleries)
         commit('SET_CODX_COSTS', bootstrapData.codxCosts)
         commit('SET_EVENT_EMAILS', bootstrapData.eventEmails)
+        commit('SET_CODX_PACKAGES', bootstrapData.codxPackages)
         commit('SET_VERIFIED_USERS', bootstrapData.verifiedUsers)
       })
       .catch((error) => {
