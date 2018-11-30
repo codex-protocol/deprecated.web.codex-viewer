@@ -17,7 +17,7 @@
               v-b-modal.faucetDripModal
               :disabled="!user.canRequestFaucetDrip"
             >
-              Request CODX from faucet
+              Request CODX from Faucet
             </b-button>
 
             <p v-if="!user.canRequestFaucetDrip">

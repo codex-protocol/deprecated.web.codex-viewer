@@ -15,7 +15,7 @@
             @click="createGiveaway"
             v-if="showCreateGiveawayButton"
           >
-            Create giveaway
+            Create Giveaway
           </b-button>
         </AppHeader>
         <b-card-group deck class="record-list">
