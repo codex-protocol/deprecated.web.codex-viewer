@@ -62,7 +62,7 @@ import ToastContainer from './components/util/ToastContainer'
 import PartyModeActivator from './directives/PartyModeActivator'
 
 import './util/analytics'
-import './filters/format-codx-balance'
+import './filters/format-codx-amount'
 
 export default {
   name: 'App',

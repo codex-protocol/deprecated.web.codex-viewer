@@ -11,7 +11,7 @@ export default {
     return callApi(requestOptions)
   },
 
-  purchaseCODX: (source, packageName) => {
+  purchaseCODXPackage: (source, packageName) => {
 
     const requestOptions = {
       method: 'post',

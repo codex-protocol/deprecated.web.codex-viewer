@@ -5,10 +5,14 @@
         <AppHeader title="Get CODX" />
 
         <div class="content">
+
+          <!-- @TODO: make sure we can call CODX a digital currency -->
+          <p>CodexCoin (CODX) is the ERC-20 digital currency used to interact with The Codex Protocol. You must have CODX to create, edit, and transfer Codex Records.</p>
+
           <section class="request-faucet-drip" v-if="showFaucetDripForm">
             <p>
-              Click the button below to request the Codex Protocol ERC-20 token, CodexCoin.
-              After requesting a drip from the faucet, CodexCoin will be sent to the account you are currently logged in to.
+              On testnets such as {{ expectedNetworkName }}, you can request CODX for free from the "CODX Facuet".
+              After requesting a drip from the faucet, CODX will be sent to your account and you will recieve a notification upon success.
               You can request 1 drip every 24 hours.
             </p>
             <b-button
@@ -35,17 +39,41 @@
             </p>
           </section>
 
-          <section class="pay-with-stripe" v-if="stripeHandler && isSimpleUser">
+          <section class="pay-with-stripe" v-if="paymentsEnabled && isSimpleUser">
+
             <p>
-              Click the button below to purchase the Codex Protocol ERC-20 token, CodexCoin.
+              Select a package below to checkout securely with
+              <a href="https://stripe.com/" target="_blank">Stripe</a>.
             </p>
-            <b-button
-              id="codex-payment"
-              variant="primary"
-              @click.prevent="promptForPayment"
-            >
-              Pay with Stripe
-            </b-button>
+
+            <div class="codx-packages">
+              <div
+                :key="packageName"
+                class="codx-package"
+                v-for="(codxPackage, packageName) in codxPackages"
+              >
+                <h2 class="price">
+                  ${{ (codxPackage.price / 100).toFixed(0) }}
+                </h2>
+
+                <p>
+                  <span class="amount">{{ codxPackage.codxAmount | formatCODXAmount }}</span>
+                  <span
+                    class="bonus-amount"
+                    v-if="codxPackage.bonus !== 0"
+                  >
+                    + {{ codxPackage.codxBonus | formatCODXAmount('Bonus CODX') }}!
+                  </span>
+                </p>
+
+                <b-button
+                  variant="primary"
+                  @click.prevent="promptForPayment(packageName)"
+                >
+                  Buy
+                </b-button>
+              </div>
+            </div>
           </section>
 
         </div>
@@ -60,7 +88,10 @@ import {
   mapGetters,
 } from 'vuex'
 
+import stripe from '../util/stripe'
 import config from '../util/config'
+import Faucet from '../util/api/faucet'
+import EventBus from '../util/eventBus'
 import { timeSince } from '../util/dateHelpers'
 
 import AppHeader from '../components/core/AppHeader'
@@ -79,20 +110,21 @@ export default {
   data() {
     return {
       faucetDripEnabled: config.faucetDripEnabled,
+      expectedNetworkName: config.expectedNetworkName,
     }
   },
 
   beforeDestroy() {
-    if (this.stripeHandler) {
-      this.stripeHandler.close()
+    if (this.paymentsEnabled) {
+      stripe.widget.close()
     }
   },
 
   computed: {
-    ...mapState('auth', ['registryContractApproved', 'user']),
-    ...mapState('app', ['stripeHandler']),
     ...mapState('web3', ['recordContract']),
     ...mapGetters('auth', ['isSimpleUser']),
+    ...mapState('app', ['paymentsEnabled', 'codxPackages']),
+    ...mapState('auth', ['registryContractApproved', 'user']),
 
     showFaucetDripForm() {
       return (
@@ -109,12 +141,25 @@ export default {
   },
 
   methods: {
-    promptForPayment() {
-      this.stripeHandler.open({
+    promptForPayment(packageName) {
+
+      const codxPackage = this.codxPackages[packageName]
+
+      stripe.widget.open({
         name: 'Codex Labs, Inc',
-        description: 'CodexCoin',
-        amount: 2000,
+        amount: codxPackage.price,
+        description: 'CODX Purchase',
+        token(token) {
+          Faucet.purchaseCODXPackage(token.id, packageName)
+            .then(() => {
+              EventBus.$emit('toast:success', 'CODX purchased successfully! Your balance will update soon.', 5000)
+            })
+            .catch((error) => {
+              EventBus.$emit('toast:error', 'Could not purchase CODX.')
+            })
+        },
       })
+
     },
   },
 }
@@ -123,13 +168,38 @@ export default {
 <style lang="stylus" scoped>
 @import "../assets/variables.styl"
 
-.content
-
-  @media screen and (min-width: $breakpoint-lg)
-    max-width: 50%
-
 section + section
   margin-top: 2rem
   padding-top: 2rem
   border-top: 1px solid rgba($color-primary, .25)
+
+.codx-packages
+  display: flex
+  flex-wrap: nowrap
+  color: $color-dark
+  justify-content: space-between
+
+  .codx-package
+    padding: 1rem
+    text-align: center
+    color: $color-light
+    width: calc(33% - 1rem)
+    background-color: $color-secondary
+
+    .amount
+      font-weight: 700
+      font-size: 1.5rem
+
+  @media screen and (max-width: $breakpoint-sm)
+    flex-wrap: wrap
+
+    .codx-package
+      width: 100%
+
+      &+.codx-package
+        margin-top: 2rem
+
+      button
+        width: 100%
+
 </style>

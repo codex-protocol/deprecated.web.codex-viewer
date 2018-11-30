@@ -85,4 +85,10 @@ export default {
 
     currentState.codxCosts = codxCosts
   },
+
+  SET_CODX_PACKAGES(currentState, codxPackages = {}) {
+    logMutation('SET_CODX_PACKAGES', codxPackages)
+
+    currentState.codxPackages = codxPackages
+  },
 }
