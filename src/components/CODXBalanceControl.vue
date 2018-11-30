@@ -78,7 +78,7 @@ export default {
     getCODXButtonClicked() {
       this.TOGGLE_NAV(false)
       this.showPopover = false
-    }
+    },
   },
 }
 </script>
