@@ -69,8 +69,4 @@ export default {
       justify-content: space-between
       margin: 0
       width: 80%
-
-      @media screen and (min-width: $breakpoint-sm)
-        flex-direction: column
-        background-color: red
 </style>

@@ -257,7 +257,7 @@ export default {
 
           break
 
-        // @todo: validate this with savvy users
+        // @TODO: validate this with savvy users
         // checkout flow
         case 3:
           if (this.insufficientCODX) {
