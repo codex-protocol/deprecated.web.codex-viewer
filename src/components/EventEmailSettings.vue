@@ -49,13 +49,6 @@ export default {
     }
   },
 
-  created() {
-    // only fetch event emails once per app-load
-    if (this.eventEmails.length === 0) {
-      this.$store.dispatch('app/FETCH_EVENT_EMAILS')
-    }
-  },
-
   methods: {
     isBlacklisted(eventEmail) {
       return this.user.eventEmailBlacklist.includes(eventEmail.eventName)
@@ -91,15 +84,15 @@ export default {
   display: flex
   align-items: center
 
-  height: 3rem
   max-width: 100%
+  min-height: 3rem
   font-weight: 600
   color: $color-gray
   font-size: 0.875rem
 
 .row-container
-  height: 3rem
   max-width: 100%
+  min-height: 3rem
   font-weight: 600
   color: $color-gray
   font-size: 0.875rem

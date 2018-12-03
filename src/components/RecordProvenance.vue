@@ -1,10 +1,10 @@
 <template>
   <div>
-    <h1>Provenance</h1>
+    <h2>Provenance</h2>
     <div v-if="provenance">
       <div class="flex mb-4 pb-1" v-for="row in provenance" :key="row.id">
         <div>{{ getEventDescription(row.type) }}</div>
-        <div>
+        <div class="display-name">
           <DisplayName :name="getEventAddress(row)" />
         </div>
         <div>{{ getTimeSince(row.createdAt) }}</div>
@@ -137,26 +137,18 @@ export default {
   border-bottom: solid 1px rgba(white, .1)
 
 .flex div
-  flex: 1
-  text-align: center
+  flex-grow: 1
   font-size: 0.75rem
+  text-align: center
+
+  &+div
+    padding-left: 1rem
 
   @media screen and (min-width: $breakpoint-sm)
     font-size: 1rem
 
-  &:nth-child(2)
-    flex: 3
-
-.address-short
-
-  @media screen and (min-width: $breakpoint-lg)
-    display: none
-
-.address-large
-  display: none
-
-  @media screen and (min-width: $breakpoint-lg)
-    display: inline-block
+  &.display-name
+    max-width: 50%
 
 .show-modified-details
   padding: 0

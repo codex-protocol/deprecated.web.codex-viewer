@@ -9,6 +9,7 @@ import RavenVue from 'raven-js/plugins/vue'
 
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import './assets/custom-bootstrap.scss'
+import './filters'
 
 import App from './App'
 import store from './store'

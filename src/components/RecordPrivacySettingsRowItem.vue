@@ -3,7 +3,7 @@
     <b-row>
       <b-col class="image">
         <a href="#" @click.prevent="viewRecord">
-          <img :src="missingImageHelper.getMainImageUri(codexRecord.metadata)" />
+          <img :src="codexRecord.metadata | getMainImageUri" />
         </a>
       </b-col>
       <b-col class="name">
@@ -35,7 +35,6 @@
 import { mapState } from 'vuex'
 
 import EventBus from '../util/eventBus'
-import missingImageHelper from '../util/missingImageHelper'
 
 export default {
   name: 'RecordPrivacySettingsRowItem',
@@ -49,7 +48,6 @@ export default {
 
   data() {
     return {
-      missingImageHelper,
       isPrivate: this.codexRecord.isPrivate,
       isInGallery: this.codexRecord.isInGallery,
       route: { name: 'record-detail', params: { recordId: this.codexRecord.tokenId } },
@@ -116,8 +114,8 @@ export default {
 @import "../assets/variables.styl"
 
 .row-container
-  height: 6rem
   max-width: 100%
+  min-height: 6rem
   font-weight: 600
   color: $color-gray
   font-size: 0.875rem

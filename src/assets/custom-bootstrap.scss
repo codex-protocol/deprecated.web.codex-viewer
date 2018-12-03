@@ -162,6 +162,10 @@ hr {
 
 @include media-breakpoint-up(sm) {
 
+  .modal-dialog {
+    max-width: 800px;
+  }
+
   .modal-body {
     padding: 0 2rem 2rem 2rem;
   }
@@ -187,4 +191,38 @@ hr {
     width: auto;
     margin-bottom: 0;
   }
+}
+
+$popover-color: desaturate(lighten($color-secondary, 10%), 30%);
+
+.popover {
+  background-color: $popover-color;
+  border-color: rgba($color-dark, .25);
+  box-shadow: 0 0 1rem rgba($color-dark, .6);
+}
+
+.popover-header {
+  background-color: rgba($color-dark, .25);
+  border-bottom-color: rgba($color-dark, .25);
+}
+
+.popover-body {
+  padding: 1rem;
+  background-color: transparent;
+}
+
+.bs-popover-top .arrow::after {
+  border-top-color: $popover-color;
+}
+
+.bs-popover-right .arrow::after {
+  border-right-color: $popover-color;
+}
+
+.bs-popover-bottom .arrow::after {
+  border-bottom-color: $popover-color;
+}
+
+.bs-popover-left .arrow::after {
+  border-left-color: $popover-color;
 }

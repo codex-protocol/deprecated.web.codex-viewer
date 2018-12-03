@@ -3,7 +3,7 @@
     :ref="id"
     :id="id"
     :title="title"
-    :ok-title="okTitle"
+    :ok-title="buttonTitle"
     :hide-footer="isFooterHidden"
     :cancel-variant="cancelVariant"
     :ok-disabled="isDisabled"
@@ -56,7 +56,7 @@
           You haven't finished setting up your account so the transaction will fail.
         </p>
         <p>
-          Make sure to <b-link :to="{ name: 'faucet' }">get CODX from the faucet and approve the registry contract.</b-link>
+          Make sure to <b-link :to="{ name: 'get-codx' }">get CODX and approve the registry contract.</b-link>
         </p>
       </div>
 
@@ -80,6 +80,17 @@
         </div>
 
         <div v-else-if="currentStep === 3">
+          <CODXCheckoutControl
+            :action="checkoutTitle"
+            :cost="checkoutCost"
+            :newBalance="newBalance"
+            :insufficientCODX="insufficientCODX"
+          >
+            <slot name="checkout"></slot>
+          </CODXCheckoutControl>
+        </div>
+
+        <div v-else-if="currentStep === 4">
           <p>
             Your transaction has been submitted to the blockchain!
           </p>
@@ -93,9 +104,12 @@
 </template>
 
 <script>
+import BigNumber from 'bignumber.js'
 import { mapState, mapGetters } from 'vuex'
 
 import config from '../../util/config'
+
+import CODXCheckoutControl from '../CODXCheckoutControl'
 
 export default {
   name: 'MetaMaskNotificationModal',
@@ -112,7 +126,13 @@ export default {
     'onClear',
     'requiresTokens',
     'validate',
+    'checkoutTitle',
+    'checkoutCost',
   ],
+
+  components: {
+    CODXCheckoutControl,
+  },
 
   data() {
     const noOp = () => {}
@@ -125,27 +145,53 @@ export default {
       currentStep: 0,
       errors: [],
       shown: this.onShown || noOp,
+      disableButton: false,
     }
   },
 
   computed: {
-    ...mapState('auth', ['balance', 'registryContractApproved', 'user']),
+    ...mapState('auth', ['registryContractApproved', 'user']),
     ...mapGetters('auth', ['isSimpleUser']),
 
+    newBalance() {
+      return this.checkoutCost
+        ? new BigNumber(this.user.codxBalance).sub(this.checkoutCost)
+        : new BigNumber(0)
+    },
+
+    insufficientCODX() {
+      return this.newBalance.lt(0)
+    },
+
     isDisabled() {
-      return this.willTransactionFail || this.okDisabled || false
+      return this.willTransactionFail || this.okDisabled || this.disableButton
     },
 
     modalSize() {
       return this.size || ''
     },
 
+    // @TODO: instead of checking for a balance of 0, this should really check
+    //  for a balance "gte" the cost of the transaction
     willTransactionFail() {
-      return config.showFaucet && this.requiresTokens && (!this.registryContractApproved || this.balance.eq(0))
+      return (
+        !this.isSimpleUser &&
+        config.feesEnabled &&
+        this.requiresTokens &&
+        (!this.registryContractApproved || new BigNumber(this.user.codxBalance).eq(0))
+      )
     },
 
     shouldShowMainSlot() {
       return this.currentStep === 0 && !this.willTransactionFail
+    },
+
+    buttonTitle() {
+      if (this.isSimpleUser && this.currentStep === 0) {
+        return 'Proceed to checkout'
+      }
+
+      return this.okTitle
     },
   },
 
@@ -168,7 +214,17 @@ export default {
       }
 
       if (this.isSimpleUser) {
-        this.goToStep(3)
+        if (this.currentStep === 0) {
+          if (this.requiresTokens && this.checkoutCost) {
+            this.goToStep(3)
+          } else {
+            this.goToStep(4)
+          }
+        } else {
+          this.goToStep(this.currentStep + 1)
+        }
+      } else if (this.currentStep === 2) {
+        this.goToStep(4)
       } else {
         this.goToStep(this.currentStep + 1)
       }
@@ -192,7 +248,7 @@ export default {
 
           this.okMethod()
             .then(() => {
-              this.goToStep(this.currentStep + 1)
+              this.nextStep()
             })
             .catch((error) => {
               this.metamaskError = (error.message || 'An unknown error occurred').replace(/.*Error:(.*)$/, '$1')
@@ -201,8 +257,19 @@ export default {
 
           break
 
-        // transaction submitted, waiting for mine
+        // @TODO: validate this with savvy users
+        // checkout flow
         case 3:
+          if (this.insufficientCODX) {
+            this.disableButton = true
+          }
+
+          this.preventClose = false
+          this.isFooterHidden = false
+          break
+
+        // transaction submitted, waiting for mine
+        case 4:
           if (this.isSimpleUser) {
             this.okMethod()
               .catch((error) => {

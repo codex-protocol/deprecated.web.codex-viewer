@@ -5,11 +5,11 @@
     </div>
     <div class="button-container">
       <b-link
-        v-for="(navItem, index) in navItems"
         :key="index"
         :to="navItem.to"
-        @click.prevent="navItem.action ? navItem.action() : hideNav()"
         v-if="navItem.condition"
+        v-for="(navItem, index) in navItems"
+        @click.prevent="navItem.action ? navItem.action() : TOGGLE_NAV(false)"
       >
         <img :src="navItem.icon">{{ navItem.text }}
         <b-badge
@@ -19,11 +19,14 @@
           {{ incomingTransfers.length }}
         </b-badge>
       </b-link>
-      <hr />
-      <div class="contact" v-if="user">
-        Logged in as <DisplayName :userObject="user" />
-      </div>
-      <PrepaidTransactionsControl />
+      <span class="spacer"></span>
+      <footer class="sidebar-footer" v-if="isLoaded && user">
+        <div class="contact">
+          <h4>Logged in as</h4>
+          <DisplayName :userObject="user" />
+        </div>
+        <CODXBalanceControl v-if="isSimpleUser || feesEnabled" />
+      </footer>
     </div>
   </nav>
 </template>
@@ -32,10 +35,11 @@
 import {
   mapState,
   mapGetters,
+  mapActions,
 } from 'vuex'
 
 import DisplayName from '../util/DisplayName'
-import PrepaidTransactionsControl from '../PrepaidTransactionsControl'
+import CODXBalanceControl from '../CODXBalanceControl'
 
 import config from '../../util/config'
 
@@ -43,7 +47,6 @@ import iconHome from '../../assets/icons/home.svg'
 import iconCollection from '../../assets/icons/collection.svg'
 import iconTransfers from '../../assets/icons/transfers.svg'
 import codxIcon from '../../assets/icons/codx-token.svg'
-import faucetIcon from '../../assets/icons/faucet.svg'
 import starIcon from '../../assets/icons/star.svg'
 import galleryIcon from '../../assets/icons/gallery.svg'
 import settingsIcon from '../../assets/icons/settings.svg'
@@ -52,28 +55,27 @@ import logoutIcon from '../../assets/icons/logout.svg'
 export default {
   name: 'AppSideBar',
 
-  props: ['hideNav'],
-
   components: {
     DisplayName,
-    PrepaidTransactionsControl,
+    CODXBalanceControl,
   },
 
   data() {
     return {
-      showFaucet: config.showFaucet,
+      feesEnabled: config.feesEnabled,
       showCodexGallery: config.showCodexGalleryInSideBar,
     }
   },
 
   computed: {
     ...mapState('auth', ['user']),
+    ...mapState('app', ['isLoaded']),
     ...mapState('records', {
       incomingTransfers: (state) => {
         return state.lists.incomingTransfers
       },
     }),
-    ...mapGetters('auth', ['isAuthenticated']),
+    ...mapGetters('auth', ['isAuthenticated', 'isSimpleUser']),
 
     showManageTokensPage() {
       return this.user && this.user.type === 'savvy' && config.showManageTokensPage
@@ -106,10 +108,10 @@ export default {
           text: 'ManageTokens',
         },
         {
-          to: '/faucet',
-          condition: this.showFaucet,
-          icon: faucetIcon,
-          text: 'Faucet',
+          to: '/get-codx',
+          icon: codxIcon,
+          text: 'Get CODX',
+          condition: this.isSimpleUser || config.feesEnabled,
         },
         {
           to: '/extensions',
@@ -147,8 +149,9 @@ export default {
   },
 
   methods: {
+    ...mapActions('app', ['TOGGLE_NAV']),
     logout() {
-      this.hideNav()
+      this.TOGGLE_NAV(false)
       this.$store.dispatch('auth/LOGOUT_USER')
     },
   },
@@ -158,24 +161,20 @@ export default {
 <style lang="stylus" scoped>
 @import "../../assets/variables.styl"
 
-hr
-  border-top: 1px solid rgba($color-light, .5)
-  margin: 1rem 1rem 0
-
 nav
+  width: 100%
+  flex-grow: 1
   display: none
+  position: relative
+  overflow-y: scroll
   flex-direction: column
   background-color: rgba(white, .05)
-  width: 100%
 
   @media screen and (min-width: $breakpoint-md)
-    display: flex
     width: $side-nav-width
-    min-height: 100%
     min-width: @width
     max-width: @width
-    overflow-y: auto
-    padding-top: 0
+    display: flex
 
 a
   padding: 1rem
@@ -207,29 +206,54 @@ a
 .button-container
   flex-grow: 1
   display: flex
-  flex-direction: column
   align-items: center
+  flex-direction: column
 
   @media screen and (min-width: $breakpoint-md)
     align-items: normal
 
   a
-    text-align: center
     width: 100%
-    margin-bottom: 0.5rem
+    text-align: center
 
     @media screen and (min-width: $breakpoint-md)
       text-align: left
-      width: auto
-      margin-bottom: 0
 
 .badge
   margin-left: .25em
   border-radius: .25em
 
-.contact
-  text-align: center
+.spacer
+  flex-grow: 1
+
+.sidebar-footer
+  width: 100%
   padding: 1rem
-  overflow-wrap: break-word
+  font-size: small
+  background-color: rgba(white, .01)
+  border-top: 1px solid rgba(white, .05)
+
+  // every top level element inside the sidebar footer that's preceeded by
+  //  another top level element...
+  > * + *
+    margin-top: 1rem
+
+</style>
+
+<style lang="stylus">
+
+// @NOTE: we're using an unscoped style tag here so the styles apply to all
+//  components in the sidebar footer
+
+@import "../../assets/variables.styl"
+
+.sidebar-footer
+  h4
+    font-size: small
+    color: $color-primary
+    margin: 1rem 0 .25rem 0
+
+    &:first-of-type
+      margin-top: 0
 
 </style>

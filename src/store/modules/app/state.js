@@ -10,5 +10,9 @@ export default () => {
     giveaway: null,
     galleries: [],
     eventEmails: [],
+    codxCosts: null,
+    codxPackages: null,
+    showNav: false,
+    paymentsEnabled: !!process.env.VUE_APP_STRIPE_PUBLIC_KEY,
   }
 }

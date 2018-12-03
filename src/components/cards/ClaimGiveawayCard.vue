@@ -1,7 +1,7 @@
 <template>
   <b-card
     img-top
-    :img-src="missingImageHelper.getMainImageUri(giveaway.editionDetails)"
+    :img-src="giveaway.editionDetails | getMainImageUri"
   >
     <LoadingOverlay :show="isLoading" type="dark" />
     <b-button
@@ -20,7 +20,6 @@ import LoadingOverlay from '../util/LoadingOverlay'
 
 import EventBus from '../../util/eventBus'
 import Giveaway from '../../util/api/giveaway'
-import missingImageHelper from '../../util/missingImageHelper'
 
 export default {
   name: 'ClaimGiveawayCard',
@@ -31,7 +30,6 @@ export default {
   data() {
     return {
       isLoading: false,
-      missingImageHelper,
       disableGiveawayButton: false,
     }
   },

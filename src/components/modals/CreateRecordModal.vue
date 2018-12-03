@@ -4,13 +4,23 @@
     title="Create Record"
     ok-title="Create"
     cancel-variant="outline-primary"
-    size="lg"
     :on-shown="focusModal"
     :ok-method="createMetadata"
     :on-clear="clearModal"
     :requires-tokens="true"
     :validate="validate"
+    :checkout-cost="codxCosts.CodexRecord.mint"
+    checkout-title="Create Codex Record"
   >
+    <template slot="checkout">
+      <h3>{{ name }}</h3>
+      <h5>Description:</h5>
+      <div>{{ description }}</div>
+      <div class="image-container-xs">
+        <img :src="imageStreamUri" />
+      </div>
+    </template>
+
     <div class="flex-container">
       <div class="image-container" :class="{ 'no-image': !imageStreamUri }">
         <img :src="imageStreamUri" />
@@ -92,6 +102,7 @@ import EventBus from '../../util/eventBus'
 import contractHelper from '../../util/contractHelper'
 import { NullDescriptionHash } from '../../util/constants/web3'
 import additionalDataHelper from '../../util/additionalDataHelper'
+
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
 const logger = debug('app:component:create-record-modal')
@@ -229,6 +240,7 @@ export default {
   },
 
   computed: {
+    ...mapState('app', ['codxCosts']),
     ...mapState('auth', ['user']),
     ...mapState('web3', ['instance']),
 
@@ -270,7 +282,8 @@ export default {
     > div
       width: 50%
 
-.image-container
+.image-container,
+.image-container-xs
   display: flex
   margin: 1rem 0
   align-items: center
@@ -284,4 +297,6 @@ export default {
     max-height: 40vh
     object-fit: contain
 
+.image-container-xs img
+  width: 50%
 </style>

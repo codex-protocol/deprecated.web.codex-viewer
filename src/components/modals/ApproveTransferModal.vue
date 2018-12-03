@@ -7,7 +7,6 @@
     :ok-method="approveTransfer"
     :on-shown="onShow"
     :on-clear="clearModal"
-    :requires-tokens="true"
     :validate="validate"
   >
 
@@ -148,8 +147,6 @@ export default {
     },
 
     approveTransfer() {
-      EventBus.$emit('events:record-click-transfer', this)
-
       const input = [
         this.showEthereumAddressField ? this.toEthAddress : this.toEmailAddress,
         this.codexRecord.tokenId,
