@@ -9,7 +9,7 @@
         :style="{ order: index }"
         :key="'actualAmount' + index"
       >
-        {{ property | formatCODXBalance }}
+        {{ property | formatCODXAmount }}
       </div>
 
       <div class="table-header addresses">Staked for</div>

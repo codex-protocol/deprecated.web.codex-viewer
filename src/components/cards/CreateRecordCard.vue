@@ -1,7 +1,7 @@
 <template>
-  <div class="faucet-card">
+  <div class="create-record-card">
     <b-card no-body>
-      <div class="faucet-card-body">
+      <div class="create-record-card-body">
         <h2>Welcome</h2>
         <p>Use the <b>Add New Asset</b> button to create your first Codex Record!</p>
         <p>Codex Records can be used to...</p>
@@ -23,7 +23,7 @@ export default {
 <style lang="stylus" scoped>
 @import "../../assets/variables.styl"
 
-.faucet-card
+.create-record-card
   card()
   width: 100%
   min-width: 320px
@@ -33,7 +33,7 @@ export default {
   border: none
   background-color: rgba(white, .1)
 
-.faucet-card-body
+.create-record-card-body
   flex: 1
   text-align: left
   padding: 1.25rem 1.25rem 0

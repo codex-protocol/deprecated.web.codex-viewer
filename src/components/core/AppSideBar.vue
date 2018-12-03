@@ -5,11 +5,11 @@
     </div>
     <div class="button-container">
       <b-link
-        v-for="(navItem, index) in navItems"
         :key="index"
         :to="navItem.to"
-        @click.prevent="navItem.action ? navItem.action() : hideNav()"
         v-if="navItem.condition"
+        v-for="(navItem, index) in navItems"
+        @click.prevent="navItem.action ? navItem.action() : TOGGLE_NAV(false)"
       >
         <img :src="navItem.icon">{{ navItem.text }}
         <b-badge
@@ -25,7 +25,7 @@
           <h4>Logged in as</h4>
           <DisplayName :userObject="user" />
         </div>
-        <CODXBalanceControl v-if="showCODXBalance" />
+        <CODXBalanceControl v-if="isSimpleUser || feesEnabled" />
       </footer>
     </div>
   </nav>
@@ -35,6 +35,7 @@
 import {
   mapState,
   mapGetters,
+  mapActions,
 } from 'vuex'
 
 import DisplayName from '../util/DisplayName'
@@ -46,7 +47,6 @@ import iconHome from '../../assets/icons/home.svg'
 import iconCollection from '../../assets/icons/collection.svg'
 import iconTransfers from '../../assets/icons/transfers.svg'
 import codxIcon from '../../assets/icons/codx-token.svg'
-import faucetIcon from '../../assets/icons/faucet.svg'
 import starIcon from '../../assets/icons/star.svg'
 import galleryIcon from '../../assets/icons/gallery.svg'
 import settingsIcon from '../../assets/icons/settings.svg'
@@ -55,8 +55,6 @@ import logoutIcon from '../../assets/icons/logout.svg'
 export default {
   name: 'AppSideBar',
 
-  props: ['hideNav'],
-
   components: {
     DisplayName,
     CODXBalanceControl,
@@ -64,7 +62,7 @@ export default {
 
   data() {
     return {
-      showFaucet: config.showFaucet,
+      feesEnabled: config.feesEnabled,
       showCodexGallery: config.showCodexGalleryInSideBar,
     }
   },
@@ -77,14 +75,10 @@ export default {
         return state.lists.incomingTransfers
       },
     }),
-    ...mapGetters('auth', ['isAuthenticated']),
+    ...mapGetters('auth', ['isAuthenticated', 'isSimpleUser']),
 
     showManageTokensPage() {
       return this.user && this.user.type === 'savvy' && config.showManageTokensPage
-    },
-
-    showCODXBalance() {
-      return config.showFaucet || (this.user && this.user.type !== 'savvy')
     },
 
     navItems() {
@@ -114,10 +108,10 @@ export default {
           text: 'ManageTokens',
         },
         {
-          to: '/faucet',
-          condition: this.showFaucet,
-          icon: faucetIcon,
-          text: 'Faucet',
+          to: '/get-codx',
+          icon: codxIcon,
+          text: 'Get CODX',
+          condition: this.isSimpleUser || config.feesEnabled,
         },
         {
           to: '/extensions',
@@ -155,8 +149,9 @@ export default {
   },
 
   methods: {
+    ...mapActions('app', ['TOGGLE_NAV']),
     logout() {
-      this.hideNav()
+      this.TOGGLE_NAV(false)
       this.$store.dispatch('auth/LOGOUT_USER')
     },
   },

@@ -72,6 +72,7 @@ export default {
         commit('SET_GALLERIES', bootstrapData.galleries)
         commit('SET_CODX_COSTS', bootstrapData.codxCosts)
         commit('SET_EVENT_EMAILS', bootstrapData.eventEmails)
+        commit('SET_CODX_PACKAGES', bootstrapData.codxPackages)
         commit('SET_VERIFIED_USERS', bootstrapData.verifiedUsers)
       })
       .catch((error) => {
@@ -88,5 +89,15 @@ export default {
         // For now, just select the first giveaway that is available
         commit('SET_GIVEAWAY', giveaways[0])
       })
+  },
+
+  TOGGLE_NAV({ commit, state }, newState) {
+    logger('TOGGLE_NAV action being executed')
+
+    const newShowNav = typeof newState !== 'boolean'
+      ? !state.showNav
+      : newState
+
+    commit('SET_SHOW_NAV', newShowNav)
   },
 }

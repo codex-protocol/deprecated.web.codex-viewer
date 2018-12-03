@@ -2,7 +2,7 @@
   <div class="codx-balance-container">
     <div class="balance-wrapper">
       <h4>Credit Balance</h4>
-      <div>{{ user.codxBalance | formatCODXBalance }}</div>
+      <div>{{ user.codxBalance | formatCODXAmount }}</div>
     </div>
     <img
       @click.stop
@@ -16,28 +16,35 @@
       boundary="viewport"
       placement="righttop"
       title="What is CODX?"
+      :show.sync="showPopover"
       target="codx-balance-popover-trigger"
     >
-      <!-- @TODO: make sure we can call CODX a digital currency -->
-      <p>CODX is the digital currency used to interact with The Codex Protocol.</p>
-      <div
-        :key="methodName"
-        v-for="(description, methodName) in orderedMethodDescriptions"
-      >
-        <strong>{{ description }}:</strong> {{ codxCosts.CodexRecord[methodName] | formatCODXBalance }}
-      </div>
+      <div class="codx-balance-popover">
+        <!-- @TODO: make sure we can call CODX a digital currency -->
+        <p>CODX is the digital currency used to interact with The Codex Protocol.</p>
+        <div
+          :key="methodName"
+          v-for="(description, methodName) in orderedMethodDescriptions"
+        >
+          <strong>{{ description }}:</strong> {{ codxCosts.CodexRecord[methodName] | formatCODXAmount }}
+        </div>
 
-      <!--
-        @TODO: add a button here that takes them to a "get codx" page (i.e. the
-        faucet page after it's reworked)
-      -->
+        <b-button
+          to="/get-codx"
+          :active="false"
+          variant="primary"
+          @click="getCODXButtonClicked"
+        >
+          Get More CODX
+        </b-button>
+      </div>
     </b-popover>
   </div>
 </template>
 
 <script>
 
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'CODXBalanceControl',
@@ -55,12 +62,23 @@ export default {
         modifyMetadataHashes: 'Modify a Codex Record',
         safeTransferFrom: 'Accept a Transfer',
       },
+
+      showPopover: false,
     }
   },
 
   computed: {
     ...mapState('auth', ['user']),
     ...mapState('app', ['codxCosts']),
+  },
+
+  methods: {
+    ...mapActions('app', ['TOGGLE_NAV']),
+
+    getCODXButtonClicked() {
+      this.TOGGLE_NAV(false)
+      this.showPopover = false
+    },
   },
 }
 </script>
@@ -86,5 +104,14 @@ export default {
     &:hover
       opacity: 1
       cursor: pointer
+
+</style>
+
+<style lang="stylus">
+
+.codx-balance-popover
+  .btn
+    width: 100%
+    margin-top: 2rem
 
 </style>

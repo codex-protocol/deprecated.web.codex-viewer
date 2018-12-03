@@ -1,11 +1,11 @@
 <template>
   <b-modal
-    id="faucetModal"
-    title="Get CODX tokens"
+    title="Get CODX"
+    id="faucetDripModal"
     ok-title="Request tokens"
     cancel-variant="outline-primary"
     v-model="modalVisible"
-    v-on:ok="requestTokens"
+    v-on:ok="requestDrip"
   >
     <div class="text-center">
       <img class="token-icon" src="../../assets/icons/codx-token.svg">
@@ -21,7 +21,7 @@ import Faucet from '../../util/api/faucet'
 import EventBus from '../../util/eventBus'
 
 export default {
-  name: 'faucetModal',
+  name: 'FaucetDripModal',
 
   data() {
     return {
@@ -30,17 +30,18 @@ export default {
   },
 
   methods: {
-    requestTokens(event) {
-      event.preventDefault()
-      EventBus.$emit('events:faucet-request', this)
+    requestDrip(event) {
 
-      Faucet.getDripFromFaucet()
+      event.preventDefault()
+      EventBus.$emit('events:faucet-drip-request', this)
+
+      return Faucet.requestDrip()
         .then(() => {
-          EventBus.$emit('toast:success', 'Tokens requested successfully! Your balance will update soon.', 5000)
+          EventBus.$emit('toast:success', 'CODX requested successfully! Your balance will update soon.', 5000)
           this.modalVisible = false
         })
         .catch((error) => {
-          EventBus.$emit('toast:error', `Could not request tokens: ${error.message}`)
+          EventBus.$emit('toast:error', `Could not request CODX: ${error.message}`)
         })
     },
   },

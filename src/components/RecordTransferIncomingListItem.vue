@@ -1,6 +1,6 @@
 <template>
   <b-card
-    :img-src="missingImageHelper.getMainImageUri(codexRecord.metadata)"
+    :img-src="codexRecord.metadata | getMainImageUri"
     img-top
   >
     <div class="accepted-overlay" v-if="this.transferAccepted">
@@ -20,8 +20,6 @@
 import { mapState } from 'vuex'
 
 import EventBus from '../util/eventBus'
-import contractHelper from '../util/contractHelper'
-import missingImageHelper from '../util/missingImageHelper'
 
 export default {
   name: 'RecordTransferIncomingListItem',
@@ -38,7 +36,6 @@ export default {
       route: { name: 'record-detail', params: { recordId: this.codexRecord.tokenId } },
       transferAccepted: false,
       isLoading: false,
-      missingImageHelper,
     }
   },
 
@@ -79,31 +76,17 @@ export default {
     },
 
     acceptTransfer() {
-      const input = [
-        this.codexRecord.ownerAddress,
-        this.user.address,
-        this.codexRecord.tokenId,
-      ]
+      this.$store.commit('records/SET_SELECTED_RECORD_TO_TRANSFER', {
+        codexRecord: this.codexRecord,
+        callback: () => {
+          this.isLoading = true
+        },
+      })
 
-      this.isLoading = true
-
-      return contractHelper('CodexRecord', 'safeTransferFrom', input, this.$store)
-        .then(() => {
-          EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
-
-          // @NOTE: leave the in the loading state so that they can't click the
-          //  buttons while the transaction is waiting to be mined
-          //
-          // @TODO: figure out a way to persit this across route changes (local
-          //  storage?)
-          //
-          // this.isLoading = false
-
-        })
-        .catch((error) => {
-          EventBus.$emit('toast:error', `Could not accept transfer: ${error.message}`)
-          this.isLoading = false
-        })
+      // The modal depends on the call from above to resolve first before being shown
+      setTimeout(() => {
+        this.$root.$emit('bv::show::modal', 'acceptTransferModal')
+      }, 0)
     },
 
     ignoreTransfer() {

@@ -11,7 +11,15 @@
     :on-clear="clearModal"
     :requires-tokens="true"
     :validate="validate"
+    :checkout-cost="codxCosts.CodexRecord.modifyMetadataHashes"
+    checkout-title="Modify Codex Record"
   >
+    <template slot="checkout">
+      <h3>New title: {{ name }}</h3>
+      <h5>New description:</h5>
+      <div>{{ description }}</div>
+    </template>
+
     <b-form-group
       label="Name"
       label-for="name"
@@ -154,6 +162,7 @@ export default {
   },
 
   computed: {
+    ...mapState('app', ['codxCosts']),
     ...mapState('auth', ['authToken']),
     ...mapState('web3', ['instance']),
 

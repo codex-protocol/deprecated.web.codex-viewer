@@ -5,21 +5,21 @@
       @mousedown="topLevelClick($event)"
       :class="{
         'show-nav': showNav,
-        'with-background': this.useBackgroundImage(),
+        'with-background': useBackgroundImage(),
       }"
     >
       <AppWarningBanner v-if="showWarningBanner" />
       <div class="app-wrapper">
         <template v-if="!hideSideBar">
-          <span class="hamburger" @click="toggleNav">
+          <span class="hamburger" @click="TOGGLE_NAV">
             <IconBase
-              iconName="menu"
               width="28"
               height="32"
+              iconName="menu"
               class="icon-menu"
             />
           </span>
-          <AppSideBar :hideNav="hideNav" />
+          <AppSideBar />
         </template>
         <div class="main-content-wrapper">
           <div class="main-content">
@@ -45,6 +45,7 @@ import axios from 'axios'
 import {
   mapState,
   mapGetters,
+  mapActions,
 } from 'vuex'
 import VueCookieAcceptDecline from 'vue-cookie-accept-decline'
 
@@ -61,7 +62,6 @@ import ToastContainer from './components/util/ToastContainer'
 import PartyModeActivator from './directives/PartyModeActivator'
 
 import './util/analytics'
-import './filters/format-codx-balance'
 
 export default {
   name: 'App',
@@ -84,7 +84,6 @@ export default {
 
   data() {
     return {
-      showNav: false,
       showWarningBanner: config.expectedNetworkId !== '1' && config.expectedNetworkId !== '5777',
     }
   },
@@ -127,8 +126,8 @@ export default {
 
   computed: {
     ...mapGetters('auth', ['isAuthenticated']),
-    ...mapState('app', ['isLoaded', 'postLoginDestination', 'giveaway']),
     ...mapState('auth', ['user', 'authToken']),
+    ...mapState('app', ['showNav', 'isLoaded', 'postLoginDestination', 'giveaway']),
 
     hideSideBar() {
       return this.$route.meta && this.$route.meta.hideSideBar
@@ -136,6 +135,8 @@ export default {
   },
 
   methods: {
+    ...mapActions('app', ['TOGGLE_NAV']),
+
     initializeApi() {
       axios.defaults.baseURL = config.apiUrl
       axios.defaults.headers.common['Content-Type'] = 'application/json'
@@ -249,14 +250,6 @@ export default {
 
     useBackgroundImage() {
       return this.$route.meta.useBackgroundImage || false
-    },
-
-    toggleNav() {
-      this.showNav = !this.showNav
-    },
-
-    hideNav() {
-      this.showNav = false
     },
 
     // here we capture all events that bubble up to the top level "app"

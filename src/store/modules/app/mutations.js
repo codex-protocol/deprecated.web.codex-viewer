@@ -50,6 +50,12 @@ export default {
     currentState.isLoaded = isLoaded
   },
 
+  SET_SHOW_NAV(currentState, showNav) {
+    logMutation('SET_SHOW_NAV', showNav)
+
+    currentState.showNav = showNav
+  },
+
   SET_POST_LOGIN_DESTINATION(currentState, destination) {
     logMutation('SET_POST_LOGIN_DESTINATION', destination)
 
@@ -78,5 +84,11 @@ export default {
     logMutation('SET_CODX_COSTS', codxCosts)
 
     currentState.codxCosts = codxCosts
+  },
+
+  SET_CODX_PACKAGES(currentState, codxPackages = {}) {
+    logMutation('SET_CODX_PACKAGES', codxPackages)
+
+    currentState.codxPackages = codxPackages
   },
 }

@@ -150,7 +150,7 @@ export default {
     const { address } = rootState.auth.user
 
     return Promise.all([
-      tokenContract.methods.allowance(address, recordContract.address)
+      tokenContract.methods.allowance(address, recordContract._address)
         .call()
         .then((allowance) => {
           commit('SET_APPROVAL_STATUS', {
@@ -158,7 +158,7 @@ export default {
             stateProperty: 'registryContractApproved',
           })
         }),
-      tokenContract.methods.allowance(address, stakeContract.address)
+      tokenContract.methods.allowance(address, stakeContract._address)
         .call()
         .then((allowance) => {
           commit('SET_APPROVAL_STATUS', {
