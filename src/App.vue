@@ -363,8 +363,8 @@ img
   width: 100%
   flex-grow: 1
   max-height: 100%
+  overflow-y: auto
   overflow-x: hidden
-  overflow-y: scroll
 
   @media screen and (min-width: $breakpoint-md)
     display: flex
@@ -376,10 +376,10 @@ img
 
   // uncommenting these will cause the footer to stay positioned at the bottom
   //  of the main content area instead of being pushed down by a tall
-  //  .main-content div
+  // .main-content div
   //
-  // overflow-x: hidden
-  // overflow-y: scroll
+  //   overflow-y: auto
+  //   overflow-x: hidden
 
 .cookie
   color: $color-dark
