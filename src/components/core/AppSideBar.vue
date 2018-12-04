@@ -223,9 +223,6 @@ a
   margin-left: .25em
   border-radius: .25em
 
-.spacer
-  flex-grow: 1
-
 .sidebar-footer
   width: 100%
   padding: 1rem

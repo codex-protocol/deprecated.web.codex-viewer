@@ -397,6 +397,9 @@ img
   color: inherit
   font-weight: 600
 
+.spacer
+  flex-grow: 1
+
 // CSS Checkbox toggle
 // <input type="checkbox"> toggle
 // https://danklammer.com/articles/simple-css-toggle-switch/
