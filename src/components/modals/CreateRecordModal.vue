@@ -1,5 +1,5 @@
 <template>
-  <meta-mask-notification-modal
+  <MetaMaskNotificationModal
     id="createRecordModal"
     title="Create Record"
     ok-title="Create"
@@ -9,16 +9,14 @@
     :on-clear="clearModal"
     :requires-tokens="true"
     :validate="validate"
+    :ok-disabled="disableButton"
     :checkout-cost="codxCosts.CodexRecord.mint"
     checkout-title="Create Codex Record"
   >
     <template slot="checkout">
       <h3>{{ name }}</h3>
-      <h5>Description:</h5>
-      <div>{{ description }}</div>
-      <div class="image-container-xs">
-        <img :src="imageStreamUri" />
-      </div>
+      <div class="image-container"><img :src="imageStreamUri"></div>
+      <div class="description">{{ description }}</div>
     </template>
 
     <div class="flex-container">
@@ -89,7 +87,7 @@
         </b-form-group>
       </div>
     </div>
-  </meta-mask-notification-modal>
+  </MetaMaskNotificationModal>
 </template>
 
 <script>
@@ -256,6 +254,10 @@ export default {
       return 'danger'
     },
 
+    disableButton() {
+      return this.uploadComplete === false
+    },
+
     isPublic: {
       get: function getIsPublic() {
         return !this.confirmMintValues.isPrivate
@@ -269,34 +271,20 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+
+@import "../../assets/variables.styl"
+
 .flex-container
   display: flex
   flex-direction: column
+  justify-content: space-between
 
-  @media screen and (min-width: $breakpoint-sm)
-    flex-direction: row
+  // this can be uncommented to have the image and form fields side-by-side
+  //
+  // @media screen and (min-width: $breakpoint-sm)
+  //   flex-direction: row
+  //
+  //   > div
+  //     width: calc(50% - 1rem)
 
-    input
-      width: auto
-
-    > div
-      width: 50%
-
-.image-container,
-.image-container-xs
-  display: flex
-  margin: 1rem 0
-  align-items: center
-  justify-content: center
-
-  @media screen and (min-width: $breakpoint-sm)
-    border: 1px solid rgba(white, .25)
-
-  img
-    max-width: 100%
-    max-height: 40vh
-    object-fit: contain
-
-.image-container-xs img
-  width: 50%
 </style>

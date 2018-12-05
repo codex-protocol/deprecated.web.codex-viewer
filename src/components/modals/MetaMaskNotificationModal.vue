@@ -18,15 +18,7 @@
     :no-close-on-backdrop="preventClose"
   >
 
-    <!--
-      @NOTE: we use v-show here instead of v-if so that scoped styles from
-      parent components will still be applied
-
-      since there are some calculations to be done before showing the slot, the
-      time it takes to do so prevents webpack from being able to apply the
-      scoped styles if you use a v-if
-    -->
-    <div v-show="shouldShowMainSlot">
+    <div v-if="shouldShowMainSlot">
       <p v-if="errors.length">
         <b-alert variant="danger" :show="errors.length !== 0">
           Please fix these error(s):
@@ -38,7 +30,7 @@
       <slot></slot>
     </div>
 
-    <div class="text-center" v-show="!shouldShowMainSlot">
+    <div class="text-center" v-else>
 
       <div v-if="!isSimpleUser">
         <img class="icon" src="../../assets/images/metamask.png" />
@@ -48,7 +40,7 @@
         <p>
           There was a problem sending your transaction:
         </p>
-        <pre class="metamask-error">{{metamaskError}}</pre>
+        <pre class="metamask-error">{{ metamaskError }}</pre>
       </div>
 
       <div v-else-if="willTransactionFail">
@@ -187,8 +179,8 @@ export default {
     },
 
     buttonTitle() {
-      if (this.isSimpleUser && this.currentStep === 0) {
-        return 'Proceed to checkout'
+      if (this.isSimpleUser && this.currentStep === 0 && this.requiresTokens) {
+        return 'Proceed to Checkout'
       }
 
       return this.okTitle
@@ -201,16 +193,23 @@ export default {
       if (typeof this.onClear === 'function') this.onClear()
     },
 
+    scrollToTop() {
+      // annoyingly enough, the element that Vue Bootstrap attaches the b-modal
+      //  $ref to isn't the actual body of the modal, but the container that
+      //  holds the backdrop and everything else so we need to look up the child
+      //  element we really want to scroll
+      this.$refs[this.id].$el.querySelector(`#${this.id}`).scrollTop = 0
+    },
+
     nextStep() {
+
+      // always scroll back up to the top when navigating through steps, because
+      //  there could be new content up there
+      this.scrollToTop()
+
       if (this.validate) {
         this.errors = this.validate()
-
-        if (this.errors.length) {
-          // rudimentary, but refocuses at the top if we need to scroll
-          this.shown()
-
-          return
-        }
+        return
       }
 
       if (this.isSimpleUser) {

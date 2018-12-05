@@ -165,8 +165,8 @@ nav
   width: 100%
   flex-grow: 1
   display: none
+  overflow-y: auto
   position: relative
-  overflow-y: scroll
   flex-direction: column
   background-color: rgba(white, .05)
 
@@ -222,9 +222,6 @@ a
 .badge
   margin-left: .25em
   border-radius: .25em
-
-.spacer
-  flex-grow: 1
 
 .sidebar-footer
   width: 100%

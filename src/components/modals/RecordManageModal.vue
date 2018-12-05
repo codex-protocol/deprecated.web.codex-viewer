@@ -1,12 +1,12 @@
 <template>
-  <meta-mask-notification-modal
+  <MetaMaskNotificationModal
     id="recordManageModal"
     title="Modify Record"
     ok-title="Save"
     cancel-variant="outline-primary"
     size="lg"
     :on-shown="focusModal"
-    :ok-disabled="!canSubmit"
+    :ok-disabled="disableButton"
     :ok-method="updateMetadata"
     :on-clear="clearModal"
     :requires-tokens="true"
@@ -14,10 +14,10 @@
     :checkout-cost="codxCosts.CodexRecord.modifyMetadataHashes"
     checkout-title="Modify Codex Record"
   >
-    <template slot="checkout">
-      <h3>New title: {{ name }}</h3>
-      <h5>New description:</h5>
-      <div>{{ description }}</div>
+    <template slot="checkout" v-if="codexRecord">
+      <h3>{{ name }}</h3>
+      <div class="image-container"><img :src="imageStreamUri || mainImage.uri"></div>
+      <div class="description">{{ description }}</div>
     </template>
 
     <b-form-group
@@ -109,7 +109,7 @@
         v-on:vdropzone-queue-complete="onQueueComplete"
       />
     </b-form-group>
-  </meta-mask-notification-modal>
+  </MetaMaskNotificationModal>
 </template>
 
 <script>
@@ -166,8 +166,8 @@ export default {
     ...mapState('auth', ['authToken']),
     ...mapState('web3', ['instance']),
 
-    canSubmit() {
-      return !this.isFileProcessing
+    disableButton() {
+      return this.isFileProcessing || (this.progressVisible && !this.uploadMainImageSuccess)
     },
 
     progressVariant() {
@@ -284,7 +284,9 @@ export default {
     clearModal() {
       Object.assign(this.$data, this.$options.data.apply(this))
 
-      this.$refs.dropzone.removeAllFiles()
+      if (this.$refs.dropzone) {
+        this.$refs.dropzone.removeAllFiles()
+      }
     },
 
     validate() {

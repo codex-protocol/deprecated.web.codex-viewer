@@ -56,15 +56,31 @@
                   ${{ (codxPackage.price / 100).toFixed(0) }}
                 </h2>
 
-                <p>
-                  <span class="amount">{{ codxPackage.codxAmount | formatCODXAmount }}</span>
-                  <span
-                    class="bonus-amount"
-                    v-if="codxPackage.bonus !== 0"
-                  >
-                    + {{ codxPackage.codxBonus | formatCODXAmount('Bonus CODX') }}!
+                <p class="total-amount">
+                  <span>{{ codxPackage.codxTotal | formatCODXAmount }}</span>
+                </p>
+
+                <p class="total-breakdown" v-if="codxPackage.bonus !== 0">
+                  <span class="base-amount">
+                    {{ codxPackage.codxAmount | formatCODXAmount }}
+                  </span>
+                  <span class="bonus-amount">
+                    + {{ codxPackage.codxBonus | formatCODXAmount('Bonus CODX!') }}
                   </span>
                 </p>
+
+                <span class="spacer"></span>
+
+                <div class="details">
+                  <p>
+                    This amount is enough for one of the following:
+                  </p>
+                  <ul>
+                    <li>Create {{ Math.floor(codxPackage.codxTotal / codxCosts.CodexRecord.mint) }} Codex Records</li>
+                    <li>Modify {{ Math.floor(codxPackage.codxTotal / codxCosts.CodexRecord.modifyMetadataHashes) }} Codex Records</li>
+                    <li>Accept {{ Math.floor(codxPackage.codxTotal / codxCosts.CodexRecord.safeTransferFrom) }} Codex Record transfers</li>
+                  </ul>
+                </div>
 
                 <b-button
                   variant="primary"
@@ -121,10 +137,10 @@ export default {
   },
 
   computed: {
-    ...mapState('web3', ['recordContract']),
     ...mapGetters('auth', ['isSimpleUser']),
-    ...mapState('app', ['paymentsEnabled', 'codxPackages']),
+    ...mapState('web3', ['recordContract']),
     ...mapState('auth', ['registryContractApproved', 'user']),
+    ...mapState('app', ['paymentsEnabled', 'codxPackages', 'codxCosts']),
 
     showFaucetDripForm() {
       return (
@@ -186,15 +202,42 @@ section + section
     width: calc(33% - 1rem)
     background-color: $color-secondary
 
-    .amount
+    display: flex
+    align-items: center
+    flex-direction: column
+
+    .total-amount
       font-weight: 700
+      margin-bottom: 0
       font-size: 1.5rem
+
+    .total-breakdown
+      font-size: small
+
+      .bonus-amount
+        font-weight: 700
+        font-style: italic
+
+    .details
+      font-size: small
+      text-align: left
+      margin-bottom: 1rem
+      color: rgba($color-light, .8)
+
+      ul
+        width: 100%
 
   @media screen and (max-width: $breakpoint-sm)
     flex-wrap: wrap
 
     .codx-package
       width: 100%
+
+      .total-breakdown
+        font-size: unset
+
+      .details
+        font-size: unset
 
       &+.codx-package
         margin-top: 2rem
