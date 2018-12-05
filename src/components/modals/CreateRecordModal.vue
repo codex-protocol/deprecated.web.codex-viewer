@@ -1,16 +1,24 @@
 <template>
-  <meta-mask-notification-modal
+  <MetaMaskNotificationModal
     id="createRecordModal"
     title="Create Record"
     ok-title="Create"
     cancel-variant="outline-primary"
-    size="lg"
     :on-shown="focusModal"
     :ok-method="createMetadata"
     :on-clear="clearModal"
     :requires-tokens="true"
     :validate="validate"
+    :ok-disabled="disableButton"
+    :checkout-cost="codxCosts.CodexRecord.mint"
+    checkout-title="Create Codex Record"
   >
+    <template slot="checkout">
+      <h3>{{ name }}</h3>
+      <div class="image-container"><img :src="imageStreamUri"></div>
+      <div class="description">{{ description }}</div>
+    </template>
+
     <div class="flex-container">
       <div class="image-container" :class="{ 'no-image': !imageStreamUri }">
         <img :src="imageStreamUri" />
@@ -79,7 +87,7 @@
         </b-form-group>
       </div>
     </div>
-  </meta-mask-notification-modal>
+  </MetaMaskNotificationModal>
 </template>
 
 <script>
@@ -92,6 +100,7 @@ import EventBus from '../../util/eventBus'
 import contractHelper from '../../util/contractHelper'
 import { NullDescriptionHash } from '../../util/constants/web3'
 import additionalDataHelper from '../../util/additionalDataHelper'
+
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
 const logger = debug('app:component:create-record-modal')
@@ -229,6 +238,7 @@ export default {
   },
 
   computed: {
+    ...mapState('app', ['codxCosts']),
     ...mapState('auth', ['user']),
     ...mapState('web3', ['instance']),
 
@@ -244,6 +254,10 @@ export default {
       return 'danger'
     },
 
+    disableButton() {
+      return this.uploadComplete === false
+    },
+
     isPublic: {
       get: function getIsPublic() {
         return !this.confirmMintValues.isPrivate
@@ -257,31 +271,20 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+
+@import "../../assets/variables.styl"
+
 .flex-container
   display: flex
   flex-direction: column
+  justify-content: space-between
 
-  @media screen and (min-width: $breakpoint-sm)
-    flex-direction: row
-
-    input
-      width: auto
-
-    > div
-      width: 50%
-
-.image-container
-  display: flex
-  margin: 1rem 0
-  align-items: center
-  justify-content: center
-
-  @media screen and (min-width: $breakpoint-sm)
-    border: 1px solid rgba(white, .25)
-
-  img
-    max-width: 100%
-    max-height: 40vh
-    object-fit: contain
+  // this can be uncommented to have the image and form fields side-by-side
+  //
+  // @media screen and (min-width: $breakpoint-sm)
+  //   flex-direction: row
+  //
+  //   > div
+  //     width: calc(50% - 1rem)
 
 </style>

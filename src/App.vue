@@ -1,34 +1,40 @@
 <template>
   <div>
-    <AppWarningBanner v-if="showWarningBanner" />
-    <div id="app" :class="{
-      'with-background': this.useBackgroundImage(),
-      'show-nav': showNav,
-    }">
-      <template v-if="!hideSideBar">
-        <span class="hamburger" @click="toggleNav">
-          <IconBase
-            iconName="menu"
-            width="28"
-            height="32"
-            class="icon-menu"
-          />
-        </span>
-        <AppSideBar :hideNav="hideNav" />
-      </template>
-      <div class="main-content-wrapper">
-        <div class="main-content">
-          <router-view :key="$route.fullPath" v-if="isLoaded" />
-          <LoadingOverlay type="global" v-else />
+    <div
+      id="app"
+      @mousedown="topLevelClick($event)"
+      :class="{
+        'show-nav': showNav,
+        'with-background': useBackgroundImage(),
+      }"
+    >
+      <AppWarningBanner v-if="showWarningBanner" />
+      <div class="app-wrapper">
+        <template v-if="!hideSideBar">
+          <span class="hamburger" @click="TOGGLE_NAV">
+            <IconBase
+              width="28"
+              height="32"
+              iconName="menu"
+              class="icon-menu"
+            />
+          </span>
+          <AppSideBar />
+        </template>
+        <div class="main-content-wrapper">
+          <div class="main-content">
+            <router-view :key="$route.fullPath" v-if="isLoaded" />
+            <LoadingOverlay type="global" v-else />
+          </div>
+          <AppFooter />
         </div>
-        <AppFooter />
+        <ToastContainer />
+        <vue-cookie-accept-decline disableDecline>
+          <div slot="message">
+            This website stores cookies on your computer. Cookies are used to save information about how you interact with our website and allow us to remember you when you return. We never sell this information, and we use it strictly for analytics and metrics. For more information, please see our <a href="https://www.codexprotocol.com/privacy-policy.html" target="_blank">Privacy Policy.</a>
+          </div>
+        </vue-cookie-accept-decline>
       </div>
-      <ToastContainer />
-      <vue-cookie-accept-decline disableDecline>
-        <div slot="message">
-          This website stores cookies on your computer. Cookies are used to save information about how you interact with our website and allow us to remember you when you return. We never sell this information, and we use it strictly for analytics and metrics. For more information, please see our <a href="https://www.codexprotocol.com/privacy-policy.html" target="_blank">Privacy Policy.</a>
-        </div>
-      </vue-cookie-accept-decline>
     </div>
   </div>
 </template>
@@ -39,6 +45,7 @@ import axios from 'axios'
 import {
   mapState,
   mapGetters,
+  mapActions,
 } from 'vuex'
 import VueCookieAcceptDecline from 'vue-cookie-accept-decline'
 
@@ -77,7 +84,6 @@ export default {
 
   data() {
     return {
-      showNav: false,
       showWarningBanner: config.expectedNetworkId !== '1' && config.expectedNetworkId !== '5777',
     }
   },
@@ -85,15 +91,11 @@ export default {
   created() {
     this.initializeApi()
 
-    this.$store.dispatch('app/FETCH_VERIFIED_USERS')
+    this.$store.dispatch('app/FETCH_BOOTSTRAP_DATA')
 
-    EventBus.$on('socket:codex-coin:transferred', () => {
-      this.$store.dispatch('auth/FETCH_TOKEN_BALANCE')
-    })
-
-    EventBus.$on('socket:codex-coin:registry-contract-approved', () => {
-      this.$store.dispatch('auth/FETCH_APPROVAL_STATUSES')
-    })
+    EventBus.$on('socket:codex-coin:savvy-spend', this.spendCODX)
+    EventBus.$on('socket:codex-coin:transferred', this.refundCODX)
+    EventBus.$on('socket:codex-coin:registry-contract-approved', this.fetchApprovalStatuses)
 
     EventBus.$on('socket:codex-record:created', this.addUserRecord)
     EventBus.$on('socket:codex-record:modified', this.updateUserRecord)
@@ -109,8 +111,9 @@ export default {
   },
 
   beforeDestroy() {
-    EventBus.$off('socket:codex-coin:transferred')
-    EventBus.$off('socket:codex-coin:registry-contract-approved')
+    EventBus.$off('socket:codex-coin:savvy-spend', this.spendCODX)
+    EventBus.$off('socket:codex-coin:transferred', this.refundCODX)
+    EventBus.$off('socket:codex-coin:registry-contract-approved', this.fetchApprovalStatuses)
 
     EventBus.$off('socket:codex-record:created', this.addUserRecord)
     EventBus.$off('socket:codex-record:modified', this.updateUserRecord)
@@ -123,8 +126,8 @@ export default {
 
   computed: {
     ...mapGetters('auth', ['isAuthenticated']),
-    ...mapState('app', ['isLoaded', 'postLoginDestination', 'giveaway']),
     ...mapState('auth', ['user', 'authToken']),
+    ...mapState('app', ['showNav', 'isLoaded', 'postLoginDestination', 'giveaway']),
 
     hideSideBar() {
       return this.$route.meta && this.$route.meta.hideSideBar
@@ -132,6 +135,8 @@ export default {
   },
 
   methods: {
+    ...mapActions('app', ['TOGGLE_NAV']),
+
     initializeApi() {
       axios.defaults.baseURL = config.apiUrl
       axios.defaults.headers.common['Content-Type'] = 'application/json'
@@ -231,16 +236,46 @@ export default {
       })
     },
 
+    fetchApprovalStatuses() {
+      this.$store.dispatch('auth/FETCH_APPROVAL_STATUSES')
+    },
+
+    refundCODX(codxCost) {
+      this.$store.commit('auth/REFUND_CODX', { codxCost })
+    },
+
+    spendCODX(codxCost) {
+      this.$store.commit('auth/SPEND_CODX', { codxCost })
+    },
+
     useBackgroundImage() {
       return this.$route.meta.useBackgroundImage || false
     },
 
-    toggleNav() {
-      this.showNav = !this.showNav
-    },
-
-    hideNav() {
-      this.showNav = false
+    // here we capture all events that bubble up to the top level "app"
+    //  component as a way to close popovers that have clickable content inside
+    //  of them
+    //
+    // the idea is to check if the clicked element (event.target) is a child of
+    //  an element with the .popover class... if so, do nothing to keep the
+    //  popover open, otherwise close all popovers
+    //
+    // ideally you'd do this with some sort of directive that dynamically adds
+    //  and removes a click handler on the body element when the popover opens,
+    //  but this method was a lot easier
+    //
+    // @NOTE: this has one caveat - you need to add @click.stop to popover
+    //  triggering elements, otherwise the popover closes as soon as it opens
+    topLevelClick(event) {
+      if (
+        event &&
+        event.target &&
+        event.target.closest &&
+        event.target.closest('.popover') !== null
+      ) {
+        return
+      }
+      this.$root.$emit('bv::hide::popover')
     },
   },
 }
@@ -249,21 +284,33 @@ export default {
 <style lang="stylus">
 
 @import "./assets/variables.styl"
+@import "./assets/z-indexes.styl"
 
 html
   font-size 16px
 
 html
 body
+body > div:first-child
   margin: 0
   padding: 0
   width: 100%
+  height: 100%
 
 body
   font-size: 1em
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
   font-family: $font-family-sans-serif
+
+  // "visually disable" the application when the freshchat widget is open
+  &.fc-widget-open
+    #app
+      opacity: .5
+      filter: blur(2px)
+      user-select: none
+      pointer-events: none
+      transition: opacity ease 1s, filter ease 1s
 
 // this will properly rotate images with EXIF data (i.e. photos taken on a
 //  phone) in FireFox - unfortunately it doesn't work in Chrome, so such images
@@ -273,7 +320,10 @@ img
 
 #app
   width: 100%
+  height: 100%
   display: flex
+  overflow: hidden
+  flex-direction: column
   background-color: $color-dark
 
   &.with-background
@@ -281,47 +331,59 @@ img
 
   // On smaller screens, handle the toggle of showing the side menu
   &.show-nav
-
     nav
+      width: 100%
+      height: 100%
       display: flex
+      position: absolute
+      background-color: rgba(darken($color-dark, 25%), .95)
 
     .main-content-wrapper
-      display: none
+      filter: blur(4px)
 
-    // On larger screens always show the side menu and content
-    @media screen and (min-width: $breakpoint-md)
-      nav
-      .main-content-wrapper
-        display: flex
+.app-wrapper
+  width: 100%
+  flex-grow: 1
+  display: flex
+  overflow: hidden
+  position: relative
 
 .hamburger
-  color: $color-primary
-  position: fixed
-  right: 20px
   top: 10px
-  z-index: 10
+  right: 20px
   padding: 10px
   cursor: pointer
+  position: absolute
+  color: $color-primary
 
   @media screen and (min-width: $breakpoint-md)
     display: none
 
 .main-content-wrapper
   width: 100%
-  display: flex
-  min-height: 100vh
-  flex-direction: column
-  padding-bottom: $bottom-nav-height
+  flex-grow: 1
+  max-height: 100%
+  overflow-y: auto
+  overflow-x: hidden
+
+  @media screen and (min-width: $breakpoint-md)
+    display: flex
+    flex-direction: column
 
 .main-content
-  flex: 1
   width: 100%
-  overflow: auto
+  flex-grow: 1
+
+  // uncommenting these will cause the footer to stay positioned at the bottom
+  //  of the main content area instead of being pushed down by a tall
+  // .main-content div
+  //
+  //   overflow-y: auto
+  //   overflow-x: hidden
 
 .cookie
   color: $color-dark
   padding: 2rem !important
-  z-index: 2147483601 !important // freshchat sets their button's z-index to 2147483600 lol
   background-color: $color-light !important
 
   a
@@ -334,6 +396,26 @@ img
 .alert a
   color: inherit
   font-weight: 600
+
+.spacer
+  flex-grow: 1
+
+.image-container
+  display: flex
+  margin: 1rem 0
+  padding: .5rem
+  align-items: center
+  justify-content: center
+  background-color: rgba(white, .01)
+  border: 1px solid rgba($color-primary, .1)
+
+  &.no-image
+    display: none
+
+  img
+    max-width: 100%
+    max-height: 40vh
+    object-fit: contain
 
 // CSS Checkbox toggle
 // <input type="checkbox"> toggle

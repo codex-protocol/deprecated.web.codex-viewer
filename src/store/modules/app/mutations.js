@@ -50,6 +50,12 @@ export default {
     currentState.isLoaded = isLoaded
   },
 
+  SET_SHOW_NAV(currentState, showNav) {
+    logMutation('SET_SHOW_NAV', showNav)
+
+    currentState.showNav = showNav
+  },
+
   SET_POST_LOGIN_DESTINATION(currentState, destination) {
     logMutation('SET_POST_LOGIN_DESTINATION', destination)
 
@@ -62,15 +68,27 @@ export default {
     currentState.giveaway = giveaway
   },
 
-  SET_GALLERIES(currentState, galleries) {
+  SET_GALLERIES(currentState, galleries = []) {
     logMutation('SET_GALLERIES', galleries)
 
-    currentState.galleries = galleries || []
+    currentState.galleries = galleries
   },
 
-  SET_EVENT_EMAILS(currentState, eventEmails) {
+  SET_EVENT_EMAILS(currentState, eventEmails = []) {
     logMutation('SET_EVENT_EMAILS', eventEmails)
 
-    currentState.eventEmails = eventEmails || []
+    currentState.eventEmails = eventEmails
+  },
+
+  SET_CODX_COSTS(currentState, codxCosts = {}) {
+    logMutation('SET_CODX_COSTS', codxCosts)
+
+    currentState.codxCosts = codxCosts
+  },
+
+  SET_CODX_PACKAGES(currentState, codxPackages = {}) {
+    logMutation('SET_CODX_PACKAGES', codxPackages)
+
+    currentState.codxPackages = codxPackages
   },
 }

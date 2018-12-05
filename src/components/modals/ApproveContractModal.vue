@@ -1,5 +1,5 @@
 <template>
-  <meta-mask-notification-modal
+  <MetaMaskNotificationModal
     :id="id"
     title="Approve contract"
     ok-title="Approve"
@@ -13,7 +13,7 @@
     <p class="mt-5">
       <a :href="getAddressUrl()" target="_blank">View contract on Etherscan</a>
     </p>
-  </meta-mask-notification-modal>
+  </MetaMaskNotificationModal>
 </template>
 
 <script>
@@ -47,7 +47,7 @@ export default {
     approveTokens() {
       EventBus.$emit('events:click-approve-contract', this)
       const amount = new BigNumber(2).pow(255)
-      const input = [this.contract.address, amount.toFixed()]
+      const input = [this.contract._address, amount.toFixed()]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
       return callContract(this.tokenContract.methods.approve(...input))
@@ -61,7 +61,7 @@ export default {
     },
 
     getAddressUrl() {
-      return etherscanHelper.getAddressUrl(this.contract.address)
+      return etherscanHelper.getAddressUrl(this.contract._address)
     },
   },
 }

@@ -3,8 +3,6 @@ import debug from 'debug'
 
 import router from '../../../router'
 import Giveaway from '../../../util/api/giveaway'
-import Gallery from '../../../util/api/gallery'
-import EventEmail from '../../../util/api/eventEmail'
 
 const logger = debug('app:store:app:actions')
 
@@ -60,21 +58,27 @@ export default {
     router.replace({ path: rootState.route.path })
   },
 
-  FETCH_VERIFIED_USERS({ commit }) {
-    logger('FETCH_VERIFIED_USERS action being executed')
+  FETCH_BOOTSTRAP_DATA({ commit }) {
+    logger('FETCH_BOOTSTRAP_DATA action being executed')
 
     const requestOptions = {
-      url: '/verified-users',
+      url: '/etc/bootstrap-data',
       method: 'get',
     }
 
     return axios(requestOptions)
       .then((response) => {
-        commit('SET_VERIFIED_USERS', response.data.result)
+        const bootstrapData = response.data.result
+        commit('SET_GALLERIES', bootstrapData.galleries)
+        commit('SET_CODX_COSTS', bootstrapData.codxCosts)
+        commit('SET_EVENT_EMAILS', bootstrapData.eventEmails)
+        commit('SET_CODX_PACKAGES', bootstrapData.codxPackages)
+        commit('SET_VERIFIED_USERS', bootstrapData.verifiedUsers)
       })
       .catch((error) => {
-        logger('Error retrieving the Verified Users address map, ignoring.', error)
+        logger('Error retrieving bootstrap data:', error)
       })
+
   },
 
   FETCH_ELIGIBLE_GIVEAWAY({ commit }) {
@@ -87,21 +91,13 @@ export default {
       })
   },
 
-  FETCH_GALLERIES({ commit }) {
-    logger('FETCH_GALLERIES action being executed')
+  TOGGLE_NAV({ commit, state }, newState) {
+    logger('TOGGLE_NAV action being executed')
 
-    Gallery.getGalleries()
-      .then((galleries) => {
-        commit('SET_GALLERIES', galleries)
-      })
-  },
+    const newShowNav = typeof newState !== 'boolean'
+      ? !state.showNav
+      : newState
 
-  FETCH_EVENT_EMAILS({ commit }) {
-    logger('FETCH_EVENT_EMAILS action being executed')
-
-    EventEmail.getEventEmails()
-      .then((eventEmails) => {
-        commit('SET_EVENT_EMAILS', eventEmails)
-      })
+    commit('SET_SHOW_NAV', newShowNav)
   },
 }
