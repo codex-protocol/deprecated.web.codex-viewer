@@ -209,7 +209,10 @@ export default {
 
       if (this.validate) {
         this.errors = this.validate()
-        return
+
+        if (this.errors.length !== 0) {
+          return
+        }
       }
 
       if (this.isSimpleUser) {
