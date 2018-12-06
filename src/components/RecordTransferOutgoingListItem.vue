@@ -1,6 +1,6 @@
 <template>
   <b-card
-    :img-src="missingImageHelper.getMainImageUri(codexRecord.metadata)"
+    :img-src="codexRecord.metadata | getMainImageUri"
     img-top
   >
     <div class="approved-overlay" v-if="this.cancelApproved">
@@ -19,7 +19,6 @@
 import EventBus from '../util/eventBus'
 import { ZeroAddress } from '../util/constants/web3'
 import contractHelper from '../util/contractHelper'
-import missingImageHelper from '../util/missingImageHelper'
 
 export default {
   name: 'RecordTransferOutgoingListItem',
@@ -30,7 +29,6 @@ export default {
     return {
       route: { name: 'record-detail', params: { recordId: this.codexRecord.tokenId } },
       cancelApproved: false,
-      missingImageHelper,
     }
   },
 

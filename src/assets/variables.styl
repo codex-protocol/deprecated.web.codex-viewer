@@ -14,8 +14,8 @@ $color-dark = #1A0D2A
 $color-light = lighten($color-primary, 50%)
 
 // Fonts
-$font-family-serif = "Playfair Display", Georgia, "Times New Roman", Times, serif;
-$font-family-sans-serif = "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
+$font-family-serif = "Playfair Display", Georgia, "Times New Roman", Times, serif
+$font-family-sans-serif = "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif
 
 // Breakpoints
 $breakpoint-xs = 0
@@ -26,13 +26,16 @@ $breakpoint-xl = 1200px
 
 // Dimensions
 $side-nav-width = 16rem
-$bottom-nav-height = 4rem
 
+// Z-Indexes
+$freshchat-z-index = 2147483600 // this is used to offset the z-index of certain elements so they appear above the freshchat icon
+
+// Components
 card()
   flex: none
-  margin-bottom: 1rem
-  margin-top: 1rem
   border: none
+  margin-top: 1rem
+  margin-bottom: 1rem
   border-radius: 0 0 .25rem .25rem
 
   @media screen and (min-width: $breakpoint-sm)

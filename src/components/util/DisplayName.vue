@@ -1,7 +1,6 @@
 <template>
-  <span>
-    <span class="hash-short">{{ shortenName(processedName) }}</span>
-    <span class="hash-large">{{ processedName }}</span>
+  <span class="display-name" v-b-tooltip.hover :title="tooltipTitle">
+    {{ processedName }}
   </span>
 </template>
 
@@ -33,6 +32,12 @@ export default {
     ...mapState('auth', ['user']),
     ...mapGetters('app', ['getVerifiedNameFromAddress']),
 
+    tooltipTitle() {
+      return this.processedName === 'You'
+        ? this.getVerifiedNameFromAddress(this.selectedName)
+        : this.processedName
+    },
+
     processedName() {
       // If userObject is defined, show the full selected name instead of 'You'
       if (this.user && !this.userObject && this.selectedName === this.user.address) {
@@ -42,26 +47,6 @@ export default {
       return this.getVerifiedNameFromAddress(this.selectedName)
     },
   },
-
-  methods: {
-    shortenName(string) {
-      if (typeof string !== 'string') {
-        return null
-      }
-
-      // Enough to fit 'Logged in as xxxxxxxxxxxx@gmail.com' in the mobile nav bar
-      if (string.length <= 24) {
-        return string
-      }
-
-      let formattedString = string
-      const beginning = string.substring(0, 6)
-      const end = string.substring(string.length - 4)
-      formattedString = `${beginning}…${end}`
-
-      return formattedString
-    },
-  },
 }
 </script>
 
@@ -69,17 +54,12 @@ export default {
 
 @import "../../assets/variables.styl"
 
-.hash-short
+.display-name
   max-width: 100%
-
-  @media screen and (min-width: $breakpoint-xl)
-    display: none
-
-.hash-large
-  display: none
-  max-width: 100%
-
-  @media screen and (min-width: $breakpoint-xl)
-    display: inline-block
+  overflow: hidden
+  white-space: nowrap
+  display: inline-block
+  vertical-align: middle
+  text-overflow: ellipsis
 
 </style>

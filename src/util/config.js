@@ -27,18 +27,35 @@ const etherScanUrl = (() => {
   }
 })()
 
+// are fees enabled for savvy users? this will toggle certain peices of the UI
+//  related to getting CODX and approving contracts
+//
+// simple users will always have fees enabled, since their fees are paid to
+//  the IdentityPlatform by their IdentityProxy (and not directly to the
+//  CodexRecord contract)
+const feesEnabled = (() => {
+  switch (expectedNetworkName) {
+    case 'ganache': return false
+    case 'ropsten': return false
+    case 'rinkeby': return false
+    case 'mainnet': return false
+    default: return false
+  }
+})()
+
 const targetEnv = process.env.VUE_APP_TARGET_ENV
 export default {
-  showFaucet: false,
   showManageTokensPage: false,
   showCodexGalleryInSideBar: true,
+  faucetDripEnabled: expectedNetworkId !== '1',
 
   showManualConfirm: targetEnv === 'development',
 
-  showTestApp: targetEnv !== 'production',
+  showTestApp: expectedNetworkId !== '1',
   supportEmailAccounts: expectedNetworkId !== '1',
 
   apiUrl,
+  feesEnabled,
   etherScanUrl,
   expectedNetworkId,
   expectedNetworkName,

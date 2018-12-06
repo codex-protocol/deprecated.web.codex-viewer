@@ -12,14 +12,15 @@
       :key="eventEmail.eventName"
       v-for="eventEmail in eventEmails"
     >
-      <!-- make the whole row clickable and stop the event from propgating to the checkbox -->
-      <b-row @click.prevent.stop="toggleBlacklist(eventEmail)">
+      <!-- make the whole row clickable -->
+      <b-row @click.prevent="toggleBlacklist(eventEmail)">
         <b-col class="description">
           {{ eventEmail.description }}
         </b-col>
         <b-col class="toggle">
           <input
             type="checkbox"
+            :disabled="isLoading"
             class="toggle-checkbox"
             :checked="!isBlacklisted(eventEmail)"
           />
@@ -42,10 +43,9 @@ export default {
     ...mapState('app', ['eventEmails']),
   },
 
-  created() {
-    // only fetch event emails once per app-load
-    if (this.eventEmails.length === 0) {
-      this.$store.dispatch('app/FETCH_EVENT_EMAILS')
+  data() {
+    return {
+      isLoading: false,
     }
   },
 
@@ -55,9 +55,13 @@ export default {
     },
 
     toggleBlacklist(eventEmail) {
+      this.isLoading = true
       this.$store.dispatch('auth/TOGGLE_EVENT_EMAIL_BLACKLIST', eventEmail)
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not update email subscription: ${error.message}`)
+        })
+        .finally(() => {
+          this.isLoading = false
         })
     },
   },
@@ -80,15 +84,15 @@ export default {
   display: flex
   align-items: center
 
-  height: 3rem
   max-width: 100%
+  min-height: 3rem
   font-weight: 600
   color: $color-gray
   font-size: 0.875rem
 
 .row-container
-  height: 3rem
   max-width: 100%
+  min-height: 3rem
   font-weight: 600
   color: $color-gray
   font-size: 0.875rem

@@ -7,15 +7,15 @@
       <div v-text="accessToken"></div>
     </b-form-group>
     <b-form-group
-      label="Title"
-      label-for="title"
+      label="Name"
+      label-for="name"
     >
       <b-form-input
-        id="title"
+        id="name"
         type="text"
-        v-model="title"
+        v-model="name"
         required
-        placeholder="Enter the title"
+        placeholder="Enter the name"
       />
     </b-form-group>
     <b-form-group
@@ -42,6 +42,21 @@
         placeholder="Upload image file"
       />
     </b-form-group>
+    <b-form-group
+      label="Share Record Publicly"
+      label-for="isPublic"
+      label-size="sm"
+    >
+      <input
+        id="isPublic"
+        type="checkbox"
+        v-model="isPublic"
+        class="toggle-checkbox"
+      />
+      <b-form-text>
+        By making this Record public, anyone can view the name, description and images.
+      </b-form-text>
+    </b-form-group>
     <b-button type="submit" variant="primary">Submit</b-button>
   </b-form>
 </template>
@@ -59,18 +74,20 @@ export default {
 
   data() {
     return {
-      title: null,
-      description: null,
+      name: null,
       image: null,
+      isPrivate: true,
+      description: null,
     }
   },
 
   methods: {
     onSubmit() {
       const formData = new FormData()
-      formData.append('name', this.title)
-      formData.append('description', this.description)
+      formData.append('name', this.name)
       formData.append('mainImage', this.image)
+      formData.append('isPrivate', this.isPrivate)
+      formData.append('description', this.description)
 
       axios.post('v1/client/record', formData, {
         headers: {
@@ -78,6 +95,17 @@ export default {
           'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
         },
       }).then(this.showResult)
+    },
+  },
+
+  computed: {
+    isPublic: {
+      get: function getIsPublic() {
+        return !this.isPrivate
+      },
+      set: function setIsPublic(newValue) {
+        this.isPrivate = !newValue
+      },
     },
   },
 }

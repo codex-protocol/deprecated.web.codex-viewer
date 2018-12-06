@@ -4,7 +4,8 @@
     <p>Current owner: <DisplayName :name="codexRecord.ownerAddress" /></p>
     <p>Approved owner: <DisplayName :name="codexRecord.approvedAddress" /></p>
     <p>Last updated: {{ formatDate(codexRecord.updatedAt) }}</p>
-    <h5>Metadata</h5>
+
+    <h4>Metadata</h4>
     <p>Name hash: <DisplayName :name="codexRecord.nameHash" /></p>
     <p>Description hash: <DisplayName :name="codexRecord.descriptionHash" /></p>
     <p>ProviderId:

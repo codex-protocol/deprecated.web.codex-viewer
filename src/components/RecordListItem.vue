@@ -2,7 +2,7 @@
   <b-card
     v-if="codexRecord.metadata"
     @click.prevent="viewRecord"
-    :img-src="missingImageHelper.getMainImageUri(codexRecord.metadata)"
+    :img-src="codexRecord.metadata | getMainImageUri"
     img-top
   >
     <p>
@@ -16,8 +16,6 @@
 
 <script>
 import Raven from 'raven-js'
-
-import missingImageHelper from '../util/missingImageHelper'
 
 export default {
   name: 'RecordListItem',
@@ -38,7 +36,6 @@ export default {
 
     return {
       route: { name: 'record-detail', params: { recordId: this.codexRecord.tokenId } },
-      missingImageHelper,
     }
   },
   methods: {

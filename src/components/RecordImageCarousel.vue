@@ -36,14 +36,14 @@
 </template>
 
 <script>
-import missingImageHelper from '../util/missingImageHelper'
+import getMainImageUri from '../filters/get-main-image-uri'
 
 export default {
   name: 'RecordImageCarousel',
   props: ['codexRecord'],
   computed: {
     mainImageUri() {
-      return this.activeMainImage || missingImageHelper.getMainImageUri(this.codexRecord.metadata)
+      return this.activeMainImage || getMainImageUri(this.codexRecord.metadata)
     },
   },
 }

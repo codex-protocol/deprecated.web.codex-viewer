@@ -6,5 +6,7 @@ export default () => {
       outgoingTransfers: [],
     },
     activeRecord: null,
+    selectedRecordToTransfer: null,
+    onTransferCallback: null,
   }
 }
