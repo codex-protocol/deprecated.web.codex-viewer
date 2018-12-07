@@ -6,8 +6,7 @@
 
         <div class="content">
 
-          <!-- @TODO: make sure we can call CODX a digital currency -->
-          <p>CodexCoin (CODX) is the ERC-20 digital currency used to interact with The Codex Protocol. You must have CODX to create, edit, and transfer Codex Records.</p>
+          <p>CodexCoin (CODX) is the ERC-20 utility token used to interact with The Codex Protocol. You must have CODX to create, edit, and transfer Codex Records.</p>
 
           <section class="request-faucet-drip" v-if="showFaucetDripForm">
             <p>

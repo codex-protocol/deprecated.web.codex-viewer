@@ -20,8 +20,7 @@
       target="codx-balance-popover-trigger"
     >
       <div class="codx-balance-popover">
-        <!-- @TODO: make sure we can call CODX a digital currency -->
-        <p>CODX is the digital currency used to interact with The Codex Protocol.</p>
+        <p>CODX is the utility token used to interact with The Codex Protocol.</p>
         <div
           :key="methodName"
           v-for="(description, methodName) in orderedMethodDescriptions"
