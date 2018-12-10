@@ -1,9 +1,20 @@
 <template>
-  <div class="codx-balance-container">
+  <div class="codx-balance-container" ref="loading-overlay-container">
+
     <div class="balance-wrapper">
       <h4>Credit Balance</h4>
-      <div>{{ user.codxBalance | formatCODXAmount }}</div>
+      <span
+        v-b-tooltip.hover
+        title="Your free tokens will arrive soon!"
+        v-if="user.codxBalance === '0' && user.totalGasUsed === '0'"
+      >
+        <LoadingIcon :show="true" type="transparent" size="small" /> CODX Incoming...
+      </span>
+      <span v-else>
+        <div>{{ user.codxBalance | formatCODXAmount }}</div>
+      </span>
     </div>
+
     <img
       @click.stop
       src="../assets/icons/info.svg"
@@ -45,8 +56,14 @@
 
 import { mapState, mapActions } from 'vuex'
 
+import LoadingIcon from './util/LoadingIcon'
+
 export default {
   name: 'CODXBalanceControl',
+
+  components: {
+    LoadingIcon,
+  },
 
   data() {
     return {
@@ -112,5 +129,8 @@ export default {
   .btn
     width: 100%
     margin-top: 2rem
+
+.loading-icon
+  margin-right: .25rem
 
 </style>
