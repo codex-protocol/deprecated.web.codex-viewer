@@ -6,13 +6,19 @@
 
         <div class="content">
 
-          <p>CodexCoin (CODX) is the ERC-20 utility token used to interact with The Codex Protocol. You must have CODX to create, edit, and transfer Codex Records.</p>
+          <p>
+            <a :href="etherscanHelper.getAddressUrl(tokenContract._address)" target="_blank">CodexCoin (CODX)</a>
+            is the ERC-20 utility token used to interact with The Codex
+            Protocol. You must have CODX to create, edit, and transfer Codex
+            Records.
+          </p>
 
           <section class="request-faucet-drip" v-if="showFaucetDripForm">
             <p>
-              On testnets such as {{ expectedNetworkName }}, you can request CODX for free from the "CODX Facuet".
-              After requesting a drip from the faucet, CODX will be sent to your account and you will recieve a notification upon success.
-              You can request 1 drip every 24 hours.
+              On testnets such as {{ expectedNetworkName }}, you can request
+              CODX for free from the "CODX Facuet". After requesting a drip from
+              the faucet, CODX will be sent to your account and you will recieve
+              a notification upon success. You can request 1 drip every 24 hours.
             </p>
             <b-button
               class="mb-3"
@@ -108,6 +114,7 @@ import config from '../util/config'
 import Faucet from '../util/api/faucet'
 import EventBus from '../util/eventBus'
 import { timeSince } from '../util/dateHelpers'
+import etherscanHelper from '../util/web3/etherscanHelper'
 
 import AppHeader from '../components/core/AppHeader'
 import FaucetDripModal from '../components/modals/FaucetDripModal'
@@ -124,6 +131,7 @@ export default {
 
   data() {
     return {
+      etherscanHelper,
       faucetDripEnabled: config.faucetDripEnabled,
       expectedNetworkName: config.expectedNetworkName,
     }
@@ -137,7 +145,7 @@ export default {
 
   computed: {
     ...mapGetters('auth', ['isSimpleUser']),
-    ...mapState('web3', ['recordContract']),
+    ...mapState('web3', ['recordContract', 'tokenContract']),
     ...mapState('auth', ['registryContractApproved', 'user']),
     ...mapState('app', ['paymentsEnabled', 'codxPackages', 'codxCosts']),
 
