@@ -63,6 +63,18 @@
           :show="!!errorMessage"
           v-html="errorMessage"
         />
+
+        <b-alert
+          show
+          class="mt-4"
+          variant="primary"
+        >
+          If you are already using Codex Viewer with a managed wallet (e.g.
+          MetaMask or Coinbase Wallet), you must log in with that wallet to
+          access your existing Codex Records. Logging in with an OAuth2 provider
+          above will create a new account that is not linked to your existing
+          wallet address.
+        </b-alert>
       </div>
       <div class="col-12 col-md-6 secondary">
         <div class="login-art"><img src="../assets/images/login-art.png" v-party-mode-activator /></div>
