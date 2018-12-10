@@ -58,7 +58,7 @@
         </div>
 
         <b-alert
-          class="mt-5"
+          class="mt-4"
           variant="danger"
           :show="!!errorMessage"
           v-html="errorMessage"
@@ -303,11 +303,23 @@ export default {
 <style lang="stylus" scoped>
 @import "../assets/variables.styl"
 
-  .icons a
-    margin: 0 1rem
+  .icons
+    display: flex
+    align-items: flex-start
 
-    &:first-child
-      margin-left: 0
+  .icons a
+    width: 3rem
+    height: @width
+    display: inline-block
+
+    min-width: 0 // see: https://stackoverflow.com/a/33811151/1696150
+
+    &+a
+      margin-left: 1rem
+
+    svg
+      width: 100%
+      height: 100%
 
     &.disabled
     &[disabled]
@@ -320,8 +332,8 @@ export default {
 
   .logo
     max-width: 100px
-    margin-bottom: 2.5rem
     margin-top: 2.5rem
+    margin-bottom: 2.5rem
 
   h1
     font-weight: bold
