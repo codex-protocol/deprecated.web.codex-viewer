@@ -1,9 +1,20 @@
 <template>
-  <div class="codx-balance-container">
+  <div class="codx-balance-container" ref="loading-overlay-container">
+
     <div class="balance-wrapper">
       <h4>Credit Balance</h4>
-      <div>{{ user.codxBalance | formatCODXAmount }}</div>
+      <span
+        v-b-tooltip.hover
+        title="Your free tokens will arrive soon!"
+        v-if="user.codxBalance === '0' && user.totalGasUsed === '0'"
+      >
+        <LoadingIcon :show="true" type="transparent" size="small" /> CODX Incoming...
+      </span>
+      <span v-else>
+        <div>{{ user.codxBalance | formatCODXAmount }}</div>
+      </span>
     </div>
+
     <img
       @click.stop
       src="../assets/icons/info.svg"
@@ -20,8 +31,7 @@
       target="codx-balance-popover-trigger"
     >
       <div class="codx-balance-popover">
-        <!-- @TODO: make sure we can call CODX a digital currency -->
-        <p>CODX is the digital currency used to interact with The Codex Protocol.</p>
+        <p>CODX is the utility token used to interact with The Codex Protocol.</p>
         <div
           :key="methodName"
           v-for="(description, methodName) in orderedMethodDescriptions"
@@ -46,8 +56,14 @@
 
 import { mapState, mapActions } from 'vuex'
 
+import LoadingIcon from './util/LoadingIcon'
+
 export default {
   name: 'CODXBalanceControl',
+
+  components: {
+    LoadingIcon,
+  },
 
   data() {
     return {
@@ -113,5 +129,8 @@ export default {
   .btn
     width: 100%
     margin-top: 2rem
+
+.loading-icon
+  margin-right: .25rem
 
 </style>
