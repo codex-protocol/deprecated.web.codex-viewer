@@ -1,25 +1,40 @@
 <template>
   <div
-    ref="overlay"
-    class="loading-overlay"
-    :class="type"
     v-if="show"
-  ></div>
+    ref="overlay"
+    :class="[type, size]"
+    class="loading-overlay"
+  >
+    <LoadingIcon :type="type" :size="size" />
+  </div>
 </template>
 
 <script>
+
+import LoadingIcon from './LoadingIcon'
+
 export default {
   name: 'LoadingOverlay',
+
+  components: {
+    LoadingIcon,
+  },
+
   props: {
     show: {
       type: Boolean,
       default: true, // default is true so you can use v-else on a <LoadingOverlay> without also specifying this prop
+    },
+    size: {
+      type: String,
+      default: 'large',
     },
     type: {
       type: String,
       default: 'light',
     },
   },
+
   mounted() {
     // add a "loading-overlay-container" ref somewhere in the parent component
     //  to have it's position automatically set to "relative" (if it's not
@@ -49,41 +64,12 @@ export default {
   position: absolute
   align-items: center
   justify-content: center
-
-  &::before
-    content: ""
-    width: 4rem
-    height: 4rem
-    z-index: 999
-    display: block
-    border-radius: 50%
-    border-width: .5rem
-    border-style: solid
-    animation: spin 1s linear infinite
+  background-color: rgba($color-dark, .8)
 
   &.light
     background-color: rgba(lighten($color-primary, 50%), .75)
 
-    &::before
-      border-color: rgba($color-secondary, .25)
-      border-top-color: $color-secondary
-
-  &.dark
-  &.global
-    background-color: rgba($color-dark, .8)
-
-    &::before
-      border-color: rgba($color-primary, .25)
-      border-top-color: $color-primary
-
-  &.global
-    position: fixed
-
-  @keyframes spin
-    from
-      transform: rotate(0deg)
-
-    to
-      transform: rotate(360deg)
+  &.transparent
+    background-color: transparent
 
 </style>

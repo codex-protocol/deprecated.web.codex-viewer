@@ -1,14 +1,13 @@
 <template>
   <div>
     <h2>Provenance</h2>
-    <div v-if="provenance">
-      <div class="flex mb-4 pb-1" v-for="row in provenance" :key="row.id">
-        <div>{{ getEventDescription(row.type) }}</div>
-        <div class="display-name">
-          <DisplayName :name="getEventAddress(row)" />
-        </div>
-        <div>{{ getTimeSince(row.createdAt) }}</div>
-        <div class="action-buttons">
+
+    <table v-if="provenance">
+      <tr v-for="row in provenance" :key="row.id">
+        <td>{{ getEventDescription(row.type) }}</td>
+        <td class="display-name-container"><DisplayName :name="getEventAddress(row)" /></td>
+        <td>{{ getTimeSince(row.createdAt) }}</td>
+        <td>
           <span v-if="row.type === 'modified' && row.codexRecordModifiedEvent.changedData">
             <b-button
               variant="link"
@@ -21,9 +20,10 @@
           <a :href="getTransactionUrl(row.transactionHash)" target="_blank">
             <img src="../assets/icons/share.svg">
           </a>
-        </div>
-      </div>
-    </div>
+        </td>
+      </tr>
+    </table>
+
     <div v-else>
       <!--
         this would be an anomoly, since all records have at least one provenance
@@ -31,6 +31,7 @@
       -->
       <p>There is no provenance to display for this Codex Record.</p>
     </div>
+
     <b-modal
       ok-only
       id="modifiedDetailsModal"
@@ -132,26 +133,31 @@ export default {
 
 @import "../assets/variables.styl"
 
-.flex
-  display: flex
-  border-bottom: solid 1px rgba(white, .1)
+table
+  width: 100%
 
-.flex div
-  flex-grow: 1
-  font-size: 0.75rem
-  text-align: center
+  tr
+    border-bottom: solid 1px rgba(white, .1)
 
-  &+div
-    padding-left: 1rem
+  td
+    padding: .5rem
+    font-size: small
+    text-align: center
 
-  @media screen and (min-width: $breakpoint-sm)
-    font-size: 1rem
+    @media screen and (min-width: $breakpoint-lg)
+      padding: 1rem
+      font-size: 1rem
 
-  &.display-name
-    max-width: 50%
+    .display-name
+      @media screen and (max-width: $breakpoint-md)
+        max-width: 50%
+
+      @media screen and (max-width: $breakpoint-sm)
+        white-space: unset
+        word-break: break-all
 
 .show-modified-details
-  padding: 0
+  padding: 0 .5rem 0 0
 
 .modified-details
   .table
