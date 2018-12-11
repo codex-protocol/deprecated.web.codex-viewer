@@ -58,11 +58,23 @@
         </div>
 
         <b-alert
-          class="mt-5"
+          class="mt-4"
           variant="danger"
           :show="!!errorMessage"
           v-html="errorMessage"
         />
+
+        <b-alert
+          show
+          class="mt-4"
+          variant="primary"
+        >
+          If you are already using Codex Viewer with a managed wallet (e.g.
+          MetaMask or Coinbase Wallet), you must log in with that wallet to
+          access your existing Codex Records. Logging in with an OAuth2 provider
+          above will create a new account that is not linked to your existing
+          wallet address.
+        </b-alert>
       </div>
       <div class="col-12 col-md-6 secondary">
         <div class="login-art"><img src="../assets/images/login-art.png" v-party-mode-activator /></div>
@@ -303,11 +315,23 @@ export default {
 <style lang="stylus" scoped>
 @import "../assets/variables.styl"
 
-  .icons a
-    margin: 0 1rem
+  .icons
+    display: flex
+    align-items: flex-start
 
-    &:first-child
-      margin-left: 0
+  .icons a
+    width: 3rem
+    height: @width
+    display: inline-block
+
+    min-width: 0 // see: https://stackoverflow.com/a/33811151/1696150
+
+    &+a
+      margin-left: 1rem
+
+    svg
+      width: 100%
+      height: 100%
 
     &.disabled
     &[disabled]
@@ -320,8 +344,8 @@ export default {
 
   .logo
     max-width: 100px
-    margin-bottom: 2.5rem
     margin-top: 2.5rem
+    margin-bottom: 2.5rem
 
   h1
     font-weight: bold
