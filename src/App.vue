@@ -168,6 +168,7 @@ export default {
 
           return this.$store.dispatch('auth/LOGIN_FROM_CACHED_TOKEN')
             .then(() => {
+
               // Start fetching app & user data that is dependent on authentication
               // No need to block on these async actions
               this.$store.dispatch('records/FETCH_USER_DATA')
@@ -187,7 +188,7 @@ export default {
             })
         })
         .catch(() => {
-        // Do nothing, any caught errors will be rendered on the page
+          // Do nothing, any caught errors will be rendered on the page
         })
         .finally(() => {
           this.$store.commit('app/SET_IS_LOADED', true)
