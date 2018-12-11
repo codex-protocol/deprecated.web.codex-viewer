@@ -51,8 +51,8 @@ export default {
 
   showManualConfirm: targetEnv === 'development',
 
+  supportEmailAccounts: true,
   showTestApp: expectedNetworkId !== '1',
-  supportEmailAccounts: localStorage.getItem('supportEmailAccounts') === 'true',
 
   apiUrl,
   feesEnabled,
