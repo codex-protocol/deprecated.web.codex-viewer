@@ -178,7 +178,7 @@ export default {
               EventBus.$emit('toast:success', 'CODX purchased successfully! Your balance will update soon.', 5000)
             })
             .catch((error) => {
-              EventBus.$emit('toast:error', 'Could not purchase CODX.')
+              EventBus.$emit('toast:error', 'Could not purchase CODX, please try again later. Your card was not charged.')
             })
         },
       })
