@@ -68,6 +68,7 @@
           show
           class="mt-4"
           variant="primary"
+          v-if="supportEmailAccounts"
         >
           If you are already using Codex Viewer with a managed wallet (e.g.
           MetaMask or Coinbase Wallet), you must log in with that wallet to
