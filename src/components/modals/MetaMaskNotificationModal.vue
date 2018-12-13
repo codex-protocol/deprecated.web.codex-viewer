@@ -87,8 +87,16 @@
             Your transaction has been submitted to the blockchain!
           </p>
           <p>
-            Confirming transactions securely on the blockchain can take anywhere from a few minutes to a few hours. Once confirmed, you'll receive a notification on this page.
+            Confirming transactions securely on the blockchain can take anywhere
+            from a few minutes to a few hours. Once confirmed, you'll receive an
+            email and a notification on this page.
           </p>
+          <b-button
+            variant="primary"
+            @click="modalVisible = false"
+          >
+            Go Back to the Viewer
+          </b-button>
         </div>
       </div>
     </div>
