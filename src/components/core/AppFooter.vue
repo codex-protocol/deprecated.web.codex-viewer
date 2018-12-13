@@ -1,10 +1,10 @@
 <template>
   <div class="footer">
     <div class="links">
-      <a href="https://www.codexprotocol.com/">Home</a>
-      <a href="https://www.codexprotocol.com/Terms-of-Service.pdf">Terms of Use</a>
-      <a href="https://www.codexprotocol.com/privacy-policy.html">Privacy Policy</a>
-      <a href="https://dev.codexprotocol.com">Documentation</a>
+      <a href="https://codexprotocol.com" target="_blank">Home</a>
+      <a href="https://codexprotocol.com/wp-content/uploads/2018/11/Terms-of-Service.pdf" target="_blank">Terms of Use</a>
+      <a href="https://codexprotocol.com/privacy-policy" target="_blank">Privacy Policy</a>
+      <a href="https://dev.codexprotocol.com" target="_blank">Documentation</a>
       <b-link to="/contact">Contact Us</b-link>
     </div>
     <div class="links">
@@ -14,16 +14,16 @@
       <b-link to="/test/oauth2-app" v-if="showTestApp">Test OAuth2 API</b-link>
     </div>
     <div class="icons">
-      <a href="https://github.com/codex-protocol/">
+      <a href="https://github.com/codex-protocol/" target="_blank">
         <IconBase iconName="gitHub" width="24" height="24" class="icon" />
       </a>
-      <a href="https://twitter.com/codexprotocol">
+      <a href="https://twitter.com/codexprotocol" target="_blank">
         <IconBase iconName="twitter" width="24" height="24" class="icon" />
       </a>
-      <a href="http://t.me/codexprotocol">
+      <a href="http://t.me/codexprotocol" target="_blank">
         <IconBase iconName="telegram" width="24" height="24" class="icon" />
       </a>
-      <a href="https://medium.com/codexprotocol">
+      <a href="https://medium.com/codexprotocol" target="_blank">
         <IconBase iconName="medium" width="24" height="24" class="icon" />
       </a>
     </div>
