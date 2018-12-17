@@ -16,8 +16,8 @@
           <section class="request-faucet-drip" v-if="showFaucetDripForm">
             <p>
               On testnets such as {{ expectedNetworkName }}, you can request
-              CODX for free from the "CODX Facuet". After requesting a drip from
-              the faucet, CODX will be sent to your account and you will recieve
+              CODX for free from the "CODX Faucet". After requesting a drip from
+              the faucet, CODX will be sent to your account and you will receive
               a notification upon success. You can request 1 drip every 24 hours.
             </p>
             <b-button

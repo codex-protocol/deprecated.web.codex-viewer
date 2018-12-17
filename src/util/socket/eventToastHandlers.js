@@ -77,7 +77,7 @@ export default {
   },
 
   'codex-coin:transferred': (value) => {
-    showToast(`You have successfully recieved ${formatCODXAmount(value)}.`)
+    showToast(`You have successfully received ${formatCODXAmount(value)}.`)
   },
 
   'codex-coin:registry-contract-approved': (value) => {
