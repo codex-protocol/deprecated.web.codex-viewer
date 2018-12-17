@@ -136,6 +136,7 @@ if (config.showManageTokensPage) {
 }
 
 router.beforeEach((to, from, next) => {
+
   if (to.meta.ifAuthenticatedRedirect && store.getters['auth/isAuthenticated']) {
     return next({ name: 'collection' })
   }
@@ -154,6 +155,8 @@ router.beforeEach((to, from, next) => {
     if (to.matched.length > 0) {
       nextRoute.query = { destination: to.fullPath }
     }
+
+    return next(nextRoute)
   }
 
   return next()
