@@ -23,7 +23,7 @@
             addresses when creating users
 
             even if someone could put some malicious text into an invited user's
-            email field, nobody would ever actually recieve an email with a link
+            email field, nobody would ever actually receive an email with a link
             that would generate this page since the email would be invalid...
           -->
           <span v-html="pendingUserMessage"></span>
