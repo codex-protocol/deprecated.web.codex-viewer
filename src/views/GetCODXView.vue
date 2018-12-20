@@ -83,7 +83,6 @@
                   <ul>
                     <li>Create {{ Math.floor(codxPackage.codxTotal / codxCosts.CodexRecord.mint) }} Codex Records</li>
                     <li>Modify {{ Math.floor(codxPackage.codxTotal / codxCosts.CodexRecord.modifyMetadataHashes) }} Codex Records</li>
-                    <li>Accept {{ Math.floor(codxPackage.codxTotal / codxCosts.CodexRecord.safeTransferFrom) }} Codex Record transfers</li>
                   </ul>
                 </div>
 
