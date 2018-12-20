@@ -76,7 +76,6 @@ export default {
       orderedMethodDescriptions: {
         mint: 'Create a Codex Record',
         modifyMetadataHashes: 'Modify a Codex Record',
-        safeTransferFrom: 'Accept a Transfer',
       },
 
       showPopover: false,

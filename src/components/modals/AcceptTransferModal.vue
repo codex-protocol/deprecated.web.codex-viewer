@@ -5,8 +5,6 @@
     ok-title="Accept transfer"
     cancel-variant="outline-primary"
     :ok-method="acceptTransfer"
-    :requires-tokens="true"
-    :checkout-cost="codxCosts.CodexRecord.safeTransferFrom"
     checkout-title="Accept Codex Record"
   >
     <template slot="checkout" v-if="codexRecord">
