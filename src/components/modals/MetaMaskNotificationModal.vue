@@ -112,7 +112,6 @@ import config from '../../util/config'
 import CODXCheckoutControl from '../CODXCheckoutControl'
 
 export default {
-  name: 'MetaMaskNotificationModal',
 
   props: [
     'id',

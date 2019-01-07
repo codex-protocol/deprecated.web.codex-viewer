@@ -45,7 +45,6 @@ import axios from 'axios'
 import config from '../util/config'
 
 export default {
-  name: 'OAuth2AppCreateClientForm',
 
   props: {
     showResult: Function,

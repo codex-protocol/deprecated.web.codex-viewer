@@ -42,7 +42,6 @@
 import { mapState } from 'vuex'
 
 export default {
-  name: 'CODXCheckoutControl',
 
   props: {
     action: {

@@ -98,7 +98,6 @@ import IconBase from '../components/icons/IconBase'
 const logger = debug('app:component:login-view')
 
 export default {
-  name: 'LoginView',
 
   components: {
     IconBase,

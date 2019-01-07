@@ -14,7 +14,6 @@
 import LoadingIcon from './LoadingIcon'
 
 export default {
-  name: 'LoadingOverlay',
 
   components: {
     LoadingIcon,

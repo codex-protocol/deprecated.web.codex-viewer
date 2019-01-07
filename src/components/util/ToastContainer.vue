@@ -29,7 +29,6 @@
 import EventBus from '../../util/eventBus'
 
 export default {
-  name: 'ToastContainer',
   data() {
     return {
       toasts: [],

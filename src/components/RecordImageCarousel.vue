@@ -39,7 +39,6 @@
 import getMainImageUri from '../filters/get-main-image-uri'
 
 export default {
-  name: 'RecordImageCarousel',
   props: ['codexRecord'],
   computed: {
     mainImageUri() {

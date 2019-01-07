@@ -41,7 +41,6 @@ import AppHeader from '../components/core/AppHeader'
 import GalleryListItem from '../components/GalleryListItem'
 
 export default {
-  name: 'GalleryListView',
 
   components: {
     AppHeader,

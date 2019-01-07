@@ -36,7 +36,7 @@
             />
           </template>
         </b-card-group>
-        <create-record-modal />
+        <CreateRecordModal />
       </div>
     </div>
   </div>
@@ -64,7 +64,6 @@ import RecordListItem from '../components/RecordListItem'
 import CreateRecordModal from '../components/modals/CreateRecordModal'
 
 export default {
-  name: 'RecordListView',
 
   components: {
     AppHeader,

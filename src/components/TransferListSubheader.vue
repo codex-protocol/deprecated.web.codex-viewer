@@ -23,8 +23,6 @@
 
 <script>
 export default {
-  name: 'TransferListSubheader',
-
   props: {
     transferDirection: {
       type: String,

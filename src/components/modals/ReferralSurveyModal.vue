@@ -52,8 +52,6 @@ import EventBus from '../../util/eventBus'
 
 export default {
 
-  name: 'ReferralSurveyModal',
-
   data() {
     return {
       details: null,

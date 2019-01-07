@@ -38,7 +38,6 @@
 import axios from 'axios'
 
 export default {
-  name: 'OAuth2AppTransferRecordForm',
 
   props: {
     showResult: Function,
