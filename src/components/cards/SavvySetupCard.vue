@@ -46,7 +46,6 @@ import FaucetDripModal from './../modals/FaucetDripModal'
 import ApproveContractModal from './../modals/ApproveContractModal'
 
 export default {
-  name: 'SavvySetupCard',
   components: {
     ApproveContractModal,
     FaucetDripModal,

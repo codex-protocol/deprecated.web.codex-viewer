@@ -65,7 +65,6 @@
 import axios from 'axios'
 
 export default {
-  name: 'OAuth2AppCreateRecordForm',
 
   props: {
     showResult: Function,

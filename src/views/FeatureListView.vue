@@ -28,7 +28,6 @@ import clLogo from '../assets/images/features/cl-logo.png'
 import maecenas from '../assets/images/features/maecenas.png'
 
 export default {
-  name: 'FeatureListView',
 
   components: {
     AppHeader,

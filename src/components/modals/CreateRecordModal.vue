@@ -106,7 +106,6 @@ import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 const logger = debug('app:component:create-record-modal')
 
 export default {
-  name: 'create-record-modal',
 
   components: {
     MetaMaskNotificationModal,

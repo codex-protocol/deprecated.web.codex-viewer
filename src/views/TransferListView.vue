@@ -37,7 +37,6 @@ import RecordTransferOutgoingListItem from '../components/RecordTransferOutgoing
 import AcceptTransferModal from '../components/modals/AcceptTransferModal'
 
 export default {
-  name: 'TransferListView',
 
   components: {
     AppHeader,

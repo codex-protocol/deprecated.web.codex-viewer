@@ -8,15 +8,11 @@
 import config from '../../util/config'
 
 export default {
-  name: 'AppWarningBanner',
-
-  data() {
-    // Title case
-    const network = config.expectedNetworkName.charAt(0).toUpperCase() + config.expectedNetworkName.substr(1)
-
-    return {
-      network,
-    }
+  computed: {
+    network() {
+      // Title case
+      return config.expectedNetworkName.charAt(0).toUpperCase() + config.expectedNetworkName.substr(1)
+    },
   },
 }
 </script>

@@ -50,8 +50,6 @@ import ResendConfirmationEmailModal from '../components/modals/ResendConfirmatio
 
 export default {
 
-  name: 'ConfirmEmailView',
-
   components: {
     ResendConfirmationEmailModal,
   },

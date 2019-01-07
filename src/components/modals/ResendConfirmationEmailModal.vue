@@ -34,8 +34,6 @@ const logger = debug('app:component:resend-confirmation-email-modal')
 
 export default {
 
-  name: 'ResendConfirmationEmailModal',
-
   props: {
     defaultEmail: String,
   },

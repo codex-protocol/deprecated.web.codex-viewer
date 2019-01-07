@@ -36,17 +36,17 @@
           </div>
         </div>
 
-        <approve-contract-modal id="approveRegistryModal" :contract="recordContract" stateProperty="registryContractApproved">
+        <ApproveContractModal id="approveRegistryModal" :contract="recordContract" stateProperty="registryContractApproved">
           This will grant the Codex Viewer permission to spend CODX on your behalf.
-        </approve-contract-modal>
+        </ApproveContractModal>
 
         <!-- @TODO: We've commented out the staking modal. Should we comment out the staking button above? -->
-        <!-- <approve-contract-modal id="approveStakeModal" :contract="stakeContract" stateProperty="stakeContractApproved">
+        <!-- <ApproveContractModal id="approveStakeModal" :contract="stakeContract" stateProperty="stakeContractApproved">
           This will allow you to stake CODX.
-        </approve-contract-modal> -->
+        </ApproveContractModal> -->
 
-        <stake-tokens-modal />
-        <unstake-tokens-modal :unstake="true" />
+        <StakeTokensModal />
+        <UnstakeTokensModal :unstake="true" />
       </div>
     </div>
   </div>
@@ -62,7 +62,6 @@ import StakeTokensModal from '../components/modals/StakeTokensModal'
 import UnstakeTokensModal from '../components/modals/UnstakeTokensModal'
 
 export default {
-  name: 'ManageTokensView',
 
   components: {
     AppHeader,

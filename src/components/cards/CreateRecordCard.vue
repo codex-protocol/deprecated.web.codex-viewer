@@ -14,12 +14,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'CreateRecordCard',
-}
-</script>
-
 <style lang="stylus" scoped>
 @import "../../assets/variables.styl"
 

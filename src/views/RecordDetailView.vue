@@ -32,9 +32,9 @@
                     Settings
                   </b-button>
 
-                  <record-manage-modal :codex-record="codexRecord" />
+                  <RecordManageModal :codex-record="codexRecord" />
                   <ApproveTransferModal :codex-record="codexRecord" />
-                  <privacy-settings-modal :codex-record="codexRecord" :onUpdated="onSettingsUpdate" />
+                  <PrivacySettingsModal :codex-record="codexRecord" :onUpdated="onSettingsUpdate" />
                 </div>
 
                 <div class="public-action-buttons action-buttons">
@@ -83,7 +83,6 @@ import PrivacySettingsModal from '../components/modals/PrivacySettingsModal'
 import RecordBlockchainDetails from '../components/RecordBlockchainDetails'
 
 export default {
-  name: 'RecordDetailView',
 
   components: {
     ApproveTransferModal,

@@ -98,7 +98,7 @@
     <b-form-group
       label="Upload Additional Images"
     >
-      <vue-dropzone
+      <VueDropzone
         ref="dropzone"
         id="dropzone"
         :options="dropzoneOptions"
@@ -114,7 +114,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import vue2Dropzone from 'vue2-dropzone'
+import VueDropzone from 'vue2-dropzone'
 import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 
 import File from '../../util/api/file'
@@ -127,14 +127,13 @@ import additionalDataHelper from '../../util/additionalDataHelper'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
 export default {
-  name: 'record-manage-modal',
 
   props: {
     codexRecord: Object,
   },
 
   components: {
-    vueDropzone: vue2Dropzone,
+    VueDropzone,
     MetaMaskNotificationModal,
   },
 

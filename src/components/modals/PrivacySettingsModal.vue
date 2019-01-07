@@ -140,7 +140,6 @@ import DisplayName from '../util/DisplayName'
 const logger = debug('app:component:privacy-settings-modal')
 
 export default {
-  name: 'privacy-settings-modal',
 
   props: ['codexRecord', 'onUpdated'],
 

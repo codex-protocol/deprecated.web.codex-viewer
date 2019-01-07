@@ -18,7 +18,6 @@
 import Raven from 'raven-js'
 
 export default {
-  name: 'RecordListItem',
 
   props: {
     codexRecord: {

@@ -37,7 +37,6 @@ import IconBase from '../icons/IconBase'
 import config from '../../util/config'
 
 export default {
-  name: 'AppFooter',
 
   components: {
     IconBase,

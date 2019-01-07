@@ -51,7 +51,6 @@ import { timeSince } from '../util/dateHelpers'
 import etherscanHelper from '../util/web3/etherscanHelper'
 
 export default {
-  name: 'RecordProvenance',
 
   props: ['provenance'],
 

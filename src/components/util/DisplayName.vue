@@ -11,7 +11,6 @@ import {
 } from 'vuex'
 
 export default {
-  name: 'DisplayName',
 
   props: {
     name: String,

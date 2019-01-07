@@ -7,8 +7,6 @@
 
 <script>
 export default {
-  name: 'LoadingIcon',
-
   props: {
     size: {
       type: String,

@@ -39,7 +39,6 @@ import EventBus from '../../util/eventBus'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
 export default {
-  name: 'stake-tokens-modal',
 
   components: {
     MetaMaskNotificationModal,

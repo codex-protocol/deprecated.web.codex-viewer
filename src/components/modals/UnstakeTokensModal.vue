@@ -37,7 +37,6 @@ import EventBus from '../../util/eventBus'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
 export default {
-  name: 'unstake-tokens-modal',
 
   props: ['currentStake'],
 

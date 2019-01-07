@@ -37,7 +37,6 @@ import { mapState } from 'vuex'
 import EventBus from '../util/eventBus'
 
 export default {
-  name: 'RecordPrivacySettingsRowItem',
 
   props: {
     codexRecord: {

@@ -27,7 +27,6 @@ import etherscanHelper from '../../util/web3/etherscanHelper'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
 export default {
-  name: 'approve-contract-modal',
 
   props: {
     id: String,

@@ -21,7 +21,6 @@ import { ZeroAddress } from '../util/constants/web3'
 import contractHelper from '../util/contractHelper'
 
 export default {
-  name: 'RecordTransferOutgoingListItem',
 
   props: ['codexRecord'],
 

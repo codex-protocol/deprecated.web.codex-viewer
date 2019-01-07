@@ -21,7 +21,6 @@ import Faucet from '../../util/api/faucet'
 import EventBus from '../../util/eventBus'
 
 export default {
-  name: 'FaucetDripModal',
 
   data() {
     return {

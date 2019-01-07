@@ -68,7 +68,6 @@ import EventBus from '../../util/eventBus'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
 export default {
-  name: 'ApproveTransferModal',
 
   props: {
     codexRecord: Object,
