@@ -54,14 +54,6 @@ $grid-gutter-width:                 2rem;
   max-width: 1140px;
 }
 
-.modal-dialog {
-  color: $color-light;
-}
-
-.modal-body {
-  text-align: initial;
-}
-
 .form-control,
 .custom-file-label {
   border: none;
@@ -133,7 +125,12 @@ hr {
 }
 
 // Modals
+.modal-dialog {
+  color: $color-light;
+}
+
 .modal-body {
+  text-align: initial;
   padding: 0 1rem 1rem 1rem;
 }
 
@@ -207,6 +204,7 @@ hr {
   }
 }
 
+// Popovers & Tooltips
 $popover-color: desaturate(lighten($color-secondary, 10%), 30%);
 
 .popover {
