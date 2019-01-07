@@ -71,6 +71,11 @@ export default {
     currentState.eventEmails = eventEmails
   },
 
+  SET_REFERRAL_SURVEY_OPTIONS(currentState, referralSurveyOptions = []) {
+    logMutation('SET_REFERRAL_SURVEY_OPTIONS', referralSurveyOptions)
+    currentState.referralSurveyOptions = referralSurveyOptions
+  },
+
   SET_CODX_COSTS(currentState, codxCosts = {}) {
     logMutation('SET_CODX_COSTS', codxCosts)
     currentState.codxCosts = codxCosts
