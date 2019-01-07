@@ -36,6 +36,7 @@
         </vue-cookie-accept-decline>
       </div>
     </div>
+    <ReferralSurveyModal v-if="user && !user.hasAnsweredReferralSurvey" />
   </div>
 </template>
 
@@ -60,6 +61,7 @@ import IconBase from './components/icons/IconBase'
 import LoadingOverlay from './components/util/LoadingOverlay'
 import ToastContainer from './components/util/ToastContainer'
 import PartyModeActivator from './directives/PartyModeActivator'
+import ReferralSurveyModal from './components/modals/ReferralSurveyModal'
 
 import './util/analytics'
 
@@ -67,6 +69,7 @@ export default {
   name: 'App',
 
   components: {
+    ReferralSurveyModal,
     VueCookieAcceptDecline,
 
     AppFooter,

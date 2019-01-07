@@ -25,7 +25,6 @@ import laLogo from '../assets/images/features/la-logo.png'
 import amLogo from '../assets/images/features/am-logo.png'
 import vmsLogo from '../assets/images/features/vms-logo.png'
 import clLogo from '../assets/images/features/cl-logo.png'
-import oilPainting from '../assets/images/features/oil-painting.png'
 import maecenas from '../assets/images/features/maecenas.png'
 
 export default {
@@ -62,10 +61,6 @@ export default {
           description: 'Discover top rated art service companies with the Clarion List',
           image: clLogo,
           url: 'https://www.clarionlist.com/',
-        },
-        {
-          description: 'Manage your art collection natively on Codex Viewer without having to setup your online blockchain wallet',
-          image: oilPainting,
         },
       ],
     }

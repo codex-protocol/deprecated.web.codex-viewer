@@ -74,6 +74,7 @@ export default {
         commit('SET_EVENT_EMAILS', bootstrapData.eventEmails)
         commit('SET_CODX_PACKAGES', bootstrapData.codxPackages)
         commit('SET_VERIFIED_USERS', bootstrapData.verifiedUsers)
+        commit('SET_REFERRAL_SURVEY_OPTIONS', bootstrapData.referralSurveyOptions)
       })
       .catch((error) => {
         logger('Error retrieving bootstrap data:', error)
