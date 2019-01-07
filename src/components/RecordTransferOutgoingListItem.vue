@@ -37,7 +37,6 @@ export default {
     },
 
     cancelTransfer() {
-      EventBus.$emit('events:click-cancel-transfer', this)
       const input = [ZeroAddress, this.codexRecord.tokenId]
 
       return contractHelper('CodexRecord', 'approve', input, this.$store)

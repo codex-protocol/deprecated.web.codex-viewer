@@ -44,7 +44,6 @@ export default {
 
   methods: {
     approveTokens() {
-      EventBus.$emit('events:click-approve-contract', this)
       const amount = new BigNumber(2).pow(255)
       const input = [this.contract._address, amount.toFixed()]
 

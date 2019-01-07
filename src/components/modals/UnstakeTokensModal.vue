@@ -59,8 +59,6 @@ export default {
       const amount = this.instance.utils.toWei(this.unstakeAmount, 'ether')
       const input = [amount, '0x0']
 
-      EventBus.$emit('events:click-unstake-tokens', this)
-
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
       return callContract(this.stakeContract.methods.unstake(...input))
         .then(() => {

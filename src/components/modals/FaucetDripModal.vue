@@ -32,10 +32,10 @@ export default {
     requestDrip(event) {
 
       event.preventDefault()
-      EventBus.$emit('events:faucet-drip-request', this)
 
       return Faucet.requestDrip()
         .then(() => {
+          EventBus.$emit('events:faucet-drip-request', this)
           EventBus.$emit('toast:success', 'CODX requested successfully! Your balance will update soon.', 5000)
           this.modalVisible = false
         })
