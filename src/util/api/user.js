@@ -29,4 +29,14 @@ export default {
 
     return callApi(requestOptions)
   },
+
+  updateReferralSurvey: (data) => {
+    const requestOptions = {
+      method: 'put',
+      url: '/user/referral-survey',
+      data,
+    }
+
+    return callApi(requestOptions)
+  },
 }
