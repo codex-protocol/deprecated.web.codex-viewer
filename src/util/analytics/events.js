@@ -13,6 +13,10 @@ export default {
     category: 'Page Action',
     action: 'CODX Package Purchase',
   },
+  'events:referral-survey-answered': {
+    category: 'Page Action',
+    action: 'Referral Survey Answered',
+  },
 
   // Codex Records
   'events:record-metadata-create': {
