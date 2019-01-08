@@ -53,7 +53,6 @@ import iconTransfers from '../../assets/icons/transfers.svg'
 import iconCollection from '../../assets/icons/collection.svg'
 
 export default {
-  name: 'AppSideBar',
 
   components: {
     DisplayName,

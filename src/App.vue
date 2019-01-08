@@ -29,11 +29,11 @@
           <AppFooter />
         </div>
         <ToastContainer />
-        <vue-cookie-accept-decline disableDecline>
+        <VueCookieAcceptDecline disableDecline>
           <div slot="message">
             This website stores cookies on your computer. Cookies are used to save information about how you interact with our website and allow us to remember you when you return. We never sell this information, and we use it strictly for analytics and metrics. For more information, please see our <a href="https://codexprotocol.com/privacy-policy" target="_blank">Privacy Policy.</a>
           </div>
-        </vue-cookie-accept-decline>
+        </VueCookieAcceptDecline>
       </div>
     </div>
     <ReferralSurveyModal v-if="user && !user.hasAnsweredReferralSurvey" />
@@ -50,6 +50,8 @@ import {
 } from 'vuex'
 import VueCookieAcceptDecline from 'vue-cookie-accept-decline'
 
+import './util/analytics'
+
 import config from './util/config'
 import EventBus from './util/eventBus'
 
@@ -63,10 +65,7 @@ import ToastContainer from './components/util/ToastContainer'
 import PartyModeActivator from './directives/PartyModeActivator'
 import ReferralSurveyModal from './components/modals/ReferralSurveyModal'
 
-import './util/analytics'
-
 export default {
-  name: 'App',
 
   components: {
     ReferralSurveyModal,

@@ -32,8 +32,8 @@ const router = new Router({
       meta: {
         hideSideBar: true,
         useBackgroundImage: true,
-        allowUnauthenticatedUsers: true,
         ifAuthenticatedRedirect: true,
+        allowUnauthenticatedUsers: true,
       },
     },
     {
@@ -43,8 +43,8 @@ const router = new Router({
       meta: {
         hideSideBar: true,
         useBackgroundImage: true,
-        allowUnauthenticatedUsers: true,
         ifAuthenticatedRedirect: true,
+        allowUnauthenticatedUsers: true,
       },
     },
 

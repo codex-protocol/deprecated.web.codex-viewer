@@ -50,7 +50,6 @@
 import axios from 'axios'
 
 export default {
-  name: 'OAuth2AppUpdateRecordForm',
 
   props: {
     showResult: Function,

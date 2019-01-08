@@ -30,13 +30,15 @@
 <script>
 
 export default {
-  name: 'GalleryListItem',
+
   props: ['gallery'],
+
   data() {
     return {
       route: { name: 'gallery', params: { galleryShareCode: this.gallery.shareCode } },
     }
   },
+
   methods: {
     viewGallery() {
       this.$router.push(this.route)

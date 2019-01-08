@@ -36,7 +36,6 @@ import { mapState } from 'vuex'
 import EventBus from '../util/eventBus'
 
 export default {
-  name: 'EventEmailSettings',
 
   computed: {
     ...mapState('auth', ['user']),

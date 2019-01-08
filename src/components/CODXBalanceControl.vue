@@ -59,7 +59,6 @@ import { mapState, mapActions } from 'vuex'
 import LoadingIcon from './util/LoadingIcon'
 
 export default {
-  name: 'CODXBalanceControl',
 
   components: {
     LoadingIcon,

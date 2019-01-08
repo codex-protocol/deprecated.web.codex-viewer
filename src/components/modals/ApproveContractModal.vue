@@ -27,7 +27,6 @@ import etherscanHelper from '../../util/web3/etherscanHelper'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
 export default {
-  name: 'approve-contract-modal',
 
   props: {
     id: String,
@@ -45,14 +44,13 @@ export default {
 
   methods: {
     approveTokens() {
-      EventBus.$emit('events:click-approve-contract', this)
       const amount = new BigNumber(2).pow(255)
       const input = [this.contract._address, amount.toFixed()]
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
       return callContract(this.tokenContract.methods.approve(...input))
         .then(() => {
-          EventBus.$emit('events:approve-contract', this)
+          EventBus.$emit('events:approve-contract')
           this.$store.commit('auth/SET_APPROVAL_STATUS', {
             allowance: amount,
             stateProperty: this.stateProperty,

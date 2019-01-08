@@ -7,22 +7,33 @@ import { Web3Errors } from '../../../util/constants/web3'
 
 const logger = debug('app:store:web3:actions')
 
+let walletProvider = null
+
 const registerWalletProvider = () => {
   return new Promise((resolve, reject) => {
+
+    if (walletProvider) {
+      resolve(walletProvider)
+      return
+    }
+
     if (window.ethereum) {
       window.ethereum.enable()
         .then(() => {
-          resolve(new Web3(window.ethereum))
+          walletProvider = new Web3(window.ethereum)
+          resolve(walletProvider)
         })
         .catch((error) => {
           logger(error)
-
           reject(new Error(Web3Errors.UserDeniedSignature))
         })
+
     } else if (typeof window.web3 === 'undefined') {
       reject(new Error(Web3Errors.Missing))
+
     } else {
-      resolve(new Web3(window.web3.currentProvider))
+      walletProvider = new Web3(window.web3.currentProvider)
+      resolve(walletProvider)
     }
   })
     .then((web3) => {

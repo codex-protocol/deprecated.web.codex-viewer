@@ -106,7 +106,6 @@ import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 const logger = debug('app:component:create-record-modal')
 
 export default {
-  name: 'create-record-modal',
 
   components: {
     MetaMaskNotificationModal,
@@ -234,6 +233,9 @@ export default {
 
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
       return contractHelper('CodexRecord', 'mint', input, this.$store)
+        .then(() => {
+          EventBus.$emit('events:record-metadata-create', metadata.id)
+        })
     },
   },
 

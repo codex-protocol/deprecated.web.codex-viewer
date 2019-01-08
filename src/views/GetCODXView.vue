@@ -120,7 +120,6 @@ import FaucetDripModal from '../components/modals/FaucetDripModal'
 import ApproveContractModal from '../components/modals/ApproveContractModal'
 
 export default {
-  name: 'GetCODXView',
 
   components: {
     AppHeader,
@@ -174,6 +173,7 @@ export default {
         token(token) {
           Faucet.purchaseCODXPackage(token.id, packageName)
             .then(() => {
+              EventBus.$emit('events:codx-package-purchase', packageName, codxPackage.total)
               EventBus.$emit('toast:success', 'CODX purchased successfully! Your balance will update soon.', 5000)
             })
             .catch((error) => {

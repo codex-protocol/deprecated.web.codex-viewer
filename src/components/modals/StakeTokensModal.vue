@@ -39,7 +39,6 @@ import EventBus from '../../util/eventBus'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
 export default {
-  name: 'stake-tokens-modal',
 
   components: {
     MetaMaskNotificationModal,
@@ -47,7 +46,10 @@ export default {
 
   data() {
     return {
-      stakeAmount: null,
+      stakeAmount: {
+        type: Number,
+        default: null,
+      },
       modalVisible: false,
     }
   },
@@ -62,12 +64,10 @@ export default {
       const amount = this.instance.utils.toWei(this.stakeAmount, 'ether')
       const input = [amount, '0x0']
 
-      EventBus.$emit('events:click-stake-tokens', this)
-
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
       return callContract(this.stakeContract.methods.stake(...input))
         .then(() => {
-          EventBus.$emit('events:stake-tokens', this, amount)
+          EventBus.$emit('events:stake-tokens', this.stakeAmount)
         })
     },
 

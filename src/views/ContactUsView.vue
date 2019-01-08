@@ -53,7 +53,6 @@
 import AppHeader from '../components/core/AppHeader'
 
 export default {
-  name: 'ContactUsView',
 
   components: {
     AppHeader,

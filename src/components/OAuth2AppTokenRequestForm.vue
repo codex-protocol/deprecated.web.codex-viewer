@@ -32,7 +32,6 @@
 import axios from 'axios'
 
 export default {
-  name: 'OAuth2AppTokenRequestForm',
 
   props: {
     showResult: Function,

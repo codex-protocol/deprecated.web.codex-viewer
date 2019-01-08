@@ -32,9 +32,9 @@
                     Settings
                   </b-button>
 
-                  <record-manage-modal :codex-record="codexRecord" />
+                  <RecordManageModal :codex-record="codexRecord" />
                   <ApproveTransferModal :codex-record="codexRecord" />
-                  <privacy-settings-modal :codex-record="codexRecord" :onUpdated="onSettingsUpdate" />
+                  <PrivacySettingsModal :codex-record="codexRecord" :onUpdated="onSettingsUpdate" />
                 </div>
 
                 <div class="public-action-buttons action-buttons">
@@ -83,7 +83,6 @@ import PrivacySettingsModal from '../components/modals/PrivacySettingsModal'
 import RecordBlockchainDetails from '../components/RecordBlockchainDetails'
 
 export default {
-  name: 'RecordDetailView',
 
   components: {
     ApproveTransferModal,
@@ -158,8 +157,8 @@ export default {
 
       return contractHelper('CodexRecord', 'safeTransferFrom', input, this.$store)
         .then(() => {
+          EventBus.$emit('events:record-transfer', this.recordId)
           EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
-          EventBus.$emit('events:accept-transfer', this)
         })
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not accept transfer: ${error.message}`)
