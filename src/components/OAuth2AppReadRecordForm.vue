@@ -20,7 +20,6 @@
 import axios from 'axios'
 
 export default {
-  name: 'OAuth2AppReadRecordForm',
 
   props: {
     showResult: Function,

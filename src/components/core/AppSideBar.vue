@@ -44,16 +44,15 @@ import CODXBalanceControl from '../CODXBalanceControl'
 import config from '../../util/config'
 
 import iconHome from '../../assets/icons/home.svg'
-import iconCollection from '../../assets/icons/collection.svg'
-import iconTransfers from '../../assets/icons/transfers.svg'
-import codxIcon from '../../assets/icons/codx-token.svg'
 import starIcon from '../../assets/icons/star.svg'
+import logoutIcon from '../../assets/icons/logout.svg'
+import codxIcon from '../../assets/icons/codx-token.svg'
 import galleryIcon from '../../assets/icons/gallery.svg'
 import settingsIcon from '../../assets/icons/settings.svg'
-import logoutIcon from '../../assets/icons/logout.svg'
+import iconTransfers from '../../assets/icons/transfers.svg'
+import iconCollection from '../../assets/icons/collection.svg'
 
 export default {
-  name: 'AppSideBar',
 
   components: {
     DisplayName,

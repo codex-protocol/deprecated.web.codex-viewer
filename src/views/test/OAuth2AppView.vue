@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">
-        <app-header title="OAuth2 Test App API Interface" />
+        <AppHeader title="OAuth2 Test App API Interface" />
         <div class="content">
           <p>This page is for developers that have registered an OAuth2 application with the Codex API.</p>
           <p>
@@ -42,7 +42,6 @@ import OAuth2AppUpdateRecordForm from '../../components/OAuth2AppUpdateRecordFor
 import OAuth2AppTransferRecordForm from '../../components/OAuth2AppTransferRecordForm'
 
 export default {
-  name: 'OAuth2AppView',
 
   components: {
     AppHeader,

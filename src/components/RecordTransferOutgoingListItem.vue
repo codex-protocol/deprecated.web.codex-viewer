@@ -21,7 +21,6 @@ import { ZeroAddress } from '../util/constants/web3'
 import contractHelper from '../util/contractHelper'
 
 export default {
-  name: 'RecordTransferOutgoingListItem',
 
   props: ['codexRecord'],
 
@@ -38,12 +37,11 @@ export default {
     },
 
     cancelTransfer() {
-      EventBus.$emit('events:click-cancel-transfer', this)
       const input = [ZeroAddress, this.codexRecord.tokenId]
 
       return contractHelper('CodexRecord', 'approve', input, this.$store)
         .then(() => {
-          EventBus.$emit('events:cancel-transfer', this)
+          EventBus.$emit('events:record-transfer-cancel', this.codexRecord.tokenId)
           EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
           this.cancelApproved = true
         })

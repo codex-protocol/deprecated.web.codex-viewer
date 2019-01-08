@@ -55,7 +55,6 @@ import EventEmailSettings from '../components/EventEmailSettings'
 import RecordPrivacySettingsRowItem from '../components/RecordPrivacySettingsRowItem'
 
 export default {
-  name: 'SettingsView',
 
   components: {
     AppHeader,

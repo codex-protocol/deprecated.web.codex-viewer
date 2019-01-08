@@ -46,7 +46,6 @@ import FaucetDripModal from './../modals/FaucetDripModal'
 import ApproveContractModal from './../modals/ApproveContractModal'
 
 export default {
-  name: 'SavvySetupCard',
   components: {
     ApproveContractModal,
     FaucetDripModal,
@@ -117,18 +116,18 @@ export default {
 
 .savvy-setup
   card()
+  width: 100%
   margin-left: 0
   margin-right: 0
-  width: 100%
   min-width: 180px
 
   @media screen and (min-width: $breakpoint-sm)
-    margin-right: 1rem
     margin-left: 1rem
+    margin-right: 1rem
 
 .card
-  height: 100%
   margin: 0
+  height: 100%
   border: none
   background-color: rgba(white, .1)
 

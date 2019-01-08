@@ -55,7 +55,6 @@ import AppHeader from '../components/core/AppHeader'
 import RecordListItem from '../components/RecordListItem'
 
 export default {
-  name: 'GalleryView',
 
   components: {
     AppHeader,

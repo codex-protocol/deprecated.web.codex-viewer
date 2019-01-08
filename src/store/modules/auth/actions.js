@@ -195,6 +195,15 @@ export default {
       })
   },
 
+  UPDATE_REFERRAL_SURVEY({ commit, state }, { referralSurveyOptionId, details }) {
+    logger('UPDATE_REFERRAL_ANSWER action being executed')
+
+    return User.updateReferralSurvey({ referralSurveyOptionId, details })
+      .then((hasAnsweredReferralSurvey) => {
+        return commit('SET_USER_PROPERTIES', { hasAnsweredReferralSurvey })
+      })
+  },
+
   UPDATE_USER({ commit }, newUserData) {
     logger('UPDATE_USER action being executed')
 

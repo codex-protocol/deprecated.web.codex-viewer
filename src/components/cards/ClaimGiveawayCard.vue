@@ -22,7 +22,6 @@ import EventBus from '../../util/eventBus'
 import Giveaway from '../../util/api/giveaway'
 
 export default {
-  name: 'ClaimGiveawayCard',
   props: ['giveaway'],
   components: {
     LoadingOverlay,

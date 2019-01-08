@@ -14,7 +14,6 @@
 
 <script>
 export default {
-  name: 'GiveawayInfoCard',
   props: ['giveaway'],
 }
 </script>

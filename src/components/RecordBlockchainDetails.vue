@@ -19,7 +19,6 @@ import DisplayName from './util/DisplayName'
 import { formatDate } from '../util/dateHelpers'
 
 export default {
-  name: 'RecordBlockchainDetails',
 
   props: {
     codexRecord: {

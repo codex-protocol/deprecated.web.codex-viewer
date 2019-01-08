@@ -38,7 +38,6 @@
 import DisplayName from './util/DisplayName'
 
 export default {
-  name: 'PersonalStakesTable',
   props: ['personalStakes'],
   components: {
     DisplayName,

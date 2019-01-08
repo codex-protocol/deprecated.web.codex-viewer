@@ -34,8 +34,6 @@ const logger = debug('app:component:resend-confirmation-email-modal')
 
 export default {
 
-  name: 'ResendConfirmationEmailModal',
-
   props: {
     defaultEmail: String,
   },
@@ -59,10 +57,9 @@ export default {
         return
       }
 
-      EventBus.$emit('events:resend-confirmation-email-dialog', this)
-
       EmailConfirmation.resend(emailAddress)
         .then(() => {
+          EventBus.$emit('events:resend-confirmation-email', emailAddress)
           EventBus.$emit('toast:success', 'Confirmation email has been re-sent!', 5000)
           this.modalVisible = false
         })

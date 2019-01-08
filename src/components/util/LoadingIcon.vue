@@ -7,8 +7,6 @@
 
 <script>
 export default {
-  name: 'LoadingIcon',
-
   props: {
     size: {
       type: String,
@@ -41,6 +39,12 @@ export default {
 
     border-color: rgba($color-primary, .25)
     border-top-color: $color-primary
+
+  &.medium
+    &::before
+      width: 2rem
+      height: 2rem
+      border-width: .25rem
 
   &.small
     &::before
