@@ -75,7 +75,7 @@ export default {
 
   methods: {
     trackClick(feature) {
-      EventBus.$emit('events:click-partner-link', this, feature.name)
+      EventBus.$emit('events:click-extension-feature', feature.name)
     },
   },
 }

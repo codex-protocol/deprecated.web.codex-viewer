@@ -57,10 +57,9 @@ export default {
         return
       }
 
-      EventBus.$emit('events:resend-confirmation-email-dialog', this)
-
       EmailConfirmation.resend(emailAddress)
         .then(() => {
+          EventBus.$emit('events:resend-confirmation-email', emailAddress)
           EventBus.$emit('toast:success', 'Confirmation email has been re-sent!', 5000)
           this.modalVisible = false
         })

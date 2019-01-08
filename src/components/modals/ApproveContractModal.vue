@@ -50,7 +50,7 @@ export default {
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
       return callContract(this.tokenContract.methods.approve(...input))
         .then(() => {
-          EventBus.$emit('events:approve-contract', this)
+          EventBus.$emit('events:approve-contract')
           this.$store.commit('auth/SET_APPROVAL_STATUS', {
             allowance: amount,
             stateProperty: this.stateProperty,

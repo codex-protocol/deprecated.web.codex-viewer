@@ -1,24 +1,52 @@
-import EventBus from '../eventBus'
-import { category, actionsLabels } from './eventNames'
+export default {
 
-const events = (analytics) => {
+  // Page Actions
+  'events:resend-confirmation-email': {
+    category: 'Page Action',
+    action: 'Resend Confirmation Email',
+  },
+  'events:click-extension-feature': {
+    category: 'Page Action',
+    action: 'Click Extension Feature',
+  },
+  'events:codx-package-purchase': {
+    category: 'Page Action',
+    action: 'CODX Package Purchase',
+  },
 
-  const registerEvent = (event) => {
-    EventBus.$on(event, (self, value) => {
-      analytics.track(
-        category,
-        actionsLabels[event].action,
-        actionsLabels[event].label,
-        value || '',
-        self
-      )
-    })
-  }
+  // Codex Records
+  'events:record-metadata-create': {
+    category: 'Codex Record',
+    action: 'Metadata Create',
+  },
+  'events:record-transfer-approve': {
+    category: 'Codex Record',
+    action: 'Approve',
+  },
+  'events:record-transfer-cancel': {
+    category: 'Codex Record',
+    action: 'Cancel Transfer',
+  },
+  'events:record-transfer': {
+    category: 'Codex Record',
+    action: 'Transfer',
+  },
 
-  Object.keys(actionsLabels).forEach((actionsLabel) => {
-    registerEvent(actionsLabel)
-  })
-
+  // Blockchain
+  'events:approve-contract': {
+    category: 'Blockchain',
+    action: 'Approve Contract',
+  },
+  'events:faucet-drip-request': {
+    category: 'Blockchain',
+    action: 'Faucet Drip Request',
+  },
+  'events:stake-tokens': {
+    category: 'Blockchain',
+    action: 'Stake Tokens',
+  },
+  'events:unstake-tokens': {
+    category: 'Blockchain',
+    action: 'Unstake Tokens',
+  },
 }
-
-export default events

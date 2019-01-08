@@ -17,6 +17,9 @@
 </template>
 
 <script>
+
+import { mapState } from 'vuex'
+
 import Faucet from '../../util/api/faucet'
 import EventBus from '../../util/eventBus'
 
@@ -28,6 +31,10 @@ export default {
     }
   },
 
+  computed: {
+    ...mapState('auth', ['user']),
+  },
+
   methods: {
     requestDrip(event) {
 
@@ -35,7 +42,7 @@ export default {
 
       return Faucet.requestDrip()
         .then(() => {
-          EventBus.$emit('events:faucet-drip-request', this)
+          EventBus.$emit('events:faucet-drip-request', this.user.address)
           EventBus.$emit('toast:success', 'CODX requested successfully! Your balance will update soon.', 5000)
           this.modalVisible = false
         })

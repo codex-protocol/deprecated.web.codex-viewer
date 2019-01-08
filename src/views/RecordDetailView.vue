@@ -157,8 +157,8 @@ export default {
 
       return contractHelper('CodexRecord', 'safeTransferFrom', input, this.$store)
         .then(() => {
+          EventBus.$emit('events:record-transfer', this.recordId)
           EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
-          EventBus.$emit('events:accept-transfer', this)
         })
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not accept transfer: ${error.message}`)
