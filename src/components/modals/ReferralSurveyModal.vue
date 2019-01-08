@@ -125,7 +125,7 @@ export default {
         })
         .finally(() => {
           EventBus.$emit('events:referral-survey-answered', this.selectedReferralSurveyOption.name)
-          EventBus.$emit('toast:success', 'Survey answer saved. Thanks for your input!')
+          EventBus.$emit('toast:success', 'Survey answer saved. Thanks for your input!', 5000)
         })
 
     },
