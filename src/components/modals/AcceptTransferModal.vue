@@ -58,6 +58,7 @@ export default {
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
       return contractHelper('CodexRecord', 'safeTransferFrom', input, this.$store)
         .then(() => {
+          EventBus.$emit('events:record-transfer', this.codexRecord.tokenId)
           EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
 
           // @NOTE: leave the in the loading state so that they can't click the

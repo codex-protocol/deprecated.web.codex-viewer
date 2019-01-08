@@ -46,7 +46,10 @@ export default {
 
   data() {
     return {
-      stakeAmount: null,
+      stakeAmount: {
+        type: Number,
+        default: null,
+      },
       modalVisible: false,
     }
   },
@@ -64,7 +67,7 @@ export default {
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
       return callContract(this.stakeContract.methods.stake(...input))
         .then(() => {
-          EventBus.$emit('events:stake-tokens', this, amount)
+          EventBus.$emit('events:stake-tokens', this.stakeAmount)
         })
     },
 

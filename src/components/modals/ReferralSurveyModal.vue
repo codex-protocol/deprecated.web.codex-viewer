@@ -124,6 +124,7 @@ export default {
           // do nothing since this isn't a crucial action
         })
         .finally(() => {
+          EventBus.$emit('events:referral-survey-answered', this.selectedReferralSurveyOption.name)
           EventBus.$emit('toast:success', 'Survey answer saved. Thanks for your input!')
         })
 

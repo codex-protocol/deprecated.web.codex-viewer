@@ -50,6 +50,8 @@ import {
 } from 'vuex'
 import VueCookieAcceptDecline from 'vue-cookie-accept-decline'
 
+import './util/analytics'
+
 import config from './util/config'
 import EventBus from './util/eventBus'
 
@@ -62,8 +64,6 @@ import LoadingOverlay from './components/util/LoadingOverlay'
 import ToastContainer from './components/util/ToastContainer'
 import PartyModeActivator from './directives/PartyModeActivator'
 import ReferralSurveyModal from './components/modals/ReferralSurveyModal'
-
-import './util/analytics'
 
 export default {
 

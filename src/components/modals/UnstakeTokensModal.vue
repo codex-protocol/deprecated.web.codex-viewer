@@ -46,7 +46,10 @@ export default {
 
   data() {
     return {
-      unstakeAmount: null,
+      unstakeAmount: {
+        type: Number,
+        default: null,
+      },
     }
   },
 
@@ -62,7 +65,7 @@ export default {
       // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
       return callContract(this.stakeContract.methods.unstake(...input))
         .then(() => {
-          EventBus.$emit('events:unstake-tokens', this, amount)
+          EventBus.$emit('events:unstake-tokens', this.unstakeAmount)
         })
     },
     clearModal() {
