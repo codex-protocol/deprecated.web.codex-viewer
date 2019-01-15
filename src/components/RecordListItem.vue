@@ -56,7 +56,7 @@ export default {
       return this.codexRecord.isPrivate ? this.isPrivateIcon : this.isPublicIcon
     },
     privacyTooltipText() {
-      return this.codexRecord.isPrivate ? 'Private': 'Public'
+      return this.codexRecord.isPrivate ? 'Private' : 'Public'
     },
   },
 
