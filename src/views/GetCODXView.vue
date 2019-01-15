@@ -37,14 +37,14 @@
 
           </section>
 
-          <section class="buy-on-exchange" v-if="!isSimpleUser && !faucetDripEnabled">
+          <section class="buy-on-exchange" v-if="!isNotSavvyUser && !faucetDripEnabled">
             <!--  @TODO: add info here about where savvy users can purchase CODX from an exchange -->
             <p>
               Buy CODX on an exchange.
             </p>
           </section>
 
-          <section class="pay-with-stripe" v-if="paymentsEnabled && isSimpleUser">
+          <section class="pay-with-stripe" v-if="paymentsEnabled && isNotSavvyUser">
 
             <p>
               Select a package below to checkout securely with
@@ -142,15 +142,15 @@ export default {
   },
 
   computed: {
-    ...mapGetters('auth', ['isSimpleUser']),
+    ...mapGetters('auth', ['isNotSavvyUser']),
     ...mapState('web3', ['recordContract', 'tokenContract']),
     ...mapState('auth', ['registryContractApproved', 'user']),
     ...mapState('app', ['paymentsEnabled', 'codxPackages', 'codxCosts']),
 
     showFaucetDripForm() {
       return (
-        (config.faucetDripEnabled && this.isSimpleUser) ||
-        (config.faucetDripEnabled && config.feesEnabled && !this.isSimpleUser)
+        (config.faucetDripEnabled && this.isNotSavvyUser) ||
+        (config.faucetDripEnabled && config.feesEnabled && !this.isNotSavvyUser)
       )
     },
 
