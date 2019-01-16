@@ -7,7 +7,7 @@ export default {
     return state.user && state.user.isAdmin
   },
 
-  isSimpleUser: (state) => {
+  isNotSavvyUser: (state) => {
     return state.user && state.user.type !== 'savvy'
   },
 }

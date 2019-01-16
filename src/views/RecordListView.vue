@@ -85,14 +85,14 @@ export default {
         return state.lists.userRecords
       },
     }),
-    ...mapGetters('auth', ['isAdmin', 'isSimpleUser']),
+    ...mapGetters('auth', ['isAdmin', 'isNotSavvyUser']),
 
     showCreateGiveawayButton() {
       return this.isAdmin && !this.giveaway
     },
 
     showSavvySetupCard() {
-      return config.feesEnabled && !this.isSimpleUser && !this.hideSetup && !this.giveaway
+      return config.feesEnabled && !this.isNotSavvyUser && !this.hideSetup && !this.giveaway
     },
   },
 
