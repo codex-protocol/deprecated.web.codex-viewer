@@ -39,6 +39,49 @@
           <b-tab title="Email Subscriptions" v-if="user && user.email && supportEmailAccounts">
             <EventEmailSettings />
           </b-tab>
+
+
+          <!-- ADMIN TAB -->
+          <b-tab title="Admin" v-if="isAdmin || alwaysShowAdminSettingsTab">
+            <section>
+              <h2>Admin Rights</h2>
+              <b-form-group
+                label="Give this account admin rights"
+                label-for="isAdminCheckbox"
+                label-size="sm"
+              >
+                <input
+                  id="isAdminCheckbox"
+                  type="checkbox"
+                  :checked="user.isAdmin"
+                  class="toggle-checkbox"
+                  @change="toggleIsAdmin(!user.isAdmin)"
+                />
+              </b-form-group>
+            </section>
+            <section>
+              <h2>Giveaways</h2>
+              <b-button
+                @click="createGiveaway"
+                variant="outline-primary"
+              >
+                Create Giveaway
+              </b-button>
+            </section>
+            <section>
+              <h2>Auth Token</h2>
+              <b-button
+                class="mb-2"
+                variant="outline-primary"
+                @click="showAuthToken = !showAuthToken"
+              >
+                {{ showAuthToken ? 'Hide' : 'Show' }}
+              </b-button>
+              <div class="auth-token-container" :class="{ 'show': showAuthToken }">
+                <code>{{ authToken }}</code>
+              </div>
+            </section>
+          </b-tab>
         </b-tabs>
       </div>
     </div>
@@ -46,9 +89,12 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+
+import { mapState, mapGetters } from 'vuex'
 
 import config from '../util/config'
+import EventBus from '../util/eventBus'
+import Giveaway from '../util/api/giveaway'
 import { formatDate } from '../util/dateHelpers'
 import AppHeader from '../components/core/AppHeader'
 import EventEmailSettings from '../components/EventEmailSettings'
@@ -87,17 +133,43 @@ export default {
 
     return {
       profileProperties,
+      newIsAdmin: false,
+      showAuthToken: false,
       supportEmailAccounts: config.supportEmailAccounts,
+      alwaysShowAdminSettingsTab: config.alwaysShowAdminSettingsTab,
     }
   },
 
   computed: {
-    ...mapState('auth', ['user']),
+    ...mapState('auth', ['user', 'authToken']),
+    ...mapState('app', ['giveaway']),
+    ...mapGetters('auth', ['isAdmin']),
     ...mapState('records', {
       userRecords: (state) => {
         return state.lists.userRecords
       },
     }),
+  },
+
+  methods: {
+    toggleIsAdmin(isAdmin) {
+      return this.$store.dispatch('auth/UPDATE_IS_ADMIN', isAdmin)
+        .then(() => {
+          EventBus.$emit('toast:success', 'Updated isAdmin!', 5000)
+        })
+        .catch((error) => {
+          EventBus.$emit('toast:error', `Could not update isAdmin: ${error.message}`)
+        })
+    },
+    createGiveaway() {
+      return Giveaway.createNewGiveaway()
+        .then(() => {
+          EventBus.$emit('toast:success', 'Created giveaway!', 5000)
+        })
+        .catch((error) => {
+          EventBus.$emit('toast:error', `Could not create giveaway: ${error.message}`)
+        })
+    },
   },
 }
 </script>
@@ -132,4 +204,22 @@ export default {
 
 .tab-pane
   margin-top: 1rem
+
+section
+  &+section
+    margin-top: 4rem
+
+.auth-token-container
+  opacity: 0
+  left: 50rem
+  padding: 1rem
+  position: relative
+  border-radius: 4px
+  background-color: rgba(#e83e8c, .1)
+  transition: opacity ease .1s, left ease .5s
+
+  &.show
+    left: 0
+    opacity: 1
+
 </style>

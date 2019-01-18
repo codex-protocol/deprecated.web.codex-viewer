@@ -21,6 +21,11 @@ export default {
   },
 
   update: (data) => {
+
+    if (Object.prototype.hasOwnProperty.call(data, 'isAdmin') && process.env.VUE_APP_TARGET_ENV !== 'development') {
+      return Promise.reject(new Error('ಠ_ಠ'))
+    }
+
     const requestOptions = {
       method: 'put',
       url: '/user',

@@ -93,6 +93,7 @@ export default {
   created() {
     this.initializeApi()
 
+    EventBus.$on('socket:codex-coin:reserved', this.spendCODX)
     EventBus.$on('socket:codex-coin:savvy-spend', this.spendCODX)
     EventBus.$on('socket:codex-coin:transferred', this.refundCODX)
     EventBus.$on('socket:codex-coin:registry-contract-approved', this.fetchApprovalStatuses)
@@ -114,6 +115,7 @@ export default {
   },
 
   beforeDestroy() {
+    EventBus.$off('socket:codex-coin:reserved', this.spendCODX)
     EventBus.$off('socket:codex-coin:savvy-spend', this.spendCODX)
     EventBus.$off('socket:codex-coin:transferred', this.refundCODX)
     EventBus.$off('socket:codex-coin:registry-contract-approved', this.fetchApprovalStatuses)
