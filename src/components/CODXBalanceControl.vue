@@ -6,12 +6,12 @@
       <span
         v-b-tooltip.hover
         title="Your free tokens will arrive soon!"
-        v-if="user.codxBalance === '0' && user.totalGasUsed === '0'"
+        v-if="user.availableCODXBalance === '0' && user.totalGasUsed === '0'"
       >
         <LoadingIcon :show="true" type="transparent" size="small" /> CODX Incoming...
       </span>
       <span v-else>
-        <div>{{ user.codxBalance | formatCODXAmount }}</div>
+        <div>{{ user.availableCODXBalance | formatCODXAmount }}</div>
       </span>
     </div>
 
