@@ -32,7 +32,7 @@
 
     <div class="text-center" v-else>
 
-      <div v-if="!isSimpleUser">
+      <div v-if="!isNotSavvyUser">
         <img class="icon" src="../../assets/images/metamask.png" />
       </div>
 
@@ -150,7 +150,7 @@ export default {
 
   computed: {
     ...mapState('auth', ['registryContractApproved', 'user']),
-    ...mapGetters('auth', ['isSimpleUser']),
+    ...mapGetters('auth', ['isNotSavvyUser']),
 
     newBalance() {
       return this.checkoutCost
@@ -174,7 +174,7 @@ export default {
     //  for a balance "gte" the cost of the transaction
     willTransactionFail() {
       return (
-        !this.isSimpleUser &&
+        !this.isNotSavvyUser &&
         config.feesEnabled &&
         this.requiresTokens &&
         (!this.registryContractApproved || new BigNumber(this.user.codxBalance).eq(0))
@@ -186,7 +186,7 @@ export default {
     },
 
     buttonTitle() {
-      if (this.isSimpleUser && this.currentStep === 0 && this.requiresTokens) {
+      if (this.isNotSavvyUser && this.currentStep === 0 && this.requiresTokens) {
         return 'Proceed to Checkout'
       }
 
@@ -222,7 +222,7 @@ export default {
         }
       }
 
-      if (this.isSimpleUser) {
+      if (this.isNotSavvyUser) {
         if (this.currentStep === 0) {
           if (this.requiresTokens && this.checkoutCost) {
             this.goToStep(3)
@@ -279,7 +279,7 @@ export default {
 
         // transaction submitted, waiting for mine
         case 4:
-          if (this.isSimpleUser) {
+          if (this.isNotSavvyUser) {
             this.okMethod()
               .catch((error) => {
                 this.metamaskError = (error.message || 'An unknown error occurred').replace(/.*Error:(.*)$/, '$1')

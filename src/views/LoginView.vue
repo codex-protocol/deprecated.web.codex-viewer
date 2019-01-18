@@ -41,6 +41,7 @@
             <b-link
               :key="index"
               :disabled="provider.isDisabled"
+              :gtm-login-button="provider.name"
               :href="getOAuth2LoginUrl(provider)"
               v-for="(provider, index) in oAuth2Providers"
             >
@@ -49,10 +50,16 @@
           </template>
 
           <!-- web3 login buttons -->
-          <b-link @click="registerWalletProvider('metaMask')">
+          <b-link
+            gtm-login-button="metamask"
+            @click="registerWalletProvider('metaMask')"
+          >
             <IconBase iconName="metaMask" width="48" height="48" />
           </b-link>
-          <b-link @click="registerWalletProvider('coinbaseWallet')">
+          <b-link
+            gtm-login-button="coinbase"
+            @click="registerWalletProvider('coinbaseWallet')"
+          >
             <IconBase iconName="coinbaseWallet" width="48" height="48" />
           </b-link>
         </div>

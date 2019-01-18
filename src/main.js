@@ -5,6 +5,7 @@ import Raven from 'raven-js'
 import { sync } from 'vuex-router-sync'
 import VueBootstrap from 'bootstrap-vue'
 import VueAnalytics from 'vue-analytics'
+import VueGoogleTagManager from 'vue-gtm'
 import RavenVue from 'raven-js/plugins/vue'
 
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -33,6 +34,13 @@ Vue.use(VueBootstrap)
 if (process.env.VUE_APP_GOOGLE_ANALYTICS_ID) {
   Vue.use(VueAnalytics, {
     id: process.env.VUE_APP_GOOGLE_ANALYTICS_ID,
+    router,
+  })
+}
+
+if (process.env.VUE_APP_GOOGLE_TAG_MANAGER_ID) {
+  Vue.use(VueGoogleTagManager, {
+    id: process.env.VUE_APP_GOOGLE_TAG_MANAGER_ID,
     router,
   })
 }

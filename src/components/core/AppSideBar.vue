@@ -25,7 +25,7 @@
           <h4>Logged in as</h4>
           <DisplayName :userObject="user" />
         </div>
-        <CODXBalanceControl v-if="isSimpleUser || feesEnabled" />
+        <CODXBalanceControl v-if="isNotSavvyUser || feesEnabled" />
       </footer>
     </div>
   </nav>
@@ -74,7 +74,7 @@ export default {
         return state.lists.incomingTransfers
       },
     }),
-    ...mapGetters('auth', ['isAuthenticated', 'isSimpleUser']),
+    ...mapGetters('auth', ['isAuthenticated', 'isNotSavvyUser']),
 
     showManageTokensPage() {
       return this.user && this.user.type === 'savvy' && config.showManageTokensPage
@@ -110,7 +110,7 @@ export default {
           to: '/get-codx',
           icon: codxIcon,
           text: 'Get CODX',
-          condition: this.isSimpleUser || config.feesEnabled,
+          condition: this.isNotSavvyUser || config.feesEnabled,
         },
         {
           to: '/extensions',

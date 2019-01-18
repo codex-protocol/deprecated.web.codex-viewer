@@ -2,7 +2,7 @@
   <div class="footer">
     <div class="links">
       <a href="https://codexprotocol.com" target="_blank">Home</a>
-      <a href="https://codexprotocol.com/wp-content/uploads/2018/11/Terms-of-Service.pdf" target="_blank">Terms of Use</a>
+      <a href="https://codexprotocol.com/terms-of-service" target="_blank">Terms of Use</a>
       <a href="https://codexprotocol.com/privacy-policy" target="_blank">Privacy Policy</a>
       <a href="https://dev.codexprotocol.com" target="_blank">Documentation</a>
       <b-link to="/contact">Contact Us</b-link>
