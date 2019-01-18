@@ -19,7 +19,7 @@
         <h4>Your Credits</h4>
         <div class="line-item" :class="{ 'insufficient-codx': insufficientCODX }">
           <span>Current Balance</span>
-          <span class="current-balance">{{ user.codxBalance | formatCODXAmount }}</span>
+          <span class="current-balance">{{ user.availableCODXBalance | formatCODXAmount }}</span>
         </div>
 
         <div class="insufficient-codx-notice" v-if="insufficientCODX">

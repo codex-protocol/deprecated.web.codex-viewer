@@ -64,7 +64,7 @@ export default {
     },
 
     currentStep() {
-      if (new BigNumber(this.user.codxBalance).eq(0)) {
+      if (new BigNumber(this.user.availableCODXBalance).eq(0)) {
         return 1
       }
 
