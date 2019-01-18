@@ -204,6 +204,22 @@ export default {
       })
   },
 
+  UPDATE_IS_ADMIN({ commit, state }, isAdmin) {
+
+    if (process.env.VUE_APP_TARGET_ENV !== 'development') {
+      return Promise.reject(new Error('ಠ_ಠ'))
+    }
+
+    logger('UPDATE_IS_ADMIN action being executed')
+
+    return User.update({ isAdmin })
+      .then((user) => {
+        return commit('SET_USER_PROPERTIES', {
+          isAdmin: user.isAdmin,
+        })
+      })
+  },
+
   UPDATE_USER({ commit }, newUserData) {
     logger('UPDATE_USER action being executed')
 

@@ -44,12 +44,14 @@ const feesEnabled = (() => {
 })()
 
 const targetEnv = process.env.VUE_APP_TARGET_ENV
+
 export default {
   showManageTokensPage: false,
   showCodexGalleryInSideBar: true,
   faucetDripEnabled: expectedNetworkId !== '1',
 
   showManualConfirm: targetEnv === 'development',
+  alwaysShowAdminSettingsTab: targetEnv === 'development',
 
   supportEmailAccounts: true,
   showTestApp: expectedNetworkId !== '1',
