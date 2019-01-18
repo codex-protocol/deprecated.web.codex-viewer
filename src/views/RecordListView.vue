@@ -9,14 +9,6 @@
           >
             Add New Asset
           </b-button>
-
-          <b-button
-            variant="outline-primary"
-            @click="createGiveaway"
-            v-if="showCreateGiveawayButton"
-          >
-            Create Giveaway
-          </b-button>
         </AppHeader>
         <b-card-group deck class="record-list">
           <SavvySetupCard v-if="showSavvySetupCard" />
@@ -49,8 +41,6 @@ import {
 } from 'vuex'
 
 import config from '../util/config'
-import EventBus from '../util/eventBus'
-import Giveaway from '../util/api/giveaway'
 
 import AppHeader from '../components/core/AppHeader'
 
@@ -58,7 +48,6 @@ import SavvySetupCard from '../components/cards/SavvySetupCard'
 import GiveawayInfoCard from '../components/cards/GiveawayInfoCard'
 import CreateRecordCard from '../components/cards/CreateRecordCard'
 import ClaimGiveawayCard from '../components/cards/ClaimGiveawayCard'
-
 
 import RecordListItem from '../components/RecordListItem'
 import CreateRecordModal from '../components/modals/CreateRecordModal'
@@ -85,23 +74,10 @@ export default {
         return state.lists.userRecords
       },
     }),
-    ...mapGetters('auth', ['isAdmin', 'isNotSavvyUser']),
-
-    showCreateGiveawayButton() {
-      return this.isAdmin && !this.giveaway
-    },
+    ...mapGetters('auth', ['isNotSavvyUser']),
 
     showSavvySetupCard() {
       return config.feesEnabled && !this.isNotSavvyUser && !this.hideSetup && !this.giveaway
-    },
-  },
-
-  methods: {
-    createGiveaway() {
-      Giveaway.createNewGiveaway()
-        .catch((error) => {
-          EventBus.$emit('toast:error', `Could not create giveaway: ${error.message}`)
-        })
     },
   },
 }
