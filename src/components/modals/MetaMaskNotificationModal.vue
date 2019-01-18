@@ -154,7 +154,7 @@ export default {
 
     newBalance() {
       return this.checkoutCost
-        ? new BigNumber(this.user.codxBalance).sub(this.checkoutCost)
+        ? new BigNumber(this.user.availableCODXBalance).sub(this.checkoutCost)
         : new BigNumber(0)
     },
 
@@ -177,7 +177,7 @@ export default {
         !this.isNotSavvyUser &&
         config.feesEnabled &&
         this.requiresTokens &&
-        (!this.registryContractApproved || new BigNumber(this.user.codxBalance).eq(0))
+        (!this.registryContractApproved || new BigNumber(this.user.availableCODXBalance).eq(0))
       )
     },
 

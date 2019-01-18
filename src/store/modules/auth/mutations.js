@@ -85,18 +85,18 @@ export default {
   SPEND_CODX(currentState, { codxCost }) {
     logMutation('SPEND_CODX', codxCost)
 
-    if (currentState.user && currentState.user.codxBalance) {
-      const bnCODXBalance = new BigNumber(currentState.user.codxBalance)
-      Vue.set(currentState.user, 'codxBalance', bnCODXBalance.sub(codxCost).toString())
+    if (currentState.user && currentState.user.availableCODXBalance) {
+      const availableCODXBalance = new BigNumber(currentState.user.availableCODXBalance)
+      Vue.set(currentState.user, 'availableCODXBalance', availableCODXBalance.sub(codxCost).toString())
     }
   },
 
   REFUND_CODX(currentState, { codxCost }) {
     logMutation('REFUND_CODX', codxCost)
 
-    if (currentState.user && currentState.user.codxBalance) {
-      const bnCODXBalance = new BigNumber(currentState.user.codxBalance)
-      Vue.set(currentState.user, 'codxBalance', bnCODXBalance.plus(codxCost).toString())
+    if (currentState.user && currentState.user.availableCODXBalance) {
+      const availableCODXBalance = new BigNumber(currentState.user.availableCODXBalance)
+      Vue.set(currentState.user, 'availableCODXBalance', availableCODXBalance.plus(codxCost).toString())
     }
   },
 }
