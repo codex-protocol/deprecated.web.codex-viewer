@@ -71,7 +71,14 @@
             <section>
               <h2>Auth Token</h2>
               <b-button
-                class="mb-2"
+                class="mb-4"
+                variant="outline-primary"
+                @click="copyToClipboard(authToken, 'Auth Token copied!')"
+                >
+                Copy
+              </b-button>
+              <b-button
+                class="mb-4 ml-4"
                 variant="outline-primary"
                 @click="showAuthToken = !showAuthToken"
               >
@@ -97,6 +104,7 @@ import EventBus from '../util/eventBus'
 import Giveaway from '../util/api/giveaway'
 import { formatDate } from '../util/dateHelpers'
 import AppHeader from '../components/core/AppHeader'
+import copyToClipboard from '../util/copyToClipboard'
 import EventEmailSettings from '../components/EventEmailSettings'
 import RecordPrivacySettingsRowItem from '../components/RecordPrivacySettingsRowItem'
 
@@ -152,6 +160,7 @@ export default {
   },
 
   methods: {
+    copyToClipboard,
     toggleIsAdmin(isAdmin) {
       return this.$store.dispatch('auth/UPDATE_IS_ADMIN', isAdmin)
         .then(() => {
