@@ -6,7 +6,7 @@
       <span
         v-b-tooltip.hover
         title="Your free tokens will arrive soon!"
-        v-if="availableCODXBalance === 0 && user.totalGasUsed === '0'"
+        v-if="availableCODXBalance === 0 && !user.hasReceivedNewUserBonus"
       >
         <LoadingIcon :show="true" type="transparent" size="small" /> CODX Incoming...
       </span>
