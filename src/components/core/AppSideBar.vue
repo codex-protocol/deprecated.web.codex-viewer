@@ -1,7 +1,11 @@
 <template>
   <nav>
-    <div class="logo" v-party-mode-activator>
-      <img src="../../assets/logos/codex/gold.svg">
+    <div class="logo">
+      <img
+        v-party-mode-activator
+        src="../../assets/logos/codex/gold.svg"
+        @click="$router.push({ name: 'collection' })"
+      >
     </div>
     <div class="button-container">
       <b-link
@@ -201,6 +205,9 @@ a
 
   img
     height: 100%
+
+    &:hover
+      cursor: pointer
 
 .button-container
   flex-grow: 1
