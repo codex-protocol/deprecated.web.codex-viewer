@@ -81,9 +81,9 @@ export default {
     window.localStorage.setItem('hideSetup', true)
   },
 
-  SYNC_CODX_BALANACES(currentState, { codxBalance, reservedCODXBalance }) {
+  SYNC_CODX_BALANCES(currentState, { codxBalance, reservedCODXBalance }) {
 
-    logMutation('SYNC_CODX_BALANACES', codxBalance, reservedCODXBalance)
+    logMutation('SYNC_CODX_BALANCES', codxBalance, reservedCODXBalance)
 
     if (currentState.user) {
 
