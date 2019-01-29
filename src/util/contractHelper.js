@@ -14,11 +14,7 @@ const contractHelper = ((contractName, functionName, args, store) => {
   }
 
   return identityProxy.contractCall(contractName, functionName, args)
-    .then((result) => {
-      store.commit('auth/SPEND_CODX', {
-        codxCost: result.value.tx.codxCost,
-      })
-    })
+
 })
 
 export default contractHelper
