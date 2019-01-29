@@ -23,8 +23,8 @@
       </label>
       <b-form-select
         class="mb-3"
-        value-field="id"
         id="referral"
+        value-field="id"
         text-field="name"
         @input="referralChanged"
         v-model="selectedOptionId"

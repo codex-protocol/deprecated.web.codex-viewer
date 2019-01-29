@@ -39,8 +39,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import BigNumber from 'bignumber.js'
+import { mapState, mapGetters } from 'vuex'
 
 import FaucetDripModal from './../modals/FaucetDripModal'
 import ApproveContractModal from './../modals/ApproveContractModal'
@@ -57,6 +56,7 @@ export default {
   },
   computed: {
     ...mapState('web3', ['recordContract']),
+    ...mapGetters('auth', ['availableCODXBalance']),
     ...mapState('auth', ['registryContractApproved', 'user']),
 
     done() {
@@ -64,7 +64,7 @@ export default {
     },
 
     currentStep() {
-      if (new BigNumber(this.user.availableCODXBalance).eq(0)) {
+      if (this.availableCODXBalance === 0) {
         return 1
       }
 

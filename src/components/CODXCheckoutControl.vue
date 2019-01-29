@@ -8,18 +8,18 @@
         <h4>Summary</h4>
         <div class="line-item">
           <span>{{ action }} x 1</span>
-          <span>{{ cost | formatCODXAmount }}</span>
+          <span>{{ cost }} CODX</span>
         </div>
         <div class="line-item total">
           <span>Total</span>
-          <span>{{ cost | formatCODXAmount }}</span>
+          <span>{{ cost }} CODX</span>
         </div>
       </div>
       <div class="checkout-box">
         <h4>Your Credits</h4>
         <div class="line-item" :class="{ 'insufficient-codx': insufficientCODX }">
           <span>Current Balance</span>
-          <span class="current-balance">{{ user.availableCODXBalance | formatCODXAmount }}</span>
+          <span class="current-balance">{{ availableCODXBalance }} CODX</span>
         </div>
 
         <div class="insufficient-codx-notice" v-if="insufficientCODX">
@@ -30,7 +30,7 @@
         </div>
         <div class="line-item" v-else>
           <span>After This Transaction</span>
-          <span>{{ newBalance | formatCODXAmount }}</span>
+          <span>{{ newBalance }} CODX</span>
         </div>
       </div>
     </div>
@@ -39,7 +39,7 @@
 
 <script>
 
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
 
@@ -50,12 +50,12 @@ export default {
     },
 
     cost: {
-      type: String,
+      type: Number,
       required: true,
     },
 
     newBalance: {
-      type: Object,
+      type: Number,
       required: true,
     },
 
@@ -67,6 +67,7 @@ export default {
 
   computed: {
     ...mapState('auth', ['user']),
+    ...mapGetters('auth', ['availableCODXBalance']),
   },
 }
 </script>

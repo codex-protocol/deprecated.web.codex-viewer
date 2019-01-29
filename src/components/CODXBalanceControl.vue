@@ -6,12 +6,12 @@
       <span
         v-b-tooltip.hover
         title="Your free tokens will arrive soon!"
-        v-if="user.availableCODXBalance === '0' && user.totalGasUsed === '0'"
+        v-if="availableCODXBalance === 0 && !user.hasReceivedNewUserBonus"
       >
         <LoadingIcon :show="true" type="transparent" size="small" /> CODX Incoming...
       </span>
       <span v-else>
-        <div>{{ user.availableCODXBalance | formatCODXAmount }}</div>
+        {{ availableCODXBalance }} CODX
       </span>
     </div>
 
@@ -36,7 +36,7 @@
           :key="methodName"
           v-for="(description, methodName) in orderedMethodDescriptions"
         >
-          <strong>{{ description }}:</strong> {{ codxCosts.CodexRecord[methodName] | formatCODXAmount }}
+          <strong>{{ description }}:</strong> {{ codxCosts.CodexRecord[methodName] }} CODX
         </div>
 
         <b-button
@@ -54,7 +54,7 @@
 
 <script>
 
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 
 import LoadingIcon from './util/LoadingIcon'
 
@@ -84,6 +84,7 @@ export default {
   computed: {
     ...mapState('auth', ['user']),
     ...mapState('app', ['codxCosts']),
+    ...mapGetters('auth', ['availableCODXBalance']),
   },
 
   methods: {

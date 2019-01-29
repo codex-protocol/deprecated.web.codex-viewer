@@ -25,7 +25,7 @@
       </b-link>
       <span class="spacer"></span>
       <footer class="sidebar-footer" v-if="isLoaded && user">
-        <div class="contact">
+        <div>
           <h4>Logged in as</h4>
           <DisplayName :userObject="user" />
         </div>

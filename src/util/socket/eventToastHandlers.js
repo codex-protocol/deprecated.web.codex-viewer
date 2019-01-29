@@ -1,6 +1,5 @@
 import router from '../../router'
 import EventBus from '../eventBus'
-import formatCODXAmount from '../../filters/format-codx-amount'
 
 // this is here as a wrapper / convenience method so we don't have to repeat a
 //  bunch of stuff in the handlers below
@@ -77,7 +76,7 @@ export default {
   },
 
   'codex-coin:transferred': (value) => {
-    showToast(`You have successfully received ${formatCODXAmount(value)}.`)
+    showToast(`You have successfully received ${value} CODX.`)
   },
 
   'codex-coin:registry-contract-approved': (value) => {

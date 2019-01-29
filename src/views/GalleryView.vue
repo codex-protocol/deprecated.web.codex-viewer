@@ -6,10 +6,12 @@
     <div class="row">
       <div class="col-12">
         <AppHeader :title="gallery.name">
-          <b-button variant="outline-primary" @click="copyShareLink" ref="copy-share-link-button">Copy Share Link</b-button>
-          <b-button variant="outline-primary" @click="viewFullscreen" v-if="browserSupportsFullscreen">
-            View Fullscreen
-          </b-button>
+          <template slot="buttons">
+            <b-button variant="outline-primary" @click="copyShareLink" ref="copy-share-link-button">Copy Share Link</b-button>
+            <b-button variant="outline-primary" @click="viewFullscreen" v-if="browserSupportsFullscreen">
+              View Fullscreen
+            </b-button>
+          </template>
         </AppHeader>
 
         <div class="carousel-container" ref="carousel-container">

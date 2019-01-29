@@ -73,9 +73,9 @@ export default {
 
 .card
   card()
+  cursor: pointer
   min-width: 180px
   text-align: center
-  cursor: pointer
 
 .card-body
   border-top: 1px solid rgba(black, .1)

@@ -20,7 +20,7 @@ export default {
           user,
         })
 
-        if (user.type === 'simple') {
+        if (user.type !== 'savvy') {
           return dispatch('web3/REGISTER_INFURA_PROVIDER', null, { root: true })
         }
 
@@ -90,7 +90,7 @@ export default {
   HANDLE_LOGIN_ERROR({ commit, dispatch, state }, error) {
     logger('HANDLE_LOGIN_ERROR action being executed', error)
 
-    if (state.user && state.user.type === 'simple') {
+    if (state.user && state.user.type !== 'savvy') {
       // @TODO: Right now we're just sending the entire error object
       //  Once the API has been updated to return specific error codes we can pass that along instead
       commit('app/SET_API_ERROR_CODE', error, { root: true })

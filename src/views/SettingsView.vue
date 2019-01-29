@@ -26,10 +26,10 @@
                 </b-row>
               </b-container>
               <RecordPrivacySettingsRowItem
-                v-for="record in userRecords"
-                v-if="record.metadata"
-                :codex-record="record"
                 :key="record.tokenId"
+                :codex-record="record"
+                v-if="record.metadata"
+                v-for="record in userRecords"
               />
             </div>
             <div v-else>
