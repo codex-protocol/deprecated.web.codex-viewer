@@ -1,8 +1,13 @@
 <template>
   <div class="header">
     <h1>{{ title }}</h1>
-    <div class="buttons">
-      <slot></slot>
+    <div class="slots">
+      <div class="buttons">
+        <slot name="buttons"></slot>
+      </div>
+      <div class="actions">
+        <slot name="actions"></slot>
+      </div>
     </div>
   </div>
 </template>
@@ -23,7 +28,6 @@ export default {
 @import "../../assets/variables.styl"
 
 .header
-  font-size: 2.5rem
   margin-top: 1rem
   margin-bottom: 1rem
   color: $color-primary
@@ -32,32 +36,44 @@ export default {
   flex-direction: column
 
   h1
-    font-size: 1em
-    font-weight: bold
     line-height: 1em
+    font-size: 2.5rem
+    font-weight: bold
     margin-bottom: 1rem
     font-family: $font-family-serif
 
     @media screen and (min-width: $breakpoint-sm)
       margin-top: 1rem
 
-  .buttons
+  .slots
+    display: flex
+    align-items: center
+    flex-direction: column
+    justify-content: space-between
+
+    @media screen and (min-width: $breakpoint-sm)
+      flex-direction: row
+
+    >div
+      width: 100%
       display: flex
       flex-direction: column
 
       @media screen and (min-width: $breakpoint-sm)
+        width: auto
         flex-direction: row
 
-  button
-    margin-right: 1rem
-    margin-bottom: 1rem
-    width: 100%
+      >* + *
+        margin-top: .5rem
 
-    &:last-of-type
-      margin-bottom: 0
+        @media screen and (min-width: $breakpoint-sm)
+          margin-top: 0
+          margin-left: .5rem
 
-    @media screen and (min-width: $breakpoint-sm)
-      width: auto
-      margin-bottom: 0
+      &+div:not(:empty)
+        margin-top: 1rem
+
+        @media screen and (min-width: $breakpoint-sm)
+          margin-top: 0rem
 
 </style>
