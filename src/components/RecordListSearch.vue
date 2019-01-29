@@ -1,0 +1,205 @@
+<template>
+  <b-form
+    class="record-list-search-form"
+    @submit.prevent="searchUserRecords(searchQuery)"
+  >
+    <b-form-input
+      type="search"
+      ref="search-input"
+      autocomplete="off"
+      class="search-input"
+      v-model="searchQuery"
+      placeholder="Search..."
+      @blur.native="toggleFocus(false)"
+      @focus.native="toggleFocus(true)"
+    />
+
+    <div
+      class="search-results"
+      v-show="isFocused && hasSearched"
+    >
+      <LoadingOverlay
+        type="dark"
+        size="small"
+        v-if="isLoading"
+      />
+
+      <div
+        class="no-results"
+        v-if="searchQuery && hasSearched && searchResults.length === 0"
+      >
+        no results found
+      </div>
+      <div
+        class="search-result"
+        :key="searchResult.tokenId"
+        v-if="searchResult.metadata"
+        v-for="searchResult in searchResults"
+        @click="goToRecord(searchResult.tokenId)"
+      >
+        <img :src="searchResult.metadata | getMainImageUri" />
+        {{ searchResult.metadata.name }}
+      </div>
+    </div>
+  </b-form>
+</template>
+
+<script>
+
+import { mapState } from 'vuex'
+
+import Record from '../util/api/record'
+import LoadingOverlay from '../components/util/LoadingOverlay'
+
+export default {
+
+  components: {
+    LoadingOverlay,
+  },
+
+  data() {
+    return {
+      pageNumber: 0,
+      isLoading: false,
+      isFocused: false,
+      searchQuery: null,
+      searchResults: [],
+      hasSearched: false,
+      searchDebounceTimer: null,
+    }
+  },
+
+  computed: {
+    ...mapState('records', {
+      userRecords: (state) => {
+        return state.lists.userRecords
+      },
+    }),
+  },
+
+  watch: {
+    searchQuery(newSearchQuery, oldSearchQuery) {
+
+      if (!newSearchQuery) {
+        this.searchResults = []
+        this.hasSearched = false
+      }
+
+      if (newSearchQuery.length <= 1 || newSearchQuery === oldSearchQuery) return
+
+      this.isLoading = true
+
+      if (this.searchDebounceTimer) {
+        clearTimeout(this.searchDebounceTimer)
+      }
+
+      this.searchDebounceTimer = setTimeout(() => {
+        this.searchUserRecords(newSearchQuery)
+        this.searchDebounceTimer = null
+      }, 250)
+    },
+  },
+
+  methods: {
+    toggleFocus(isFocused) {
+      if (!isFocused) {
+        // @NOTE: the delay is necessary to allow clicks inside the dropdown to
+        //  get picked up after the blur event hides it... couldn't figure out a
+        //  better way to do this ¯\_(ツ)_/¯
+        setTimeout(() => { this.isFocused = false }, 250)
+
+      } else {
+        this.isFocused = true
+        const $input = this.$refs['search-input'].$el
+        $input.setSelectionRange(0, $input.value.length)
+      }
+    },
+    goToRecord(recordId) {
+      this.clearSearch()
+      this.$router.push({ name: 'record-detail', params: { recordId } })
+    },
+    clearSearch() {
+      this.searchQuery = ''
+      this.searchResults = []
+      this.hasSearched = false
+    },
+    searchUserRecords(query) {
+      this.isLoading = true
+      return Record.searchUserRecords({ query })
+        .then((records) => {
+          this.searchResults = records
+        })
+        .finally(() => {
+          this.isLoading = false
+          this.hasSearched = true
+        })
+    },
+  },
+}
+</script>
+
+<style lang="stylus" scoped>
+
+@import "../assets/variables.styl"
+
+.record-list-search-form
+  position: relative
+
+  .search-input
+    padding-left: 2.25rem
+    background-size: 24px 24px
+    background-repeat: no-repeat
+    background-position: .5rem center
+    background-image: url(../assets/icons/search.svg)
+
+    @media screen and (min-width: $breakpoint-sm)
+      width: 0rem
+      padding-left: 2rem
+      transition: width ease .25s .25s
+
+      &:focus
+        width: 14rem
+        transition-delay: 0s
+        padding-left: 2.25rem
+
+.search-results
+  width: 100%
+  z-index: 100
+  font-size: small
+  overflow-y: auto
+  position: absolute
+  overflow-x: hidden
+  background-color: rgba($color-dark, .95)
+  box-shadow: 0 0 1rem rgba($color-dark, .6)
+  border: 1px solid rgba($color-primary, .1)
+
+  border-top-width: 0
+
+  .search-result
+    width: 100%
+    padding: .5rem
+    cursor: pointer
+    max-width: 100%
+    overflow: hidden
+    white-space: nowrap
+    display: inline-block
+    vertical-align: middle
+    text-overflow: ellipsis
+    transition: background-color ease .25s
+
+    &:hover
+      background-color: rgba(white, .1)
+
+    img
+      width: 2rem
+      height: 2rem
+      object-fit: contain
+      margin-right: .5rem
+
+  .no-results
+    padding: 1rem
+    font-size: small
+    text-align: center
+    color: rgba($color-light, .5)
+
+</style>

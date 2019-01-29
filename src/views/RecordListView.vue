@@ -3,12 +3,25 @@
     <div class="row">
       <div class="col-12">
         <AppHeader title="Collection">
-          <b-button
-            variant="primary"
-            v-b-modal.createRecordModal
-          >
-            Add New Asset
-          </b-button>
+          <template slot="buttons">
+            <b-button
+              variant="primary"
+              v-b-modal.createRecordModal
+            >
+              Add New Asset
+            </b-button>
+          </template>
+          <template slot="actions" v-if="userRecords.length > 1">
+            <RecordListSearch v-if="userRecords.length >= paginationOptions.pageSize" />
+            <b-form class="sorting-options">
+              <b-form-select
+                @input="sortingChanged"
+                :options="sortingOptions"
+                v-model="selectedSortingOption"
+                id="record-list-sorting-options"
+              />
+            </b-form>
+          </template>
         </AppHeader>
         <b-card-group deck class="record-list">
           <SavvySetupCard v-if="showSavvySetupCard" />
@@ -20,14 +33,28 @@
 
           <!-- If there are no marketing cards displayed the user has no records, show a 'how-to' card -->
           <CreateRecordCard v-if="!giveaway && userRecords.length === 0" />
-          <template v-else>
-            <RecordListItem
-              v-for="record in userRecords"
-              :codex-record="record"
-              :key="record.tokenId"
-            />
-          </template>
+
+          <RecordListItem
+            :key="record.tokenId"
+            :codex-record="record"
+            v-for="record in userRecords"
+          />
+
         </b-card-group>
+
+        <div class="pagination-controls" v-if="totalRecordCount > paginationOptions.pageSize">
+          <b-button
+            size="sm"
+            class="load-more"
+            @click="loadMore()"
+            variant="outline-primary"
+            :disabled="isLoading || userRecords.length >= totalRecordCount"
+          >
+            Load More
+            <LoadingIcon v-show="isLoading" size="small" />
+          </b-button>
+        </div>
+
         <CreateRecordModal />
       </div>
     </div>
@@ -49,7 +76,9 @@ import GiveawayInfoCard from '../components/cards/GiveawayInfoCard'
 import CreateRecordCard from '../components/cards/CreateRecordCard'
 import ClaimGiveawayCard from '../components/cards/ClaimGiveawayCard'
 
+import LoadingIcon from '../components/util/LoadingIcon'
 import RecordListItem from '../components/RecordListItem'
+import RecordListSearch from '../components/RecordListSearch'
 import CreateRecordModal from '../components/modals/CreateRecordModal'
 
 export default {
@@ -62,13 +91,29 @@ export default {
     CreateRecordCard,
     ClaimGiveawayCard,
 
+    LoadingIcon,
     RecordListItem,
+    RecordListSearch,
     CreateRecordModal,
+  },
+
+  data() {
+    return {
+      isLoading: false,
+      selectedSortingOption: '-createdAt',
+      sortingOptions: [
+        { value: 'createdAt', text: 'Oldest First' },
+        { value: '-createdAt', text: 'Newest First' },
+        { value: 'metadata.name', text: 'Name (A-Z)' },
+        { value: '-metadata.name', text: 'Name (Z-A)' },
+      ],
+    }
   },
 
   computed: {
     ...mapState('app', ['giveaway']),
     ...mapState('auth', ['hideSetup']),
+    ...mapState('records', ['totalRecordCount', 'paginationOptions']),
     ...mapState('records', {
       userRecords: (state) => {
         return state.lists.userRecords
@@ -80,12 +125,42 @@ export default {
       return config.feesEnabled && !this.isNotSavvyUser && !this.hideSetup && !this.giveaway
     },
   },
+
+  methods: {
+    loadMore() {
+      this.isLoading = true
+      return this.$store.dispatch('records/FETCH_NEXT_PAGE')
+        .finally(() => {
+          this.isLoading = false
+        })
+    },
+    sortingChanged() {
+      this.isLoading = true
+      return this.$store.dispatch('records/REFRESH_USER_RECORDS', { order: this.selectedSortingOption })
+        .finally(() => {
+          this.isLoading = false
+        })
+    },
+  },
 }
 </script>
 
 <style lang="stylus" scoped>
+
+@import "../assets/variables.styl"
+
+.sorting-options
+  @media screen and (min-width: $breakpoint-sm)
+    width: 10rem
+
 .record-list
   display: flex
   flex-wrap: wrap
   align-items: start
+
+.pagination-controls
+  display: flex
+  margin: 2rem 0
+  justify-content: center
+
 </style>
