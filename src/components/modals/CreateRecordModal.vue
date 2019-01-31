@@ -121,7 +121,10 @@ export default {
       uploadComplete: false,
       progressVisible: false,
       confirmMintValues: {
-        isPrivate: true,
+        // on 2018-01-31 the default state for this checkbox was made "public"
+        //  since most people are making public records (note that the API still
+        //  has "private" as the default though)
+        isPrivate: false,
       },
     }
   },
