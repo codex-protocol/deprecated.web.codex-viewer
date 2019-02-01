@@ -10,6 +10,7 @@
       class="search-input"
       v-model="searchQuery"
       placeholder="Search..."
+      @keydown.native="onKeydown"
       @blur.native="toggleFocus(false)"
       @focus.native="toggleFocus(true)"
     />
@@ -31,11 +32,12 @@
         no results found
       </div>
       <div
+        :key="index"
         class="search-result"
-        :key="searchResult.tokenId"
         v-if="searchResult.metadata"
-        v-for="searchResult in searchResults"
-        @click="goToRecord(searchResult.tokenId)"
+        @click="goToRecord(searchResult)"
+        v-for="(searchResult, index) in searchResults"
+        :class="{ 'selected': selectedResultIndex === index }"
       >
         <img :src="searchResult.metadata | getMainImageUri" />
         {{ searchResult.metadata.name }}
@@ -66,6 +68,7 @@ export default {
       searchResults: [],
       hasSearched: false,
       searchDebounceTimer: null,
+      selectedResultIndex: null,
     }
   },
 
@@ -75,14 +78,16 @@ export default {
         return state.lists.userRecords
       },
     }),
+    $input() {
+      return this.$refs['search-input'].$el
+    },
   },
 
   watch: {
     searchQuery(newSearchQuery, oldSearchQuery) {
 
       if (!newSearchQuery) {
-        this.searchResults = []
-        this.hasSearched = false
+        this.clearSearch()
       }
 
       if (newSearchQuery.length <= 1 || newSearchQuery === oldSearchQuery) return
@@ -101,6 +106,45 @@ export default {
   },
 
   methods: {
+    onKeydown(event) {
+      switch (event.code) {
+        case 'Enter':
+          if (this.selectedResultIndex !== null) {
+            this.goToRecord(this.searchResults[this.selectedResultIndex])
+            event.preventDefault()
+          }
+          break
+
+        case 'ArrowUp':
+          if (this.selectedResultIndex !== null) {
+            this.selectedResultIndex = this.selectedResultIndex - 1
+
+            if (this.selectedResultIndex < 0) {
+              this.selectedResultIndex = 0
+            }
+          }
+
+          event.preventDefault()
+          break
+
+        case 'ArrowDown':
+          if (this.selectedResultIndex === null) {
+            this.selectedResultIndex = 0
+          } else {
+            this.selectedResultIndex = this.selectedResultIndex + 1
+          }
+
+          if (this.selectedResultIndex > this.searchResults.length - 1) {
+            this.selectedResultIndex = this.searchResults.length - 1
+          }
+
+          event.preventDefault()
+          break
+
+        default:
+          // do nothing
+      }
+    },
     toggleFocus(isFocused) {
       if (!isFocused) {
         // @NOTE: the delay is necessary to allow clicks inside the dropdown to
@@ -110,24 +154,25 @@ export default {
 
       } else {
         this.isFocused = true
-        const $input = this.$refs['search-input'].$el
-        $input.setSelectionRange(0, $input.value.length)
+        this.$input.setSelectionRange(0, this.$input.value.length)
       }
     },
-    goToRecord(recordId) {
+    goToRecord(record) {
       this.clearSearch()
-      this.$router.push({ name: 'record-detail', params: { recordId } })
+      this.$router.push({ name: 'record-detail', params: { recordId: record.tokenId } })
     },
     clearSearch() {
       this.searchQuery = ''
       this.searchResults = []
       this.hasSearched = false
+      this.selectedResultIndex = null
     },
     searchUserRecords(query) {
       this.isLoading = true
       return Record.searchUserRecords({ query })
         .then((records) => {
           this.searchResults = records
+          this.selectedResultIndex = null
         })
         .finally(() => {
           this.isLoading = false
@@ -188,6 +233,7 @@ export default {
     transition: background-color ease .25s
 
     &:hover
+    &.selected
       background-color: rgba(white, .1)
 
     img
