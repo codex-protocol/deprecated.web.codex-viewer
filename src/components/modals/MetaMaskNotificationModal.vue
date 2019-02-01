@@ -104,7 +104,6 @@
 </template>
 
 <script>
-import BigNumber from 'bignumber.js'
 import { mapState, mapGetters } from 'vuex'
 
 import config from '../../util/config'
@@ -150,16 +149,16 @@ export default {
 
   computed: {
     ...mapState('auth', ['registryContractApproved', 'user']),
-    ...mapGetters('auth', ['isNotSavvyUser']),
+    ...mapGetters('auth', ['isNotSavvyUser', 'availableCODXBalance']),
 
     newBalance() {
       return this.checkoutCost
-        ? new BigNumber(this.user.availableCODXBalance).sub(this.checkoutCost)
-        : new BigNumber(0)
+        ? this.availableCODXBalance - this.checkoutCost
+        : 0
     },
 
     insufficientCODX() {
-      return this.newBalance.lt(0)
+      return this.newBalance < 0
     },
 
     isDisabled() {
@@ -177,7 +176,7 @@ export default {
         !this.isNotSavvyUser &&
         config.feesEnabled &&
         this.requiresTokens &&
-        (!this.registryContractApproved || new BigNumber(this.user.availableCODXBalance).eq(0))
+        (!this.registryContractApproved || this.availableCODXBalance === 0)
       )
     },
 

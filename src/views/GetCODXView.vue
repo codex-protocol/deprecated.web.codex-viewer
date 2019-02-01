@@ -62,15 +62,15 @@
                 </h2>
 
                 <p class="total-amount">
-                  <span>{{ codxPackage.codxTotal | formatCODXAmount }}</span>
+                  <span>{{ codxPackage.total }} CODX</span>
                 </p>
 
                 <p class="total-breakdown" v-if="codxPackage.bonus !== 0">
                   <span class="base-amount">
-                    {{ codxPackage.codxAmount | formatCODXAmount }}
+                    {{ codxPackage.amount }} CODX
                   </span>
                   <span class="bonus-amount">
-                    + {{ codxPackage.codxBonus | formatCODXAmount('Bonus CODX!') }}
+                    + {{ codxPackage.bonus }} Bonus CODX!
                   </span>
                 </p>
 
@@ -81,8 +81,8 @@
                     This amount is enough for one of the following:
                   </p>
                   <ul>
-                    <li>Create {{ Math.floor(codxPackage.codxTotal / codxCosts.CodexRecord.mint) }} Codex Records</li>
-                    <li>Modify {{ Math.floor(codxPackage.codxTotal / codxCosts.CodexRecord.modifyMetadataHashes) }} Codex Records</li>
+                    <li>Create {{ Math.floor(codxPackage.total / codxCosts.CodexRecord.mint) }} Codex Records</li>
+                    <li>Modify {{ Math.floor(codxPackage.total / codxCosts.CodexRecord.modifyMetadataHashes) }} Codex Records</li>
                   </ul>
                 </div>
 
