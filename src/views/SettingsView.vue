@@ -13,24 +13,35 @@
             </div>
           </b-tab>
           <b-tab title="Collection">
-            <div
-              class="list-container"
-              v-if="userRecords.length > 0"
-            >
-              <b-container>
-                <b-row class="list-header-row">
-                  <b-col class="image">Image</b-col>
-                  <b-col class="name">Asset Name</b-col>
-                  <b-col class="toggle" v-if="user && user.isGalleryEnabled">Include in Gallery</b-col>
-                  <b-col class="toggle">Details Public</b-col>
-                </b-row>
-              </b-container>
-              <RecordPrivacySettingsRowItem
-                :key="record.tokenId"
-                :codex-record="record"
-                v-if="record.metadata"
-                v-for="record in userRecords"
-              />
+            <div v-if="userRecords.length > 0">
+              <div class="list-container">
+                <b-container>
+                  <b-row class="list-header-row">
+                    <b-col class="image">Image</b-col>
+                    <b-col class="name">Asset Name</b-col>
+                    <b-col class="toggle" v-if="user && user.isGalleryEnabled">Include in Gallery</b-col>
+                    <b-col class="toggle">Details Public</b-col>
+                  </b-row>
+                </b-container>
+                <RecordPrivacySettingsRowItem
+                  :key="record.tokenId"
+                  :codex-record="record"
+                  v-if="record.metadata"
+                  v-for="record in userRecords"
+                />
+              </div>
+            </div>
+            <div class="pagination-controls" v-if="totalRecordCount > paginationOptions.pageSize">
+              <b-button
+                size="sm"
+                class="load-more"
+                @click="loadMore()"
+                variant="outline-primary"
+                :disabled="isLoadingRecords || userRecords.length >= totalRecordCount"
+              >
+                Load More
+                <LoadingIcon v-show="isLoadingRecords" size="small" />
+              </b-button>
             </div>
             <div v-else>
               You have no Codex Records in your collection!
@@ -105,6 +116,7 @@ import Giveaway from '../util/api/giveaway'
 import { formatDate } from '../util/dateHelpers'
 import AppHeader from '../components/core/AppHeader'
 import copyToClipboard from '../util/copyToClipboard'
+import LoadingIcon from '../components/util/LoadingIcon'
 import EventEmailSettings from '../components/EventEmailSettings'
 import RecordPrivacySettingsRowItem from '../components/RecordPrivacySettingsRowItem'
 
@@ -112,6 +124,7 @@ export default {
 
   components: {
     AppHeader,
+    LoadingIcon,
     EventEmailSettings,
     RecordPrivacySettingsRowItem,
   },
@@ -141,6 +154,7 @@ export default {
 
     return {
       profileProperties,
+      isLoadingRecords: false,
       newIsAdmin: false,
       showAuthToken: false,
       supportEmailAccounts: config.supportEmailAccounts,
@@ -149,8 +163,9 @@ export default {
   },
 
   computed: {
-    ...mapState('auth', ['user', 'authToken']),
     ...mapState('app', ['giveaway']),
+    ...mapState('auth', ['user', 'authToken']),
+    ...mapState('records', ['totalRecordCount', 'paginationOptions']),
     ...mapGetters('auth', ['isAdmin']),
     ...mapState('records', {
       userRecords: (state) => {
@@ -177,6 +192,13 @@ export default {
         })
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not create giveaway: ${error.message}`)
+        })
+    },
+    loadMore() {
+      this.isLoadingRecords = true
+      return this.$store.dispatch('records/FETCH_NEXT_PAGE')
+        .finally(() => {
+          this.isLoadingRecords = false
         })
     },
   },
@@ -230,5 +252,10 @@ section
   &.show
     left: 0
     opacity: 1
+
+.pagination-controls
+  display: flex
+  margin: 2rem 0
+  justify-content: center
 
 </style>
