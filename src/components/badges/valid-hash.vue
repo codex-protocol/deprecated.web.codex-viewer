@@ -36,7 +36,10 @@ export default {
 
   computed: {
     isValid() {
-      return this.hash === Web3.utils.sha3(this.string)
+      if (this.string === null || this.string === '') {
+        return this.hash === '0x0000000000000000000000000000000000000000000000000000000000000000'
+      }
+      return this.hash === Web3.utils.sha3(this.string || '')
     },
   },
 }
