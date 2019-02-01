@@ -1,13 +1,34 @@
 import callApi from './callApi'
 
 export default {
-  getUserRecords: () => {
+  searchUserRecords: ({ query, limit = 5, order = 'metadata.name' }) => {
     const requestOptions = {
       method: 'get',
       url: '/user/records',
+      params: {
+        limit,
+        order,
+        query,
+      },
     }
 
     return callApi(requestOptions)
+
+  },
+
+  getUserRecords: ({ limit, offset, order }) => {
+    const requestOptions = {
+      method: 'get',
+      url: '/user/records',
+      params: {
+        limit,
+        order,
+        offset,
+      },
+    }
+
+    return callApi(requestOptions, true)
+
   },
 
   getRecord: (recordId) => {

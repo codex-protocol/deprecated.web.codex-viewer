@@ -1,7 +1,6 @@
 import axios from 'axios'
 import debug from 'debug'
 import BigNumber from 'bignumber.js'
-import Vue from 'vue'
 
 import getInitialState from './state'
 import SocketService from '../../../util/socket'
@@ -82,21 +81,26 @@ export default {
     window.localStorage.setItem('hideSetup', true)
   },
 
-  SPEND_CODX(currentState, { codxCost }) {
-    logMutation('SPEND_CODX', codxCost)
+  SYNC_CODX_BALANCES(currentState, { codxBalance, reservedCODXBalance }) {
 
-    if (currentState.user && currentState.user.availableCODXBalance) {
-      const availableCODXBalance = new BigNumber(currentState.user.availableCODXBalance)
-      Vue.set(currentState.user, 'availableCODXBalance', availableCODXBalance.sub(codxCost).toString())
-    }
-  },
+    logMutation('SYNC_CODX_BALANCES', codxBalance, reservedCODXBalance)
 
-  REFUND_CODX(currentState, { codxCost }) {
-    logMutation('REFUND_CODX', codxCost)
+    if (currentState.user) {
 
-    if (currentState.user && currentState.user.availableCODXBalance) {
-      const availableCODXBalance = new BigNumber(currentState.user.availableCODXBalance)
-      Vue.set(currentState.user, 'availableCODXBalance', availableCODXBalance.plus(codxCost).toString())
+      const newProperties = {}
+
+      if (typeof codxBalance === 'number') {
+        newProperties.codxBalance = codxBalance
+      }
+
+      if (typeof reservedCODXBalance === 'number') {
+        newProperties.reservedCODXBalance = reservedCODXBalance
+      }
+
+      if (Object.keys(newProperties).length > 0) {
+        currentState.user = Object.assign({}, currentState.user, newProperties)
+      }
+
     }
   },
 }
