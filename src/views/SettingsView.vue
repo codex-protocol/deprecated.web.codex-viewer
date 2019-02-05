@@ -30,18 +30,18 @@
                   v-for="record in userRecords"
                 />
               </div>
-            </div>
-            <div class="pagination-controls" v-if="totalRecordCount > paginationOptions.pageSize">
-              <b-button
-                size="sm"
-                class="load-more"
-                @click="loadMore()"
-                variant="outline-primary"
-                :disabled="isLoadingRecords || userRecords.length >= totalRecordCount"
-              >
-                Load More
-                <LoadingIcon v-show="isLoadingRecords" size="small" />
-              </b-button>
+              <div class="pagination-controls" v-if="totalRecordCount > paginationOptions.pageSize">
+                <b-button
+                  size="sm"
+                  class="load-more"
+                  @click="loadMore()"
+                  variant="outline-primary"
+                  :disabled="isLoadingRecords || userRecords.length >= totalRecordCount"
+                >
+                  Load More
+                  <LoadingIcon v-show="isLoadingRecords" size="small" />
+                </b-button>
+              </div>
             </div>
             <div v-else>
               You have no Codex Records in your collection!
