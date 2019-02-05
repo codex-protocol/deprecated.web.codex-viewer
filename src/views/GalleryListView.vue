@@ -8,7 +8,8 @@
           <b-card-group deck>
             <GalleryListItem
               v-if="gallery.previewImages && gallery.previewImages.length !== 0"
-              v-for="gallery in galleries"
+              v-for="(gallery, index) in galleries"
+              :slideDuration="3000 + (250 * index)"
               :gallery="gallery"
               :key="gallery.id"
             />

@@ -2,7 +2,7 @@
   <b-card @click.prevent="viewGallery">
     <b-carousel
       slot="header"
-      :interval="3000"
+      :interval="slideDuration"
       class="fixed-size-carousel"
     >
       <b-carousel-slide
@@ -28,7 +28,16 @@
 
 export default {
 
-  props: ['gallery'],
+  props: {
+    gallery: {
+      type: Object,
+      required: true,
+    },
+    slideDuration: {
+      type: Number,
+      default: 3000,
+    },
+  },
 
   data() {
     return {
