@@ -1,17 +1,14 @@
 <template>
-  <b-card
-    v-if="gallery.codexRecords"
-    @click.prevent="viewGallery"
-  >
+  <b-card @click.prevent="viewGallery">
     <b-carousel
       slot="header"
       :interval="3000"
       class="fixed-size-carousel"
     >
       <b-carousel-slide
-        :key="codexRecord.id"
-        v-for="codexRecord in gallery.codexRecords"
-        :img-src="codexRecord.metadata | getMainImageUri"
+        :key="index"
+        :img-src="previewImage"
+        v-for="(previewImage, index) in gallery.previewImages"
       ></b-carousel-slide>
     </b-carousel>
     <div class="card-text">

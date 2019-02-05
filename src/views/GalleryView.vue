@@ -20,15 +20,16 @@
             slot="header"
             v-model="slideIndex"
             class="fixed-size-carousel"
+            @sliding-end="onSlideEnd"
             :interval="gallery.slideDuration"
           >
             <b-carousel-slide
               :key="codexRecord.id"
-              v-for="codexRecord in gallery.codexRecords"
+              v-for="codexRecord in records"
               :img-src="codexRecord.metadata | getMainImageUri"
             ></b-carousel-slide>
           </b-carousel>
-          <p class="record-info">
+          <p class="record-info" v-if="currentCodexRecord">
             <a href="#" @click.prevent="viewRecord(currentCodexRecord.tokenId)">
               {{ currentCodexRecord.metadata.name }}
             </a>
@@ -37,36 +38,59 @@
 
         <b-card-group deck class="record-list">
           <RecordListItem
-            v-for="record in gallery.codexRecords"
+            v-for="record in records"
             :codex-record="record"
             :key="record.tokenId"
           />
         </b-card-group>
+
+        <div class="pagination-controls" v-if="totalCount > pageSize">
+          <b-button
+            size="sm"
+            class="load-more"
+            @click="loadMore()"
+            variant="outline-primary"
+            :disabled="isLoading || records.length >= totalCount"
+          >
+            Load More
+            <LoadingIcon v-show="isLoading" size="small" />
+          </b-button>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+
+import is from 'is_js'
+
 import EventBus from '../util/eventBus'
 import Gallery from '../util/api/gallery'
 import copyToClipboard from '../util/copyToClipboard'
 import fullscreenHelper from '../util/fullscreenHelper'
 
 import AppHeader from '../components/core/AppHeader'
+import LoadingIcon from '../components/util/LoadingIcon'
 import RecordListItem from '../components/RecordListItem'
 
 export default {
 
   components: {
     AppHeader,
+    LoadingIcon,
     RecordListItem,
   },
 
   data() {
     return {
+      records: [],
       gallery: null,
       slideIndex: 0,
+      pageNumber: 0,
+      totalCount: 0,
+      isLoading: false,
+      pageSize: is.mobile() ? 4 : 16,
       browserSupportsFullscreen: fullscreenHelper.browserSupportsFullscreen,
     }
   },
@@ -82,7 +106,7 @@ export default {
     },
 
     currentCodexRecord() {
-      return this.gallery.codexRecords[this.slideIndex]
+      return this.records[this.slideIndex]
     },
   },
 
@@ -105,17 +129,69 @@ export default {
       })
     },
 
+    onSlideEnd(slideIndex) {
+      if (
+        !this.isLoading &&
+        this.records.length < this.totalCount &&
+        slideIndex >= this.records.length / 2
+      ) {
+        this.loadMore()
+      }
+    },
+
+    loadMore() {
+      this.pageNumber += 1
+      this.isLoading = true
+
+      const limit = this.pageSize
+      const offset = limit * this.pageNumber
+
+      return Gallery.getGalleryRecords(this.galleryShareCode, { limit, offset })
+        .then(({ totalCount, records }) => {
+
+          const newRecords = records.filter((record) => {
+            // Filter out any records that don't have metadata attached to them.
+            //  These are records that were created by other providers.
+            return record.metadata && !this.records.find((existingRecord) => {
+              return existingRecord.tokenId === record.tokenId
+            })
+          })
+
+          this.records.push(...newRecords)
+          this.totalCount = totalCount
+        })
+        .finally(() => {
+          this.isLoading = false
+        })
+    },
+
     getGallery() {
+
+      this.isLoading = true
+
       Gallery.getGallery(this.galleryShareCode)
         .then((gallery) => {
-          if (!gallery.codexRecords || gallery.codexRecords.length === 0) {
-            throw new Error(`${gallery.name} has no Codex Records to show.`)
-          }
           this.gallery = gallery
+        })
+        .then(() => {
+          this.pageNumber = 0
+          const limit = this.pageSize
+          const offset = limit * this.pageNumber
+          return Gallery.getGalleryRecords(this.galleryShareCode, { limit, offset })
+        })
+        .then(({ totalCount, records }) => {
+          if (!records || records.length === 0) {
+            throw new Error(`${this.gallery.name} has no Codex Records to show.`)
+          }
+          this.records = records
+          this.totalCount = totalCount
         })
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not get gallery: ${error.message}`)
           this.$router.replace({ name: 'galleries' })
+        })
+        .finally(() => {
+          this.isLoading = false
         })
     },
   },
@@ -166,5 +242,10 @@ export default {
   @media screen and (min-width: $breakpoint-md)
     display: flex
     flex-wrap: wrap
+
+.pagination-controls
+  display: flex
+  margin: 2rem 0
+  justify-content: center
 
 </style>
