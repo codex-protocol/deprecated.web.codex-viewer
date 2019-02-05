@@ -235,17 +235,20 @@ export default {
   background-color: rgba(white, .01)
 
 .record-list
+  padding: 1rem
   display: none
   margin-top:  4rem
-  padding: 1rem
 
   @media screen and (min-width: $breakpoint-md)
     display: flex
     flex-wrap: wrap
 
 .pagination-controls
-  display: flex
-  margin: 2rem 0
-  justify-content: center
+  display: none
+
+  @media screen and (min-width: $breakpoint-md)
+    display: flex
+    margin: 2rem 0
+    justify-content: center
 
 </style>
