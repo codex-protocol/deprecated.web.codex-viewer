@@ -82,4 +82,27 @@ export default {
   'codex-coin:registry-contract-approved': (value) => {
     showToast('The registry contract has been successfully approved to spend CODX on your behalf.')
   },
+
+  'bulk-transaction:started': (bulkTransaction) => {
+    switch (bulkTransaction.type) {
+      case 'record-mint':
+        showToast(`Your bulk transaction has started. ${bulkTransaction.recordMintData.pendingMetadata.length} new Codex Records should be created soon.`)
+        break
+
+      default:
+        showToast('Your bulk transaction has started.')
+    }
+  },
+
+  'bulk-transaction:completed': (bulkTransaction) => {
+    switch (bulkTransaction.type) {
+      case 'record-mint':
+        showToast(`Your bulk transaction has completed. ${bulkTransaction.recordMintData.numCreated} new Codex Records were created.`)
+        break
+
+      default:
+        showToast('Your bulk transaction has completed.')
+    }
+  },
+
 }
