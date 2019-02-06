@@ -10,12 +10,28 @@ export default {
     return callApi(requestOptions)
   },
 
-  getGalleryRecords: (galleryShareCode, { limit, offset }) => {
+  searchGalleryRecords: (galleryShareCode, { query, limit = 5, order = 'metadata.name' }) => {
     const requestOptions = {
       method: 'get',
       url: `/galleries/${galleryShareCode}/records`,
       params: {
         limit,
+        order,
+        query,
+      },
+    }
+
+    return callApi(requestOptions)
+
+  },
+
+  getGalleryRecords: (galleryShareCode, { limit, order, offset }) => {
+    const requestOptions = {
+      method: 'get',
+      url: `/galleries/${galleryShareCode}/records`,
+      params: {
+        limit,
+        order,
         offset,
       },
     }
