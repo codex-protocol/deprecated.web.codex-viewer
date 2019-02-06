@@ -12,13 +12,15 @@
             </b-button>
           </template>
           <template slot="actions" v-if="userRecords.length > 1">
-            <RecordListSearch v-if="userRecords.length >= paginationOptions.pageSize" />
+            <RecordSearch
+              type="user"
+              v-if="userRecords.length >= paginationOptions.pageSize"
+            />
             <b-form class="sorting-options">
               <b-form-select
                 @input="sortingChanged"
                 :options="sortingOptions"
                 v-model="selectedSortingOption"
-                id="record-list-sorting-options"
               />
             </b-form>
           </template>
@@ -76,9 +78,9 @@ import GiveawayInfoCard from '../components/cards/GiveawayInfoCard'
 import CreateRecordCard from '../components/cards/CreateRecordCard'
 import ClaimGiveawayCard from '../components/cards/ClaimGiveawayCard'
 
+import RecordSearch from '../components/RecordSearch'
 import LoadingIcon from '../components/util/LoadingIcon'
 import RecordListItem from '../components/RecordListItem'
-import RecordListSearch from '../components/RecordListSearch'
 import CreateRecordModal from '../components/modals/CreateRecordModal'
 
 export default {
@@ -92,8 +94,8 @@ export default {
     ClaimGiveawayCard,
 
     LoadingIcon,
+    RecordSearch,
     RecordListItem,
-    RecordListSearch,
     CreateRecordModal,
   },
 
