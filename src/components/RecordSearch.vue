@@ -1,7 +1,7 @@
 <template>
   <b-form
-    class="record-list-search-form"
-    @submit.prevent="searchUserRecords(searchQuery)"
+    class="record-search-form"
+    @submit.prevent="searchRecords(searchQuery)"
   >
     <b-form-input
       type="search"
@@ -48,12 +48,25 @@
 
 <script>
 
-import { mapState } from 'vuex'
-
 import Record from '../util/api/record'
+import Gallery from '../util/api/gallery'
 import LoadingOverlay from '../components/util/LoadingOverlay'
 
 export default {
+
+  props: {
+    type: {
+      type: String,
+      required: true,
+      validator: (value) => {
+        return value === 'user' || value === 'gallery'
+      },
+    },
+    gallery: {
+      type: Object,
+      default: null,
+    },
+  },
 
   components: {
     LoadingOverlay,
@@ -73,11 +86,6 @@ export default {
   },
 
   computed: {
-    ...mapState('records', {
-      userRecords: (state) => {
-        return state.lists.userRecords
-      },
-    }),
     $input() {
       return this.$refs['search-input'].$el
     },
@@ -99,7 +107,7 @@ export default {
       }
 
       this.searchDebounceTimer = setTimeout(() => {
-        this.searchUserRecords(newSearchQuery)
+        this.searchRecords(newSearchQuery)
         this.searchDebounceTimer = null
       }, 250)
     },
@@ -167,9 +175,14 @@ export default {
       this.hasSearched = false
       this.selectedResultIndex = null
     },
-    searchUserRecords(query) {
+    searchRecords(query) {
       this.isLoading = true
-      return Record.searchUserRecords({ query })
+
+      const promise = this.type === 'user'
+        ? Record.searchUserRecords({ query })
+        : Gallery.searchGalleryRecords(this.gallery.shareCode, { query })
+
+      return promise
         .then((records) => {
           this.searchResults = records
           this.selectedResultIndex = null
@@ -187,7 +200,7 @@ export default {
 
 @import "../assets/variables.styl"
 
-.record-list-search-form
+.record-search-form
   position: relative
 
   .search-input

@@ -36,6 +36,21 @@
           </p>
         </div>
 
+        <div class="pagination-actions" v-if="records.length > 1">
+          <RecordSearch
+            type="gallery"
+            :gallery="gallery"
+            v-if="records.length >= pageSize"
+          />
+          <b-form class="sorting-options">
+            <b-form-select
+              @input="sortingChanged"
+              :options="sortingOptions"
+              v-model="selectedSortingOption"
+            />
+          </b-form>
+        </div>
+
         <b-card-group deck class="record-list">
           <RecordListItem
             v-for="record in records"
@@ -71,6 +86,7 @@ import copyToClipboard from '../util/copyToClipboard'
 import fullscreenHelper from '../util/fullscreenHelper'
 
 import AppHeader from '../components/core/AppHeader'
+import RecordSearch from '../components/RecordSearch'
 import LoadingIcon from '../components/util/LoadingIcon'
 import RecordListItem from '../components/RecordListItem'
 
@@ -79,6 +95,7 @@ export default {
   components: {
     AppHeader,
     LoadingIcon,
+    RecordSearch,
     RecordListItem,
   },
 
@@ -87,11 +104,19 @@ export default {
       records: [],
       gallery: null,
       slideIndex: 0,
-      pageNumber: 0,
       totalCount: 0,
       isLoading: false,
-      pageSize: is.mobile() ? 4 : 16,
       browserSupportsFullscreen: fullscreenHelper.browserSupportsFullscreen,
+
+      pageNumber: 0,
+      pageSize: is.mobile() ? 4 : 16,
+      selectedSortingOption: '-createdAt',
+      sortingOptions: [
+        { value: 'createdAt', text: 'Oldest First' },
+        { value: '-createdAt', text: 'Newest First' },
+        { value: 'metadata.name', text: 'Name (A-Z)' },
+        { value: '-metadata.name', text: 'Name (Z-A)' },
+      ],
     }
   },
 
@@ -145,8 +170,9 @@ export default {
 
       const limit = this.pageSize
       const offset = limit * this.pageNumber
+      const order = this.selectedSortingOption
 
-      return Gallery.getGalleryRecords(this.galleryShareCode, { limit, offset })
+      return Gallery.getGalleryRecords(this.gallery.shareCode, { limit, offset, order })
         .then(({ totalCount, records }) => {
 
           const newRecords = records.filter((record) => {
@@ -177,7 +203,8 @@ export default {
           this.pageNumber = 0
           const limit = this.pageSize
           const offset = limit * this.pageNumber
-          return Gallery.getGalleryRecords(this.galleryShareCode, { limit, offset })
+          const order = this.selectedSortingOption
+          return Gallery.getGalleryRecords(this.gallery.shareCode, { limit, offset, order })
         })
         .then(({ totalCount, records }) => {
           if (!records || records.length === 0) {
@@ -193,6 +220,10 @@ export default {
         .finally(() => {
           this.isLoading = false
         })
+    },
+
+    sortingChanged() {
+      return this.getGallery()
     },
   },
 }
@@ -234,10 +265,20 @@ export default {
   text-align: center
   background-color: rgba(white, .01)
 
-.record-list
-  padding: 1rem
+.pagination-actions
   display: none
-  margin-top:  4rem
+
+  @media screen and (min-width: $breakpoint-sm)
+    display: flex
+    margin-top: 4rem
+    justify-content: flex-end
+
+    .sorting-options
+      width: 10rem
+      margin-left: .5rem
+
+.record-list
+  display: none
 
   @media screen and (min-width: $breakpoint-md)
     display: flex
