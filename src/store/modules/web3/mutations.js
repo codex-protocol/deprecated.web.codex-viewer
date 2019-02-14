@@ -35,8 +35,8 @@ export default {
     currentState[propertyName] = Object.freeze(contract)
   },
 
-  SET_REGISTRATION_ERROR(currentState, { message, error }) {
-    logMutation('SET_REGISTRATION_ERROR', message, error)
+  SET_REGISTRATION_ERROR(currentState, error) {
+    logMutation('SET_REGISTRATION_ERROR', error)
 
     currentState.registrationError = error
 
