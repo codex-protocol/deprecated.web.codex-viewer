@@ -44,15 +44,17 @@
             <!-- add a "claim with a different email" link here if/when that flow is implemented -->
           </b-alert>
 
-          <b-alert
-            class="mt-4"
-            variant="danger"
-            v-html="errorMessage"
-            :show="!!errorMessage"
-          />
+          <p>
+            <b-alert
+              variant="danger"
+              v-html="errorMessage"
+              :show="!!errorMessage"
+            />
 
-          <p v-if="formValidateErrors.length">
-            <b-alert variant="danger" :show="formValidateErrors.length !== 0">
+            <b-alert
+              variant="danger"
+              :show="formValidateErrors.length !== 0"
+            >
               Please fix these error(s):
               <ul class="mb-0">
                 <li v-for="(error, index) in formValidateErrors" :key="index">{{ error }}</li>
