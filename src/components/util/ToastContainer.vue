@@ -43,7 +43,7 @@ export default {
     }
   },
   methods: {
-    addToast({ text, type = 'info', timeout, clickHandler }) {
+    addToast({ text, type = 'info', timeout = 10000, clickHandler }) {
 
       const newToast = {
         text,

@@ -87,6 +87,10 @@ export default {
       })
   },
 
+  // @BUG: there's a bug here that makes 401 unauthorized errors (i.e. token
+  //  expirations) show the default web3 error instead of the "api error code"
+  //  message since there's no user set in that case... this error message logic
+  //  is janky as fuck
   HANDLE_LOGIN_ERROR({ commit, dispatch, state }, error) {
     logger('HANDLE_LOGIN_ERROR action being executed', error)
 
@@ -95,12 +99,7 @@ export default {
       //  Once the API has been updated to return specific error codes we can pass that along instead
       commit('app/SET_API_ERROR_CODE', error, { root: true })
     } else {
-      commit('web3/SET_REGISTRATION_ERROR', {
-        message: 'Error while registering Web3',
-        error,
-      }, {
-        root: true,
-      })
+      commit('web3/SET_REGISTRATION_ERROR', error, { root: true })
     }
 
     dispatch('LOGOUT_USER')
