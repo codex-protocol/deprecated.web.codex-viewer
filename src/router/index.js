@@ -63,6 +63,9 @@ const router = new Router({
       name: 'contact',
       path: '/contact',
       component: ContactUsView,
+      meta: {
+        allowUnauthenticatedUsers: true,
+      },
     },
     {
       name: 'record-detail',

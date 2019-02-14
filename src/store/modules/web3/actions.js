@@ -126,10 +126,7 @@ export default {
           }
         })
         .catch((error) => {
-          commit('SET_REGISTRATION_ERROR', {
-            message: 'Error while polling',
-            error,
-          })
+          commit('SET_REGISTRATION_ERROR', error)
 
           commit('SET_IS_POLLING', {
             isPolling: false,

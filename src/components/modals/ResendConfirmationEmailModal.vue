@@ -74,8 +74,4 @@ export default {
 
 <style lang="stylus" scoped>
 
-.token-icon
-  width: 8rem
-  margin-bottom: 2rem
-
 </style>
