@@ -90,7 +90,6 @@
         size="sm"
         variant="link"
         class="pl-0 pr-0"
-        v-if="supportEmailAccounts"
         @click="toggleWhitelistField()"
       >
         Share with an {{ showEthereumAddressField ? 'email' : 'Ethereum' }} address instead?
@@ -132,7 +131,6 @@
 import { mapState } from 'vuex'
 import debug from 'debug'
 
-import config from '../../util/config'
 import Record from '../../util/api/record'
 import EventBus from '../../util/eventBus'
 import DisplayName from '../util/DisplayName'
@@ -155,7 +153,6 @@ export default {
       showEthereumAddressField: true,
       isPrivate: this.codexRecord.isPrivate,
       isInGallery: this.codexRecord.isInGallery,
-      supportEmailAccounts: config.supportEmailAccounts,
       whitelistedEmails: Array.from(this.codexRecord.whitelistedEmails) || [],
       whitelistedAddresses: Array.from(this.codexRecord.whitelistedAddresses) || [],
     }
@@ -180,9 +177,9 @@ export default {
   methods: {
 
     onShow() {
-      // by default, show the ethereum address field to savvy users and the email
-      //  field to simple users
-      if (this.user.type !== 'savvy' && config.supportEmailAccounts) {
+      // by default, show the ethereum address field to savvy users and the
+      //  email field to simple users
+      if (this.user.type !== 'savvy') {
         this.showEthereumAddressField = false
       }
     },
