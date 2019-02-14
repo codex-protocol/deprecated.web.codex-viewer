@@ -7,6 +7,7 @@ export default Vue.filter('escapeHtml', (text) => {
     return text
   }
 
+  // @BUG: if there's an email in the text, it will be incorrectly linkified
   return escapeHtml(text)
 
     // replace urls with hyperlinks
