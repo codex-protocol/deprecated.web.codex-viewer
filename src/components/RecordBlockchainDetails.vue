@@ -17,11 +17,11 @@
         </div>
         <div>
           <span>Created</span>
-          <span>{{ formatDate(codexRecord.createdAt) }}</span>
+          <span>{{ codexRecord.createdAt | formatDate }}</span>
         </div>
         <div>
           <span>Last Updated</span>
-          <span>{{ formatDate(codexRecord.updatedAt) }}</span>
+          <span>{{ codexRecord.updatedAt | formatDate }}</span>
         </div>
       </div>
     </section>
@@ -85,26 +85,17 @@
 
 import DisplayName from './util/DisplayName'
 import ValidHashBadge from './badges/valid-hash'
-import { formatDate } from '../util/dateHelpers'
 
 export default {
-
   props: {
     codexRecord: {
       type: Object,
       required: true,
     },
   },
-
   components: {
     DisplayName,
     ValidHashBadge,
-  },
-
-  methods: {
-    formatDate(date) {
-      return formatDate(date)
-    },
   },
 }
 </script>
