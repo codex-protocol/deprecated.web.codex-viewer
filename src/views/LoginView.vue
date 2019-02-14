@@ -8,87 +8,256 @@
           </b-link>
         </div>
 
-        <h1>Sign in</h1>
-        <div class="lead">Codex Viewer allows you to create, view, and transfer Codex Records</div>
+        <div class="form-container" ref="form-container">
 
-        <b-alert
-          show
-          class="mt-5"
-          variant="secondary"
-          v-if="pendingUserMessage"
-        >
+          <LoadingOverlay :show="isLoading" type="dark" size="large" />
+
+          <h1>
+            <template v-if="showFormType === 'login'">Sign In</template>
+            <template v-if="showFormType === 'signup'">Sign Up</template>
+          </h1>
+
+          <p>
+            Codex Viewer allows you to create Codex Records, securely storing
+            your collection's provenance on the Ethereum blockchain.
+            <small><a href="https://codexprotocol.com/">Learn more &raquo;</a></small>
+          </p>
+
+          <hr>
+
+          <b-alert
+            show
+            class="mt-4 mb-4"
+            variant="secondary"
+            v-if="pendingUserMessage"
+          >
+            <!--
+              @NOTE: using v-html here should be fine, since the only user-defined
+              data is the email address... and the database verifies all email
+              addresses when creating users
+
+              even if someone could put some malicious text into an invited user's
+              email field, nobody would ever actually receive an email with a link
+              that would generate this page since the email would be invalid...
+            -->
+            <span v-html="pendingUserMessage"></span>
+            <!-- add a "claim with a different email" link here if/when that flow is implemented -->
+          </b-alert>
+
+          <b-alert
+            class="mt-4"
+            variant="danger"
+            v-html="errorMessage"
+            :show="!!errorMessage"
+          />
+
+          <p v-if="formValidateErrors.length">
+            <b-alert variant="danger" :show="formValidateErrors.length !== 0">
+              Please fix these error(s):
+              <ul class="mb-0">
+                <li v-for="(error, index) in formValidateErrors" :key="index">{{ error }}</li>
+              </ul>
+            </b-alert>
+          </p>
+
+          <b-form
+            v-if="showFormType === 'login'"
+            @submit.prevent="login('local')"
+          >
+            <b-form-group>
+              <b-form-input
+                required
+                type="email"
+                placeholder="Email"
+                v-model="loginForm.email"
+              />
+            </b-form-group>
+            <b-form-group>
+              <b-form-input
+                required
+                type="password"
+                placeholder="Password"
+                v-model="loginForm.password"
+              />
+            </b-form-group>
+            <div class="form-button-container">
+              <b-link
+                size="sm"
+                variant="link"
+                class="forgot-password-button"
+                v-b-modal.forgotPasswordModal
+              >
+                Forgot Password?
+              </b-link>
+              <b-button
+                type="submit"
+                variant="primary"
+                class="form-button"
+              >
+                Login
+              </b-button>
+            </div>
+          </b-form>
+
+          <b-form
+            @submit.prevent="createUser()"
+            v-if="showFormType === 'signup'"
+          >
+            <b-form-group>
+              <b-form-input
+                required
+                v-model="signupForm.name"
+                placeholder="Name (Required)"
+              />
+            </b-form-group>
+            <b-form-group>
+              <b-form-input
+                required
+                type="email"
+                placeholder="Email (Required)"
+                v-model="signupForm.email"
+              />
+            </b-form-group>
+            <div class="password-fields-container">
+              <b-form-input
+                required
+                type="password"
+                placeholder="Password (4+ characters)"
+                v-model="signupForm.password"
+              />
+              <b-form-input
+                required
+                type="password"
+                placeholder="Confirm Password"
+                v-model="signupForm.confirmPassword"
+              />
+            </div>
+            <!-- <b-form-group label="I am...">
+              <b-form-checkbox-group
+                :options="signupForm.userTypes"
+                v-model="signupForm.selectedUserTypes"
+              />
+            </b-form-group> -->
+            <div class="form-button-container">
+              <b-button
+                type="submit"
+                variant="primary"
+                class="form-button"
+              >
+                Get Started Now
+              </b-button>
+            </div>
+          </b-form>
+
+          <div class="divider">
+            <span></span>
+            <span>
+              <template v-if="showFormType === 'login'">or sign in with</template>
+              <template v-if="showFormType === 'signup'">or sign up with</template>
+            </span>
+            <span></span>
+          </div>
+
+          <div class="social-icons">
+
+            <!-- oauth2 login buttons -->
+            <b-link
+              :key="index"
+              v-b-tooltip.hover
+              :disabled="provider.isDisabled"
+              :title="provider.name | titleCase"
+              :href="getOAuth2LoginUrl(provider)"
+              v-for="(provider, index) in oAuth2Providers"
+            >
+              <IconBase :iconName="provider.name" width="48" height="48" />
+            </b-link>
+
+            <!-- web3 login buttons -->
+            <b-link
+              title="MetaMask"
+              v-b-tooltip.hover
+              @click="login('web3', 'metaMask')"
+            >
+              <IconBase iconName="metaMask" width="48" height="48" />
+            </b-link>
+            <b-link
+              v-b-tooltip.hover
+              title="Coinbase Wallet"
+              @click="login('web3', 'coinbaseWallet')"
+            >
+              <IconBase iconName="coinbaseWallet" width="48" height="48" />
+            </b-link>
+          </div>
+
+          <hr>
+
           <!--
-            @NOTE: using v-html here should be fine, since the only user-defined
-            data is the email address... and the database verifies all email
-            addresses when creating users
-
-            even if someone could put some malicious text into an invited user's
-            email field, nobody would ever actually receive an email with a link
-            that would generate this page since the email would be invalid...
+            @NOTE: the button below triggers a page reload on click, which is
+            slightly inefficient but allows the url to stay in sync with what
+            form type we're showing and since people probably aren't going to be
+            switching forms too often, I think it's fine. if it becomes a
+            problem, the click handler could be changed to
+            @click="showFormType = 'signup'"
           -->
-          <span v-html="pendingUserMessage"></span>
-          <!-- add a "claim with a different email" link here if/when that flow is implemented -->
-        </b-alert>
+          <div class="switch-form-link" v-if="showFormType === 'login'">
+            Need an account?
+            <b-button
+              size="sm"
+              variant="link"
+              @click="$router.replace({ path: '/signup' })"
+            >
+              Get started absolutely free!
+            </b-button>
+          </div>
 
-        <p class="mt-5 mb-3">
-          <b>Sign in below to get started</b>
-        </p>
-
-        <div class="icons mb-3">
-
-          <!-- oauth2 login buttons -->
-          <b-link
-            :key="index"
-            :disabled="provider.isDisabled"
-            :gtm-login-button="provider.name"
-            :href="getOAuth2LoginUrl(provider)"
-            v-for="(provider, index) in oAuth2Providers"
-          >
-            <IconBase :iconName="provider.name" width="48" height="48" />
-          </b-link>
-
-          <!-- web3 login buttons -->
-          <b-link
-            gtm-login-button="metamask"
-            @click="registerWalletProvider('metaMask')"
-          >
-            <IconBase iconName="metaMask" width="48" height="48" />
-          </b-link>
-          <b-link
-            gtm-login-button="coinbase"
-            @click="registerWalletProvider('coinbaseWallet')"
-          >
-            <IconBase iconName="coinbaseWallet" width="48" height="48" />
-          </b-link>
+          <!--
+            @NOTE: the button below triggers a page reload on click, which is
+            slightly inefficient but allows the url to stay in sync with what
+            form type we're showing and since people probably aren't going to be
+            switching forms too often, I think it's fine. if it becomes a
+            problem, the click handler could be changed to
+            @click="showFormType = 'login'"
+          -->
+          <div class="switch-form-link" v-if="showFormType === 'signup'">
+            Already have an account?
+            <b-button
+              size="sm"
+              variant="link"
+              @click="$router.replace({ path: '/login' })"
+            >
+              Sign In &raquo;
+            </b-button>
+          </div>
         </div>
-
-        <b-alert
-          class="mt-4"
-          variant="danger"
-          :show="!!errorMessage"
-          v-html="errorMessage"
-        />
 
         <b-alert
           show
           class="mt-4"
           variant="primary"
         >
-          If you are already using Codex Viewer with a managed wallet (e.g.
-          MetaMask or Coinbase Wallet), you must log in with that wallet to
-          access your existing Codex Records. Logging in with an OAuth2 provider
-          above will create a new account that is not linked to your existing
-          wallet address.
+          <p>
+            If you are already using Codex Viewer with a managed wallet (e.g.
+            MetaMask or Coinbase Wallet), you must log in with that wallet to
+            access your existing Codex Records.
+          </p>
+          <p class="mb-0">
+            <strong>
+              Logging in with a different method will create a new account that
+              is not linked to your existing wallet address.
+            </strong>
+          </p>
         </b-alert>
       </div>
       <div class="col-12 col-md-6 secondary">
         <div class="login-art"><img src="../assets/images/login-art.png" v-party-mode-activator /></div>
       </div>
     </div>
+    <ForgotPasswordModal />
   </div>
 </template>
 
 <script>
+import axios from 'axios'
 import debug from 'debug'
 import { mapState } from 'vuex'
 
@@ -97,6 +266,8 @@ import PendingUser from '../util/api/pendingUser'
 import { Web3Errors, Networks } from '../util/constants/web3'
 
 import IconBase from '../components/icons/IconBase'
+import LoadingOverlay from '../components/util/LoadingOverlay'
+import ForgotPasswordModal from '../components/modals/ForgotPasswordModal'
 
 const logger = debug('app:component:login-view')
 
@@ -104,11 +275,39 @@ export default {
 
   components: {
     IconBase,
+    LoadingOverlay,
+    ForgotPasswordModal,
   },
 
   data() {
     return {
+      isLoading: false,
       walletProvider: null,
+
+      showFormType: 'login',
+      formSubmitError: null,
+      formValidateErrors: [],
+
+      loginForm: {
+        email: null,
+        password: null,
+      },
+
+      signupForm: {
+        name: null,
+        email: null,
+        password: null,
+        confirmPassword: null,
+
+        // selectedUserTypes: [],
+        // userTypes: [
+        //   { value: 'artist', text: 'An artist' },
+        //   { value: 'collector', text: 'A collector' },
+        //   { value: 'gallery', text: 'A gallery' },
+        //   { value: 'auction-house', text: 'An auction house' },
+        //   { value: 'just-curious', text: 'Just curious' },
+        // ],
+      },
 
       oAuth2Providers: [
         {
@@ -132,9 +331,15 @@ export default {
   },
 
   created() {
+
+    if (this.$router.currentRoute.path === '/signup') {
+      this.showFormType = 'signup'
+    }
+
     if (this.pendingUserCode) {
       this.getPendingUserStats(this.pendingUserCode)
     }
+
   },
 
   computed: {
@@ -142,27 +347,19 @@ export default {
     ...mapState('web3', ['providerAccount', 'instance', 'registrationError']),
     ...mapState('app', ['apiErrorCode', 'pendingUserCode', 'postLoginDestination']),
 
-    oAuth2LoginQueryString() {
+    $formContainer() {
+      return this.$refs['form-container']
+    },
 
-      const oAuth2LoginQueryParams = {
+    loginQueryParams() {
+      return {
         destination: this.postLoginDestination,
         pendingUserCode: this.pendingUserCode,
       }
-
-      return Object
-        .keys(oAuth2LoginQueryParams)
-        .filter((key) => {
-          return !!oAuth2LoginQueryParams[key] // remove any empty values
-        })
-        .map((key) => {
-          return `${key}=${encodeURIComponent(oAuth2LoginQueryParams[key])}`
-        })
-        .join('&')
-
     },
 
     errorMessage() {
-      return this.web3ErrorMessage || this.apiErrorMessage
+      return this.web3ErrorMessage || this.apiErrorMessage || this.formSubmitError
     },
 
     apiErrorMessage() {
@@ -231,8 +428,8 @@ export default {
 
         return `
           You have ${numApproved} Codex ${recordOrRecords} waiting to be
-          claimed. Log in with an Identity Provider associated with the
-          email <strong>${email}</strong> below to claim ${itOrThem}!
+          claimed. Log in with the email <strong>${email}</strong> to claim
+          ${itOrThem}!
         `
       }
 
@@ -244,8 +441,8 @@ export default {
 
         return `
           ${numWhitelisted} Codex ${recordOrRecords} ${hasOrHave} been shared
-          with you. Log in with an Identity Provider associated with the
-          email <strong>${email}</strong> below to view ${itOrThem}!
+          with you. Log in with the email <strong>${email}</strong> to view
+          ${itOrThem}!
         `
       }
 
@@ -257,36 +454,133 @@ export default {
       // this message is a little missleading, but I suppose it's better than
       //  showing nothing
       return `
-        Log in with an Identity Provider associated with the email
-        <strong>${email}</strong> below to see what's waiting for you!
+        Log in with the email <strong>${email}</strong> to see what's waiting
+        for you!
       `
     },
   },
 
   methods: {
-    registerWalletProvider(provider) {
-      this.walletProvider = provider
 
-      // Clear out error state now that an action has taken place by the user
-      if (this.apiErrorCode) {
-        this.$store.commit('app/SET_API_ERROR_CODE', null)
+    clearErrors() {
+      this.formSubmitError = null
+      this.formValidateErrors = []
+      this.$store.commit('app/SET_API_ERROR_CODE', null)
+      this.$store.commit('web3/SET_REGISTRATION_ERROR', null)
+    },
+
+    createUser() {
+
+      this.clearErrors()
+
+      if (!this.signupForm.email) {
+        this.formValidateErrors.push('Email is required')
       }
 
-      this.$store.dispatch('auth/LOGIN_FROM_SIGNED_DATA')
+      if (!this.signupForm.password) {
+        this.formValidateErrors.push('Password is required')
+      }
+
+      if (this.signupForm.password !== this.signupForm.confirmPassword) {
+        this.formValidateErrors.push('Passwords fields must match')
+      }
+
+      if (this.signupForm.password.length < 4) {
+        this.formValidateErrors.push('Password must be longer than 4 characters')
+      }
+
+      if (this.formValidateErrors.length !== 0) {
+        this.shakeForm()
+        return null
+      }
+
+      this.isLoading = true
+
+      const requestOptions = {
+        url: '/users',
+        method: 'post',
+        data: this.signupForm,
+      }
+
+      return axios(requestOptions)
+        .then((response) => {
+          this.$store.commit('app/SET_EMAIL_ADDRESS_TO_CONFIRM', response.data.result.email, { root: true })
+          return this.$router.push({ name: 'confirm-email' })
+        })
+        .catch((error) => {
+          this.shakeForm()
+
+          // @TODO: add better error handling
+          this.formSubmitError = error.message || error.toString()
+        })
+        .finally(() => {
+          this.isLoading = false
+        })
+
+    },
+
+    login(type, provider) {
+
+      this.clearErrors()
+
+      let promise = null
+
+      if (type === 'web3') {
+        this.walletProvider = provider
+        promise = this.$store.dispatch('auth/LOGIN_FROM_SIGNED_DATA')
+      } else {
+        promise = this.$store.dispatch('auth/LOGIN_FROM_EMAIL_AND_PASSWORD', Object.assign({}, this.loginQueryParams, {
+          password: this.loginForm.password,
+          email: this.loginForm.email,
+        }))
+      }
+
+      this.isLoading = true
+
+      return promise
         .then(() => {
-          // Start fetching app & user data that is dependent on authentication
-          // No need to block on these async actions
+
+          // if this user has not confirmed their email, the LOGIN_FROM_EMAIL_AND_PASSWORD
+          //  action will redirect them to the confirm-email route and no user
+          //  will be set
+          if (!this.user) return null
+
+          // start fetching app & user data that is dependent on authentication
+          //  (no need to block on these async actions)
           this.$store.dispatch('records/FETCH_USER_DATA')
           this.$store.dispatch('app/FETCH_ELIGIBLE_GIVEAWAY')
 
-          // We know this authentication happened from the Login view, so we can send the user directly to the collection page
-          // We don't have to worry about the isLoading flag here since it is already set to true
-          this.$router.replace({ name: 'collection' })
+          // no need to worry about the global isLoading flag here since it is
+          //  already set to true
+          if (this.loginQueryParams.destination) {
+            return this.$router.push({ path: this.loginQueryParams.destination })
+          }
+
+          return this.$router.push({ name: 'collection' })
+
         })
-        .catch(() => {
-          // do nothing since the LOGIN_FROM_SIGNED_DATA action will catch
-          //  errors and dispatch the HANDLE_LOGIN_ERROR action for us
+        .catch((error) => {
+          this.shakeForm()
+
+          // @NOTE: web3 login erros have their own weird vuex logic so no need
+          //  to print the error again
+          if (type !== 'web3') {
+            this.formSubmitError = error.message || error.toString()
+          }
+
         })
+        .finally(() => {
+          this.isLoading = false
+        })
+
+    },
+
+    shakeForm() {
+      this.$formContainer.classList.add('is-shaking')
+      // const duration = 2000 * getComputedStyle(this.$formContainer).animationDuration.replace(/^([\d\.]*).*/, '$1') || .15
+      setTimeout(() => {
+        this.$formContainer.classList.remove('is-shaking')
+      }, 300)
     },
 
     getOAuth2LoginUrl(provider) {
@@ -295,7 +589,18 @@ export default {
         return null
       }
 
-      return `${config.apiUrl}/oauth2/login/${provider.name}?${this.oAuth2LoginQueryString}`
+      const queryString = Object
+        .keys(this.loginQueryParams)
+        .filter((key) => {
+          return !!this.loginQueryParams[key] // remove any empty values
+        })
+        .map((key) => {
+          return `${key}=${encodeURIComponent(this.loginQueryParams[key])}`
+        })
+        .join('&')
+
+      return `${config.apiUrl}/login/oauth2/${provider.name}?${queryString}`
+
     },
 
     getPendingUserStats(pendingUserCode) {
@@ -314,45 +619,104 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+
 @import "../assets/variables.styl"
 
-  .icons
-    display: flex
-    align-items: flex-start
+.logo
+  max-width: 128px
+  margin: 2rem auto 1rem
 
-  .icons a
-    width: 3rem
-    height: @width
-    display: inline-block
-
-    min-width: 0 // see: https://stackoverflow.com/a/33811151/1696150
-
-    &+a
-      margin-left: 1rem
-
-    svg
-      width: 100%
-      height: 100%
-
-    &.disabled
-    &[disabled]
-      opacity: .5
-
-      // disable hover state changes
-      &:hover
-        cursor: unset
-        color: $color-primary
-
-  .logo
-    max-width: 100px
-    margin-top: 2.5rem
-    margin-bottom: 2.5rem
+.form-container
+  padding: 2rem
+  position: relative
+  background-color: rgba($color-dark, .8)
+  box-shadow: 0 0 .5rem rgba($color-dark, .2)
 
   h1
     font-weight: bold
     font-family: $font-family-serif
 
-  .login-art img
-    width: 100%
-    margin-top: 3rem
+  .alert
+    word-wrap: break-word
+
+  .password-fields-container
+    display: flex
+    flex-direction: column
+    justify-content: space-between
+
+    >input
+      width: 100%
+      margin-bottom: 1rem
+
+    @media screen and (min-width: $breakpoint-xl)
+      flex-direction: row
+
+      >input
+        width: calc(50% - .5rem)
+
+  .form-button-container
+    display: flex
+    align-items: flex-end
+    flex-direction: column
+
+    .form-button
+      width: 100%
+
+    .forgot-password-button
+      padding: 0
+      font-size: small
+      margin-bottom: .25rem
+
+  .divider
+    display: flex
+    margin: 1rem 0
+    font-size: small
+    font-weight: bold
+    align-items: center
+
+    span:nth-child(odd)
+      flex-grow: 1
+      border-bottom: 1px solid rgba(white, .1)
+
+    span:nth-child(2)
+      margin: 0 1rem
+      line-height: 1.5rem
+
+  .social-icons
+    display: flex
+    position: relative
+    justify-content: space-around
+
+    a
+      width: 2rem
+      height: @width
+      display: inline-block
+      min-width: 0 // see: https://stackoverflow.com/a/33811151/1696150
+
+      @media screen and (min-width: $breakpoint-sm)
+        width: 3rem
+        height: @width
+
+      svg
+        width: 100%
+        height: 100%
+
+      &.disabled
+      &[disabled]
+        opacity: .5
+
+        // disable hover state changes
+        &:hover
+          cursor: unset
+          color: $color-primary
+
+  .switch-form-link
+  .signup-link
+    font-weight: bold
+    text-align: center
+
+.login-art img
+  width: 100%
+  margin-top: 3rem
+
 </style>

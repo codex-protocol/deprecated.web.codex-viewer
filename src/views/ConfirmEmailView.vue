@@ -2,35 +2,38 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12 col-md-6 primary">
-        <div class="logo">
-          <b-link href="/" replace>
+
+        <div class="logo" v-party-mode-activator>
+          <b-link to="/">
             <img src="../assets/logos/codex/gold.svg" />
           </b-link>
         </div>
 
-        <h1>{{ headerText }}</h1>
-        <div class="lead">{{ bodyText }}</div>
+        <div class="form-container" ref="form-container">
+          <h1>{{ headerText }}</h1>
+          <p>{{ bodyText }}</p>
 
-        <b-button
-          size="sm"
-          variant="link"
-          class="pl-0 pr-0"
-          v-b-modal.resendConfirmationEmailModal
-        >
-          {{ buttonText }}
-        </b-button>
+          <b-button
+            size="sm"
+            variant="link"
+            class="pl-0 pr-0"
+            v-b-modal.resendConfirmationEmailModal
+          >
+            {{ buttonText }}
+          </b-button>
 
-        <ResendConfirmationEmailModal :default-email="emailAddressToConfirm" />
+          <ResendConfirmationEmailModal :default-email="emailAddressToConfirm" />
 
-        <b-button
-          size="sm"
-          variant="link"
-          class="pl-0 pr-0"
-          @click.prevent="confirmEmail"
-          v-if="showManualConfirm && emailAddressToConfirm"
-        >
-          Confirm email
-        </b-button>
+          <b-button
+            size="sm"
+            variant="link"
+            class="pl-0 pr-0"
+            @click.prevent="confirmEmail"
+            v-if="showManualConfirm && emailAddressToConfirm"
+          >
+            Confirm email
+          </b-button>
+        </div>
 
       </div>
       <div class="col-12 col-md-6 secondary">
@@ -91,16 +94,18 @@ export default {
 @import "../assets/variables.styl"
 
 .logo
-  max-width: 100px
-  margin-bottom: 2.5rem
-  margin-top: 2.5rem
+  max-width: 128px
+  margin: 2rem auto 1rem
 
-h1
-  font-weight: bold
-  font-family: $font-family-serif
+.form-container
+  padding: 2rem
+  position: relative
+  background-color: rgba($color-dark, .8)
+  box-shadow: 0 0 .5rem rgba($color-dark, .2)
 
-.lead
-  margin-bottom: 3rem
+  h1
+    font-weight: bold
+    font-family: $font-family-serif
 
 .login-art img
   width: 100%

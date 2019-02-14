@@ -22,6 +22,31 @@
     max-height: 40vh
     object-fit: contain
 
+&.is-shaking
+  position: relative
+  animation: shake 150ms ease-in-out 0s infinite
+
+@keyframes shake
+  0%
+    left: 0
+    transform: rotate(0deg)
+
+  25%
+    left: -1rem
+    transform: rotate(-1deg)
+
+  50%
+    left: 0
+    transform: rotate(0deg)
+
+  75%
+    left: 1rem
+    transform: rotate(1deg)
+
+  100%
+    left: 0
+    transform: rotate(0deg)
+
 // CSS Checkbox toggle
 // <input type="checkbox"> toggle
 // https://danklammer.com/articles/simple-css-toggle-switch/

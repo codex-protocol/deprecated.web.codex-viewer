@@ -15,6 +15,14 @@ const queryParamsToHandle = {
     mutationName: 'SET_PENDING_USER_CODE',
     clearUserState: true,
   },
+  passwordResetCode: {
+    mutationName: 'SET_PASSWORD_RESET_CODE',
+    clearUserState: true,
+  },
+  passwordResetEmail: {
+    mutationName: 'SET_PASSWORD_RESET_EMAIL',
+    clearUserState: true,
+  },
   destination: {
     mutationName: 'SET_POST_LOGIN_DESTINATION',
   },

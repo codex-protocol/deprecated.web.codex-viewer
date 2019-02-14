@@ -2,6 +2,8 @@ export default () => {
   return {
     emailAddressToConfirm: null,
     pendingUserCode: null,
+    passwordResetCode: null,
+    passwordResetEmail: null,
     verifiedUsers: null,
     apiErrorCode: null,
     apiErrorMessage: null,

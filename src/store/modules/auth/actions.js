@@ -6,6 +6,47 @@ import User from '../../../util/api/user'
 const logger = debug('app:store:auth:actions')
 
 export default {
+
+  LOGIN_FROM_EMAIL_AND_PASSWORD({ commit, dispatch }, { email, password, pendingUserCode }) {
+    logger('LOGIN_FROM_EMAIL_AND_PASSWORD action being executed')
+
+    return User.getAuthTokenFromEmailAndPassword({ email, password, pendingUserCode })
+      .then((response) => {
+
+        const { user, authToken } = response
+
+        if (!user) {
+          throw new Error('Invalid email and/or password specified.')
+        }
+
+        if (user.type !== 'savvy' && !user.isEmailConfirmed) {
+          commit('app/SET_EMAIL_ADDRESS_TO_CONFIRM', user.email, { root: true })
+          router.push({ name: 'confirm-email' })
+          return null
+        }
+
+        // this shouldn't really ever happen, but we'll add a check for it
+        //  here just to be safe...
+        if (!authToken) {
+          throw new Error('Invalid email and/or password specified.')
+        }
+
+        commit('SET_AUTH_STATE', authToken)
+        commit('SET_USER', { user })
+
+        return dispatch('web3/REGISTER_INFURA_PROVIDER', null, { root: true })
+          .then(() => {
+            return dispatch('UPDATE_CONTRACT_STATE')
+          })
+
+      })
+      .catch((error) => {
+        dispatch('LOGOUT_USER')
+        throw error
+      })
+
+  },
+
   // Called from App.vue, ONLY IF there's an authToken in the query string or in local storage.
   //  This be either simple or savvy users--we find out which once we retrieve the user object
   //  from the API. If it's a simple user, we register Web3 using Infura. If it's a savvy user
@@ -63,7 +104,7 @@ export default {
           signedData,
         })
           .then((response) => {
-            commit('SET_AUTH_STATE', response.token)
+            commit('SET_AUTH_STATE', response.authToken)
 
             commit('SET_USER', {
               user: response.user,
