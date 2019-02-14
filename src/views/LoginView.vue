@@ -2,8 +2,8 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12 col-md-6 primary">
-        <div class="logo">
-          <b-link href="/" replace>
+        <div class="logo" v-party-mode-activator>
+          <b-link to="/">
             <img src="../assets/logos/codex/gold.svg" />
           </b-link>
         </div>
@@ -92,7 +92,6 @@
 </template>
 
 <script>
-import is from 'is_js'
 import debug from 'debug'
 import { mapState } from 'vuex'
 
@@ -112,7 +111,6 @@ export default {
 
   data() {
     return {
-      isMobile: is.mobile(),
       walletProvider: null,
       supportEmailAccounts: config.supportEmailAccounts,
 
@@ -176,12 +174,12 @@ export default {
       //  arbitrary text from the query string. Later we'll deprecate the message param and just pivot
       //  based on error codes.
       return this.apiErrorCode
-        ? 'We were unable to log you in with your account. Try again later.'
+        ? 'We were unable to log you in to your account. Please try again later.'
         : null
     },
 
     web3ErrorMessage() {
-      if (!this.registrationError && !this.apiErrorCod) {
+      if (!this.registrationError) {
         return null
       }
 
@@ -196,13 +194,13 @@ export default {
           return `You're on the wrong Ethereum network. The expected network is ${Networks[config.expectedNetworkId]}. To sign in with Web3, change the network in your wallet settings.`
 
         case Web3Errors.UserDeniedSignature:
-          return 'In order to sign in with your Web3, use your wallet to sign the message that you are prompted with. This will not spend any gas.'
+          return 'In order to sign in with your Web3 account, use your wallet to sign the message that you are prompted with. This will not spend any gas.'
 
         case Web3Errors.AccountChanged:
           return 'In order to preserve your privacy, we logged you out of Codex Viewer because we detected a change in the Web3 wallet your\'re currently using.'
 
         default:
-          return 'Something went wrong with your Web3 login. Try again later.'
+          return 'We were unable to log you in to your account. Please try again later.'
       }
     },
 
