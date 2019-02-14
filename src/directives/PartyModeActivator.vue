@@ -52,13 +52,13 @@ export default Vue.directive('party-mode-activator', {
 @import "../assets/variables.styl"
 
 .party-mode
-  animation party-mode 500ms linear 0s infinite
+  animation: party-mode 500ms linear 0s infinite
 
 @keyframes party-mode
   0%
-    filter hue-rotate(0deg)
+    filter: hue-rotate(0deg)
 
   100%
-    filter hue-rotate(360deg)
+    filter: hue-rotate(360deg)
 
 </style>
