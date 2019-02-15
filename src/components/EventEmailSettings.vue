@@ -11,7 +11,7 @@
       :event-email="eventEmail"
       :key="eventEmail.eventName"
       v-for="eventEmail in eventEmails"
-      v-if="!eventEmail.forUserTypes || eventEmail.forUserTypes.includes(user.type)"
+      v-if="!eventEmail.forUserRoles || eventEmail.forUserRoles.includes(user.role)"
     >
       <!-- make the whole row clickable -->
       <b-row @click.prevent="toggleBlacklist(eventEmail)">
