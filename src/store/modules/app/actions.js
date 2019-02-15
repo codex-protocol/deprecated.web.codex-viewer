@@ -44,6 +44,17 @@ const queryParamsToHandle = {
 }
 
 export default {
+
+  CLEAR_QUERY_PARAMS({ commit, rootState }) {
+    logger('CLEAR_QUERY_PARAMS action being executed')
+
+    Object.keys(queryParamsToHandle).forEach((key) => {
+      if (key === 'authToken') return
+      const param = queryParamsToHandle[key]
+      commit(param.mutationName, null, param.mutationConfiguration)
+    })
+  },
+
   HANDLE_QUERY_PARAMS({ commit, rootState }) {
     logger('HANDLE_QUERY_PARAMS action being executed')
 

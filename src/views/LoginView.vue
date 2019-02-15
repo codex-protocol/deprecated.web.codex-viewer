@@ -107,9 +107,8 @@
           >
             <b-form-group>
               <b-form-input
-                required
                 v-model="signupForm.name"
-                placeholder="Name (Required)"
+                placeholder="Name (Optional)"
               />
             </b-form-group>
             <b-form-group>
@@ -134,12 +133,13 @@
                 v-model="signupForm.confirmPassword"
               />
             </div>
-            <!-- <b-form-group label="I am...">
+            <b-form-group label="I am...">
               <b-form-checkbox-group
-                :options="signupForm.userTypes"
-                v-model="signupForm.selectedUserTypes"
+                stacked
+                v-model="signupForm.userRoleSurvey.answers"
+                :options="signupForm.userRoleSurvey.options"
               />
-            </b-form-group> -->
+            </b-form-group>
             <div class="form-button-container">
               <b-button
                 type="submit"
@@ -300,15 +300,18 @@ export default {
         email: null,
         password: null,
         confirmPassword: null,
-
-        // selectedUserTypes: [],
-        // userTypes: [
-        //   { value: 'artist', text: 'An artist' },
-        //   { value: 'collector', text: 'A collector' },
-        //   { value: 'gallery', text: 'A gallery' },
-        //   { value: 'auction-house', text: 'An auction house' },
-        //   { value: 'just-curious', text: 'Just curious' },
-        // ],
+        userRoleSurvey: {
+          answers: [],
+          options: [
+            { value: 'artist', text: 'An Artist / Creator' },
+            { value: 'collector', text: 'A Collector' },
+            { value: 'gallery', text: 'A Marketplace / Gallery' },
+            { value: 'auction-house', text: 'An Auction House' },
+            { value: 'appraiser', text: 'An Appraiser' },
+            { value: 'crypto-enthusiast', text: 'Crypto Enthusiast' },
+            { value: 'just-curious', text: 'Just Curious' },
+          ],
+        },
       },
 
       oAuth2Providers: [
@@ -430,7 +433,7 @@ export default {
 
         return `
           You have ${numApproved} Codex ${recordOrRecords} waiting to be
-          claimed. Log in with the email <strong>${email}</strong> to claim
+          claimed. Sign up with the email <strong>${email}</strong> to claim
           ${itOrThem}!
         `
       }
@@ -443,7 +446,7 @@ export default {
 
         return `
           ${numWhitelisted} Codex ${recordOrRecords} ${hasOrHave} been shared
-          with you. Log in with the email <strong>${email}</strong> to view
+          with you. Sign up with the email <strong>${email}</strong> to view
           ${itOrThem}!
         `
       }
@@ -456,7 +459,7 @@ export default {
       // this message is a little missleading, but I suppose it's better than
       //  showing nothing
       return `
-        Log in with the email <strong>${email}</strong> to see what's waiting
+        Sign up with the email <strong>${email}</strong> to see what's waiting
         for you!
       `
     },
@@ -501,12 +504,24 @@ export default {
       const requestOptions = {
         url: '/users',
         method: 'post',
-        data: this.signupForm,
+        data: Object.assign({}, this.signupForm, {
+          pendingUserCode: this.pendingUserCode,
+        }),
       }
 
       return axios(requestOptions)
         .then((response) => {
-          this.$store.commit('app/SET_EMAIL_ADDRESS_TO_CONFIRM', response.data.result.email, { root: true })
+          const { result } = response.data
+          if (result.authToken) {
+            return this.$store.dispatch('auth/SET_AUTH_TOKEN_AND_CLEAR_QUERY_PARAMS', result.authToken)
+              .then(() => {
+                return this.$store.dispatch('auth/LOGIN_FROM_CACHED_TOKEN')
+              })
+              .then(() => {
+                return this.afterSuccessfulLogin()
+              })
+          }
+          this.$store.commit('app/SET_EMAIL_ADDRESS_TO_CONFIRM', result.user.email, { root: true })
           return this.$router.push({ name: 'confirm-email' })
         })
         .catch((error) => {
@@ -547,18 +562,7 @@ export default {
           //  will be set
           if (!this.user) return null
 
-          // start fetching app & user data that is dependent on authentication
-          //  (no need to block on these async actions)
-          this.$store.dispatch('records/FETCH_USER_DATA')
-          this.$store.dispatch('app/FETCH_ELIGIBLE_GIVEAWAY')
-
-          // no need to worry about the global isLoading flag here since it is
-          //  already set to true
-          if (this.loginQueryParams.destination) {
-            return this.$router.push({ path: this.loginQueryParams.destination })
-          }
-
-          return this.$router.push({ name: 'collection' })
+          return this.afterSuccessfulLogin()
 
         })
         .catch((error) => {
@@ -574,6 +578,23 @@ export default {
         .finally(() => {
           this.isLoading = false
         })
+
+    },
+
+    afterSuccessfulLogin() {
+
+      // start fetching app & user data that is dependent on authentication
+      //  (no need to block on these async actions)
+      this.$store.dispatch('records/FETCH_USER_DATA')
+      this.$store.dispatch('app/FETCH_ELIGIBLE_GIVEAWAY')
+
+      // no need to worry about the global isLoading flag here since it is
+      //  already set to true
+      if (this.loginQueryParams.destination) {
+        return this.$router.push({ path: this.loginQueryParams.destination })
+      }
+
+      return this.$router.push({ name: 'collection' })
 
     },
 

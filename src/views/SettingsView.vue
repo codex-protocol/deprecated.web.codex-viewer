@@ -12,7 +12,7 @@
               <h4>Account Information</h4>
               <div class="details-table">
                 <template v-if="isNotSavvyUser">
-                  <div class="name-row">
+                  <div class="name-row" v-if="user.name">
                     <span>Name</span>
                     <span>{{ user.name }}</span>
                   </div>
@@ -40,9 +40,22 @@
               </div>
             </section>
             <section v-if="isNotSavvyUser">
-              <h4>Change Password</h4>
-              <b-form class="change-password-form" @submit.prevent="updatePassword()">
-                <b-form-group>
+              <h4>{{ user.isPasswordSet ? 'Change' : 'Set' }} Password</h4>
+
+              <b-form
+                class="change-password-form"
+                @submit.prevent="changePassword()"
+              >
+
+                <LoadingOverlay type="dark" :show="changePasswordForm.isLoadingPasswordChange" />
+
+                <b-alert variant="primary" :show="!user.isPasswordSet">
+                  Your account was created via social login. If you'd like to also
+                  enable the ability to log in via email &amp; password, you may
+                  set a password here.
+                </b-alert>
+
+                <b-form-group v-if="user.isPasswordSet">
                   <b-form-input
                     required
                     type="password"
@@ -192,6 +205,7 @@ import Giveaway from '../util/api/giveaway'
 import AppHeader from '../components/core/AppHeader'
 import copyToClipboard from '../util/copyToClipboard'
 import LoadingIcon from '../components/util/LoadingIcon'
+import LoadingOverlay from '../components/util/LoadingOverlay'
 import EventEmailSettings from '../components/EventEmailSettings'
 import RecordPrivacySettingsRowItem from '../components/RecordPrivacySettingsRowItem'
 
@@ -200,6 +214,7 @@ export default {
   components: {
     AppHeader,
     LoadingIcon,
+    LoadingOverlay,
     EventEmailSettings,
     RecordPrivacySettingsRowItem,
   },
@@ -265,7 +280,7 @@ export default {
         })
     },
 
-    updatePassword() {
+    changePassword() {
 
       const errors = []
 
@@ -289,9 +304,9 @@ export default {
       this.changePasswordForm.isLoadingPasswordChange = true
 
       const requestOptions = {
-        method: 'put',
         url: '/user/password',
         data: this.changePasswordForm,
+        method: this.user.isPasswordSet ? 'put' : 'post',
       }
 
       return axios(requestOptions)
@@ -300,8 +315,12 @@ export default {
           this.changePasswordForm.newPassword = null
           this.changePasswordForm.confirmNewPassword = null
 
+          if (!this.user.isPasswordSet) {
+            this.$store.commit('auth/SET_USER_PROPERTIES', { isPasswordSet: true })
+          }
+
           EventBus.$emit('toast:success', 'Password succesfully changed!', 5000)
-          this.$store.commit('auth/SET_AUTH_STATE', response.data.result.newAuthToken)
+          return this.$store.dispatch('auth/SET_AUTH_TOKEN_AND_CLEAR_QUERY_PARAMS', response.data.result.newAuthToken)
         })
         .catch((error) => {
           EventBus.$emit('toast:error', `Could not change password: ${error.message}`)
@@ -325,6 +344,7 @@ export default {
 
 .change-password-form
   width: 100%
+  position: relative
 
   @media screen and (min-width: $breakpoint-sm)
     width: 50%
