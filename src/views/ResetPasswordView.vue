@@ -76,6 +76,7 @@
                   type="submit"
                   variant="primary"
                   class="form-button"
+                  :disabled="isLoading"
                 >
                   Reset Password
                 </b-button>

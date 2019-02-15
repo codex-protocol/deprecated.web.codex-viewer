@@ -109,36 +109,6 @@ section
     margin-top: 2rem
 
 .details-table
-  display: flex
   font-size: small
-  flex-direction: column
-  border: 1px solid rgba($color-primary, .1)
-
-  >div
-    width: 100%
-    display: flex
-
-    &+div
-      border-top: 1px solid rgba($color-primary, .1)
-
-    >span
-      padding: .5rem
-      overflow-wrap: break-word
-
-      &:nth-of-type(1)
-        width: 33%
-        background-color: rgba($color-primary, .05)
-
-      &:nth-of-type(2)
-        flex-grow: 1
-        width: 67%
-
-  .file-hash
-    width: 100%
-    display: inline-block
-    overflow-wrap: break-word
-
-    &+.file-hash
-      margin-top: .5rem
 
 </style>
