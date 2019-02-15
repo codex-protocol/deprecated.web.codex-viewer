@@ -13,7 +13,9 @@
               <div>
                 <div v-if="codexRecord.metadata">
                   <h1>{{ codexRecord.metadata.name }}</h1>
-                  <div class="description" v-html="$options.filters.escapeHtml(codexRecord.metadata.description)"></div>
+                  <!-- this can be swapped when the email bug is fixed in the escapeHTML filter -->
+                  <div class="description">{{ codexRecord.metadata.description }}</div>
+                  <!-- <div class="description" v-html="$options.filters.escapeHtml(codexRecord.metadata.description)"></div> -->
                 </div>
                 <div v-else>
                   <h1>Codex Record #{{ codexRecord.tokenId }}</h1>
@@ -187,6 +189,10 @@ h1
 
 .description
   margin-bottom: 1rem
+  overflow-wrap: break-word
+
+  // this can be removed when the email bug is fixed in the escapeHTML filter
+  white-space: pre-wrap
 
 .action-buttons
   display: flex

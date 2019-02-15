@@ -44,7 +44,7 @@ export default {
 
   data() {
     return {
-      showTestApp: config.showTestApp && config.supportEmailAccounts,
+      showTestApp: config.showTestApp,
     }
   },
 }

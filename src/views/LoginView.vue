@@ -37,17 +37,15 @@
         <div class="icons mb-3">
 
           <!-- oauth2 login buttons -->
-          <template v-if="supportEmailAccounts">
-            <b-link
-              :key="index"
-              :disabled="provider.isDisabled"
-              :gtm-login-button="provider.name"
-              :href="getOAuth2LoginUrl(provider)"
-              v-for="(provider, index) in oAuth2Providers"
-            >
-              <IconBase :iconName="provider.name" width="48" height="48" />
-            </b-link>
-          </template>
+          <b-link
+            :key="index"
+            :disabled="provider.isDisabled"
+            :gtm-login-button="provider.name"
+            :href="getOAuth2LoginUrl(provider)"
+            v-for="(provider, index) in oAuth2Providers"
+          >
+            <IconBase :iconName="provider.name" width="48" height="48" />
+          </b-link>
 
           <!-- web3 login buttons -->
           <b-link
@@ -75,7 +73,6 @@
           show
           class="mt-4"
           variant="primary"
-          v-if="supportEmailAccounts"
         >
           If you are already using Codex Viewer with a managed wallet (e.g.
           MetaMask or Coinbase Wallet), you must log in with that wallet to
@@ -112,7 +109,6 @@ export default {
   data() {
     return {
       walletProvider: null,
-      supportEmailAccounts: config.supportEmailAccounts,
 
       oAuth2Providers: [
         {

@@ -108,6 +108,25 @@ hr {
   border-top: 1px solid rgba(white, 0.1);
 }
 
+.nav-tabs {
+  border-bottom: 1px solid rgba($color-primary, .25);
+}
+
+.nav-link {
+  border-radius: 4px 4px 0 0;
+}
+
+.nav-tabs .nav-link:hover {
+  border-color: rgba($color-primary, .25);
+  border-bottom-color: transparent;
+}
+
+.nav-tabs .nav-link.active {
+  border-top-color: rgba($color-primary, .5);
+  border-left-color: rgba($color-primary, .5);
+  border-right-color: rgba($color-primary, .5);
+}
+
 // these styles make it so bootstrap's carousel component takes up the full
 //  dimensions of it's parent container, and remain that size regardless of the
 //  size of the image
