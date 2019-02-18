@@ -132,7 +132,7 @@ section
 
     >span
       padding: .5rem
-      word-wrap: break-word
+      overflow-wrap: break-word
 
       &:nth-of-type(1)
         width: 33%
@@ -145,7 +145,7 @@ section
   .file-hash
     width: 100%
     display: inline-block
-    word-wrap: break-word
+    overflow-wrap: break-word
 
     &+.file-hash
       margin-top: .5rem

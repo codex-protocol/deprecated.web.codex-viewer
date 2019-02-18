@@ -50,11 +50,9 @@ export default {
   showCodexGalleryInSideBar: true,
   faucetDripEnabled: expectedNetworkId !== '1',
 
+  showTestApp: expectedNetworkId !== '1',
   showManualConfirm: targetEnv === 'development',
   alwaysShowAdminSettingsTab: targetEnv === 'development',
-
-  supportEmailAccounts: true,
-  showTestApp: expectedNetworkId !== '1',
 
   apiUrl,
   feesEnabled,

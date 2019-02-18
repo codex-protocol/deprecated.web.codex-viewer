@@ -47,7 +47,8 @@
               You have no Codex Records in your collection!
             </div>
           </b-tab>
-          <b-tab title="Email Subscriptions" v-if="user && user.email && supportEmailAccounts">
+
+          <b-tab title="Email Subscriptions" v-if="user && user.email">
             <EventEmailSettings />
           </b-tab>
 
@@ -141,23 +142,17 @@ export default {
         property: 'address',
         text: 'Ethereum address',
       },
+      {
+        property: 'email',
+        text: 'Email address',
+      },
     ]
-
-    if (config.supportEmailAccounts) {
-      profileProperties.push(
-        {
-          property: 'email',
-          text: 'Email address',
-        },
-      )
-    }
 
     return {
       profileProperties,
-      isLoadingRecords: false,
       newIsAdmin: false,
       showAuthToken: false,
-      supportEmailAccounts: config.supportEmailAccounts,
+      isLoadingRecords: false,
       alwaysShowAdminSettingsTab: config.alwaysShowAdminSettingsTab,
     }
   },

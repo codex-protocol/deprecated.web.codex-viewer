@@ -1,0 +1,89 @@
+.alert a
+  color: inherit
+  font-weight: 600
+
+.spacer
+  flex-grow: 1
+
+.image-container
+  display: flex
+  margin: 1rem 0
+  padding: .5rem
+  align-items: center
+  justify-content: center
+  background-color: rgba(white, .01)
+  border: 1px solid rgba($color-primary, .1)
+
+  &.no-image
+    display: none
+
+  img
+    max-width: 100%
+    max-height: 40vh
+    object-fit: contain
+
+// CSS Checkbox toggle
+// <input type="checkbox"> toggle
+// https://danklammer.com/articles/simple-css-toggle-switch/
+.toggle-checkbox
+  opacity: 1
+  z-index: 0
+  -webkit-appearance: none
+  appearance: none
+  width: 62px
+  height: 32px
+  display: inline-block
+  position: relative
+  border-radius: 50px
+  overflow: hidden
+  outline: none
+  border: 3px solid $color-gray
+  cursor: pointer
+  background-color: transparent
+  transition: border-color ease 0.3s
+
+  &::before
+    content: ""
+    display: block
+    position: absolute
+    z-index: 2
+    width: 22px
+    height: 22px
+    background-color: $color-gray
+    left: 2px
+    top: 2px
+    border-radius: 50%
+    font: 10px/28px Helvetica
+    text-transform: uppercase
+    font-weight: bold
+    text-indent: -22px
+    word-spacing: 37px
+    color: $color-light
+    text-shadow: -1px -1px rgba(0,0,0,0.15)
+    white-space: nowrap
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2)
+    transition: all cubic-bezier(0.3, 1.5, 0.7, 1) 0.3s
+
+  &:checked
+    background-color: transparent
+    border-color: $color-success
+
+    &::before
+      left: 32px
+      background-color: $color-success
+
+  // lighten all the border & background colors when disabled
+  &:disabled
+    border-color: lighten($color-gray, 25%)
+
+    &::before
+      color: lighten($color-light, 25%)
+      background-color: lighten($color-gray, 25%)
+
+    &:checked
+      border-color: lighten($color-success, 25%)
+
+      &::before
+        background-color: lighten($color-success, 25%)
+
+// End CSS Checkbox toggle
