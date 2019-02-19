@@ -6,6 +6,7 @@ import config from '../util/config'
 
 import LoginView from '../views/LoginView'
 import ConfirmEmailView from '../views/ConfirmEmailView'
+import ResetPasswordView from '../views/ResetPasswordView'
 import FeatureListView from '../views/FeatureListView'
 import TransferListView from '../views/TransferListView'
 import RecordListView from '../views/RecordListView'
@@ -26,8 +27,11 @@ const router = new Router({
     // login routes
     {
       name: 'login',
-      path: '/login',
-      alias: '/',
+      path: '/',
+      alias: [
+        '/login',
+        '/signup',
+      ],
       component: LoginView,
       meta: {
         hideSideBar: true,
@@ -40,6 +44,17 @@ const router = new Router({
       name: 'confirm-email',
       path: '/confirm-email',
       component: ConfirmEmailView,
+      meta: {
+        hideSideBar: true,
+        useBackgroundImage: true,
+        ifAuthenticatedRedirect: true,
+        allowUnauthenticatedUsers: true,
+      },
+    },
+    {
+      name: 'reset-password',
+      path: '/reset-password',
+      component: ResetPasswordView,
       meta: {
         hideSideBar: true,
         useBackgroundImage: true,

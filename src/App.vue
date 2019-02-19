@@ -36,7 +36,7 @@
         </VueCookieAcceptDecline>
       </div>
     </div>
-    <ReferralSurveyModal v-if="user && !user.hasAnsweredReferralSurvey" />
+    <ReferralSurveyModal v-if="isAuthenticated && !user.hasAnsweredReferralSurvey" />
   </div>
 </template>
 

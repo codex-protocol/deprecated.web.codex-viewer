@@ -1,13 +1,3 @@
-const formatDate = (date, dateOnly) => {
-  const newDate = new Date(date)
-
-  if (dateOnly) {
-    return newDate.toLocaleDateString()
-  }
-
-  return newDate.toLocaleString()
-}
-
 // https://stackoverflow.com/questions/3177836/how-to-format-time-since-xxx-e-g-4-minutes-ago-similar-to-stack-exchange-site
 const timeSince = (date) => {
   const seconds = Math.floor((new Date() - date) / 1000)
@@ -34,7 +24,5 @@ const timeSince = (date) => {
   return `${Math.floor(seconds)} seconds`
 }
 
-export {
-  formatDate,
-  timeSince,
-}
+// eslint-disable-next-line import/prefer-default-export
+export { timeSince }

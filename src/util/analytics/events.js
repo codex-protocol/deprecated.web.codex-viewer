@@ -5,6 +5,10 @@ export default {
     category: 'Page Action',
     action: 'Resend Confirmation Email',
   },
+  'events:forgot-password-request': {
+    category: 'Page Action',
+    action: 'Forgot Password Request',
+  },
   'events:click-extension-feature': {
     category: 'Page Action',
     action: 'Click Extension Feature',

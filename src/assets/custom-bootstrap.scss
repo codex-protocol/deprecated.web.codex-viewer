@@ -63,6 +63,11 @@ $grid-gutter-width:                 2rem;
   background-color: rgba(white, .1);
 }
 
+.custom-checkbox .custom-control-label::before {
+  border-radius: .25em;
+  opacity: .9;
+}
+
 .custom-file-label {
   overflow: hidden;
 }
