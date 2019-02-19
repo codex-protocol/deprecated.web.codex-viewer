@@ -22,7 +22,7 @@
       <p v-if="errors.length">
         <b-alert variant="danger" :show="errors.length !== 0">
           Please fix these error(s):
-          <ul>
+          <ul class="mb-0">
             <li v-for="(error, index) in errors" :key="index">{{ error }}</li>
           </ul>
         </b-alert>

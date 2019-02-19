@@ -26,6 +26,16 @@ export default {
     currentState.pendingUserCode = pendingUserCode
   },
 
+  SET_PASSWORD_RESET_CODE(currentState, passwordResetCode) {
+    logMutation('SET_PASSWORD_RESET_CODE', passwordResetCode)
+    currentState.passwordResetCode = passwordResetCode
+  },
+
+  SET_PASSWORD_RESET_EMAIL(currentState, passwordResetEmail) {
+    logMutation('SET_PASSWORD_RESET_EMAIL', passwordResetEmail)
+    currentState.passwordResetEmail = passwordResetEmail
+  },
+
   SET_EMAIL_ADDRESS_TO_CONFIRM(currentState, emailAddress) {
     logMutation('SET_EMAIL_ADDRESS_TO_CONFIRM', emailAddress)
     currentState.emailAddressToConfirm = emailAddress
