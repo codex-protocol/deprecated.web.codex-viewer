@@ -585,6 +585,7 @@ export default {
           // @NOTE: web3 login erros have their own weird vuex logic so no need
           //  to print the error again
           if (type !== 'web3') {
+            this.loginForm.password = null
             this.formSubmitError = error.message || error.toString()
           }
 
