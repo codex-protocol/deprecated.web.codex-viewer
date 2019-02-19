@@ -512,17 +512,26 @@ export default {
       return axios(requestOptions)
         .then((response) => {
           const { result } = response.data
+
+          // since the SET_AUTH_TOKEN_AND_CLEAR_QUERY_PARAMS mutation clears the
+          //  saved "destination" query param, we need to save it here and pass
+          //  it to afterSuccessfulLogin() below
+          const destination = this.postLoginDestination
+
           if (result.authToken) {
             return this.$store.dispatch('auth/SET_AUTH_TOKEN_AND_CLEAR_QUERY_PARAMS', result.authToken)
               .then(() => {
                 return this.$store.dispatch('auth/LOGIN_FROM_CACHED_TOKEN')
               })
               .then(() => {
-                return this.afterSuccessfulLogin()
+                return this.afterSuccessfulLogin(destination)
               })
           }
+
           this.$store.commit('app/SET_EMAIL_ADDRESS_TO_CONFIRM', result.user.email, { root: true })
+
           return this.$router.push({ name: 'confirm-email' })
+
         })
         .catch((error) => {
           this.shakeForm()
@@ -539,6 +548,11 @@ export default {
     login(type, provider) {
 
       this.clearErrors()
+
+      // since the LOGIN_FROM_SIGNED_DATA mutation clears the saved
+      //  "destination" query param, we need to save it here and pass it to
+      //  afterSuccessfulLogin() below
+      const destination = this.postLoginDestination
 
       let promise = null
 
@@ -562,7 +576,7 @@ export default {
           //  will be set
           if (!this.user) return null
 
-          return this.afterSuccessfulLogin()
+          return this.afterSuccessfulLogin(destination)
 
         })
         .catch((error) => {
@@ -581,7 +595,9 @@ export default {
 
     },
 
-    afterSuccessfulLogin() {
+    afterSuccessfulLogin(destination = this.loginQueryParams.destination) {
+
+      console.log('destination', destination)
 
       // start fetching app & user data that is dependent on authentication
       //  (no need to block on these async actions)
@@ -590,8 +606,8 @@ export default {
 
       // no need to worry about the global isLoading flag here since it is
       //  already set to true
-      if (this.loginQueryParams.destination) {
-        return this.$router.push({ path: this.loginQueryParams.destination })
+      if (destination) {
+        return this.$router.push({ path: destination })
       }
 
       return this.$router.push({ name: 'collection' })
