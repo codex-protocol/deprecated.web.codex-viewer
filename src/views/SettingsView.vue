@@ -35,7 +35,7 @@
                 </div>
                 <div v-if="isNotSavvyUser">
                   <span>CODX Balance</span>
-                  <span>{{ availableCODXBalance }}</span>
+                  <span>{{ availableCODXBalance }} CODX</span>
                 </div>
               </div>
             </section>
