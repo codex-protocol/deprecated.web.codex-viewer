@@ -47,7 +47,6 @@ const targetEnv = process.env.VUE_APP_TARGET_ENV
 
 export default {
   showManageTokensPage: false,
-  showCodexGalleryInSideBar: true,
   faucetDripEnabled: expectedNetworkId !== '1',
 
   showTestApp: expectedNetworkId !== '1',

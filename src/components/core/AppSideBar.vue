@@ -66,7 +66,6 @@ export default {
   data() {
     return {
       feesEnabled: config.feesEnabled,
-      showCodexGallery: config.showCodexGalleryInSideBar,
     }
   },
 
@@ -124,7 +123,7 @@ export default {
         },
         {
           to: '/galleries',
-          condition: this.showCodexGallery,
+          condition: true,
           icon: galleryIcon,
           text: 'Galleries',
         },
