@@ -364,6 +364,7 @@ img
   max-height: 100%
   overflow-y: auto
   overflow-x: hidden
+  -webkit-overflow-scrolling: touch
 
   @media screen and (min-width: $breakpoint-md)
     display: flex

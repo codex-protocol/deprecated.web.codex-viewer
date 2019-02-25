@@ -29,8 +29,10 @@ export default {
       required: true,
     },
     string: {
-      type: String,
       required: true,
+      validator: (value) => {
+        return typeof value === 'string' || value === null
+      },
     },
   },
 
@@ -39,7 +41,7 @@ export default {
       if (this.string === null || this.string === '') {
         return this.hash === '0x0000000000000000000000000000000000000000000000000000000000000000'
       }
-      return this.hash === Web3.utils.sha3(this.string || '')
+      return this.hash === Web3.utils.soliditySha3(this.string || '')
     },
   },
 }
