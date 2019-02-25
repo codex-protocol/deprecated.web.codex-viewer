@@ -3,6 +3,16 @@
     <section>
       <h4>Details</h4>
       <div class="details-table">
+        <div>
+          <span>Privacy Setting</span>
+          <span>
+            {{ codexRecord.isPrivate ? 'Private' : 'Public' }}
+            <!--
+            <img class="privacy-icon" src="../assets/icons/lock.svg" v-if="codexRecord.isPrivate" />
+            <img class="privacy-icon" src="../assets/icons/lock-open.svg" v-if="!codexRecord.isPrivate" />
+            -->
+          </span>
+        </div>
         <div v-if="codexRecord.metadata">
           <span>Creator</span>
           <span><DisplayName :name="codexRecord.metadata.creatorAddress" /></span>
@@ -110,5 +120,10 @@ section
 
 .details-table
   font-size: small
+
+.privacy-icon
+  width: 1em
+  height: 1em
+  vertical-align: text-bottom
 
 </style>
