@@ -15,10 +15,11 @@
 
           <section class="request-faucet-drip" v-if="showFaucetDripForm">
             <p>
-              On testnets such as {{ expectedNetworkName }}, you can request
-              CODX for free from the "CODX Faucet". After requesting a drip from
-              the faucet, CODX will be sent to your account and you will receive
-              a notification upon success. You can request 1 drip every 24 hours.
+              On testnets such as {{ expectedNetworkName | titleCase }}, you can
+              request CODX for free from the "CODX Faucet". After requesting a
+              drip from the faucet, CODX will be sent to your account and you
+              will receive a notification upon success. You can request 1 drip
+              every 24 hours.
             </p>
             <b-button
               class="mb-3"
@@ -95,6 +96,13 @@
               </div>
             </div>
           </section>
+
+          <b-alert class="mt-4" variant="secondary" :show="isNotSavvyUser">
+            <strong>Please Note:</strong>
+            Any CODX purchased is held in your managed Codex Viewer account and
+            can only be spent implicitly via the Codex Viewer (e.g. creating or
+            modifying a Codex Record.)
+          </b-alert>
 
         </div>
       </div>

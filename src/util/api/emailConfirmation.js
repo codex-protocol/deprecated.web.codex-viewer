@@ -4,7 +4,7 @@ export default {
   resend: (email) => {
     const requestOptions = {
       method: 'post',
-      url: '/email-confirmation/resend',
+      url: '/login/email-confirmation/resend',
       data: {
         email,
       },

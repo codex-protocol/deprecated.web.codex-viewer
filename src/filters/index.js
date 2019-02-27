@@ -1,4 +1,5 @@
 import './title-case'
 import './escape-html'
+import './format-date'
 import './format-codx-amount'
 import './get-main-image-uri'

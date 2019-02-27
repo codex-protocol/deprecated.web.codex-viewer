@@ -4,16 +4,104 @@
       <div class="col-12">
         <AppHeader title="Settings &amp; Privacy" />
         <b-tabs>
+
+          <!-- PROFILE TAB -->
           <b-tab title="Profile">
-            <div
-              v-for="(item, index) in profileProperties"
-              :key="index"
-            >
-              {{ item.text }}: {{ item.formatter ? item.formatter(user[item.property]) : user[item.property] }}
-            </div>
+
+            <section>
+              <h4>Account Information</h4>
+              <div class="details-table">
+                <template v-if="isNotSavvyUser">
+                  <div class="name-row" v-if="user.name">
+                    <span>Name</span>
+                    <span>{{ user.name }}</span>
+                  </div>
+                  <div>
+                    <span>Email Address</span>
+                    <span>{{ user.email }}</span>
+                  </div>
+                </template>
+                <div>
+                  <span>Ethereum Address</span>
+                  <span>{{ user.address }}</span>
+                </div>
+                <div>
+                  <span>Account Created On</span>
+                  <span>{{ user.createdAt | formatDate() }}</span>
+                </div>
+                <div>
+                  <span>Number of Records Owned</span>
+                  <span>{{ totalRecordCount }}</span>
+                </div>
+                <div v-if="isNotSavvyUser">
+                  <span>CODX Balance</span>
+                  <span>{{ availableCODXBalance }} CODX</span>
+                </div>
+              </div>
+            </section>
+            <section v-if="isNotSavvyUser">
+              <h4>{{ user.isPasswordSet ? 'Change' : 'Set' }} Password</h4>
+
+              <b-form
+                class="change-password-form"
+                @submit.prevent="changePassword()"
+              >
+
+                <LoadingOverlay type="dark" :show="changePasswordForm.isLoadingPasswordChange" />
+
+                <b-alert variant="primary" :show="!user.isPasswordSet">
+                  Your account was created via social login. If you'd like to also
+                  enable the ability to log in via email &amp; password, you may
+                  set a password here.
+                </b-alert>
+
+                <b-form-group v-if="user.isPasswordSet">
+                  <b-form-input
+                    required
+                    type="password"
+                    placeholder="Old Password"
+                    v-model="changePasswordForm.oldPassword"
+                  />
+                </b-form-group>
+                <b-form-group>
+                  <b-form-input
+                    required
+                    type="password"
+                    v-model="changePasswordForm.newPassword"
+                    placeholder="New Password (4+ characters)"
+                  />
+                </b-form-group>
+                <b-form-group>
+                  <b-form-input
+                    required
+                    type="password"
+                    placeholder="Confirm New Password"
+                    v-model="changePasswordForm.confirmNewPassword"
+                  />
+                </b-form-group>
+                <div class="form-button-container">
+                  <b-button
+                    type="submit"
+                    variant="primary"
+                    class="form-button"
+                    :disabled="changePasswordForm.isLoadingPasswordChange"
+                  >
+                    Save
+                  </b-button>
+                </div>
+              </b-form>
+            </section>
           </b-tab>
+
+
+          <!-- COLLECTION TAB -->
           <b-tab title="Collection">
-            <div v-if="userRecords.length > 0">
+
+            <div v-if="userRecords.length === 0">
+              You have no Codex Records in your collection!
+            </div>
+
+            <div v-else>
               <div class="list-container">
                 <b-container>
                   <b-row class="list-header-row">
@@ -34,7 +122,7 @@
                 <b-button
                   size="sm"
                   class="load-more"
-                  @click="loadMore()"
+                  @click="loadMoreRecords()"
                   variant="outline-primary"
                   :disabled="isLoadingRecords || userRecords.length >= totalRecordCount"
                 >
@@ -43,11 +131,10 @@
                 </b-button>
               </div>
             </div>
-            <div v-else>
-              You have no Codex Records in your collection!
-            </div>
           </b-tab>
 
+
+          <!-- EMAIL SUBSCRIPTION TAB -->
           <b-tab title="Email Subscriptions" v-if="user && user.email">
             <EventEmailSettings />
           </b-tab>
@@ -109,15 +196,16 @@
 
 <script>
 
+import axios from 'axios'
 import { mapState, mapGetters } from 'vuex'
 
 import config from '../util/config'
 import EventBus from '../util/eventBus'
 import Giveaway from '../util/api/giveaway'
-import { formatDate } from '../util/dateHelpers'
 import AppHeader from '../components/core/AppHeader'
 import copyToClipboard from '../util/copyToClipboard'
 import LoadingIcon from '../components/util/LoadingIcon'
+import LoadingOverlay from '../components/util/LoadingOverlay'
 import EventEmailSettings from '../components/EventEmailSettings'
 import RecordPrivacySettingsRowItem from '../components/RecordPrivacySettingsRowItem'
 
@@ -126,30 +214,21 @@ export default {
   components: {
     AppHeader,
     LoadingIcon,
+    LoadingOverlay,
     EventEmailSettings,
     RecordPrivacySettingsRowItem,
   },
 
   data() {
-    const profileProperties = [
-      {
-        property: 'createdAt',
-        text: 'Created at',
-        formatter: formatDate,
-      },
-
-      {
-        property: 'address',
-        text: 'Ethereum address',
-      },
-      {
-        property: 'email',
-        text: 'Email address',
-      },
-    ]
-
     return {
-      profileProperties,
+
+      changePasswordForm: {
+        oldPassword: null,
+        newPassword: null,
+        confirmNewPassword: null,
+        isLoadingPasswordChange: false,
+      },
+
       newIsAdmin: false,
       showAuthToken: false,
       isLoadingRecords: false,
@@ -161,7 +240,7 @@ export default {
     ...mapState('app', ['giveaway']),
     ...mapState('auth', ['user', 'authToken']),
     ...mapState('records', ['totalRecordCount', 'paginationOptions']),
-    ...mapGetters('auth', ['isAdmin']),
+    ...mapGetters('auth', ['isAdmin', 'isNotSavvyUser', 'availableCODXBalance']),
     ...mapState('records', {
       userRecords: (state) => {
         return state.lists.userRecords
@@ -170,7 +249,9 @@ export default {
   },
 
   methods: {
+
     copyToClipboard,
+
     toggleIsAdmin(isAdmin) {
       return this.$store.dispatch('auth/UPDATE_IS_ADMIN', isAdmin)
         .then(() => {
@@ -180,6 +261,7 @@ export default {
           EventBus.$emit('toast:error', `Could not update isAdmin: ${error.message}`)
         })
     },
+
     createGiveaway() {
       return Giveaway.createNewGiveaway()
         .then(() => {
@@ -189,19 +271,83 @@ export default {
           EventBus.$emit('toast:error', `Could not create giveaway: ${error.message}`)
         })
     },
-    loadMore() {
+
+    loadMoreRecords() {
       this.isLoadingRecords = true
       return this.$store.dispatch('records/FETCH_NEXT_PAGE')
         .finally(() => {
           this.isLoadingRecords = false
         })
     },
+
+    changePassword() {
+
+      const errors = []
+
+      if (!this.changePasswordForm.newPassword) {
+        errors.push('Password is required')
+      }
+
+      if (this.changePasswordForm.newPassword !== this.changePasswordForm.confirmNewPassword) {
+        errors.push('Passwords fields must match')
+      }
+
+      if (this.changePasswordForm.newPassword.length < 4) {
+        errors.push('Password must be longer than 4 characters')
+      }
+
+      if (errors.length !== 0) {
+        EventBus.$emit('toast:error', `Please fix these error(s):\n\n${errors.join('\n\n')}`)
+        return null
+      }
+
+      this.changePasswordForm.isLoadingPasswordChange = true
+
+      const requestOptions = {
+        url: '/user/password',
+        data: this.changePasswordForm,
+        method: this.user.isPasswordSet ? 'put' : 'post',
+      }
+
+      return axios(requestOptions)
+        .then((response) => {
+          this.changePasswordForm.oldPassword = null
+          this.changePasswordForm.newPassword = null
+          this.changePasswordForm.confirmNewPassword = null
+
+          if (!this.user.isPasswordSet) {
+            this.$store.commit('auth/SET_USER_PROPERTIES', { isPasswordSet: true })
+          }
+
+          EventBus.$emit('toast:success', 'Password succesfully changed!', 5000)
+          return this.$store.dispatch('auth/SET_AUTH_TOKEN_AND_CLEAR_QUERY_PARAMS', response.data.result.newAuthToken)
+        })
+        .catch((error) => {
+          EventBus.$emit('toast:error', `Could not change password: ${error.message}`)
+        })
+        .finally(() => {
+          this.changePasswordForm.isLoadingPasswordChange = false
+        })
+
+    },
   },
 }
 </script>
 
 <style lang="stylus" scoped>
+
 @import "../assets/variables.styl"
+
+.details-table
+  @media screen and (max-width: $breakpoint-sm)
+    font-size: small
+
+.change-password-form
+  width: 100%
+  position: relative
+
+  @media screen and (min-width: $breakpoint-sm)
+    width: 50%
 
 .list-container
   display: flex

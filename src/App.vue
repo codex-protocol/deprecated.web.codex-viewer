@@ -36,7 +36,7 @@
         </VueCookieAcceptDecline>
       </div>
     </div>
-    <ReferralSurveyModal v-if="user && !user.hasAnsweredReferralSurvey" />
+    <ReferralSurveyModal v-if="isAuthenticated && !user.hasAnsweredReferralSurvey" />
   </div>
 </template>
 
@@ -364,6 +364,7 @@ img
   max-height: 100%
   overflow-y: auto
   overflow-x: hidden
+  -webkit-overflow-scrolling: touch
 
   @media screen and (min-width: $breakpoint-md)
     display: flex
