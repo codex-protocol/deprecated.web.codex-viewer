@@ -339,14 +339,14 @@ export default {
 @import "../assets/variables.styl"
 
 .details-table
-  @media screen and (max-width: $breakpoint-sm)
+  @media (max-width: $breakpoint-sm)
     font-size: small
 
 .change-password-form
   width: 100%
   position: relative
 
-  @media screen and (min-width: $breakpoint-sm)
+  @media (min-width: $breakpoint-sm)
     width: 50%
 
 .list-container

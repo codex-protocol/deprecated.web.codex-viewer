@@ -60,22 +60,22 @@ export default {
   max-width: 100%
   height: 50vh
 
-  @media screen and (orientation: portrait)
+  @media (orientation: portrait)
     height: 50vh
 
-  @media screen and (orientation: landscape)
+  @media (orientation: landscape)
     height: 98vh
 
-  @media screen and (min-width: $breakpoint-sm) and (orientation: portrait)
+  @media (min-width: $breakpoint-sm) and (orientation: portrait)
     height: 60vh
 
-  @media screen and (min-width: $breakpoint-sm) and (orientation: landscape)
+  @media (min-width: $breakpoint-sm) and (orientation: landscape)
     height: 98vh
 
-  @media screen and (min-width: $breakpoint-md)
+  @media (min-width: $breakpoint-md)
     height: 40vh
 
-  @media screen and (min-width: $breakpoint-sm) and (orientation: landscape)
+  @media (min-width: $breakpoint-sm) and (orientation: landscape)
     height: 40vh
 
 .private-img

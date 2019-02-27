@@ -202,7 +202,7 @@ h1
     margin-right: .5rem
     margin-bottom: 1rem
 
-    @media screen and (max-width: $breakpoint-md)
+    @media (max-width: $breakpoint-md)
       width: 100%
       margin-right: 0
 

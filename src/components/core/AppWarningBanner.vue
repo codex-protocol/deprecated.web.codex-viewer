@@ -46,7 +46,7 @@ export default {
   text-align: center
   background-color: $color-warning
 
-  @media screen and (min-width: $breakpoint-sm)
+  @media (min-width: $breakpoint-sm)
     padding: 1.5rem
     font-size: 1rem
 

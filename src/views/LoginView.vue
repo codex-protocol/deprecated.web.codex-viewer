@@ -689,7 +689,7 @@ export default {
       width: 100%
       margin-bottom: 1rem
 
-    @media screen and (min-width: $breakpoint-xl)
+    @media (min-width: $breakpoint-xl)
       flex-direction: row
 
       >input
@@ -734,7 +734,7 @@ export default {
       display: inline-block
       min-width: 0 // see: https://stackoverflow.com/a/33811151/1696150
 
-      @media screen and (min-width: $breakpoint-sm)
+      @media (min-width: $breakpoint-sm)
         width: 3rem
         height: @width
 

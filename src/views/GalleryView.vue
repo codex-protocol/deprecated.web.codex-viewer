@@ -252,7 +252,7 @@ export default {
   height: 100%
   padding: 1rem
 
-  @media screen and (min-width: $breakpoint-md)
+  @media (min-width: $breakpoint-md)
     width: 50%
     height: 50vh
     max-width: 50%
@@ -268,7 +268,7 @@ export default {
 .pagination-actions
   display: none
 
-  @media screen and (min-width: $breakpoint-sm)
+  @media (min-width: $breakpoint-sm)
     display: flex
     margin-top: 4rem
     justify-content: flex-end
@@ -280,14 +280,14 @@ export default {
 .record-list
   display: none
 
-  @media screen and (min-width: $breakpoint-md)
+  @media (min-width: $breakpoint-md)
     display: flex
     flex-wrap: wrap
 
 .pagination-controls
   display: none
 
-  @media screen and (min-width: $breakpoint-md)
+  @media (min-width: $breakpoint-md)
     display: flex
     margin: 2rem 0
     justify-content: center

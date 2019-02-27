@@ -152,7 +152,7 @@ export default {
 @import "../assets/variables.styl"
 
 .sorting-options
-  @media screen and (min-width: $breakpoint-sm)
+  @media (min-width: $breakpoint-sm)
     width: 10rem
 
 .record-list

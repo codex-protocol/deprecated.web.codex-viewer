@@ -210,7 +210,7 @@ export default {
     background-position: .5rem center
     background-image: url(../assets/icons/search.svg)
 
-    @media screen and (min-width: $breakpoint-sm)
+    @media (min-width: $breakpoint-sm)
       width: 0rem
       padding-left: 2rem
       transition: width ease .25s .25s
