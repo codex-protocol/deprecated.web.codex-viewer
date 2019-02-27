@@ -102,7 +102,7 @@ export default {
     }
   },
 
-  created() {
+  mounted() {
     // This will try to pull one of the cached records, otherwise it will fetch it from the API
     this.$store.dispatch('records/FETCH_RECORD', this.recordId)
   },

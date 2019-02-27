@@ -669,6 +669,7 @@ export default {
 .form-container
   padding: 2rem
   position: relative
+  backdrop-filter: blur(4px)
   background-color: rgba($color-dark, .8)
   box-shadow: 0 0 .5rem rgba($color-dark, .2)
 

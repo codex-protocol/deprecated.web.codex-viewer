@@ -227,6 +227,7 @@ export default {
   overflow-y: auto
   position: absolute
   overflow-x: hidden
+  backdrop-filter: blur(4px)
   background-color: rgba($color-dark, .95)
   box-shadow: 0 0 1rem rgba($color-dark, .6)
   border: 1px solid rgba($color-primary, .1)
