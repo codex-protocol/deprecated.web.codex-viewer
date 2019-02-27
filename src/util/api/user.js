@@ -12,8 +12,18 @@ export default {
 
   getAuthTokenFromSignedData: (data) => {
     const requestOptions = {
+      url: '/login/savvy',
       method: 'post',
-      url: '/auth-token',
+      data,
+    }
+
+    return callApi(requestOptions)
+  },
+
+  getAuthTokenFromEmailAndPassword: (data) => {
+    const requestOptions = {
+      url: '/login/local',
+      method: 'post',
       data,
     }
 

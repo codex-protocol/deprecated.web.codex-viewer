@@ -3,6 +3,16 @@
     <section>
       <h4>Details</h4>
       <div class="details-table">
+        <div>
+          <span>Privacy Setting</span>
+          <span>
+            {{ codexRecord.isPrivate ? 'Private' : 'Public' }}
+            <!--
+            <img class="privacy-icon" src="../assets/icons/lock.svg" v-if="codexRecord.isPrivate" />
+            <img class="privacy-icon" src="../assets/icons/lock-open.svg" v-if="!codexRecord.isPrivate" />
+            -->
+          </span>
+        </div>
         <div v-if="codexRecord.metadata">
           <span>Creator</span>
           <span><DisplayName :name="codexRecord.metadata.creatorAddress" /></span>
@@ -17,11 +27,11 @@
         </div>
         <div>
           <span>Created</span>
-          <span>{{ formatDate(codexRecord.createdAt) }}</span>
+          <span>{{ codexRecord.createdAt | formatDate }}</span>
         </div>
         <div>
           <span>Last Updated</span>
-          <span>{{ formatDate(codexRecord.updatedAt) }}</span>
+          <span>{{ codexRecord.updatedAt | formatDate }}</span>
         </div>
       </div>
     </section>
@@ -85,26 +95,17 @@
 
 import DisplayName from './util/DisplayName'
 import ValidHashBadge from './badges/valid-hash'
-import { formatDate } from '../util/dateHelpers'
 
 export default {
-
   props: {
     codexRecord: {
       type: Object,
       required: true,
     },
   },
-
   components: {
     DisplayName,
     ValidHashBadge,
-  },
-
-  methods: {
-    formatDate(date) {
-      return formatDate(date)
-    },
   },
 }
 </script>
@@ -118,36 +119,11 @@ section
     margin-top: 2rem
 
 .details-table
-  display: flex
   font-size: small
-  flex-direction: column
-  border: 1px solid rgba($color-primary, .1)
 
-  >div
-    width: 100%
-    display: flex
-
-    &+div
-      border-top: 1px solid rgba($color-primary, .1)
-
-    >span
-      padding: .5rem
-      overflow-wrap: break-word
-
-      &:nth-of-type(1)
-        width: 33%
-        background-color: rgba($color-primary, .05)
-
-      &:nth-of-type(2)
-        flex-grow: 1
-        width: 67%
-
-  .file-hash
-    width: 100%
-    display: inline-block
-    overflow-wrap: break-word
-
-    &+.file-hash
-      margin-top: .5rem
+.privacy-icon
+  width: 1em
+  height: 1em
+  vertical-align: text-bottom
 
 </style>

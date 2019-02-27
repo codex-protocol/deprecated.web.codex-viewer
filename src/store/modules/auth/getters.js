@@ -1,6 +1,6 @@
 export default {
   isAuthenticated: (state) => {
-    return !!state.user
+    return !!state.authToken && !!state.user
   },
 
   isAdmin: (state) => {

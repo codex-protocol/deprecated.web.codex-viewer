@@ -6,6 +6,56 @@ import User from '../../../util/api/user'
 const logger = debug('app:store:auth:actions')
 
 export default {
+
+  SET_AUTH_TOKEN_AND_CLEAR_QUERY_PARAMS({ commit, dispatch }, authToken) {
+    logger('SET_AUTH_TOKEN_AND_CLEAR_QUERY_PARAMS action being executed')
+
+    commit('SET_AUTH_STATE', authToken)
+    return dispatch('app/CLEAR_QUERY_PARAMS', null, { root: true })
+  },
+
+  LOGIN_FROM_EMAIL_AND_PASSWORD({ commit, dispatch }, { email, password, pendingUserCode }) {
+    logger('LOGIN_FROM_EMAIL_AND_PASSWORD action being executed')
+
+    return User.getAuthTokenFromEmailAndPassword({ email, password, pendingUserCode })
+      .then((response) => {
+
+        const { user, authToken } = response
+
+        if (!user) {
+          throw new Error('Invalid email and/or password specified.')
+        }
+
+        if (user.type !== 'savvy' && !user.isEmailConfirmed) {
+          commit('app/SET_EMAIL_ADDRESS_TO_CONFIRM', user.email, { root: true })
+          router.push({ name: 'confirm-email' })
+          return null
+        }
+
+        // this shouldn't really ever happen, but we'll add a check for it
+        //  here just to be safe...
+        if (!authToken) {
+          throw new Error('Invalid email and/or password specified.')
+        }
+
+        return dispatch('SET_AUTH_TOKEN_AND_CLEAR_QUERY_PARAMS', authToken)
+          .then(() => {
+            commit('SET_USER', { user })
+
+            return dispatch('web3/REGISTER_INFURA_PROVIDER', null, { root: true })
+              .then(() => {
+                return dispatch('UPDATE_CONTRACT_STATE')
+              })
+          })
+
+      })
+      .catch((error) => {
+        dispatch('LOGOUT_USER')
+        throw error
+      })
+
+  },
+
   // Called from App.vue, ONLY IF there's an authToken in the query string or in local storage.
   //  This be either simple or savvy users--we find out which once we retrieve the user object
   //  from the API. If it's a simple user, we register Web3 using Infura. If it's a savvy user
@@ -63,22 +113,24 @@ export default {
           signedData,
         })
           .then((response) => {
-            commit('SET_AUTH_STATE', response.token)
+            return dispatch('SET_AUTH_TOKEN_AND_CLEAR_QUERY_PARAMS', response.authToken)
+              .then(() => {
+                commit('SET_USER', {
+                  user: response.user,
+                })
 
-            commit('SET_USER', {
-              user: response.user,
-            })
+                commit('web3/SET_IS_POLLING', {
+                  isPolling: true,
+                }, {
+                  root: true,
+                })
 
-            commit('web3/SET_IS_POLLING', {
-              isPolling: true,
-            }, {
-              root: true,
-            })
+                // No need to block on the promise resolution of polling
+                dispatch('web3/POLL_WEB3', null, { root: true })
 
-            // No need to block on the promise resolution of polling
-            dispatch('web3/POLL_WEB3', null, { root: true })
+                return dispatch('UPDATE_CONTRACT_STATE')
+              })
 
-            return dispatch('UPDATE_CONTRACT_STATE')
           })
       })
       .catch((error) => {
@@ -234,18 +286,22 @@ export default {
   // This is currently used for handling some Metamask state changes
   //  Changing the route this navigates to will require updating how we handle
   //  the state changes.
-  LOGOUT_USER({ commit }) {
+  LOGOUT_USER({ commit, dispatch }) {
     logger('LOGOUT_USER action being executed')
 
     commit('auth/RESET_STATE', null, { root: true })
     commit('records/RESET_STATE', null, { root: true })
 
-    // if this is an unauthenticated route, clear their auth token (i.e. log
-    //  the user out), but do not redirect them to the login page
-    if (router.currentRoute.meta && router.currentRoute.meta.allowUnauthenticatedUsers) {
-      return
-    }
+    return dispatch('app/CLEAR_QUERY_PARAMS', null, { root: true })
+      .then(() => {
+        // if this is an unauthenticated route, clear their auth token (i.e. log
+        //  the user out), but do not redirect them to the login page
+        if (router.currentRoute.meta && router.currentRoute.meta.allowUnauthenticatedUsers) {
+          return
+        }
 
-    router.replace('/')
+        router.replace('/')
+      })
+
   },
 }

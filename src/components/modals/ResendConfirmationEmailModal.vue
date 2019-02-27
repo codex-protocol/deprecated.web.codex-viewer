@@ -2,24 +2,28 @@
   <b-modal
     ok-title="Send"
     @hidden="reset"
+    @shown="focusModal"
     v-model="modalVisible"
     cancel-variant="outline-primary"
     id="resendConfirmationEmailModal"
     title="Resend Confirmation Email"
     @ok="resendConfirmationEmail(emailAddress)"
   >
-    <b-form-group
-      label-size="sm"
-      label-for="emailAddress"
-      label="Email Address"
-    >
-      <b-form-input
-        required
-        class="mb-4"
-        id="emailAddress"
-        v-model="emailAddress"
-      />
-    </b-form-group>
+    <b-form @submit.prevent="resendConfirmationEmail(emailAddress)">
+      <b-form-group
+        label-size="sm"
+        label="Email Address"
+        label-for="emailAddress"
+      >
+        <b-form-input
+          required
+          class="mb-4"
+          id="emailAddress"
+          v-model="emailAddress"
+          ref="defaultModalFocus"
+        />
+      </b-form-group>
+    </b-form>
   </b-modal>
 </template>
 
@@ -67,6 +71,12 @@ export default {
           logger('Could not resend confirmation email:', error)
           EventBus.$emit('toast:error', 'Could not resend confirmation email.')
         })
+    },
+
+    focusModal() {
+      if (this.$refs.defaultModalFocus) {
+        this.$refs.defaultModalFocus.focus()
+      }
     },
   },
 }
