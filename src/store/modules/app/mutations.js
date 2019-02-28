@@ -76,6 +76,11 @@ export default {
     currentState.galleries = galleries
   },
 
+  SET_AUCTION_HOUSES(currentState, auctionHouses = []) {
+    logMutation('SET_GALLERIES', auctionHouses)
+    currentState.auctionHouses = auctionHouses
+  },
+
   SET_EVENT_EMAILS(currentState, eventEmails = []) {
     logMutation('SET_EVENT_EMAILS', eventEmails)
     currentState.eventEmails = eventEmails

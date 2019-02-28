@@ -1,0 +1,625 @@
+<template>
+  <div v-if="auctionHouse">
+    <header>
+      <CarouselBackground :urls="headerBackgroundImageUrls" />
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12 col-lg-6">
+            <div class="info">
+              <div class="info-row title">
+                <img :src="auctionHouse.iconUrl">
+                <h2>{{ auctionHouse.name }}</h2>
+              </div>
+              <div class="info-row description">
+                <p>{{ auctionHouse.description }}</p>
+              </div>
+              <div class="info-row social-links">
+                <a
+                  :key="name"
+                  :href="link"
+                  v-if="!!link"
+                  v-for="(link, name) in orderedSocialLinks"
+                >
+                  {{ name | titleCase }}
+                </a>
+              </div>
+            </div>
+          </div>
+          <!-- <div class="action-buttons col-12 col-lg-6">
+            <b-button variant="primary" @click="viewAsSlideshow">
+              <img src="../assets/icons/slideshow.svg"> View as Slideshow
+            </b-button>
+            <b-button variant="outline-primary" @click="copyShareLink" ref="copy-share-link-button">
+              Copy Share Link
+            </b-button>
+          </div> -->
+        </div>
+      </div>
+    </header>
+
+    <section class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+
+          <div class="pagination-actions" v-if="records.length !== 0">
+
+            <b-form class="filter-options-form flex-column-to-row">
+
+              <b-button
+                size="sm"
+                tabindex="1"
+                @click="toggleFilterOptionsVisibility()"
+                :class="{ 'active': areFilterOptionsVisible }"
+                class="toggle-filter-options-button glass-button"
+              >
+                <img src="../assets/icons/filter.svg">{{ areFilterOptionsVisible ? 'Hide' : 'Show' }} Filters
+              </b-button>
+
+              <div
+                class="filter-options flex-column-to-row"
+                :class="{ 'is-visible': areFilterOptionsVisible }"
+              >
+                <div
+                  :key="index"
+                  class="filter-option"
+                  v-for="(filterOption, index) in filterOptions"
+                >
+                  <b-button
+                    size="sm"
+                    :tabindex="index + 2"
+                    suppress-top-level-click
+                    class="filter-option-button glass-button"
+                    :class="{ 'active': filterOption.isDropdownVisible }"
+                    @click="toggleFilterDropdownVisibility(filterOption)"
+                  >
+                    {{ filterOption.name | titleCase }} ({{ filterOption.selectedValues.length }} / {{ filterOption.values.length }})<img src="../assets/icons/arrow-right.svg">
+                  </b-button>
+                  <div
+                    suppress-top-level-click
+                    class="filter-option-dropdown"
+                    :class="{ 'is-visible': filterOption.isDropdownVisible }"
+                  >
+                    <b-form-checkbox-group
+                      stacked
+                      size="sm"
+                      :key="filterOption.name"
+                      :options="filterOption.values"
+                      v-model="filterOption.selectedValues"
+                    />
+                  </div>
+                </div>
+
+                <b-button
+                  size="sm"
+                  variant="primary"
+                  class="apply-filters-button"
+                  @click="applyFiltersAndSorting"
+                  :tabindex="filterOptions.length + 1"
+                >
+                  Apply
+                </b-button>
+              </div>
+
+            </b-form>
+
+            <div class="spacer"></div>
+
+            <div class="flex-column-to-row">
+              <RecordSearch
+                type="auction-house"
+                :auctionHouse="auctionHouse"
+              />
+
+              <b-form class="sorting-options">
+                <b-form-select
+                  :options="sortingOptions"
+                  @input="applyFiltersAndSorting"
+                  v-model="selectedSortingOption"
+                />
+              </b-form>
+            </div>
+          </div>
+
+          <b-card-group deck class="record-list">
+            <RecordListItem
+              :key="record.tokenId"
+              :codex-record="record"
+              v-for="record in records"
+            />
+          </b-card-group>
+
+          <div class="pagination-controls" v-if="totalCount > pageSize">
+            <b-button
+              size="sm"
+              class="load-more"
+              @click="loadMore()"
+              variant="outline-primary"
+              :disabled="isLoading || records.length >= totalCount"
+            >
+              Load More
+              <LoadingIcon v-show="isLoading" size="small" />
+            </b-button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</template>
+
+<script>
+
+import is from 'is_js'
+
+import EventBus from '../util/eventBus'
+import AuctionHouse from '../util/api/auction-house'
+import copyToClipboard from '../util/copyToClipboard'
+
+import RecordSearch from '../components/RecordSearch'
+import LoadingIcon from '../components/util/LoadingIcon'
+import RecordListItem from '../components/RecordListItem'
+import CarouselBackground from '../components/CarouselBackground'
+
+export default {
+
+  components: {
+    LoadingIcon,
+    RecordSearch,
+    RecordListItem,
+    CarouselBackground,
+  },
+
+  data() {
+    return {
+      records: [],
+      totalCount: 0,
+      isLoading: false,
+      auctionHouse: null,
+      isMobile: is.mobile(),
+      headerBackgroundImageUrls: [],
+
+      filterOptions: [],
+      areFilterOptionsVisible: false,
+
+      pageNumber: 0,
+      pageSize: is.mobile() ? 4 : 16,
+      selectedSortingOption: '-createdAt',
+      sortingOptions: [
+        { value: 'createdAt', text: 'Oldest First' },
+        { value: '-createdAt', text: 'Newest First' },
+        { value: 'metadata.name', text: 'Name (A-Z)' },
+        { value: '-metadata.name', text: 'Name (Z-A)' },
+      ],
+    }
+  },
+
+  computed: {
+    auctionHouseShareCode() {
+      return this.$route.params.auctionHouseShareCode
+    },
+
+    // make sure "website" is always listed first in the social links
+    orderedSocialLinks() {
+
+      const orderedSocialLinks = {}
+
+      Object.keys(this.auctionHouse.socialLinks)
+        .sort((key) => {
+          if (key === 'website') {
+            return -1
+          }
+          return 0
+        })
+        .forEach((key) => {
+          orderedSocialLinks[key] = this.auctionHouse.socialLinks[key]
+        })
+
+      return orderedSocialLinks
+
+    },
+
+    filters() {
+      const filters = {}
+      this.filterOptions.forEach((filterOption) => {
+        filters[filterOption.name] = filterOption.selectedValues
+      })
+      return filters
+    },
+  },
+
+  created() {
+    // @TODO: Add caching for individual auction houses?
+    this.getAuctionHouse()
+  },
+
+  mounted() {
+    EventBus.$on('app:top-level-click', this.hideAllFilterDropdowns)
+  },
+
+  beforeDestroy() {
+    EventBus.$off('app:top-level-click', this.hideAllFilterDropdowns)
+  },
+
+  methods: {
+
+    copyShareLink() {
+      copyToClipboard(window.location.href, 'Share link copied to clipboard!')
+      this.$refs['copy-share-link-button'].focus()
+    },
+
+    viewAsSlideshow() {
+      // @TODO: do this
+    },
+
+    viewRecord(tokenId) {
+      this.$router.push({
+        name: 'record-detail',
+        params: {
+          recordId: tokenId,
+        },
+      })
+    },
+
+    getAuctionHouse() {
+
+      this.isLoading = true
+
+      AuctionHouse.getAuctionHouse(this.auctionHouseShareCode)
+        .then(({ auctionHouse, filterOptions }) => {
+          this.auctionHouse = auctionHouse
+          this.filterOptions = filterOptions
+
+          this.filterOptions.forEach((filterOption) => {
+            this.$set(filterOption, 'selectedValues', [])
+            this.$set(filterOption, 'isDropdownVisible', false)
+          })
+
+          return this.getRecords()
+        })
+        .catch((error) => {
+          EventBus.$emit('toast:error', `Could not get auction house: ${error.message}`)
+          this.$router.replace({ name: 'auction-houses' })
+        })
+        .finally(() => {
+          this.isLoading = false
+        })
+    },
+
+    getRecords() {
+
+      this.pageNumber = 0
+      this.isLoading = true
+
+      const limit = this.pageSize
+      const offset = limit * this.pageNumber
+      const order = this.selectedSortingOption
+
+      return AuctionHouse.getAuctionHouseRecords(this.auctionHouse.shareCode, { limit, offset, order, filters: this.filters })
+        .then(({ totalCount, records }) => {
+
+          // @TODO: instead of throwing an error, this needs to gracefully exit
+          //  and show a "no records matching filters found" here
+          if (!records || records.length === 0) {
+            throw new Error(`${this.auctionHouse.name} has no Codex Records to show.`)
+          }
+
+          this.records = records
+          this.totalCount = totalCount
+
+          // only populate headerBackgroundImageUrls once, so the header doesn't
+          //  reload with filter & sorting changes (that's why this isn't a
+          //  computed property)
+          if (this.headerBackgroundImageUrls.length === 0) {
+            const headerBackgroundImageUrls = Array.from(this.records)
+              // this shouldn't be necessary...
+              // .filter((record) => {
+              //   return record && record.metadata && record.metadata.mainImage
+              // })
+              .sort(() => {
+                return Math.random() > 0.5 ? 1 : -1
+              })
+              .slice(0, 10)
+              .map((record) => {
+                return record.metadata.mainImage.uri
+              })
+
+            this.headerBackgroundImageUrls.push(...headerBackgroundImageUrls)
+          }
+
+        })
+        .catch((error) => {
+          EventBus.$emit('toast:error', `Could not get auction house records: ${error.message}`)
+          this.$router.replace({ name: 'auction-houses' })
+        })
+        .finally(() => {
+          this.isLoading = false
+        })
+
+    },
+
+    loadMore() {
+
+      this.pageNumber += 1
+      this.isLoading = true
+
+      const limit = this.pageSize
+      const offset = limit * this.pageNumber
+      const order = this.selectedSortingOption
+
+      return AuctionHouse.getAuctionHouseRecords(this.auctionHouse.shareCode, { limit, offset, order, filters: this.filters })
+        .then(({ totalCount, records }) => {
+
+          const newRecords = records.filter((record) => {
+            // Filter out any records that don't have metadata attached to them.
+            //  These are records that were created by other providers.
+            return record.metadata && !this.records.find((existingRecord) => {
+              return existingRecord.tokenId === record.tokenId
+            })
+          })
+
+          this.records.push(...newRecords)
+          this.totalCount = totalCount
+
+        })
+        .finally(() => {
+          this.isLoading = false
+        })
+    },
+
+    hideAllFilterDropdowns() {
+      this.filterOptions.forEach((filterOption) => {
+        // eslint-disable-next-line no-param-reassign
+        filterOption.isDropdownVisible = false
+      })
+    },
+
+    toggleFilterDropdownVisibility(filterOption) {
+
+      // hide any open filter dropdowns if we're about to show one
+      if (!filterOption.isDropdownVisible) {
+        this.hideAllFilterDropdowns()
+      }
+
+      // eslint-disable-next-line no-param-reassign
+      filterOption.isDropdownVisible = !filterOption.isDropdownVisible
+
+    },
+
+    toggleFilterOptionsVisibility() {
+      this.areFilterOptionsVisible = !this.areFilterOptionsVisible
+    },
+
+    applyFiltersAndSorting() {
+      return this.getRecords()
+    },
+  },
+}
+</script>
+
+<style lang="stylus" scoped>
+
+@import "../assets/variables.styl"
+
+header
+  padding-top: 5rem
+  position: relative
+  padding-bottom: 2.5rem
+
+  @media (min-width: $breakpoint-sm)
+    padding-bottom: 5rem
+
+  .action-buttons
+    width: 100%
+    margin-top: 1rem
+
+    @media (min-width: $breakpoint-lg)
+      margin-top: 0
+
+    @media (min-width: $breakpoint-sm)
+      display: flex
+      align-items: flex-end
+      flex-direction: column
+
+    button
+      width: 100%
+
+      &+button
+        margin-top: 1rem
+
+      img
+        vertical-align: bottom
+
+      @media (min-width: $breakpoint-sm)
+        width: auto
+
+  .info
+    padding: 2rem
+    backdrop-filter: blur(4px)
+    background-color: rgba($color-dark, .9)
+    box-shadow: 0 0 1rem rgba($color-dark, .2)
+
+    .info-row
+      width: 100%
+      display: flex
+      align-items: center
+      flex-direction: column
+
+      @media (min-width: $breakpoint-sm)
+        flex-direction: row
+
+      &+.info-row
+        margin-top: 1rem
+
+    .title
+      img
+        width: 5rem
+        height: @width
+        min-width: @width
+        min-height: @height
+
+        border-radius: 50%
+        margin-bottom: 1rem
+
+        @media (min-width: $breakpoint-sm)
+          margin-bottom: 0
+          margin-right: 1rem
+          align-self: flex-start
+
+      h2
+        margin: 0
+        font-weight: 700
+        font-size: 1.5rem
+        text-align: center
+
+        @media (min-width: $breakpoint-sm)
+          text-align: left
+
+    .social-links
+      flex-wrap: wrap
+      flex-direction: row
+      justify-content: space-around
+
+      a
+        padding: 0 .5rem
+        font-size: small
+
+        @media (min-width: $breakpoint-sm)
+          font-size: normal
+
+    .description
+      font-size: small
+
+      @media (min-width: $breakpoint-sm)
+        font-size: normal
+
+.flex-column-to-row
+  width: 100%
+  display: flex
+  flex-direction: column
+
+  @media (min-width: $breakpoint-sm)
+    width: auto
+    flex-direction: row
+
+.pagination-actions
+  display: flex
+  margin-top: 4rem
+  justify-content: flex-end
+  flex-direction: column-reverse
+
+  @media (min-width: $breakpoint-sm)
+    flex-direction: row
+
+  .spacer
+    min-width: 1rem
+    min-height: 1rem
+
+  .filter-options-form
+    align-items: flex-start
+
+    button
+      width: 100%
+      line-height: 1rem
+
+      @media (min-width: $breakpoint-sm)
+        width: auto
+
+      &:not(.apply-filters-button)
+        padding: .25rem .5rem
+
+        &.toggle-filter-options-button
+          img
+            margin-right: .25rem
+
+      &:not(.toggle-filter-options-button)
+        margin-left: 0
+        margin-top: .5rem
+
+        @media (min-width: $breakpoint-sm)
+          margin-top: 0
+          margin-left: .5rem
+
+    .filter-options
+      display: none
+      flex-wrap: wrap
+
+      &.is-visible
+        display: flex
+
+    .filter-option
+      width: 100%
+      position: relative
+
+      @media (min-width: $breakpoint-sm)
+        width: auto
+
+      .filter-option-button
+        padding-right: 0
+
+        img
+          transition: transform ease .25s
+
+        &.active
+          img
+            transform: rotateZ(90deg)
+
+      .filter-option-dropdown
+        height: 0
+        opacity: 0
+        width: 20rem
+        padding: .5rem
+        overflow-x: scroll
+        color: $color-light
+        backdrop-filter: blur(4px)
+        text-transform: capitalize
+        background-color: rgba($color-dark, .95)
+        box-shadow: 0 0 1rem rgba($color-dark, .6)
+        border: 1px solid rgba($color-primary, .1)
+        transition: opacity ease .25s, height ease .25s
+
+        left: 0
+        top: 100%
+        z-index: 1
+        position: absolute
+
+        &.is-visible
+          opacity: 1
+          height: 10.5rem // the extra .5 rem makes it obvious there's more in the list if it has to scroll
+
+  .sorting-options
+    width: 100%
+    margin-left: 0
+    margin-top: .5rem
+
+    @media (min-width: $breakpoint-sm)
+      width: 10rem
+      margin-top: 0
+      margin-left: .5rem
+
+.record-list
+  display: flex
+  flex-wrap: wrap
+
+.pagination-controls
+  display: flex
+  margin: 2rem 0
+  justify-content: center
+
+</style>
+
+<style lang="stylus">
+
+.filter-option-dropdown
+  .custom-checkbox
+    height: auto
+
+  .custom-controls-stacked
+    padding: 0
+    height: auto
+
+  label
+    width: 100%
+
+    &:hover
+      cursor: pointer
+
+</style>

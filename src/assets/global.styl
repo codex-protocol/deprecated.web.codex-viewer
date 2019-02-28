@@ -145,3 +145,30 @@
 
     &+.file-hash
       margin-top: .5rem
+
+.glass-button
+  font-weight: normal
+  color: rgba($color-light, .75)
+  background-color: rgba(white, .1)
+  border-color: rgba($color-primary, .1)
+
+  img
+    vertical-align: middle
+
+  &:not(.disabled):not(:disabled)
+    &:focus
+    &:hover
+    &:active
+    &.active
+      color: rgba($color-light, 1)
+      background-color: rgba(white, .15)
+      border-color: rgba($color-primary, .2)
+
+    &:active
+    &.active
+      background-color: rgba(white, .2)
+
+    &:focus
+    &.active:focus
+    &:active:focus
+      box-shadow: 0 0 0 0.1rem rgba($color-primary, 0.25)
