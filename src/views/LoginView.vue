@@ -598,8 +598,6 @@ export default {
 
     afterSuccessfulLogin(destination = this.loginQueryParams.destination) {
 
-      console.log('destination', destination)
-
       // start fetching app & user data that is dependent on authentication
       //  (no need to block on these async actions)
       this.$store.dispatch('records/FETCH_USER_DATA')
