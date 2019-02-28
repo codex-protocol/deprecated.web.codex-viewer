@@ -50,6 +50,7 @@
 
 import Record from '../util/api/record'
 import Gallery from '../util/api/gallery'
+import AuctionHouse from '../util/api/auction-house'
 import LoadingOverlay from '../components/util/LoadingOverlay'
 
 export default {
@@ -59,10 +60,14 @@ export default {
       type: String,
       required: true,
       validator: (value) => {
-        return value === 'user' || value === 'gallery'
+        return value === 'user' || value === 'gallery' || value === 'auction-house'
       },
     },
     gallery: {
+      type: Object,
+      default: null,
+    },
+    auctionHouse: {
       type: Object,
       default: null,
     },
@@ -178,9 +183,14 @@ export default {
     searchRecords(query) {
       this.isLoading = true
 
-      const promise = this.type === 'user'
-        ? Record.searchUserRecords({ query })
-        : Gallery.searchGalleryRecords(this.gallery.shareCode, { query })
+      const promise = (() => {
+        switch (this.type) {
+          case 'user': return Record.searchUserRecords({ query })
+          case 'gallery': return Gallery.searchGalleryRecords(this.gallery.shareCode, { query })
+          case 'auction-house': return AuctionHouse.searchAuctionHouseRecords(this.auctionHouse.shareCode, { query })
+          default: return Promise.resolve([])
+        }
+      })()
 
       return promise
         .then((records) => {

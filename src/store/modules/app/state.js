@@ -11,6 +11,7 @@ export default () => {
     postLoginDestination: null,
     giveaway: null,
     galleries: [],
+    auctionHouses: [],
     eventEmails: [],
     codxCosts: null,
     codxPackages: null,
