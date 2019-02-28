@@ -1,7 +1,11 @@
 <template>
-  <div class="carousel-background" :class="{ 'is-loading': isLoading, 'running': isRunning }">
-    <div class="images">
-      <img :src="url" :key="index" v-for="(url, index) in urls">
+  <div
+     ref="container"
+    class="carousel-background"
+    :class="{ 'is-loading': isLoading, 'running': isRunning && !isLoading }"
+  >
+    <div class="images" ref="images">
+      <img @load="imageLoaded(index)" :src="url" :key="index" v-for="(url, index) in urls">
     </div>
   </div>
 </template>
@@ -19,35 +23,28 @@ export default {
 
   data() {
     return {
-      isRunning: true,
-      isLoading: false,
+      numLoaded: 0,
+      isLoading: true,
+      isRunning: false,
     }
   },
 
-  created() {
+  methods: {
+    imageLoaded(index) {
 
-    this.isLoading = true
+      this.numLoaded += 1
 
-    const promises = this.urls.map((url) => {
-
-      const image = new Image()
-
-      const promise = new Promise((resolve, reject) => {
-        image.addEventListener('error', reject)
-        image.addEventListener('load', resolve)
-      })
-
-      image.src = url
-
-      return promise
-
-    })
-
-    Promise
-      .all(promises)
-      .finally(() => {
+      if (this.numLoaded >= this.urls.length) {
         this.isLoading = false
-      })
+        if (this.$refs.images.offsetWidth > this.$refs.container.offsetWidth) {
+          this.isRunning = true
+
+          // adjust the animationDuration by some factor of the screen size and
+          //  number of images... ¯\_(⊙︿⊙)_/¯
+          this.$refs.images.style.animationDuration = `${this.urls.length * (20 - Math.floor(this.$refs.container.offsetWidth / 200))}s`
+        }
+      }
+    },
   },
 }
 
@@ -63,7 +60,13 @@ export default {
     transform: translateX(0%)
 
   50%
-    transform: s("translateX(calc(-100% + 100vw - %s))", $side-nav-width)
+    transform: translateX(calc(-100% + 100vw))
+
+    // this breaks on mobile since there's no sidebar, it's not that bad on
+    //  desktop to just ignore the sidebar width and have the last image get
+    //  cutoff a bit
+    //
+    // transform: s("translateX(calc(-100% + 100vw - %s))", $side-nav-width)
 
   100%
     transform: translateX(0%)
@@ -98,6 +101,7 @@ export default {
     min-width: 100%
     max-height: 100%
     position: absolute
+    text-align: center
     white-space: nowrap
     transition: opacity ease 1s
     animation: pan 60s ease-in-out 0s infinite paused
