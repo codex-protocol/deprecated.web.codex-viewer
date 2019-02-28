@@ -42,65 +42,15 @@
         <div class="col-12">
 
           <div class="pagination-actions" v-if="records.length !== 0">
-
-            <b-form class="filter-options-form flex-column-to-row">
-
-              <b-button
-                size="sm"
-                tabindex="1"
-                @click="toggleFilterOptionsVisibility()"
-                :class="{ 'active': areFilterOptionsVisible }"
-                class="toggle-filter-options-button glass-button"
-              >
-                <img src="../assets/icons/filter.svg">{{ areFilterOptionsVisible ? 'Hide' : 'Show' }} Filters
-              </b-button>
-
-              <div
-                class="filter-options flex-column-to-row"
-                :class="{ 'is-visible': areFilterOptionsVisible }"
-              >
-                <div
-                  :key="index"
-                  class="filter-option"
-                  v-for="(filterOption, index) in filterOptions"
-                >
-                  <b-button
-                    size="sm"
-                    :tabindex="index + 2"
-                    suppress-top-level-click
-                    class="filter-option-button glass-button"
-                    :class="{ 'active': filterOption.isDropdownVisible }"
-                    @click="toggleFilterDropdownVisibility(filterOption)"
-                  >
-                    {{ filterOption.name | titleCase }} ({{ filterOption.selectedValues.length }} / {{ filterOption.values.length }})<img src="../assets/icons/arrow-right.svg">
-                  </b-button>
-                  <div
-                    suppress-top-level-click
-                    class="filter-option-dropdown"
-                    :class="{ 'is-visible': filterOption.isDropdownVisible }"
-                  >
-                    <b-form-checkbox-group
-                      stacked
-                      size="sm"
-                      :key="filterOption.name"
-                      :options="filterOption.values"
-                      v-model="filterOption.selectedValues"
-                    />
-                  </div>
-                </div>
-
-                <b-button
-                  size="sm"
-                  variant="primary"
-                  class="apply-filters-button"
-                  @click="applyFiltersAndSorting"
-                  :tabindex="filterOptions.length + 1"
-                >
-                  Apply
-                </b-button>
-              </div>
-
-            </b-form>
+            <b-button
+              size="sm"
+              tabindex="1"
+              @click="toggleFilterOptionsVisibility()"
+              :class="{ 'active': areFilterOptionsVisible }"
+              class="toggle-filter-options-button glass-button"
+            >
+              <img src="../assets/icons/filter.svg">{{ areFilterOptionsVisible ? 'Hide' : 'Show' }} Filters
+            </b-button>
 
             <div class="spacer"></div>
 
@@ -118,6 +68,51 @@
                 />
               </b-form>
             </div>
+          </div>
+
+          <div
+            class="filter-options flex-column-to-row"
+            :class="{ 'is-visible': areFilterOptionsVisible }"
+          >
+            <div
+              :key="index"
+              class="filter-option"
+              v-for="(filterOption, index) in filterOptions"
+            >
+              <b-button
+                size="sm"
+                :tabindex="index + 2"
+                suppress-top-level-click
+                class="filter-option-button glass-button"
+                :class="{ 'active': filterOption.isDropdownVisible }"
+                @click="toggleFilterDropdownVisibility(filterOption)"
+              >
+                {{ filterOption.name | titleCase }} ({{ filterOption.selectedValues.length }} / {{ filterOption.values.length }})<img src="../assets/icons/arrow-right.svg">
+              </b-button>
+              <div
+                suppress-top-level-click
+                class="filter-option-dropdown"
+                :class="{ 'is-visible': filterOption.isDropdownVisible }"
+              >
+                <b-form-checkbox-group
+                  stacked
+                  size="sm"
+                  :key="filterOption.name"
+                  :options="filterOption.values"
+                  v-model="filterOption.selectedValues"
+                />
+              </div>
+            </div>
+
+            <b-button
+              size="sm"
+              variant="primary"
+              class="apply-filters-button"
+              @click="applyFiltersAndSorting"
+              :tabindex="filterOptions.length + 1"
+            >
+              Apply
+            </b-button>
           </div>
 
           <b-card-group deck class="record-list">
@@ -509,81 +504,15 @@ header
   @media (min-width: $breakpoint-sm)
     flex-direction: row
 
+  .toggle-filter-options-button
+    padding: .25rem .5rem
+
+    img
+      margin-right: .25rem
+
   .spacer
     min-width: 1rem
     min-height: 1rem
-
-  .filter-options-form
-    align-items: flex-start
-
-    button
-      width: 100%
-      line-height: 1rem
-
-      @media (min-width: $breakpoint-sm)
-        width: auto
-
-      &:not(.apply-filters-button)
-        padding: .25rem .5rem
-
-        &.toggle-filter-options-button
-          img
-            margin-right: .25rem
-
-      &:not(.toggle-filter-options-button)
-        margin-left: 0
-        margin-top: .5rem
-
-        @media (min-width: $breakpoint-sm)
-          margin-top: 0
-          margin-left: .5rem
-
-    .filter-options
-      display: none
-      flex-wrap: wrap
-
-      &.is-visible
-        display: flex
-
-    .filter-option
-      width: 100%
-      position: relative
-
-      @media (min-width: $breakpoint-sm)
-        width: auto
-
-      .filter-option-button
-        padding-right: 0
-
-        img
-          transition: transform ease .25s
-
-        &.active
-          img
-            transform: rotateZ(90deg)
-
-      .filter-option-dropdown
-        height: 0
-        opacity: 0
-        width: 20rem
-        padding: .5rem
-        overflow-x: scroll
-        color: $color-light
-        backdrop-filter: blur(4px)
-        text-transform: capitalize
-        background-color: rgba($color-dark, .95)
-        box-shadow: 0 0 1rem rgba($color-dark, .6)
-        border: 1px solid rgba($color-primary, .1)
-        transition: opacity ease .25s, height ease .25s
-
-        left: 0
-        top: 100%
-        z-index: 1
-        position: absolute
-
-        &.is-visible
-          opacity: 1
-          height: 10.5rem // the extra .5 rem makes it obvious there's more in the list if it has to scroll
 
   .sorting-options
     width: 100%
@@ -594,6 +523,66 @@ header
       width: 10rem
       margin-top: 0
       margin-left: .5rem
+
+.filter-options
+  display: none
+  flex-wrap: wrap
+
+  &.is-visible
+    display: flex
+
+  button
+    width: 100%
+    padding-top: .25rem
+    padding-bottom: .25rem
+
+    &.apply-filters-button
+      width: auto
+      margin-top: .5rem
+
+  .filter-option
+    width: 100%
+    margin-right: 0
+    margin-top: .5rem
+    position: relative
+
+    @media (min-width: $breakpoint-sm)
+      width: auto
+      margin-right: .5rem
+
+    .filter-option-button
+      padding-right: 0
+      padding-left: .5rem
+
+      img
+        transition: transform ease .25s
+
+      &.active
+        img
+          transform: rotateZ(90deg)
+
+    .filter-option-dropdown
+      height: 0
+      opacity: 0
+      width: 20rem
+      padding: .5rem
+      overflow-x: scroll
+      color: $color-light
+      backdrop-filter: blur(4px)
+      text-transform: capitalize
+      background-color: rgba($color-dark, .95)
+      box-shadow: 0 0 1rem rgba($color-dark, .6)
+      border: 1px solid rgba($color-primary, .1)
+      transition: opacity ease .25s, height ease .25s
+
+      left: 0
+      top: 100%
+      z-index: 1
+      position: absolute
+
+      &.is-visible
+        opacity: 1
+        height: 10.5rem // the extra .5 rem makes it obvious there's more in the list if it has to scroll
 
 .record-list
   display: flex
