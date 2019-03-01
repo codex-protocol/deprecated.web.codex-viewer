@@ -61,8 +61,8 @@
               :class="{ 'is-visible': areFilterOptionsVisible }"
             >
               <div
-                :key="index"
                 class="filter-option"
+                :key="filterOption.name"
                 v-for="(filterOption, index) in filterOptions"
                 v-if="filterOption.values && filterOption.values.length !== 0"
               >
@@ -73,7 +73,7 @@
                   :class="{ 'active': filterOption.isDropdownVisible }"
                   @click="toggleFilterDropdownVisibility(filterOption)"
                 >
-                  {{ filterOption.name | titleCase }} ({{ filterOption.selectedValues.length }} / {{ filterOption.values.length }})
+                  {{ filterOption.label }} ({{ getNumSelectedFilterValues(filterOption) }} / {{ filterOption.values.length }})
                   <span class="spacer"></span>
                   <img src="../assets/icons/arrow-right.svg">
                 </b-button>
@@ -81,12 +81,28 @@
                   class="filter-option-dropdown glass-pane"
                   :class="{ 'is-visible': filterOption.isDropdownVisible }"
                 >
-                  <b-form-checkbox-group
-                    stacked
-                    size="sm"
-                    :options="filterOption.values"
-                    v-model="filterOption.selectedValues"
-                  />
+                  <template v-if="filterOption.type === 'date'">
+                    <b-form-group
+                      :key="value.name"
+                      :label="value.label"
+                      v-for="(value) in filterOption.values"
+                    >
+                      <b-input
+                        size="sm"
+                        type="date"
+                        v-model="filterOption.selectedDateValues[value.name]"
+                      />
+                    </b-form-group>
+                  </template>
+                  <template v-else>
+                    <b-form-checkbox-group
+                      stacked
+                      size="sm"
+                      :options="filterOption.values"
+                      v-model="filterOption.selectedValues"
+                    />
+                  </template>
+
                 </div>
               </div>
 
@@ -246,14 +262,18 @@ export default {
     numSelectedFilters() {
       return this.filterOptions
         .reduce((accumulator, filterOption) => {
-          return accumulator + filterOption.selectedValues.length
+          return accumulator + this.getNumSelectedFilterValues(filterOption)
         }, 0)
     },
 
     filters() {
       const filters = {}
       this.filterOptions.forEach((filterOption) => {
-        filters[filterOption.name] = filterOption.selectedValues
+        if (filterOption.type === 'date') {
+          filters[filterOption.name] = filterOption.selectedDateValues
+        } else {
+          filters[filterOption.name] = filterOption.selectedValues
+        }
       })
       return filters
     },
@@ -303,6 +323,7 @@ export default {
 
           this.filterOptions.forEach((filterOption) => {
             this.$set(filterOption, 'selectedValues', [])
+            this.$set(filterOption, 'selectedDateValues', {})
             this.$set(filterOption, 'isDropdownVisible', false)
           })
 
@@ -335,7 +356,7 @@ export default {
           // this is likely because there are too many filters
           if (!records || records.length === 0) {
             this.records = []
-            return null
+            return
           }
 
           // only populate headerBackgroundImageUrls once, so the header doesn't
@@ -430,10 +451,20 @@ export default {
 
     resetFilters() {
       this.filterOptions.forEach((filterOption) => {
-        filterOption.selectedValues = []
+        filterOption.selectedValues = [] // eslint-disable-line no-param-reassign
+        filterOption.selectedDateValues = {} // eslint-disable-line no-param-reassign
       })
       this.applyFiltersAndSorting()
-    }
+    },
+
+    getNumSelectedFilterValues(filterOption) {
+      return filterOption.selectedValues.length + Object
+        .keys(filterOption.selectedDateValues)
+        .filter((key) => {
+          return !!filterOption.selectedDateValues[key]
+        })
+        .length
+    },
   },
 }
 </script>
