@@ -566,11 +566,12 @@ header
 
   left: 0
   top: 100%
-  z-index: 1
+  z-index: -1
   position: absolute
 
   &.is-visible
     opacity: 1
+    z-index: 1
 
   button
     width: 100%
