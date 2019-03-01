@@ -594,9 +594,11 @@ header
 
     .filter-option-button
       z-index: 2
-      display: flex
       padding-right: 0
       padding-left: .5rem
+
+      display: flex
+      align-items: center
 
       img
         transition: transform ease .25s
