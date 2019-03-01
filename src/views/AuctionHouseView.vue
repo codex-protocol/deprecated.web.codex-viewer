@@ -41,7 +41,7 @@
       <div class="row">
         <div class="col-12">
 
-          <div class="pagination-actions" v-if="records.length !== 0">
+          <div class="pagination-actions">
 
             <b-button
               size="sm"
@@ -128,13 +128,21 @@
             </div>
           </div>
 
-          <b-card-group deck class="record-list">
-            <RecordListItem
-              :key="record.tokenId"
-              :codex-record="record"
-              v-for="record in records"
-            />
-          </b-card-group>
+          <template v-if="records.length === 0">
+            <div class="no-results">
+              <p>No records found.</p>
+              <p v-if="numSelectedFilters !== 0">Perhaps you should <b-link @click="resetFilters()">reset all filters</b-link>?</p>
+            </div>
+          </template>
+          <template v-else>
+            <b-card-group deck class="record-list">
+              <RecordListItem
+                :key="record.tokenId"
+                :codex-record="record"
+                v-for="record in records"
+              />
+            </b-card-group>
+          </template>
 
           <div class="pagination-controls" v-if="totalCount > pageSize">
             <b-button
@@ -235,6 +243,13 @@ export default {
       )
     },
 
+    numSelectedFilters() {
+      return this.filterOptions
+        .reduce((accumulator, filterOption) => {
+          return accumulator + filterOption.selectedValues.length
+        }, 0)
+    },
+
     filters() {
       const filters = {}
       this.filterOptions.forEach((filterOption) => {
@@ -314,14 +329,14 @@ export default {
       return AuctionHouse.getAuctionHouseRecords(this.auctionHouse.shareCode, { limit, offset, order, filters: this.filters })
         .then(({ totalCount, records }) => {
 
-          // @TODO: instead of throwing an error, this needs to gracefully exit
-          //  and show a "no records matching filters found" here
-          if (!records || records.length === 0) {
-            throw new Error(`${this.auctionHouse.name} has no Codex Records to show.`)
-          }
-
-          this.records = records
+          this.records = records || []
           this.totalCount = totalCount
+
+          // this is likely because there are too many filters
+          if (!records || records.length === 0) {
+            this.records = []
+            return null
+          }
 
           // only populate headerBackgroundImageUrls once, so the header doesn't
           //  reload with filter & sorting changes (that's why this isn't a
@@ -633,6 +648,10 @@ header
         opacity: 1
         height: 10.5rem // the extra .5 rem makes it obvious there's more in the list if it has to scroll
         pointer-events: all
+
+.no-results
+  padding: 4rem 1rem
+  text-align: center
 
 .record-list
   display: flex
