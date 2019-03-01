@@ -5,7 +5,7 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-12 col-lg-6">
-            <div class="info">
+            <div class="info glass-pane">
               <div class="info-row title">
                 <img :src="auctionHouse.iconUrl">
                 <h2>{{ auctionHouse.name }}</h2>
@@ -42,15 +42,73 @@
         <div class="col-12">
 
           <div class="pagination-actions" v-if="records.length !== 0">
+
             <b-button
               size="sm"
               tabindex="1"
+              v-if="hasFilterOptions"
+              suppress-top-level-click
               @click="toggleFilterOptionsVisibility()"
               :class="{ 'active': areFilterOptionsVisible }"
               class="toggle-filter-options-button glass-button"
             >
               <img src="../assets/icons/filter.svg">{{ areFilterOptionsVisible ? 'Hide' : 'Show' }} Filters
             </b-button>
+
+            <div
+              suppress-top-level-click
+              class="filter-options glass-pane flex-column-to-row"
+              :class="{ 'is-visible': areFilterOptionsVisible }"
+            >
+              <div
+                :key="index"
+                class="filter-option"
+                v-for="(filterOption, index) in filterOptions"
+                v-if="filterOption.values && filterOption.values.length !== 0"
+              >
+                <b-button
+                  size="sm"
+                  :tabindex="index + 2"
+                  class="filter-option-button glass-button"
+                  :class="{ 'active': filterOption.isDropdownVisible }"
+                  @click="toggleFilterDropdownVisibility(filterOption)"
+                >
+                  {{ filterOption.name | titleCase }} ({{ filterOption.selectedValues.length }} / {{ filterOption.values.length }})
+                  <span class="spacer"></span>
+                  <img src="../assets/icons/arrow-right.svg">
+                </b-button>
+                <div
+                  class="filter-option-dropdown glass-pane"
+                  :class="{ 'is-visible': filterOption.isDropdownVisible }"
+                >
+                  <b-form-checkbox-group
+                    stacked
+                    size="sm"
+                    :options="filterOption.values"
+                    v-model="filterOption.selectedValues"
+                  />
+                </div>
+              </div>
+
+              <!-- <b-button
+                size="sm"
+                @click="resetFilters"
+                variant="outline-primary"
+                class="reset-filters-button"
+                :tabindex="filterOptions.length + 2"
+              >
+                Reset
+              </b-button> -->
+              <b-button
+                size="sm"
+                variant="primary"
+                class="apply-filters-button"
+                @click="applyFiltersAndSorting"
+                :tabindex="filterOptions.length + 1"
+              >
+                Apply
+              </b-button>
+            </div>
 
             <div class="spacer"></div>
 
@@ -68,51 +126,6 @@
                 />
               </b-form>
             </div>
-          </div>
-
-          <div
-            class="filter-options flex-column-to-row"
-            :class="{ 'is-visible': areFilterOptionsVisible }"
-          >
-            <div
-              :key="index"
-              class="filter-option"
-              v-for="(filterOption, index) in filterOptions"
-            >
-              <b-button
-                size="sm"
-                :tabindex="index + 2"
-                suppress-top-level-click
-                class="filter-option-button glass-button"
-                :class="{ 'active': filterOption.isDropdownVisible }"
-                @click="toggleFilterDropdownVisibility(filterOption)"
-              >
-                {{ filterOption.name | titleCase }} ({{ filterOption.selectedValues.length }} / {{ filterOption.values.length }})<img src="../assets/icons/arrow-right.svg">
-              </b-button>
-              <div
-                suppress-top-level-click
-                class="filter-option-dropdown"
-                :class="{ 'is-visible': filterOption.isDropdownVisible }"
-              >
-                <b-form-checkbox-group
-                  stacked
-                  size="sm"
-                  :key="filterOption.name"
-                  :options="filterOption.values"
-                  v-model="filterOption.selectedValues"
-                />
-              </div>
-            </div>
-
-            <b-button
-              size="sm"
-              variant="primary"
-              class="apply-filters-button"
-              @click="applyFiltersAndSorting"
-              :tabindex="filterOptions.length + 1"
-            >
-              Apply
-            </b-button>
           </div>
 
           <b-card-group deck class="record-list">
@@ -210,6 +223,16 @@ export default {
 
       return orderedSocialLinks
 
+    },
+
+    hasFilterOptions() {
+      return (
+        this.filterOptions &&
+        this.filterOptions.length !== 0 &&
+        this.filterOptions.some((filterOption) => {
+          return filterOption.values && filterOption.values.length !== 0
+        })
+      )
     },
 
     filters() {
@@ -360,7 +383,8 @@ export default {
         })
     },
 
-    hideAllFilterDropdowns() {
+    hideAllFilterDropdowns(keepFilterOptionsOpen = false) {
+      if (!keepFilterOptionsOpen) this.areFilterOptionsVisible = false
       this.filterOptions.forEach((filterOption) => {
         // eslint-disable-next-line no-param-reassign
         filterOption.isDropdownVisible = false
@@ -371,7 +395,7 @@ export default {
 
       // hide any open filter dropdowns if we're about to show one
       if (!filterOption.isDropdownVisible) {
-        this.hideAllFilterDropdowns()
+        this.hideAllFilterDropdowns(true)
       }
 
       // eslint-disable-next-line no-param-reassign
@@ -381,11 +405,20 @@ export default {
 
     toggleFilterOptionsVisibility() {
       this.areFilterOptionsVisible = !this.areFilterOptionsVisible
+      this.hideAllFilterDropdowns(true)
     },
 
     applyFiltersAndSorting() {
+      this.hideAllFilterDropdowns()
       return this.getRecords()
     },
+
+    resetFilters() {
+      this.filterOptions.forEach((filterOption) => {
+        filterOption.selectedValues = []
+      })
+      this.applyFiltersAndSorting()
+    }
   },
 }
 </script>
@@ -427,10 +460,9 @@ header
         width: auto
 
   .info
+    border: none
     padding: 2rem
-    backdrop-filter: blur(4px)
     background-color: rgba($color-dark, .9)
-    box-shadow: 0 0 1rem rgba($color-dark, .2)
 
     .info-row
       width: 100%
@@ -498,6 +530,7 @@ header
 .pagination-actions
   display: flex
   margin-top: 4rem
+  position: relative
   justify-content: flex-end
   flex-direction: column-reverse
 
@@ -510,7 +543,7 @@ header
     img
       margin-right: .25rem
 
-  .spacer
+  >.spacer
     min-width: 1rem
     min-height: 1rem
 
@@ -525,17 +558,26 @@ header
       margin-left: .5rem
 
 .filter-options
-  display: none
   flex-wrap: wrap
+  padding: .5rem 1rem 1rem
+
+  opacity: 0
+  transition: opacity ease .25s, height ease .25s
+
+  left: 0
+  top: 100%
+  z-index: 1
+  position: absolute
 
   &.is-visible
-    display: flex
+    opacity: 1
 
   button
     width: 100%
     padding-top: .25rem
     padding-bottom: .25rem
 
+    &.reset-filters-button
     &.apply-filters-button
       width: auto
       margin-top: .5rem
@@ -551,6 +593,8 @@ header
       margin-right: .5rem
 
     .filter-option-button
+      z-index: 2
+      display: flex
       padding-right: 0
       padding-left: .5rem
 
@@ -564,25 +608,28 @@ header
     .filter-option-dropdown
       height: 0
       opacity: 0
-      width: 20rem
+      width: 100%
       padding: .5rem
       overflow-x: scroll
       color: $color-light
+      pointer-events: none
       backdrop-filter: blur(4px)
       text-transform: capitalize
-      background-color: rgba($color-dark, .95)
-      box-shadow: 0 0 1rem rgba($color-dark, .6)
-      border: 1px solid rgba($color-primary, .1)
       transition: opacity ease .25s, height ease .25s
 
       left: 0
       top: 100%
-      z-index: 1
+      z-index: -1
       position: absolute
 
+      @media (min-width: $breakpoint-sm)
+        width: 20rem
+
       &.is-visible
+        z-index: 3
         opacity: 1
         height: 10.5rem // the extra .5 rem makes it obvious there's more in the list if it has to scroll
+        pointer-events: all
 
 .record-list
   display: flex
