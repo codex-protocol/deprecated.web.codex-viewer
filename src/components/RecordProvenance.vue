@@ -143,15 +143,15 @@ table
     font-size: small
     text-align: center
 
-    @media screen and (min-width: $breakpoint-lg)
+    @media (min-width: $breakpoint-lg)
       padding: 1rem
       font-size: 1rem
 
     .display-name
-      @media screen and (max-width: $breakpoint-md)
+      @media (max-width: $breakpoint-md)
         max-width: 50%
 
-      @media screen and (max-width: $breakpoint-sm)
+      @media (max-width: $breakpoint-sm)
         white-space: unset
         word-break: break-all
 

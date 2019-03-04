@@ -121,7 +121,7 @@ export default {
   margin-right: 0
   min-width: 180px
 
-  @media screen and (min-width: $breakpoint-sm)
+  @media (min-width: $breakpoint-sm)
     margin-left: 1rem
     margin-right: 1rem
 

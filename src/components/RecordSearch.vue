@@ -210,7 +210,7 @@ export default {
     background-position: .5rem center
     background-image: url(../assets/icons/search.svg)
 
-    @media screen and (min-width: $breakpoint-sm)
+    @media (min-width: $breakpoint-sm)
       width: 0rem
       padding-left: 2rem
       transition: width ease .25s .25s
@@ -227,6 +227,7 @@ export default {
   overflow-y: auto
   position: absolute
   overflow-x: hidden
+  backdrop-filter: blur(4px)
   background-color: rgba($color-dark, .95)
   box-shadow: 0 0 1rem rgba($color-dark, .6)
   border: 1px solid rgba($color-primary, .1)

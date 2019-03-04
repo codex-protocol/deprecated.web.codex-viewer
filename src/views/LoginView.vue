@@ -598,8 +598,6 @@ export default {
 
     afterSuccessfulLogin(destination = this.loginQueryParams.destination) {
 
-      console.log('destination', destination)
-
       // start fetching app & user data that is dependent on authentication
       //  (no need to block on these async actions)
       this.$store.dispatch('records/FETCH_USER_DATA')
@@ -669,6 +667,7 @@ export default {
 .form-container
   padding: 2rem
   position: relative
+  backdrop-filter: blur(4px)
   background-color: rgba($color-dark, .8)
   box-shadow: 0 0 .5rem rgba($color-dark, .2)
 
@@ -688,7 +687,7 @@ export default {
       width: 100%
       margin-bottom: 1rem
 
-    @media screen and (min-width: $breakpoint-xl)
+    @media (min-width: $breakpoint-xl)
       flex-direction: row
 
       >input
@@ -733,7 +732,7 @@ export default {
       display: inline-block
       min-width: 0 // see: https://stackoverflow.com/a/33811151/1696150
 
-      @media screen and (min-width: $breakpoint-sm)
+      @media (min-width: $breakpoint-sm)
         width: 3rem
         height: @width
 

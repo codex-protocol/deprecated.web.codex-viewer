@@ -101,13 +101,13 @@ export default {
   font-weight: bold
   color: $color-dark
 
-  @media screen and (min-width: $breakpoint-sm)
+  @media (min-width: $breakpoint-sm)
     max-width: calc(100% * 1/2)
 
-  @media screen and (min-width: $breakpoint-md)
+  @media (min-width: $breakpoint-md)
     max-width: calc(100% * 1/3)
 
-  @media screen and (min-width: $breakpoint-lg)
+  @media (min-width: $breakpoint-lg)
     max-width: calc(100% * 1/4)
 
   a

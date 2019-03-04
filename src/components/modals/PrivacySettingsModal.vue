@@ -295,7 +295,7 @@ export default {
     width: 100%
     margin-bottom: 1rem
 
-  @media screen and (min-width: $breakpoint-sm)
+  @media (min-width: $breakpoint-sm)
     flex-direction: row
 
     input

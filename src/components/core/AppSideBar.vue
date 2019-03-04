@@ -172,7 +172,7 @@ nav
   flex-direction: column
   background-color: rgba(white, .05)
 
-  @media screen and (min-width: $breakpoint-md)
+  @media (min-width: $breakpoint-md)
     width: $side-nav-width
     min-width: @width
     max-width: @width
@@ -214,14 +214,14 @@ a
   align-items: center
   flex-direction: column
 
-  @media screen and (min-width: $breakpoint-md)
+  @media (min-width: $breakpoint-md)
     align-items: normal
 
   a
     width: 100%
     text-align: center
 
-    @media screen and (min-width: $breakpoint-md)
+    @media (min-width: $breakpoint-md)
       text-align: left
 
 .badge

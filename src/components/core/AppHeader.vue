@@ -42,7 +42,7 @@ export default {
     margin-bottom: 1rem
     font-family: $font-family-serif
 
-    @media screen and (min-width: $breakpoint-sm)
+    @media (min-width: $breakpoint-sm)
       margin-top: 1rem
 
   .slots
@@ -51,7 +51,7 @@ export default {
     flex-direction: column
     justify-content: space-between
 
-    @media screen and (min-width: $breakpoint-sm)
+    @media (min-width: $breakpoint-sm)
       flex-direction: row
 
     >div
@@ -59,21 +59,21 @@ export default {
       display: flex
       flex-direction: column
 
-      @media screen and (min-width: $breakpoint-sm)
+      @media (min-width: $breakpoint-sm)
         width: auto
         flex-direction: row
 
       >* + *
         margin-top: .5rem
 
-        @media screen and (min-width: $breakpoint-sm)
+        @media (min-width: $breakpoint-sm)
           margin-top: 0
           margin-left: .5rem
 
       &+div:not(:empty)
         margin-top: 1rem
 
-        @media screen and (min-width: $breakpoint-sm)
+        @media (min-width: $breakpoint-sm)
           margin-top: 0rem
 
 </style>

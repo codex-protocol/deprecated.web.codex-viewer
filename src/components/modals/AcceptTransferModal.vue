@@ -1,5 +1,6 @@
 <template>
   <MetaMaskNotificationModal
+    v-if="codexRecord"
     id="acceptTransferModal"
     title="Accept Codex Record"
     ok-title="Accept transfer"
@@ -7,7 +8,7 @@
     :ok-method="acceptTransfer"
     checkout-title="Accept Codex Record"
   >
-    <template slot="checkout" v-if="codexRecord">
+    <template slot="checkout">
       <h3>{{ codexRecord.metadata.name }}</h3>
       <div class="image-container">
         <img :src="codexRecord.metadata | getMainImageUri" />
@@ -15,12 +16,10 @@
       <div class="description">{{ codexRecord.metadata.description }}</div>
     </template>
 
-    <p>
-      Accepting this Codex Record will add it to your collection.
-      As soon as it is added to your collection it will become private.
-    </p>
-
-    <p>You have full control over what you can do with the Codex Record after it's added to your collection.</p>
+    <b-alert variant="secondary" show>
+      The current owner of this Codex Record has made it <strong>{{ codexRecord.isPrivate ? 'private' : 'publicly visible' }}</strong>.
+      After accepting this transfer, the privacy settings will remain the same. You can update the privacy settings for this record on your Settings page after the transfer is complete.
+    </b-alert>
   </MetaMaskNotificationModal>
 </template>
 
@@ -42,7 +41,6 @@ export default {
   },
 
   computed: {
-    ...mapState('app', ['codxCosts']),
     ...mapState('auth', ['user']),
     ...mapState('records', ['onTransferCallback']),
   },
@@ -60,14 +58,6 @@ export default {
         .then(() => {
           EventBus.$emit('events:record-transfer', this.codexRecord.tokenId)
           EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
-
-          // @NOTE: leave the in the loading state so that they can't click the
-          //  buttons while the transaction is waiting to be mined
-          //
-          // @TODO: figure out a way to persit this across route changes (local
-          //  storage?)
-          //
-          // this.isLoading = false
 
           if (typeof this.onTransferCallback === 'function') {
             this.onTransferCallback()
