@@ -125,7 +125,7 @@ export default {
       padding-top: 1rem
       border-top: 1px dotted rgba($color-light, .1)
 
-  @media screen and (max-width: $breakpoint-sm)
+  @media (max-width: $breakpoint-sm)
     flex-direction: column
 
     .column

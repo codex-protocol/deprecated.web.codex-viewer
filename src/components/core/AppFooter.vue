@@ -60,7 +60,7 @@ export default {
   align-items: center
   flex-direction: column
 
-  @media screen and (min-width: $breakpoint-md)
+  @media (min-width: $breakpoint-md)
     height: 8rem
     min-height: @height
     max-height: @height

@@ -22,10 +22,10 @@
         How did you hear about us?
       </label>
       <b-form-select
-        class="mb-3"
         id="referral"
         value-field="id"
         text-field="name"
+        class="form-control mb-3"
         @input="referralChanged"
         v-model="selectedOptionId"
         :options="randomizedOptions"

@@ -241,7 +241,7 @@ section + section
       ul
         width: 100%
 
-  @media screen and (max-width: $breakpoint-sm)
+  @media (max-width: $breakpoint-sm)
     flex-wrap: wrap
 
     .codx-package

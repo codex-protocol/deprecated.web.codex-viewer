@@ -63,6 +63,7 @@ export default {
   position: absolute
   align-items: center
   justify-content: center
+  backdrop-filter: blur(4px)
   background-color: rgba($color-dark, .8)
 
   &.light
