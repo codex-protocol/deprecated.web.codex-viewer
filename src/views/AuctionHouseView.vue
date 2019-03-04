@@ -136,6 +136,7 @@
 
               <b-form class="sorting-options">
                 <b-form-select
+                  class="form-control"
                   :options="sortingOptions"
                   @input="applyFiltersAndSorting"
                   v-model="selectedSortingOption"
