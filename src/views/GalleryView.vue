@@ -44,6 +44,7 @@
           />
           <b-form class="sorting-options">
             <b-form-select
+              class="form-control"
               @input="sortingChanged"
               :options="sortingOptions"
               v-model="selectedSortingOption"
