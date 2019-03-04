@@ -15,7 +15,7 @@
             :key="record.tokenId"
             :is="listItemComponent"
           />
-          <AcceptTransferModal :codexRecord="selectedRecordToTransfer" />
+          <AcceptTransferModal :codex-record="selectedRecordToTransfer" />
         </b-card-group>
         <div v-else>
           You have no {{ transferDirection }} transfers.
