@@ -286,7 +286,7 @@ export default {
 
   // this can be uncommented to have the image and form fields side-by-side
   //
-  // @media screen and (min-width: $breakpoint-sm)
+  // @media (min-width: $breakpoint-sm)
   //   flex-direction: row
   //
   //   > div

@@ -355,7 +355,7 @@ img
   position: absolute
   color: $color-primary
 
-  @media screen and (min-width: $breakpoint-md)
+  @media (min-width: $breakpoint-md)
     display: none
 
 .main-content-wrapper
@@ -366,7 +366,7 @@ img
   overflow-x: hidden
   -webkit-overflow-scrolling: touch
 
-  @media screen and (min-width: $breakpoint-md)
+  @media (min-width: $breakpoint-md)
     display: flex
     flex-direction: column
 

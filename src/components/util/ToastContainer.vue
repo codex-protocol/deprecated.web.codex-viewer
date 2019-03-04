@@ -104,7 +104,7 @@ export default {
   pointer-events: none
   box-sizing: border-box
 
-  @media screen and (max-width: $breakpoint-sm)
+  @media (max-width: $breakpoint-sm)
     width: 100%
     position: fixed
 

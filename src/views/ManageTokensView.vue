@@ -101,7 +101,7 @@ export default {
   button
     margin-bottom: 1rem
 
-  @media screen and (min-width: 675px)
+  @media (min-width: 675px)
     flex-direction: row
 
     button

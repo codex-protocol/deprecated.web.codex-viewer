@@ -45,9 +45,10 @@
                 </div>
 
                 <div class="approved-action-buttons action-buttons" v-if="isApproved">
-                  <b-button variant="primary" @click="acceptTransfer">
+                  <b-button variant="primary" v-b-modal.acceptTransferModal>
                     Accept Transfer
                   </b-button>
+                  <AcceptTransferModal :codex-record="codexRecord" />
                 </div>
 
                 <RecordBlockchainDetails v-if="showDetails" :codexRecord="codexRecord" />
@@ -72,27 +73,27 @@
 <script>
 import { mapState } from 'vuex'
 
-import EventBus from '../util/eventBus'
 import { ZeroAddress } from '../util/constants/web3'
-import contractHelper from '../util/contractHelper'
 import copyToClipboard from '../util/copyToClipboard'
 
 import RecordProvenance from '../components/RecordProvenance'
-import RecordManageModal from '../components/modals/RecordManageModal'
 import RecordImageCarousel from '../components/RecordImageCarousel'
+import RecordManageModal from '../components/modals/RecordManageModal'
+import AcceptTransferModal from '../components/modals/AcceptTransferModal'
+import RecordBlockchainDetails from '../components/RecordBlockchainDetails'
 import ApproveTransferModal from '../components/modals/ApproveTransferModal'
 import PrivacySettingsModal from '../components/modals/PrivacySettingsModal'
-import RecordBlockchainDetails from '../components/RecordBlockchainDetails'
 
 export default {
 
   components: {
+    RecordProvenance,
+    RecordManageModal,
+    AcceptTransferModal,
+    RecordImageCarousel,
     ApproveTransferModal,
     PrivacySettingsModal,
-    RecordProvenance,
     RecordBlockchainDetails,
-    RecordManageModal,
-    RecordImageCarousel,
   },
 
   data() {
@@ -102,7 +103,7 @@ export default {
     }
   },
 
-  created() {
+  mounted() {
     // This will try to pull one of the cached records, otherwise it will fetch it from the API
     this.$store.dispatch('records/FETCH_RECORD', this.recordId)
   },
@@ -150,23 +151,6 @@ export default {
       this.$store.commit('records/UPDATE_RECORD_IN_LISTS', codexRecord)
     },
 
-    acceptTransfer() {
-      const input = [
-        this.codexRecord.ownerAddress,
-        this.user.address,
-        this.recordId,
-      ]
-
-      return contractHelper('CodexRecord', 'safeTransferFrom', input, this.$store)
-        .then(() => {
-          EventBus.$emit('events:record-transfer', this.recordId)
-          EventBus.$emit('toast:success', 'Transaction submitted successfully!', 5000)
-        })
-        .catch((error) => {
-          EventBus.$emit('toast:error', `Could not accept transfer: ${error.message}`)
-        })
-    },
-
     toggleShowDetails() {
       this.showDetails = !this.showDetails
     },
@@ -202,7 +186,7 @@ h1
     margin-right: .5rem
     margin-bottom: 1rem
 
-    @media screen and (max-width: $breakpoint-md)
+    @media (max-width: $breakpoint-md)
       width: 100%
       margin-right: 0
 

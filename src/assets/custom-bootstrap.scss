@@ -290,3 +290,7 @@ $popover-color: desaturate(lighten($color-secondary, 10%), 30%);
 .btn {
   padding: .5rem 1.5rem;
 }
+
+.tab-pane:focus {
+  outline: none;
+}
