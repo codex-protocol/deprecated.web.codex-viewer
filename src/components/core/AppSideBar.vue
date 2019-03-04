@@ -127,7 +127,9 @@ export default {
           to: '/auction-houses',
           icon: auctionHouseIcon,
           text: 'Auction Houses',
-          condition: this.auctionHouses.length !== 0,
+          condition: this.auctionHouses.some((auctionHouse) => {
+            return auctionHouse.previewImages.length !== 0
+          }),
         },
         {
           to: '/galleries',
