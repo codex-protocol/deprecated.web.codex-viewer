@@ -519,50 +519,57 @@ header
       @media (min-width: $breakpoint-sm)
         flex-direction: row
 
-      &+.info-row
+      &+.info-row:not(:empty)
         margin-top: 1rem
 
-    .title
-      img
-        width: 5rem
-        height: @width
-        min-width: @width
-        min-height: @height
+      &.title
+        img
+          width: 5rem
+          height: @width
+          min-width: @width
+          min-height: @height
 
-        border-radius: 50%
-        margin-bottom: 1rem
+          border-radius: 50%
+          margin-bottom: 1rem
 
-        @media (min-width: $breakpoint-sm)
-          margin-bottom: 0
-          margin-right: 1rem
-          align-self: flex-start
+          @media (min-width: $breakpoint-sm)
+            margin-bottom: 0
+            margin-right: 1rem
+            align-self: flex-start
 
-      h2
-        margin: 0
-        font-weight: 700
-        font-size: 1.5rem
-        text-align: center
+        h2
+          margin: 0
+          font-weight: 700
+          font-size: 1.5rem
+          text-align: center
 
-        @media (min-width: $breakpoint-sm)
-          text-align: left
+          @media (min-width: $breakpoint-sm)
+            text-align: left
 
-    .social-links
-      flex-wrap: wrap
-      flex-direction: row
-      justify-content: space-around
+      &.social-links
+        margin-top: 0
+        flex-wrap: wrap
+        flex-direction: row
+        justify-content: space-around
 
-      a
-        padding: 0 .5rem
+        &:not(:empty)
+          margin-top: 2rem
+
+        a
+          padding: 0 .5rem
+          font-size: small
+
+          @media (min-width: $breakpoint-sm)
+            font-size: normal
+
+      &.description
         font-size: small
+
+        p
+          margin: 0
 
         @media (min-width: $breakpoint-sm)
           font-size: normal
-
-    .description
-      font-size: small
-
-      @media (min-width: $breakpoint-sm)
-        font-size: normal
 
 .flex-column-to-row
   width: 100%
