@@ -63,8 +63,8 @@
                     <AcceptTransferModal :codex-record="codexRecord" />
                   </div>
 
-                  <div class="auction-house-action-buttons" v-if="codexRecord.metadata && codexRecord.metadata.auctionHouseLinkbackUrl">
-                    <b-button variant="primary" target="_blank" :href="codexRecord.metadata.auctionHouseLinkbackUrl">
+                  <div class="auction-house-action-buttons" v-if="auctionHouseLinkbackUrl">
+                    <b-button variant="primary" target="_blank" :href="auctionHouseLinkbackUrl">
                       View Asset on Auction House
                     </b-button>
                   </div>
@@ -169,8 +169,18 @@ export default {
     },
 
     isAwaitingApproval() {
-      return this.codexRecord.approvedAddress !== null &&
+      return (
+        this.codexRecord.approvedAddress !== null &&
         this.codexRecord.approvedAddress !== ZeroAddress
+      )
+    },
+
+    auctionHouseLinkbackUrl() {
+      return (
+        this.codexRecord.metadata &&
+        this.codexRecord.metadata.auctionHouseMetadata &&
+        this.codexRecord.metadata.auctionHouseMetadata.linkbackUrl
+      )
     },
   },
 
