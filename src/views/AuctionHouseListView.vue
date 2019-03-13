@@ -49,6 +49,5 @@ export default {
 
 .card
   card()
-  min-width: 180px
 
 </style>
