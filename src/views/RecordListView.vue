@@ -10,6 +10,13 @@
             >
               Add New Asset
             </b-button>
+            <b-button
+              variant="primary"
+              v-b-modal.bulkRecordMintModal
+              v-if="isNotSavvyUser && user.role === 'auction-house'"
+            >
+              Bulk Create Assets
+            </b-button>
           </template>
           <template slot="actions" v-if="userRecords.length > 1">
             <RecordSearch
@@ -59,6 +66,7 @@
         </div>
 
         <CreateRecordModal />
+        <BulkRecordMintModal v-if="isNotSavvyUser && user.role === 'auction-house'" />
       </div>
     </div>
   </div>
@@ -83,6 +91,7 @@ import RecordSearch from '../components/RecordSearch'
 import LoadingIcon from '../components/util/LoadingIcon'
 import RecordListItem from '../components/RecordListItem'
 import CreateRecordModal from '../components/modals/CreateRecordModal'
+import BulkRecordMintModal from '../components/modals/BulkRecordMintModal'
 
 export default {
 
@@ -97,7 +106,9 @@ export default {
     LoadingIcon,
     RecordSearch,
     RecordListItem,
+
     CreateRecordModal,
+    BulkRecordMintModal,
   },
 
   data() {
@@ -115,7 +126,7 @@ export default {
 
   computed: {
     ...mapState('app', ['giveaway']),
-    ...mapState('auth', ['hideSetup']),
+    ...mapState('auth', ['user', 'hideSetup']),
     ...mapState('records', ['totalRecordCount', 'paginationOptions']),
     ...mapState('records', {
       userRecords: (state) => {
