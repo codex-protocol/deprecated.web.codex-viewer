@@ -1,16 +1,17 @@
 <template>
   <b-card @click.prevent="viewAuctionHouse">
-    <b-carousel
-      slot="header"
-      :interval="slideDuration"
-      class="fixed-size-carousel"
-    >
-      <b-carousel-slide
-        :key="index"
-        :img-src="previewImage"
-        v-for="(previewImage, index) in auctionHouse.previewImages"
-      ></b-carousel-slide>
-    </b-carousel>
+    <div slot="header" class="carousel-container">
+      <b-carousel
+        :interval="slideDuration"
+        class="fixed-size-carousel"
+      >
+        <b-carousel-slide
+          :key="index"
+          :img-src="previewImage"
+          v-for="(previewImage, index) in auctionHouse.previewImages"
+        ></b-carousel-slide>
+      </b-carousel>
+    </div>
     <div class="card-text">
       <p>
         <a href="#" @click.prevent="viewAuctionHouse">
@@ -58,19 +59,6 @@ export default {
 
 .card
   card()
-  min-width: 180px
   cursor: pointer
-  background-color: #fff
-
-  .card-header
-    padding: 0
-
-  .card-body
-    a
-      font-weight: bold
-      color: $color-dark
-
-    small
-      color: $color-light-gray
 
 </style>
