@@ -100,4 +100,9 @@ export default {
     logMutation('SET_CODX_PACKAGES', codxPackages)
     currentState.codxPackages = codxPackages
   },
+
+  ADD_GLOBAL_REF(currentState, { name, $ref }) {
+    logMutation('ADD_GLOBAL_REF', { name, $ref })
+    currentState.$globalRefs[name] = $ref
+  },
 }
