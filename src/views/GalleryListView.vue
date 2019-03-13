@@ -60,9 +60,9 @@ export default {
 
 .card
   card()
-  min-width: 180px
 
   &.upsell-card
-    background-color: rgba(white, .1)
+    .card-body
+      background-color: rgba(white, .1)
 
 </style>
