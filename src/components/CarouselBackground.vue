@@ -12,6 +12,8 @@
 
 <script>
 
+import { mapState } from 'vuex'
+
 export default {
 
   props: {
@@ -26,22 +28,103 @@ export default {
       numLoaded: 0,
       isLoading: true,
       isRunning: false,
+
+      animationSpeed: 0.1,
+      animationPosition: 0,
+      animationDirection: -1, // start going to the left
     }
   },
 
+  computed: {
+    ...mapState('app', ['$globalRefs']),
+
+    $images() {
+      return this.$refs.images
+    },
+
+    $container() {
+      return this.$refs.container
+    },
+
+    $mainContentWrapper() {
+      return this.$globalRefs['main-content-wrapper']
+    },
+  },
+
+  watch: {
+    isRunning(newValue, oldValue) {
+      if (newValue) {
+        window.requestAnimationFrame(this.animationFrame)
+      }
+    },
+  },
+
+  mounted() {
+    this.$globalRefs['main-content-wrapper'].addEventListener('scroll', this.onScroll)
+  },
+
+  beforeDestroy() {
+    this.$globalRefs['main-content-wrapper'].removeEventListener('scroll', this.onScroll)
+    this.stop() // make sure the requestAnimationFrame loop doesn't leak
+  },
+
   methods: {
+
+    play() {
+      this.isRunning = true
+    },
+
+    stop() {
+      this.isRunning = false
+    },
+
+    onScroll() {
+      if (this.isLoading) return
+
+      if (!this.isRunning && this.$globalRefs['main-content-wrapper'].scrollTop < this.$container.offsetHeight) {
+        this.play()
+      }
+
+      if (this.isRunning && this.$globalRefs['main-content-wrapper'].scrollTop >= this.$container.offsetHeight) {
+        this.stop()
+      }
+    },
+
+    animationFrame(currentTime) {
+
+      if (!this.isRunning || this.isLoading) return
+
+      this.animationPosition += this.animationSpeed * this.animationDirection
+
+      if (this.animationPosition <= -100) {
+        this.animationPosition = -100
+        this.animationDirection *= -1
+
+      } else if (this.animationPosition > 0) {
+        this.animationPosition = 0
+        this.animationDirection *= -1
+      }
+
+      this.$images.style.transform = `translateX(calc(${this.animationPosition}% + ${this.$container.offsetWidth * (this.animationPosition / -100)}px))`
+
+      window.requestAnimationFrame(this.animationFrame)
+    },
+
     imageLoaded(index) {
 
       this.numLoaded += 1
 
       if (this.numLoaded >= this.urls.length) {
-        this.isLoading = false
-        if (this.$refs.images.offsetWidth > this.$refs.container.offsetWidth) {
-          this.isRunning = true
 
-          // adjust the animationDuration by some factor of the screen size and
-          //  number of images... ¯\_(⊙︿⊙)_/¯
-          this.$refs.images.style.animationDuration = `${this.urls.length * (20 - Math.floor(this.$refs.container.offsetWidth / 200))}s`
+        this.isLoading = false
+
+        if (this.$images.offsetWidth > this.$container.offsetWidth) {
+          this.play()
+
+          // since the animation is percentage-based, more images will cause a
+          //  faster scroll speed... let's compensate for that by scalling
+          //  animationSpeed down by a factor of the total width
+          this.animationSpeed = 100 / this.$images.offsetWidth
         }
       }
     },
@@ -54,23 +137,6 @@ export default {
 
 @import "../assets/variables.styl"
 
-// @TODO: this is totally fucked in Safari...
-@keyframes pan
-  0%
-    transform: translateX(0%)
-
-  50%
-    transform: translateX(calc(-100% + 100vw)) // this kinda fucks up if the width of .images < 100vh with the sidebar open
-
-    // this breaks on mobile since there's no sidebar, it's not that bad on
-    //  desktop to just ignore the sidebar width and have the last image get
-    //  cutoff a bit
-    //
-    // transform: s("translateX(calc(-100% + 100vw - %s))", $side-nav-width)
-
-  100%
-    transform: translateX(0%)
-
 .carousel-background
   top: 0
   left: 0
@@ -79,10 +145,6 @@ export default {
   position: absolute
   pointer-events: none
   background-image: url(../assets/images/pattern-dark.jpeg)
-
-  &.running
-    .images
-      animation-play-state: running
 
   &::after
     top: 0
@@ -104,10 +166,6 @@ export default {
     text-align: center
     white-space: nowrap
     transition: opacity ease 1s
-    animation: pan 60s ease-in-out 0s infinite paused
-
-    @media (min-width: $breakpoint-sm)
-      animation: pan 80s ease-in-out 0s infinite paused
 
     img
       height: 100%

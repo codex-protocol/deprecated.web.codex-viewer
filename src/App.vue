@@ -21,7 +21,7 @@
           </span>
           <AppSideBar />
         </template>
-        <div class="main-content-wrapper">
+        <div class="main-content-wrapper" ref="main-content-wrapper">
           <div class="main-content">
             <router-view :key="$route.fullPath" v-if="isLoaded" />
             <LoadingOverlay type="global" v-else />
@@ -106,6 +106,10 @@ export default {
   },
 
   mounted() {
+    this.$store.commit('app/ADD_GLOBAL_REF', {
+      $ref: this.$refs['main-content-wrapper'],
+      name: 'main-content-wrapper',
+    })
     this.$store.dispatch('app/FETCH_BOOTSTRAP_DATA')
       .finally(() => {
         this.initializeApp()
