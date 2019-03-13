@@ -60,7 +60,7 @@ export default {
     transform: translateX(0%)
 
   50%
-    transform: translateX(calc(-100% + 100vw))
+    transform: translateX(calc(-100% + 100vw)) // this kinda fucks up if the width of .images < 100vh with the sidebar open
 
     // this breaks on mobile since there's no sidebar, it's not that bad on
     //  desktop to just ignore the sidebar width and have the last image get
@@ -111,6 +111,7 @@ export default {
 
     img
       height: 100%
+      display: inline-block
 
   &.is-loading
     .images
