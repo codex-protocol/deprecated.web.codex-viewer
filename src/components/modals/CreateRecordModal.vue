@@ -11,7 +11,7 @@
     :validate="validate"
     :ok-disabled="disableButton"
     :checkout-cost="codxCosts.CodexRecord.mint"
-    checkout-title="Create Codex Record"
+    checkout-action="Create Codex Record"
   >
     <template slot="checkout">
       <h3>{{ name }}</h3>
