@@ -54,15 +54,7 @@ export default {
 
 .card
   card()
-  cursor: pointer
-  min-width: 180px
   text-align: center
-
-.card-body
-  border-top: 1px solid rgba(black, .1)
-
-button
-  white-space: normal
 
 @keyframes spin
   from

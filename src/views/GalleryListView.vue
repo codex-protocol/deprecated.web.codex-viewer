@@ -63,6 +63,6 @@ export default {
 
   &.upsell-card
     .card-body
-      background-color: rgba(white, .1)
+      background-color: transparent
 
 </style>

@@ -23,10 +23,9 @@ export default {
 
 .card
   card()
-  cursor: pointer
-  min-width: 180px
   text-align: center
-  background-color: $color-dark
-  border: 1px solid $color-light
+
+  .card-body
+    background-color: transparent
 
 </style>
