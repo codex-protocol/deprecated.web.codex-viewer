@@ -15,7 +15,8 @@ nav
   z-index: $freshchat-z-index + 3
 
 .modal
-  z-index: $freshchat-z-index + 4
+[id$=__BV_modal_outer_] // @NOTE: this line fixes the dumb auto-z-indexing applied by boostrap-vue...
+  z-index: $freshchat-z-index + 4 !important
 
 .tooltip
   z-index: $freshchat-z-index + 5

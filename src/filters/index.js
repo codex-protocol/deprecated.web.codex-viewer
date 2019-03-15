@@ -1,3 +1,4 @@
+import './truncate'
 import './title-case'
 import './escape-html'
 import './format-date'
