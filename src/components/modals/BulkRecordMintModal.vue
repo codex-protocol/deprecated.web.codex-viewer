@@ -18,6 +18,8 @@
       <p>The specified metadata will create {{ this.metadata.length }} Codex Record{{ this.metadata.length === 1 ? '' : 's' }}.</p>
     </template>
 
+    <LoadingOverlay :show="isLoading" type="dark" />
+
     <b-alert variant="secondary" show>
       @TODO: put info here about the structure of metadata files (and/or link
       out to developer docs)
@@ -99,11 +101,13 @@ import { mapState } from 'vuex'
 
 import EventBus from '../../util/eventBus'
 
+import LoadingOverlay from '../util/LoadingOverlay'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
 export default {
 
   components: {
+    LoadingOverlay,
     MetaMaskNotificationModal,
   },
 
@@ -156,6 +160,7 @@ export default {
       const fileReader = new FileReader()
 
       fileReader.addEventListener('loadend', () => {
+
         try {
 
           const parsedJSON = JSON.parse(fileReader.result)
@@ -165,12 +170,14 @@ export default {
             return
           }
 
-          this.isLoading = false
           this.metadata = parsedJSON.metadata
 
         } catch (error) {
           EventBus.$emit('toast:error', `Could not upload file: ${error.message}`)
         }
+
+        this.isLoading = false
+
       })
 
       fileReader.readAsText(file)
@@ -190,7 +197,7 @@ export default {
       formData.append('metadata', file)
 
       const requestOptions = {
-        url: '/user/bulk-transaction/record-mint/heffel/convert-xml',
+        url: '/user/bulk-transaction/record-mint/convert/xml',
         method: 'post',
         data: formData,
       }
