@@ -112,7 +112,6 @@ export default {
 
 .card
   card()
-  min-width: 180px
 
   &.is-loading
     opacity: .5
@@ -131,13 +130,6 @@ export default {
 
     p
       font-weight: 600
-
-  a
-    font-weight: bold
-    color: $color-dark
-
-    &:hover
-      text-decoration: none
 
   p
     color: $color-secondary

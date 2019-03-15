@@ -77,7 +77,5 @@ export default {
 .record-list
   display: flex
   flex-wrap: wrap
-  margin-left: 0
-  margin-right: 0
 
 </style>
