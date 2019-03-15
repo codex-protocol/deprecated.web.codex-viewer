@@ -5,8 +5,8 @@
         <AppHeader title="Settings &amp; Privacy" />
         <b-tabs>
 
-          <!-- PROFILE TAB -->
-          <b-tab title="Profile">
+          <!-- ACCOUNT TAB -->
+          <b-tab title="Account">
 
             <section>
               <h4>Account Information</h4>

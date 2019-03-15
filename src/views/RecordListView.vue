@@ -159,7 +159,6 @@ export default {
 .record-list
   display: flex
   flex-wrap: wrap
-  align-items: flex-start
 
 .pagination-controls
   display: flex

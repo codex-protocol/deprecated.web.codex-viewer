@@ -74,18 +74,7 @@ export default {
 .card
   card()
   cursor: pointer
-  min-width: 180px
   text-align: center
-
-.card-body
-  border-top: 1px solid rgba(black, .1)
-
-  a
-    font-weight: bold
-    color: $color-dark
-
-  small
-    color: $color-light-gray
 
 .privacy-icon
   width: 1em
