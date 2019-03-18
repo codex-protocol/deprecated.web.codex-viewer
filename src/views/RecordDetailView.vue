@@ -1,8 +1,16 @@
 <template>
-  <div class="container-fluid">
+  <div class="record-details container-fluid">
+
+    <LoadingOverlay :show="isLoading" type="dark" />
+
     <div class="row">
       <div class="col-12">
-        <div v-if="codexRecord">
+
+        <div class="mt-4" v-if="error">
+          <p>Error: {{ this.error }}</p>
+        </div>
+
+        <div v-if="!error && codexRecord">
           <div class="row">
             <div class="col-12 col-md-5">
               <RecordImageCarousel
@@ -57,14 +65,6 @@
           </div>
           <RecordProvenance :provenance="codexRecord.provenance" />
         </div>
-
-        <div v-else>
-          <div v-if="error">
-            <p>There was an error loading Record with id {{ this.recordId }}</p>
-            <p>{{ this.error }}</p>
-          </div>
-          <div v-else>Loading...</div>
-        </div>
       </div> <!-- col-12 -->
     </div> <!-- row -->
   </div> <!-- container-fluid -->
@@ -77,6 +77,7 @@ import { ZeroAddress } from '../util/constants/web3'
 import copyToClipboard from '../util/copyToClipboard'
 
 import RecordProvenance from '../components/RecordProvenance'
+import LoadingOverlay from '../components/util/LoadingOverlay'
 import RecordImageCarousel from '../components/RecordImageCarousel'
 import RecordManageModal from '../components/modals/RecordManageModal'
 import AcceptTransferModal from '../components/modals/AcceptTransferModal'
@@ -87,6 +88,7 @@ import PrivacySettingsModal from '../components/modals/PrivacySettingsModal'
 export default {
 
   components: {
+    LoadingOverlay,
     RecordProvenance,
     RecordManageModal,
     AcceptTransferModal,
@@ -99,13 +101,21 @@ export default {
   data() {
     return {
       error: null,
+      isLoading: false,
       showDetails: false,
     }
   },
 
   mounted() {
+    this.isLoading = true
     // This will try to pull one of the cached records, otherwise it will fetch it from the API
     this.$store.dispatch('records/FETCH_RECORD', this.recordId)
+      .catch((error) => {
+        this.error = error.message || error.toString()
+      })
+      .finally(() => {
+        this.isLoading = false
+      })
   },
 
   beforeDestroy() {
@@ -166,6 +176,10 @@ export default {
 <style lang="stylus" scoped>
 
 @import "../assets/variables.styl"
+
+.record-details
+  min-height: 100%
+  position: relative
 
 h1
   padding-top: 1rem
