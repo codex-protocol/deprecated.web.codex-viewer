@@ -79,13 +79,56 @@
             v-for="(metadatum, index) in metadataPreviews"
           >
             <img :src="metadatum.mainImageUrl">
-            <span
-              class="name"
-              v-b-tooltip.hover
-              :title="metadatum.description | truncate(50)"
-            >
+
+            <span class="name">
               {{ metadatum.name }}
+              <img
+                @click.stop
+                src="../../assets/icons/info.svg"
+                :id="`metadata-preview-${index}-popover-trigger`"
+              >
             </span>
+
+            <b-popover
+              title="Details"
+              triggers="click"
+              placement="right"
+              :target="`metadata-preview-${index}-popover-trigger`"
+            >
+
+              <div class="metadata-preview-popover">
+
+                <section v-if="metadatum.description">
+                  <h5>Description</h5>
+                  <p>{{ metadatum.description }}</p>
+                </section>
+
+                <section v-if="metadatum.additionalMetadata && Object.keys(metadatum.additionalMetadata).length !== 0">
+                  <h5>Additional Metadata</h5>
+                  <div class="details-table-container">
+                    <div class="details-table">
+                      <div :key="key" v-for="(value, key) in metadatum.additionalMetadata">
+                        <span>{{ key | titleCase }}</span>
+                        <span>{{ value }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                <section v-if="metadatum.auctionHouseMetadata && Object.keys(metadatum.auctionHouseMetadata).length !== 0">
+                  <h5>Auction House Metadata</h5>
+                  <div class="details-table-container">
+                    <div class="details-table">
+                      <div :key="key" v-for="(value, key) in metadatum.auctionHouseMetadata">
+                        <span>{{ key | titleCase }}</span>
+                        <span>{{ value }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </div>
+
+            </b-popover>
           </div>
         </div>
       </section>
@@ -166,14 +209,15 @@ export default {
           const parsedJSON = JSON.parse(fileReader.result)
 
           if (!parsedJSON.metadata || !Array.isArray(parsedJSON.metadata)) {
-            EventBus.$emit('toast:error', 'Could not upload file: JSON must have "metadata" array as a top-level key.')
-            return
+            throw new Error('JSON must have "metadata" array as a top-level key.')
+
           }
 
           this.metadata = parsedJSON.metadata
 
         } catch (error) {
           EventBus.$emit('toast:error', `Could not upload file: ${error.message}`)
+          this.clearModal()
         }
 
         this.isLoading = false
@@ -314,5 +358,37 @@ export default {
       text-overflow: ellipsis
       backdrop-filter: blur(4px)
       background-color: rgba($color-dark, .80)
+
+      img
+        width: 1rem
+        opacity: .8
+        height: @width
+        vertical-align: text-bottom
+
+        &:hover
+          opacity: 1
+          cursor: pointer
+
+</style>
+
+<style lang="stylus">
+
+@import "../../assets/variables.styl"
+
+.metadata-preview-popover
+  section
+    p
+      margin: 0
+
+      &+p
+        margin-top: 1rem
+
+    &+section
+      margin-top: 1rem
+
+    .details-table-container
+      font-size: small
+      max-height: 10rem
+      overflow-y: scroll
 
 </style>
