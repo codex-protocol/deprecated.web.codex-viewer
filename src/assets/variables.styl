@@ -43,7 +43,11 @@ card()
 
   .card-header
     padding: 0
-    border-bottom: 1px solid rgba(black, .1)
+    border: none
+
+  img + .card-body
+  .card-header + .card-body
+    border-top: 1px solid rgba(black, .1)
 
   .card-body
     background-color: white
