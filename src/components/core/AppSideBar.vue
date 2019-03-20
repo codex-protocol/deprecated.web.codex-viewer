@@ -27,7 +27,10 @@
       <footer class="sidebar-footer" v-if="isLoaded && user">
         <div>
           <h4>Logged in as</h4>
-          <DisplayName :userObject="user" />
+          <span class="logged-in-as">
+            <span v-b-tooltip.hover :title="user.email" v-if="isNotSavvyUser">{{ user.email }}</span>
+            <span v-b-tooltip.hover :title="user.address" v-else>{{ user.address }}</span>
+          </span>
         </div>
         <CODXBalanceControl v-if="isNotSavvyUser || feesEnabled" />
       </footer>
@@ -42,7 +45,6 @@ import {
   mapActions,
 } from 'vuex'
 
-import DisplayName from '../util/DisplayName'
 import CODXBalanceControl from '../CODXBalanceControl'
 
 import config from '../../util/config'
@@ -59,7 +61,6 @@ import iconCollection from '../../assets/icons/collection.svg'
 export default {
 
   components: {
-    DisplayName,
     CODXBalanceControl,
   },
 
@@ -239,6 +240,14 @@ a
   //  another top level element...
   > * + *
     margin-top: 1rem
+
+.logged-in-as
+  max-width: 100%
+  overflow: hidden
+  white-space: nowrap
+  display: inline-block
+  vertical-align: middle
+  text-overflow: ellipsis
 
 </style>
 

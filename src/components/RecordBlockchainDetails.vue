@@ -15,15 +15,15 @@
         </div>
         <div v-if="codexRecord.metadata">
           <span>Creator</span>
-          <span><DisplayName :name="codexRecord.metadata.creatorAddress" /></span>
+          <span><DisplayName :address="codexRecord.metadata.creatorAddress" /></span>
         </div>
         <div>
           <span>Current Owner</span>
-          <span><DisplayName :name="codexRecord.ownerAddress" /></span>
+          <span><DisplayName :address="codexRecord.ownerAddress" /></span>
         </div>
         <div v-if="codexRecord.approvedAddress">
           <span>Approved for Transfer To</span>
-          <span><DisplayName :name="codexRecord.approvedAddress" /></span>
+          <span><DisplayName :address="codexRecord.approvedAddress" /></span>
         </div>
         <div>
           <span>Created</span>
