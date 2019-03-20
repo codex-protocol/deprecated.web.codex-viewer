@@ -35,7 +35,7 @@
                 </div>
                 <div v-if="isNotSavvyUser">
                   <span>CODX Balance</span>
-                  <span>{{ availableCODXBalance }} CODX</span>
+                  <span>{{ user.availableCODXBalance }} CODX</span>
                 </div>
               </div>
             </section>
@@ -240,7 +240,7 @@ export default {
     ...mapState('app', ['giveaway']),
     ...mapState('auth', ['user', 'authToken']),
     ...mapState('records', ['totalRecordCount', 'paginationOptions']),
-    ...mapGetters('auth', ['isAdmin', 'isNotSavvyUser', 'availableCODXBalance']),
+    ...mapGetters('auth', ['isAdmin', 'isNotSavvyUser']),
     ...mapState('records', {
       userRecords: (state) => {
         return state.lists.userRecords

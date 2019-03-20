@@ -93,8 +93,8 @@ export default {
   created() {
     this.initializeApi()
 
-    EventBus.$on('socket:codex-coin:sync-balances', this.syncCODXBalances)
     EventBus.$on('socket:codex-coin:registry-contract-approved', this.fetchApprovalStatuses)
+    EventBus.$on('socket:meta:codex-coin:sync-available-balance', this.syncAvailableCODXBalance)
 
     EventBus.$on('socket:codex-record:created', this.addUserRecord)
     EventBus.$on('socket:codex-record:modified', this.updateUserRecord)
@@ -113,8 +113,8 @@ export default {
   },
 
   beforeDestroy() {
-    EventBus.$off('socket:codex-coin:sync-balances', this.syncCODXBalances)
     EventBus.$off('socket:codex-coin:registry-contract-approved', this.fetchApprovalStatuses)
+    EventBus.$off('socket:meta:codex-coin:sync-available-balance', this.syncAvailableCODXBalance)
 
     EventBus.$off('socket:codex-record:created', this.addUserRecord)
     EventBus.$off('socket:codex-record:modified', this.updateUserRecord)
@@ -242,8 +242,8 @@ export default {
       this.$store.dispatch('auth/FETCH_APPROVAL_STATUSES')
     },
 
-    syncCODXBalances({ codxBalance, reservedCODXBalance }) {
-      this.$store.commit('auth/SYNC_CODX_BALANCES', { codxBalance, reservedCODXBalance })
+    syncAvailableCODXBalance(availableCODXBalance) {
+      this.$store.commit('auth/SYNC_AVAILABLE_CODX_BALANCE', availableCODXBalance)
     },
 
     useBackgroundImage() {

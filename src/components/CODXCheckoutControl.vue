@@ -19,7 +19,7 @@
         <h4>Your Credits</h4>
         <div class="line-item" :class="{ 'insufficient-codx': insufficientCODX }">
           <span>Current Balance</span>
-          <span class="current-balance">{{ availableCODXBalance }} CODX</span>
+          <span class="current-balance">{{ user.availableCODXBalance }} CODX</span>
         </div>
 
         <div class="insufficient-codx-notice" v-if="insufficientCODX">
@@ -39,7 +39,7 @@
 
 <script>
 
-import { mapState, mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
 
@@ -67,7 +67,6 @@ export default {
 
   computed: {
     ...mapState('auth', ['user']),
-    ...mapGetters('auth', ['availableCODXBalance']),
   },
 }
 </script>
