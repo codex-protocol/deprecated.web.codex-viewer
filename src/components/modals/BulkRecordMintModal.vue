@@ -20,13 +20,14 @@
 
     <LoadingOverlay :show="isLoading" type="dark" />
 
-    <b-alert variant="secondary" show>
-      @TODO: put info here about the structure of metadata files (and/or link
-      out to developer docs)
-    </b-alert>
-
     <b-tabs @input="clearModal">
       <b-tab title="JSON">
+
+        <b-alert variant="secondary" show>
+          For details about the expected structure of JSON metadata, please visit the
+          developer documentation <a href="https://dev.codexprotocol.com/#create-codex-records-in-bulk" target="_blank">here.</a>
+        </b-alert>
+
         <b-form>
           <b-form-group label="Metadata JSON File" label-for="jsonFile" label-size="sm">
             <b-form-file
@@ -45,6 +46,12 @@
       </b-tab>
 
       <b-tab title="XML">
+
+        <b-alert variant="secondary" show>
+          For details about the expected structure of XML metadata, please visit the
+          developer documentation <a href="https://dev.codexprotocol.com/#example-xml-structure" target="_blank">here.</a>
+        </b-alert>
+
         <b-form>
           <b-form-group label="Metadata XML File" label-for="xmlFile" label-size="sm">
             <b-form-file
