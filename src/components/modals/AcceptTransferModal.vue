@@ -6,7 +6,7 @@
     ok-title="Accept transfer"
     cancel-variant="outline-primary"
     :ok-method="acceptTransfer"
-    checkout-title="Accept Codex Record"
+    checkout-action="Accept Codex Record"
   >
     <template slot="checkout">
       <h3>{{ codexRecord.metadata.name }}</h3>

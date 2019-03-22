@@ -11,10 +11,12 @@ export default () => {
     postLoginDestination: null,
     giveaway: null,
     galleries: [],
+    auctionHouses: [],
     eventEmails: [],
     codxCosts: null,
     codxPackages: null,
     showNav: false,
     paymentsEnabled: !!process.env.VUE_APP_STRIPE_PUBLIC_KEY,
+    $globalRefs: {},
   }
 }

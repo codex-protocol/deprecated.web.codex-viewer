@@ -7,12 +7,12 @@
       <div class="checkout-box">
         <h4>Summary</h4>
         <div class="line-item">
-          <span>{{ action }} x 1</span>
-          <span>{{ cost }} CODX</span>
+          <span>{{ action }} x {{ quantity }}</span>
+          <span>{{ totalCost }} CODX</span>
         </div>
         <div class="line-item total">
           <span>Total</span>
-          <span>{{ cost }} CODX</span>
+          <span>{{ totalCost }} CODX</span>
         </div>
       </div>
       <div class="checkout-box">
@@ -54,6 +54,11 @@ export default {
       required: true,
     },
 
+    quantity: {
+      default: 1,
+      type: Number,
+    },
+
     newBalance: {
       type: Number,
       required: true,
@@ -67,6 +72,10 @@ export default {
 
   computed: {
     ...mapState('auth', ['user']),
+
+    totalCost() {
+      return this.cost * this.quantity
+    },
   },
 }
 </script>
