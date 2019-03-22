@@ -19,7 +19,7 @@
         :style="{ order: index }"
         :key="'stakedFor' + index"
       >
-        <DisplayName :name="property" />
+        <DisplayName :address="property" />
       </div>
 
       <div class="table-header">Unlock date</div>

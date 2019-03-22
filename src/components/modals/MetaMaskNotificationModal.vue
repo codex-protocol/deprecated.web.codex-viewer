@@ -149,11 +149,11 @@ export default {
 
   computed: {
     ...mapState('auth', ['registryContractApproved', 'user']),
-    ...mapGetters('auth', ['isNotSavvyUser', 'availableCODXBalance']),
+    ...mapGetters('auth', ['isNotSavvyUser']),
 
     newBalance() {
       return this.checkoutCost
-        ? this.availableCODXBalance - this.checkoutCost
+        ? this.user.availableCODXBalance - this.checkoutCost
         : 0
     },
 
@@ -176,7 +176,7 @@ export default {
         !this.isNotSavvyUser &&
         config.feesEnabled &&
         this.requiresTokens &&
-        (!this.registryContractApproved || this.availableCODXBalance === 0)
+        (!this.registryContractApproved || this.user.availableCODXBalance === 0)
       )
     },
 

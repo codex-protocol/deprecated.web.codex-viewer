@@ -15,7 +15,7 @@
     "axios": "^0.18.0",
     "bignumber.js": "git+https://github.com/frozeman/bignumber.js-nolookahead.git",
     "bootstrap": "^4.2.1",
-    "bootstrap-vue": "^2.0.0-rc.13",
+    "bootstrap-vue": "^2.0.0-rc.15",
     "buffer": "^5.2.0",
     "debug": "^3.1.0",
     "escape-html": "^1.0.3",

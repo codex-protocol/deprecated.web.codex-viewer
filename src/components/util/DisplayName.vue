@@ -1,10 +1,11 @@
 <template>
   <span class="display-name" v-b-tooltip.hover :title="tooltipTitle">
-    {{ processedName }}
+    {{ name }}
   </span>
 </template>
 
 <script>
+
 import {
   mapState,
   mapGetters,
@@ -13,37 +14,40 @@ import {
 export default {
 
   props: {
-    name: String,
-    userObject: Object,
-  },
-
-  data() {
-    const selectedName = this.userObject
-      ? this.userObject.email || this.userObject.address
-      : this.name
-
-    return {
-      selectedName,
-    }
+    address: String,
   },
 
   computed: {
     ...mapState('auth', ['user']),
+    ...mapGetters('auth', ['isNotSavvyUser']),
     ...mapGetters('app', ['getVerifiedNameFromAddress']),
 
-    tooltipTitle() {
-      return this.processedName === 'You'
-        ? this.getVerifiedNameFromAddress(this.selectedName)
-        : this.processedName
+    verifiedName() {
+      return this.getVerifiedNameFromAddress(this.address)
     },
 
-    processedName() {
-      // If userObject is defined, show the full selected name instead of 'You'
-      if (this.user && !this.userObject && this.selectedName === this.user.address) {
+    tooltipTitle() {
+
+      if (this.name === 'You') {
+        if (this.verifiedName === this.address) {
+          return this.isNotSavvyUser ? this.user.email : this.address
+        }
+        return this.verifiedName
+      }
+
+      if (this.name !== this.address) {
+        return this.address
+      }
+
+      return this.name
+    },
+
+    name() {
+      if (this.user && this.address === this.user.address) {
         return 'You'
       }
 
-      return this.getVerifiedNameFromAddress(this.selectedName)
+      return this.verifiedName
     },
   },
 }
