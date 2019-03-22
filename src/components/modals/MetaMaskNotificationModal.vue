@@ -73,9 +73,10 @@
 
         <div v-else-if="currentStep === 3">
           <CODXCheckoutControl
-            :action="checkoutTitle"
             :cost="checkoutCost"
+            :action="checkoutAction"
             :newBalance="newBalance"
+            :quantity="checkoutQuantity"
             :insufficientCODX="insufficientCODX"
           >
             <slot name="checkout"></slot>
@@ -124,8 +125,9 @@ export default {
     'onClear',
     'requiresTokens',
     'validate',
-    'checkoutTitle',
+    'checkoutAction',
     'checkoutCost',
+    'checkoutQuantity',
   ],
 
   components: {
@@ -149,11 +151,15 @@ export default {
 
   computed: {
     ...mapState('auth', ['registryContractApproved', 'user']),
-    ...mapGetters('auth', ['isNotSavvyUser', 'availableCODXBalance']),
+    ...mapGetters('auth', ['isNotSavvyUser']),
+
+    totalCheckoutCost() {
+      return this.checkoutCost * (this.checkoutQuantity || 1)
+    },
 
     newBalance() {
-      return this.checkoutCost
-        ? this.availableCODXBalance - this.checkoutCost
+      return this.totalCheckoutCost
+        ? this.user.availableCODXBalance - this.totalCheckoutCost
         : 0
     },
 
@@ -176,7 +182,7 @@ export default {
         !this.isNotSavvyUser &&
         config.feesEnabled &&
         this.requiresTokens &&
-        (!this.registryContractApproved || this.availableCODXBalance === 0)
+        (!this.registryContractApproved || this.user.availableCODXBalance === 0)
       )
     },
 
@@ -223,7 +229,7 @@ export default {
 
       if (this.isNotSavvyUser) {
         if (this.currentStep === 0) {
-          if (this.requiresTokens && this.checkoutCost) {
+          if (this.requiresTokens && this.totalCheckoutCost) {
             this.goToStep(3)
           } else {
             this.goToStep(4)

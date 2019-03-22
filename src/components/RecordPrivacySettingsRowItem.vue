@@ -129,7 +129,6 @@ export default {
 .name
   flex-grow: 5
   font-weight: 300
-  text-transform: uppercase
 
 .toggle
   text-align: center

@@ -7,19 +7,19 @@
       <div class="checkout-box">
         <h4>Summary</h4>
         <div class="line-item">
-          <span>{{ action }} x 1</span>
-          <span>{{ cost }} CODX</span>
+          <span>{{ action }} x {{ quantity }}</span>
+          <span>{{ totalCost }} CODX</span>
         </div>
         <div class="line-item total">
           <span>Total</span>
-          <span>{{ cost }} CODX</span>
+          <span>{{ totalCost }} CODX</span>
         </div>
       </div>
       <div class="checkout-box">
         <h4>Your Credits</h4>
         <div class="line-item" :class="{ 'insufficient-codx': insufficientCODX }">
           <span>Current Balance</span>
-          <span class="current-balance">{{ availableCODXBalance }} CODX</span>
+          <span class="current-balance">{{ user.availableCODXBalance }} CODX</span>
         </div>
 
         <div class="insufficient-codx-notice" v-if="insufficientCODX">
@@ -39,7 +39,7 @@
 
 <script>
 
-import { mapState, mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
 
@@ -52,6 +52,11 @@ export default {
     cost: {
       type: Number,
       required: true,
+    },
+
+    quantity: {
+      default: 1,
+      type: Number,
     },
 
     newBalance: {
@@ -67,7 +72,10 @@ export default {
 
   computed: {
     ...mapState('auth', ['user']),
-    ...mapGetters('auth', ['availableCODXBalance']),
+
+    totalCost() {
+      return this.cost * this.quantity
+    },
   },
 }
 </script>

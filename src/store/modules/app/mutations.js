@@ -76,6 +76,11 @@ export default {
     currentState.galleries = galleries
   },
 
+  SET_AUCTION_HOUSES(currentState, auctionHouses = []) {
+    logMutation('SET_GALLERIES', auctionHouses)
+    currentState.auctionHouses = auctionHouses
+  },
+
   SET_EVENT_EMAILS(currentState, eventEmails = []) {
     logMutation('SET_EVENT_EMAILS', eventEmails)
     currentState.eventEmails = eventEmails
@@ -94,5 +99,10 @@ export default {
   SET_CODX_PACKAGES(currentState, codxPackages = {}) {
     logMutation('SET_CODX_PACKAGES', codxPackages)
     currentState.codxPackages = codxPackages
+  },
+
+  ADD_GLOBAL_REF(currentState, { name, $ref }) {
+    logMutation('ADD_GLOBAL_REF', { name, $ref })
+    currentState.$globalRefs[name] = $ref
   },
 }

@@ -5,7 +5,7 @@
     <table v-if="provenance">
       <tr v-for="row in provenance" :key="row.id">
         <td>{{ getEventDescription(row.type) }}</td>
-        <td class="display-name-container"><DisplayName :name="getEventAddress(row)" /></td>
+        <td class="display-name-container"><DisplayName :address="getEventAddress(row)" /></td>
         <td>{{ getTimeSince(row.createdAt) }}</td>
         <td>
           <span v-if="row.type === 'modified' && row.codexRecordModifiedEvent.changedData">

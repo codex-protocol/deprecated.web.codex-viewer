@@ -1,6 +1,16 @@
 <template>
-  <b-card @click.prevent="viewGallery">
-    <div slot="header" class="carousel-container">
+  <!--
+    @NOTE: having ~10 galleries on one page all loading several 1-5 MB images
+    was making the page slow to a crawl, so as of 2019-03-21 the list view cards
+    no longer show carousels and instead they just show the first (randomly
+    sorted) preview image
+  -->
+  <b-card
+    img-top
+    @click.prevent="viewGallery"
+    :img-src="gallery.previewImages[0]"
+  >
+    <!-- <div slot="header" class="carousel-container">
       <b-carousel
         :interval="slideDuration"
         class="fixed-size-carousel"
@@ -11,7 +21,7 @@
           v-for="(previewImage, index) in gallery.previewImages"
         ></b-carousel-slide>
       </b-carousel>
-    </div>
+    </div> -->
     <div class="card-text">
       <p>
         <a href="#" @click.prevent="viewGallery">

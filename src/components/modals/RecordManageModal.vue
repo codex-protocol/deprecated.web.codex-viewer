@@ -12,7 +12,7 @@
     :requires-tokens="true"
     :validate="validate"
     :checkout-cost="codxCosts.CodexRecord.modifyMetadataHashes"
-    checkout-title="Modify Codex Record"
+    checkout-action="Modify Codex Record"
   >
     <template slot="checkout" v-if="codexRecord">
       <h3>{{ name }}</h3>
