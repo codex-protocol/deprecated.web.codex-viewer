@@ -21,7 +21,7 @@
           </span>
           <AppSideBar />
         </template>
-        <div class="main-content-wrapper">
+        <div class="main-content-wrapper" ref="main-content-wrapper">
           <div class="main-content">
             <router-view :key="$route.fullPath" v-if="isLoaded" />
             <LoadingOverlay type="global" v-else />
@@ -93,8 +93,8 @@ export default {
   created() {
     this.initializeApi()
 
-    EventBus.$on('socket:codex-coin:sync-available-balance', this.syncAvailableCODXBalance)
     EventBus.$on('socket:codex-coin:registry-contract-approved', this.fetchApprovalStatuses)
+    EventBus.$on('socket:meta:codex-coin:sync-available-balance', this.syncAvailableCODXBalance)
 
     EventBus.$on('socket:codex-record:created', this.addUserRecord)
     EventBus.$on('socket:codex-record:modified', this.updateUserRecord)
@@ -106,6 +106,10 @@ export default {
   },
 
   mounted() {
+    this.$store.commit('app/ADD_GLOBAL_REF', {
+      $ref: this.$refs['main-content-wrapper'],
+      name: 'main-content-wrapper',
+    })
     this.$store.dispatch('app/FETCH_BOOTSTRAP_DATA')
       .finally(() => {
         this.initializeApp()
@@ -113,8 +117,8 @@ export default {
   },
 
   beforeDestroy() {
-    EventBus.$off('socket:codex-coin:sync-available-balance', this.syncAvailableCODXBalance)
     EventBus.$off('socket:codex-coin:registry-contract-approved', this.fetchApprovalStatuses)
+    EventBus.$off('socket:meta:codex-coin:sync-available-balance', this.syncAvailableCODXBalance)
 
     EventBus.$off('socket:codex-record:created', this.addUserRecord)
     EventBus.$off('socket:codex-record:modified', this.updateUserRecord)
@@ -264,15 +268,22 @@ export default {
     //
     // @NOTE: this has one caveat - you need to add @click.stop to popover
     //  triggering elements, otherwise the popover closes as soon as it opens
+    //
+    // @NOTE: on 2018-02-26 this was extended to also check for the
+    //  "suppress-top-level-click" attribute which can be used for the same
+    //  purpose but not limited to popovers (also note that we can't just add
+    //  this attribute to the popover because vue-bootstrap dynamically
+    //  generates that element...)
     topLevelClick(event) {
       if (
         event &&
         event.target &&
         event.target.closest &&
-        event.target.closest('.popover') !== null
+        (event.target.closest('.popover') !== null || event.target.closest('[suppress-top-level-click]') !== null)
       ) {
         return
       }
+      EventBus.$emit('app:top-level-click')
       this.$root.$emit('bv::hide::popover')
     },
   },

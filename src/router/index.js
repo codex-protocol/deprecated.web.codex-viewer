@@ -5,19 +5,21 @@ import store from '../store'
 import config from '../util/config'
 
 import LoginView from '../views/LoginView'
-import ConfirmEmailView from '../views/ConfirmEmailView'
-import ResetPasswordView from '../views/ResetPasswordView'
-import FeatureListView from '../views/FeatureListView'
-import TransferListView from '../views/TransferListView'
-import RecordListView from '../views/RecordListView'
-import RecordDetailView from '../views/RecordDetailView'
-import SettingsView from '../views/SettingsView'
-import ManageTokensView from '../views/ManageTokensView'
-import GetCODXView from '../views/GetCODXView'
 import GalleryView from '../views/GalleryView'
+import GetCODXView from '../views/GetCODXView'
+import SettingsView from '../views/SettingsView'
+import ContactUsView from '../views/ContactUsView'
+import RecordListView from '../views/RecordListView'
+import FeatureListView from '../views/FeatureListView'
 import GalleryListView from '../views/GalleryListView'
 import OAuth2AppView from '../views/test/OAuth2AppView'
-import ContactUsView from '../views/ContactUsView'
+import ManageTokensView from '../views/ManageTokensView'
+import RecordDetailView from '../views/RecordDetailView'
+import TransferListView from '../views/TransferListView'
+import AuctionHouseView from '../views/AuctionHouseView'
+import ConfirmEmailView from '../views/ConfirmEmailView'
+import ResetPasswordView from '../views/ResetPasswordView'
+import AuctionHouseListView from '../views/AuctionHouseListView'
 
 Vue.use(Router)
 
@@ -117,6 +119,20 @@ const router = new Router({
       component: GetCODXView,
     },
 
+    // auction house routes
+    {
+      name: 'auction-houses',
+      path: '/auction-houses',
+      component: AuctionHouseListView,
+      meta: { allowUnauthenticatedUsers: true },
+    },
+    {
+      name: 'auction-house',
+      component: AuctionHouseView,
+      meta: { allowUnauthenticatedUsers: true },
+      path: '/auction-houses/:auctionHouseShareCode',
+    },
+
     // gallery routes
     {
       name: 'galleries',
@@ -126,8 +142,8 @@ const router = new Router({
     },
     {
       name: 'gallery',
-      path: '/galleries/:galleryShareCode',
       component: GalleryView,
+      path: '/galleries/:galleryShareCode',
       meta: { allowUnauthenticatedUsers: true },
     },
 

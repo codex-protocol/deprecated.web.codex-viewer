@@ -83,7 +83,7 @@ export default {
     showToast('The registry contract has been successfully approved to spend CODX on your behalf.')
   },
 
-  'bulk-transaction:started': (bulkTransaction) => {
+  'bulk-transaction:started': ({ bulkTransaction }) => {
     switch (bulkTransaction.type) {
       case 'record-mint':
         showToast(`Your bulk transaction has started. ${bulkTransaction.recordMintData.pendingMetadata.length} new Codex Record${bulkTransaction.recordMintData.numCreated > 1 ? 's' : ''} should be created soon.`)
@@ -94,7 +94,7 @@ export default {
     }
   },
 
-  'bulk-transaction:completed': (bulkTransaction) => {
+  'bulk-transaction:completed': ({ bulkTransaction }) => {
     switch (bulkTransaction.type) {
       case 'record-mint':
         showToast(`Your bulk transaction has completed. ${bulkTransaction.recordMintData.numCreated} new Codex Record${bulkTransaction.recordMintData.numCreated > 1 ? 's were' : ' was'} created.`)
