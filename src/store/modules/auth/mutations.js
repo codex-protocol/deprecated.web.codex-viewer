@@ -81,26 +81,14 @@ export default {
     window.localStorage.setItem('hideSetup', true)
   },
 
-  SYNC_CODX_BALANCES(currentState, { codxBalance, reservedCODXBalance }) {
+  SYNC_AVAILABLE_CODX_BALANCE(currentState, availableCODXBalance) {
 
-    logMutation('SYNC_CODX_BALANCES', codxBalance, reservedCODXBalance)
+    logMutation('SYNC_AVAILABLE_CODX_BALANCE', availableCODXBalance)
 
-    if (currentState.user) {
-
-      const newProperties = {}
-
-      if (typeof codxBalance === 'number') {
-        newProperties.codxBalance = codxBalance
-      }
-
-      if (typeof reservedCODXBalance === 'number') {
-        newProperties.reservedCODXBalance = reservedCODXBalance
-      }
-
-      if (Object.keys(newProperties).length > 0) {
-        currentState.user = Object.assign({}, currentState.user, newProperties)
-      }
-
+    if (currentState.user && typeof availableCODXBalance === 'number') {
+      currentState.user = Object.assign({}, currentState.user, {
+        availableCODXBalance,
+      })
     }
   },
 }

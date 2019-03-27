@@ -27,7 +27,10 @@
       <footer class="sidebar-footer" v-if="isLoaded && user">
         <div>
           <h4>Logged in as</h4>
-          <DisplayName :userObject="user" />
+          <span class="logged-in-as">
+            <span v-b-tooltip.hover :title="user.email" v-if="isNotSavvyUser">{{ user.email }}</span>
+            <span v-b-tooltip.hover :title="user.address" v-else>{{ user.address }}</span>
+          </span>
         </div>
         <CODXBalanceControl v-if="isNotSavvyUser || feesEnabled" />
       </footer>
@@ -42,24 +45,23 @@ import {
   mapActions,
 } from 'vuex'
 
-import DisplayName from '../util/DisplayName'
 import CODXBalanceControl from '../CODXBalanceControl'
 
 import config from '../../util/config'
 
 import iconHome from '../../assets/icons/home.svg'
-import starIcon from '../../assets/icons/star.svg'
+// import starIcon from '../../assets/icons/star.svg'
 import logoutIcon from '../../assets/icons/logout.svg'
 import codxIcon from '../../assets/icons/codx-token.svg'
 import galleryIcon from '../../assets/icons/gallery.svg'
 import settingsIcon from '../../assets/icons/settings.svg'
 import iconTransfers from '../../assets/icons/transfers.svg'
 import iconCollection from '../../assets/icons/collection.svg'
+import auctionHouseIcon from '../../assets/icons/auction-house.svg'
 
 export default {
 
   components: {
-    DisplayName,
     CODXBalanceControl,
   },
 
@@ -71,7 +73,7 @@ export default {
 
   computed: {
     ...mapState('auth', ['user']),
-    ...mapState('app', ['isLoaded']),
+    ...mapState('app', ['isLoaded', 'auctionHouses']),
     ...mapState('records', {
       incomingTransfers: (state) => {
         return state.lists.incomingTransfers
@@ -115,11 +117,19 @@ export default {
           text: 'Get CODX',
           condition: this.isNotSavvyUser || config.feesEnabled,
         },
+        // {
+        //   to: '/extensions',
+        //   condition: this.isAuthenticated,
+        //   icon: starIcon,
+        //   text: 'Extensions',
+        // },
         {
-          to: '/extensions',
-          condition: this.isAuthenticated,
-          icon: starIcon,
-          text: 'Extensions',
+          to: '/auction-houses',
+          icon: auctionHouseIcon,
+          text: 'Auction Houses',
+          condition: this.auctionHouses.some((auctionHouse) => {
+            return auctionHouse.previewImages.length !== 0
+          }),
         },
         {
           to: '/galleries',
@@ -239,6 +249,14 @@ a
   //  another top level element...
   > * + *
     margin-top: 1rem
+
+.logged-in-as
+  max-width: 100%
+  overflow: hidden
+  white-space: nowrap
+  display: inline-block
+  vertical-align: middle
+  text-overflow: ellipsis
 
 </style>
 

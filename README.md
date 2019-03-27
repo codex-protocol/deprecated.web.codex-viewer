@@ -46,9 +46,7 @@ $ npm run start
 
 ## Maintainers
 
-- [John Forrest](mailto:john@codexprotocol.com) ([@johnhforrest](https://github.com/johnhforrest))
 - [Colin Wood](mailto:colin@codexprotocol.com) ([@Anaphase](https://github.com/Anaphase))
-- [Shawn Price](mailto:shawn@codexprotocol.com) ([@sprice](https://github.com/sprice))
 
 ## Contribute
 

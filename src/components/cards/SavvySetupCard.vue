@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 
 import FaucetDripModal from './../modals/FaucetDripModal'
 import ApproveContractModal from './../modals/ApproveContractModal'
@@ -51,7 +51,6 @@ export default {
   },
   computed: {
     ...mapState('web3', ['recordContract']),
-    ...mapGetters('auth', ['availableCODXBalance']),
     ...mapState('auth', ['registryContractApproved', 'user']),
 
     done() {
@@ -59,7 +58,7 @@ export default {
     },
 
     currentStep() {
-      if (this.availableCODXBalance === 0) {
+      if (this.user.availableCODXBalance === 0) {
         return 1
       }
 

@@ -102,7 +102,7 @@
             class="whitelist-row"
             v-for="address in whitelistedAddresses"
           >
-            <DisplayName :name="address" />
+            <DisplayName :address="address" />
             <span class="close" v-on:click="removeWhitelistedAddress(address)">×</span>
           </div>
         </template>
@@ -112,7 +112,7 @@
             class="whitelist-row"
             v-for="email in whitelistedEmails"
           >
-            <DisplayName :name="email" />
+            {{ email }}
             <span class="close" @click="removeWhitelistedEmail(email)">×</span>
           </div>
         </template>
