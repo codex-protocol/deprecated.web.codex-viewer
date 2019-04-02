@@ -1,5 +1,3 @@
-import { Buffer } from 'buffer/'
-
 // this is the delimiter used to separate providerId, providerMetadataId, etc
 //  in additionalData strings sent to CodexRecord.mint() and
 //  CodexRecord.modifyMetadataHashes() contract calls
@@ -18,14 +16,20 @@ export default {
   //  processed to determine which CodexRecordMetadata or
   //  CodexRecordMetadataPendingUpdate record to apply
   encode(...args) {
+
     // allow an array or a list of arguments to be passed in
     const additionalData = (Object.prototype.toString.call(args[0]) === '[object Array]') ? args[0] : args
 
-    const hexString = Buffer
-      .from(additionalData.join(additionalDataDelimeter))
-      .toString('hex')
+    const hexString = additionalData
+      .join(additionalDataDelimeter)
+      .split('')
+      .map((character) => {
+        return character.codePointAt(0).toString(16)
+      })
+      .join('')
 
     return `0x${hexString}`
+
   },
 
 }
