@@ -800,6 +800,7 @@ export default {
   .web3-login-button
     width: 100%
     margin-top: 1rem
+    border-radius: 4px
     align-self: flex-bottom
 
     @media (min-width: $breakpoint-sm)

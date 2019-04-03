@@ -1,5 +1,5 @@
 const Networks = {
-  1: 'Main Net',
+  1: 'Mainnet',
   2: 'Deprecated Morden test network',
   3: 'Ropsten test network',
   4: 'Rinkeby test network',
