@@ -14,22 +14,18 @@
 </template>
 
 <script>
-// @NOTE: Although this is cleaner code-wise, it means that we are now bundling all the svg icons even if they aren't being used
-// For now, I'm commenting out ones we aren't using explicitly to reduce the bundle size
 
-// import IconPathChrome from './IconPathChrome'
-import IconPathCoinbaseWallet from './IconPathCoinbaseWallet'
-import IconPathFacebook from './IconPathFacebook'
-// import IconPathFirefox from './IconPathFirefox'
+// @NOTE: Although this is cleaner code-wise, it means that we are now bundling
+//  all the svg icons even if they aren't being used
+
+import IconPathMenu from './IconPathMenu'
 import IconPathGitHub from './IconPathGitHub'
 import IconPathGoogle from './IconPathGoogle'
 import IconPathMedium from './IconPathMedium'
-import IconPathMenu from './IconPathMenu'
-import IconPathMetaMask from './IconPathMetaMask'
-import IconPathMicrosoft from './IconPathMicrosoft'
-// import IconPathOpera from './IconPathOpera'
-import IconPathTelegram from './IconPathTelegram'
 import IconPathTwitter from './IconPathTwitter'
+import IconPathFacebook from './IconPathFacebook'
+import IconPathTelegram from './IconPathTelegram'
+import IconPathMicrosoft from './IconPathMicrosoft'
 
 export default {
   props: {
@@ -52,22 +48,10 @@ export default {
 
   data() {
     const icons = {
-      // chrome: {
-      //   viewBox: '0 0 496 512',
-      //   component: IconPathChrome,
-      // },
-      coinbaseWallet: {
-        viewBox: '0 0 32 32',
-        component: IconPathCoinbaseWallet,
-      },
       facebook: {
         viewBox: '0 0 448 512',
         component: IconPathFacebook,
       },
-      // firefox: {
-      //   viewBox: '0 0 480 512',
-      //   component: IconPathFirefox,
-      // },
       gitHub: {
         viewBox: '0 0 496 512',
         component: IconPathGitHub,
@@ -84,18 +68,10 @@ export default {
         viewBox: '0 0 448 512',
         component: IconPathMenu,
       },
-      metaMask: {
-        viewBox: '0 0 24 24',
-        component: IconPathMetaMask,
-      },
       microsoft: {
         viewBox: '0 0 448 512',
         component: IconPathMicrosoft,
       },
-      // opera: {
-      //   viewBox: '0 0 496 512',
-      //   component: IconPathOpera,
-      // },
       telegram: {
         viewBox: '0 0 496 512',
         component: IconPathTelegram,

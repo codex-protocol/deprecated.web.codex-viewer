@@ -2,10 +2,18 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12 col-md-6 primary">
-        <div class="logo" v-party-mode-activator>
+        <div class="logo-container" v-party-mode-activator>
           <b-link to="/">
-            <img src="../assets/logos/codex/gold.svg" />
+            <img class="logo" src="../assets/logos/codex/gold.svg" />
           </b-link>
+          <b-button
+            v-if="galleries.length"
+            class="galleries-button"
+            variant="outline-primary"
+            :to="{ name: 'galleries' }"
+          >
+            View Artist Galleries
+          </b-button>
         </div>
 
         <div class="form-container" ref="form-container">
@@ -174,21 +182,16 @@
               <IconBase :iconName="provider.name" width="48" height="48" />
             </b-link>
 
-            <!-- web3 login buttons -->
-            <b-link
-              title="MetaMask"
+            <!-- web3 login button -->
+            <b-button
+              variant="primary"
               v-b-tooltip.hover
-              @click="login('web3', 'metaMask')"
+              @click="login('web3')"
+              class="web3-login-button"
+              title="MetaMask, Coinbase Wallet, Trust, etc."
             >
-              <IconBase iconName="metaMask" width="48" height="48" />
-            </b-link>
-            <b-link
-              v-b-tooltip.hover
-              title="Coinbase Wallet"
-              @click="login('web3', 'coinbaseWallet')"
-            >
-              <IconBase iconName="coinbaseWallet" width="48" height="48" />
-            </b-link>
+              Web3 Wallet
+            </b-button>
           </div>
 
           <hr>
@@ -239,8 +242,8 @@
         >
           <p>
             If you are already using Codex Viewer with a managed wallet (e.g.
-            MetaMask or Coinbase Wallet), you must log in with that wallet to
-            access your existing Codex Records.
+            MetaMask, Coinbase Wallet, Trust, etc.), you must log in with that
+            wallet to access your existing Codex Records.
           </p>
           <p class="mb-0">
             <strong>
@@ -250,8 +253,42 @@
           </p>
         </b-alert>
       </div>
-      <div class="col-12 col-md-6 secondary">
-        <div class="login-art"><img src="../assets/images/login-art.png" v-party-mode-activator /></div>
+      <div class="col-12 col-md-6 secondary use-cases">
+        <div class="use-case">
+          <img src="../assets/images/use-cases/auction-houses.svg">
+          <div>
+            <h2>Auction Houses</h2>
+            <p>Offer digital provenance records for items you sell. Build visibility and SEO through valuable backlinks</p>
+          </div>
+        </div>
+        <div class="use-case">
+          <img src="../assets/images/use-cases/artists.svg">
+          <div>
+            <h2>Artists</h2>
+            <p>Protect your artistic legacy with a digital catalogue raisonnée secured on the blockchain</p>
+          </div>
+        </div>
+        <div class="use-case">
+          <img src="../assets/images/use-cases/dealers.svg">
+          <div>
+            <h2>Dealers &amp; Collectors</h2>
+            <p>Document your whole collection and easily share information about items for sales, insurance, lending and more</p>
+          </div>
+        </div>
+        <div class="use-case">
+          <img src="../assets/images/use-cases/appraisers.svg">
+          <div>
+            <h2>Appraisers</h2>
+            <p>Create an additional revenue stream by creating blockchain records for your client’s items</p>
+          </div>
+        </div>
+        <div class="use-case">
+          <img src="../assets/images/use-cases/marketplaces.svg">
+          <div>
+            <h2>Marketplaces</h2>
+            <p>Build buyer confidence by offering provenance information secured on the blockchain.</p>
+          </div>
+        </div>
       </div>
     </div>
     <ForgotPasswordModal />
@@ -284,7 +321,6 @@ export default {
   data() {
     return {
       isLoading: false,
-      walletProvider: null,
 
       showFormType: 'login',
       formSubmitError: null,
@@ -350,7 +386,7 @@ export default {
   computed: {
     ...mapState('auth', ['user']),
     ...mapState('web3', ['providerAccount', 'instance', 'registrationError']),
-    ...mapState('app', ['apiErrorCode', 'pendingUserCode', 'postLoginDestination']),
+    ...mapState('app', ['apiErrorCode', 'pendingUserCode', 'postLoginDestination', 'galleries']),
 
     $formContainer() {
       return this.$refs['form-container']
@@ -383,7 +419,7 @@ export default {
 
       switch (this.registrationError.message) {
         case Web3Errors.Missing:
-          return `You don't have a Web3 wallet installed. To install one, visit <a href="${this.walletProviderUrl}" target="_blank">${this.walletProviderUrl}</a>.`
+          return 'You don\'t have a Web3 wallet installed. Please install a browser extension like <a href="https://www.metamask.io" target="_blank">MetaMask</a>, or use a mobile wallet such as <a href="https://wallet.coinbase.com" target="_blank">Coinbase Wallet</a>.'
 
         case Web3Errors.Locked:
           return 'Your Web3 account is locked. To sign in with Web3, open your Ethereum wallet and follow the instructions to unlock it.'
@@ -399,17 +435,6 @@ export default {
 
         default:
           return 'We were unable to log you in to your account. Please try again later.'
-      }
-    },
-
-    walletProviderUrl() {
-      switch (this.walletProvider) {
-        case 'coinbaseWallet':
-          return 'https://wallet.coinbase.com'
-
-        default:
-        case 'metaMask':
-          return 'https://www.metamask.io'
       }
     },
 
@@ -557,7 +582,6 @@ export default {
       let promise = null
 
       if (type === 'web3') {
-        this.walletProvider = provider
         promise = this.$store.dispatch('auth/LOGIN_FROM_SIGNED_DATA')
       } else {
         promise = this.$store.dispatch('auth/LOGIN_FROM_EMAIL_AND_PASSWORD', Object.assign({}, this.loginQueryParams, {
@@ -660,9 +684,24 @@ export default {
 
 @import "../assets/variables.styl"
 
-.logo
-  max-width: 128px
-  margin: 2rem auto 1rem
+.logo-container
+  display: flex
+  margin-top: 2rem
+  align-items: center
+  flex-direction: column
+  justify-content: space-between
+
+  .logo
+    width: 10rem
+
+  .galleries-button
+    margin-bottom: 1rem
+
+  @media (min-width: $breakpoint-sm)
+    flex-direction: row
+
+    .galleries-button
+      margin-bottom: 0
 
 .form-container
   padding: 2rem
@@ -723,8 +762,12 @@ export default {
 
   .social-icons
     display: flex
+    flex-wrap: wrap
     position: relative
     justify-content: space-around
+
+    @media (min-width: $breakpoint-sm)
+      flex-wrap: nowrap
 
     a
       width: 2rem
@@ -749,13 +792,49 @@ export default {
           cursor: unset
           color: $color-primary
 
-  .switch-form-link
   .signup-link
+  .switch-form-link
     font-weight: bold
     text-align: center
 
-.login-art img
-  width: 100%
-  margin-top: 3rem
+  .web3-login-button
+    width: 100%
+    margin-top: 1rem
+    align-self: flex-bottom
+
+    @media (min-width: $breakpoint-sm)
+      width: auto
+      margin-top: 0
+
+.use-cases
+  display: flex
+  margin: 2rem 0
+  flex-direction: column
+
+  @media (min-width: $breakpoint-md)
+    margin: 8rem 0 0
+
+  .use-case
+    display: flex
+    flex-direction: row
+
+    &+.use-case
+      margin-top: 1rem
+
+    > img
+      width: 4rem
+      height: @width
+      margin-right: 2rem
+
+      @media (min-width: $breakpoint-md)
+        margin-left: 2rem
+
+    > div
+      display: flex
+      flex-direction: column
+
+      h2
+        font-weight: 700
+        font-size: 1.2rem
 
 </style>
