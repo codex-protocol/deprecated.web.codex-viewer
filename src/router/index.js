@@ -197,4 +197,16 @@ router.beforeEach((to, from, next) => {
 
 })
 
+// on mobile devices, if the user navigates from a page with the sidebar to a
+//  page without the sidebar (e.g. galleries > login), the blur effect would
+//  still be visible because "showNav" in the app state store would still be
+//  true because the sidebar component is destroyed before the TOGGLE_NAV call
+//  is made... so let's just always toggle showNav off when transitioning to a
+//  route without the sidenav
+router.afterEach((to, from) => {
+  if (to.meta.hideSideBar) {
+    store.dispatch('app/TOGGLE_NAV', false)
+  }
+})
+
 export default router
