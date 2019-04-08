@@ -825,6 +825,9 @@ export default {
     > img
       width: 4rem
       height: @width
+      min-width: @width
+      min-height: @height
+
       margin-right: 2rem
 
       @media (min-width: $breakpoint-md)
