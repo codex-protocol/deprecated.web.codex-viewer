@@ -147,12 +147,18 @@
 
           <template v-if="records.length === 0">
             <div class="no-results">
-              <p>No records found.</p>
-              <p v-if="numSelectedFilters !== 0">Perhaps you should <b-link @click="resetFilters()">reset all filters</b-link>?</p>
+              <p>
+                <template v-if="hasInitialRequestLoaded && !isLoading">No records found.</template>
+                <template v-else><LoadingIcon size="small" /> Loading records...</template>
+              </p>
+              <p v-if="!isLoading && numSelectedFilters !== 0">Perhaps you should <b-link @click="resetFilters()">reset all filters</b-link>?</p>
             </div>
           </template>
           <template v-else>
             <b-card-group deck class="record-list">
+
+              <LoadingOverlay :show="isLoading" type="dark" />
+
               <RecordListItem
                 :key="record.tokenId"
                 :codex-record="record"
@@ -190,6 +196,7 @@ import copyToClipboard from '../util/copyToClipboard'
 import RecordSearch from '../components/RecordSearch'
 import LoadingIcon from '../components/util/LoadingIcon'
 import RecordListItem from '../components/RecordListItem'
+import LoadingOverlay from '../components/util/LoadingOverlay'
 import CarouselBackground from '../components/CarouselBackground'
 
 export default {
@@ -197,6 +204,7 @@ export default {
   components: {
     LoadingIcon,
     RecordSearch,
+    LoadingOverlay,
     RecordListItem,
     CarouselBackground,
   },
@@ -209,6 +217,7 @@ export default {
       auctionHouse: null,
       isMobile: is.mobile(),
       headerBackgroundImageUrls: [],
+      hasInitialRequestLoaded: false,
 
       filterOptions: [],
       areFilterOptionsVisible: false,
@@ -387,6 +396,7 @@ export default {
         })
         .finally(() => {
           this.isLoading = false
+          this.hasInitialRequestLoaded = true
         })
 
     },
@@ -695,6 +705,7 @@ header
 .record-list
   display: flex
   flex-wrap: wrap
+  position: relative
 
 .pagination-controls
   display: flex
