@@ -80,11 +80,11 @@
         class="additional-image"
       >
         <b-img
-          class="record-image"
-          thumbnail
           fluid
+          thumbnail
           :src="image.uri"
-          alt="Additional Image"
+          class="record-image"
+          :alt="image.name || 'Additional Image'"
         /><br>
         <b-button
           size="sm"
@@ -99,15 +99,18 @@
       label="Upload Additional Images"
     >
       <VueDropzone
-        ref="dropzone"
         id="dropzone"
-        :options="dropzoneOptions"
+        ref="dropzone"
+        :useCustomSlot="true"
         :destroyDropzone="false"
+        :options="dropzoneOptions"
         v-on:vdropzone-success="fileAdded"
         v-on:vdropzone-removed-file="fileRemoved"
         v-on:vdropzone-processing="onFileProcessing"
         v-on:vdropzone-queue-complete="onQueueComplete"
-      />
+      >
+        <span class="dz-message">Drop images here to upload!</span>
+      </VueDropzone>
     </b-form-group>
   </MetaMaskNotificationModal>
 </template>
@@ -184,6 +187,7 @@ export default {
     dropzoneOptions() {
       return {
         url: `${config.apiUrl}/users/files`,
+        acceptedFiles: 'image/*',
         paramName: 'files',
         thumbnailWidth: 150,
         maxFilesize: 5,
