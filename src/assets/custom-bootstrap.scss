@@ -294,3 +294,9 @@ $popover-color: desaturate(lighten($color-secondary, 10%), 30%);
 .tab-pane:focus {
   outline: none;
 }
+
+.form-control:disabled,
+.form-control[readonly] {
+  color: rgba($color-light, .25);
+  background-color: rgba(black, .25);
+}
