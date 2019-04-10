@@ -13,9 +13,7 @@
         <div v-if="!error && codexRecord">
           <div class="row">
             <div class="col-12 col-md-5">
-              <RecordImageCarousel
-                :codexRecord="codexRecord"
-              />
+              <RecordImageCarousel :codexRecord="codexRecord"/>
             </div>
             <div class="col-12 col-md-7">
               <div>
@@ -89,6 +87,7 @@
 </template>
 
 <script>
+
 import { mapState } from 'vuex'
 
 import { ZeroAddress } from '../util/constants/web3'
@@ -97,9 +96,10 @@ import copyToClipboard from '../util/copyToClipboard'
 import RecordProvenance from '../components/RecordProvenance'
 import LoadingOverlay from '../components/util/LoadingOverlay'
 import RecordImageCarousel from '../components/RecordImageCarousel'
+import RecordBlockchainDetails from '../components/RecordBlockchainDetails'
+
 import RecordManageModal from '../components/modals/RecordManageModal'
 import AcceptTransferModal from '../components/modals/AcceptTransferModal'
-import RecordBlockchainDetails from '../components/RecordBlockchainDetails'
 import ApproveTransferModal from '../components/modals/ApproveTransferModal'
 import PrivacySettingsModal from '../components/modals/PrivacySettingsModal'
 
@@ -108,12 +108,13 @@ export default {
   components: {
     LoadingOverlay,
     RecordProvenance,
+    RecordImageCarousel,
+    RecordBlockchainDetails,
+
     RecordManageModal,
     AcceptTransferModal,
-    RecordImageCarousel,
     ApproveTransferModal,
     PrivacySettingsModal,
-    RecordBlockchainDetails,
   },
 
   data() {
