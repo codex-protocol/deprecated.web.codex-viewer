@@ -14,10 +14,17 @@
       #{{ codexRecord.tokenId }}
     </small>
     <img
-    v-b-tooltip.hover
-    class="privacy-icon"
-    :src="this.privacyIcon"
-    :title="this.privacyTooltipText"
+      v-b-tooltip.hover
+      :src="this.privacyIcon"
+      class="icon privacy-icon"
+      :title="this.privacyTooltipText"
+    />
+    <img
+      v-b-tooltip.hover
+      class="icon auction-house-icon"
+      v-if="codexRecord.isOwnedByAuctionHouse"
+      title="Currently owned by an Auction House"
+      src="../assets/icons/auction-house-black.svg"
     />
   </b-card>
 </template>
@@ -76,9 +83,10 @@ export default {
   cursor: pointer
   text-align: center
 
-.privacy-icon
+.icon
   width: 1em
   height: 1em
-  // vertical-align: text-top
+  opacity: .25
+  vertical-align: middle
 
 </style>
