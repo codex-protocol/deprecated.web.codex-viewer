@@ -1,5 +1,19 @@
 <template>
-  <span class="display-name" v-b-tooltip.hover :title="tooltipTitle">
+  <b-link
+    v-b-tooltip.hover
+    class="display-name"
+    :title="tooltipTitle"
+    :to="destinationRoute"
+    v-if="destinationRoute"
+  >
+    {{ name }}
+  </b-link>
+  <span
+    v-else
+    v-b-tooltip.hover
+    class="display-name"
+    :title="tooltipTitle"
+  >
     {{ name }}
   </span>
 </template>
@@ -19,8 +33,26 @@ export default {
 
   computed: {
     ...mapState('auth', ['user']),
+    ...mapState('app', ['auctionHouses']),
     ...mapGetters('auth', ['isNotSavvyUser']),
     ...mapGetters('app', ['getVerifiedNameFromAddress']),
+
+    destinationRoute() {
+
+      const matchedAuctionHouse = this.auctionHouses.find((auctionHouse) => {
+        return auctionHouse.userAddress === this.address
+      })
+
+      if (matchedAuctionHouse) {
+        return {
+          name: 'auction-house',
+          params: { auctionHouseShareCode: matchedAuctionHouse.shareCode },
+        }
+      }
+
+      return null
+
+    },
 
     verifiedName() {
       return this.getVerifiedNameFromAddress(this.address)
