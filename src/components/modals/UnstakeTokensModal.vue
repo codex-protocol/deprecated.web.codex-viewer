@@ -1,7 +1,7 @@
 <template>
   <MetaMaskNotificationModal
     id="unstakeTokensModal"
-    title="Unstake tokens"
+    title="Unstake Tokens"
     ok-title="Unstake"
     :ok-disabled="!canSubmit"
     cancel-variant="outline-primary"

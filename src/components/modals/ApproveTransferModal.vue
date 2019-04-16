@@ -2,7 +2,7 @@
   <MetaMaskNotificationModal
     id="approveTransferModal"
     title="Transfer Codex Record"
-    ok-title="Start transfer"
+    ok-title="Start Transfer"
     cancel-variant="outline-primary"
     :ok-method="approveTransfer"
     :on-shown="onShow"

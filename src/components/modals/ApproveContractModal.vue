@@ -1,7 +1,7 @@
 <template>
   <MetaMaskNotificationModal
     :id="id"
-    title="Approve contract"
+    title="Approve Contract"
     ok-title="Approve"
     cancel-variant="outline-primary"
     :ok-method="approveTokens"
