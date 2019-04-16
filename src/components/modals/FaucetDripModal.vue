@@ -2,7 +2,7 @@
   <b-modal
     title="Get CODX"
     id="faucetDripModal"
-    ok-title="Request tokens"
+    ok-title="Request Tokens"
     cancel-variant="outline-primary"
     v-model="modalVisible"
     v-on:ok="requestDrip"
