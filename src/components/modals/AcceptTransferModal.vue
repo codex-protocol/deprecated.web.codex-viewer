@@ -3,7 +3,7 @@
     v-if="codexRecord"
     id="acceptTransferModal"
     title="Accept Codex Record"
-    ok-title="Accept transfer"
+    ok-title="Accept Transfer"
     cancel-variant="outline-primary"
     :ok-method="acceptTransfer"
     checkout-action="Accept Codex Record"
