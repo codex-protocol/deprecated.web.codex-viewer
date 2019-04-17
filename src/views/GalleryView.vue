@@ -24,7 +24,7 @@
             :interval="gallery.slideDuration"
           >
             <b-carousel-slide
-              :key="codexRecord.id"
+              :key="codexRecord.tokenId"
               v-for="codexRecord in records"
               :img-src="codexRecord.metadata | getMainImageUri"
             ></b-carousel-slide>

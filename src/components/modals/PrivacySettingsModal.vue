@@ -1,7 +1,7 @@
 <template>
   <b-modal
     id="recordPrivacySettings"
-    title="Record privacy settings"
+    title="Record Privacy Settings"
     ok-title="Save"
     cancel-variant="outline-primary"
     v-model="modalVisible"

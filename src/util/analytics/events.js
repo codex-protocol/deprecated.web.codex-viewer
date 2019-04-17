@@ -21,6 +21,10 @@ export default {
     category: 'Page Action',
     action: 'Referral Survey Answered',
   },
+  'events:claim-record-request': {
+    category: 'Page Action',
+    action: 'Claim Record Request',
+  },
 
   // Codex Records
   'events:record-metadata-create': {

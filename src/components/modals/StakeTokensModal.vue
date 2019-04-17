@@ -1,7 +1,7 @@
 <template>
   <MetaMaskNotificationModal
     id="stakeTokensModal"
-    title="Stake tokens"
+    title="Stake Tokens"
     ok-title="Stake"
     :on-shown="focusModal"
     :ok-disabled="!canSubmit"
