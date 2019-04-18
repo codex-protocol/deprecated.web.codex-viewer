@@ -61,7 +61,8 @@
                     <AcceptTransferModal :codex-record="codexRecord" />
                   </div>
 
-                  <div class="auction-house-action-buttons">
+                  <!-- the v-if hides these if the record is private and the user is not approved  -->
+                  <div class="auction-house-action-buttons" v-if="codexRecord.metadata">
                     <b-button
                       target="_blank"
                       variant="primary"
