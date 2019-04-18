@@ -158,6 +158,7 @@
                 />
               </b-form-group>
             </section>
+            <!--
             <section>
               <h2>Giveaways</h2>
               <b-button
@@ -166,6 +167,17 @@
               >
                 Create Giveaway
               </b-button>
+            </section>
+            -->
+            <section>
+              <h2>Verified Users &amp; Galleries</h2>
+              <b-button
+                v-b-modal.verifiedUserAndGalleryModal
+                variant="outline-primary"
+              >
+                Verify User and/or Create Gallery
+              </b-button>
+              <VerifiedUserAndGalleryModal />
             </section>
             <section>
               <h2>Auth Token</h2>
@@ -208,6 +220,7 @@ import LoadingIcon from '../components/util/LoadingIcon'
 import LoadingOverlay from '../components/util/LoadingOverlay'
 import EventEmailSettings from '../components/EventEmailSettings'
 import RecordPrivacySettingsRowItem from '../components/RecordPrivacySettingsRowItem'
+import VerifiedUserAndGalleryModal from '../components/modals/VerifiedUserAndGalleryModal'
 
 export default {
 
@@ -216,6 +229,7 @@ export default {
     LoadingIcon,
     LoadingOverlay,
     EventEmailSettings,
+    VerifiedUserAndGalleryModal,
     RecordPrivacySettingsRowItem,
   },
 
