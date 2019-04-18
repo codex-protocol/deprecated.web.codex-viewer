@@ -167,8 +167,17 @@ export default {
     initializeApp() {
       this.$store.dispatch('app/HANDLE_QUERY_PARAMS')
         .then(() => {
+
+          // if they're not logged in, we still need to create the web3 instance
+          //  so we can access web3.utils (for the valid-hash component, etc)
+          //
+          // for some dumbass reason the utils package isn't avaialable on the
+          //  default Web3 export (nor Web3.modules...)
+          //
+          // this shouldn't really affect anything because when they actually
+          //  log in, the provider will be correctly re-registered
           if (!this.authToken) {
-            return null
+            return this.$store.dispatch('web3/REGISTER_INFURA_PROVIDER', null, { root: true })
           }
 
           return this.$store.dispatch('auth/LOGIN_FROM_CACHED_TOKEN')
