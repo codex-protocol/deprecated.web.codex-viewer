@@ -176,6 +176,7 @@ hr {
 .modal .close {
   font-size: 3rem;
   margin-top: -2.6rem;
+  padding-bottom: 0rem;
 }
 
 .modal-footer {
@@ -212,6 +213,13 @@ hr {
   .modal-dialog {
     max-width: calc(100% - 1rem);
   }
+  .modal-header {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .modal-footer {
+    padding: 2rem 1rem .25rem;
+  }
 }
 
 @include media-breakpoint-up(sm) {
@@ -220,13 +228,18 @@ hr {
     padding: 0 2rem 2rem 2rem;
   }
 
+  .modal-header {
+    padding: 2rem;
+  }
+
   .modal .close {
-    font-size: 1.5rem;
+    font-size: 2rem;
     margin-top: -2rem;
   }
 
   .modal-footer {
     flex-direction: row;
+    padding: 0 2rem 2rem;
   }
 
   .modal-footer > :not(:first-child) {
