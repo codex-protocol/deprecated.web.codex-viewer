@@ -1,5 +1,5 @@
 <template>
-  <div class="codx-balance-container" ref="loading-overlay-container">
+  <div class="codx-balance-container">
 
     <div class="balance-wrapper">
       <h4>Credit Balance</h4>
