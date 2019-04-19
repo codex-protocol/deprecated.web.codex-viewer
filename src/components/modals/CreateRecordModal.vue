@@ -18,16 +18,48 @@
       <div class="image-container"><img :src="mainImage.dataUrl"></div>
       <div class="description">{{ description }}</div>
 
-      <!-- @TODO: add image & file previews here -->
-      <!--
-      <div
-        :key="index"
-        class="additional-image image-container"
-        v-for="(additionalImage, index) in additionalImages"
+      <b-form-group
+        label-size="sm"
+        label="Additional Images"
       >
-        <img :src="additionalImage.dataUrl" />
-      </div>
-    -->
+        <div class="additional-files">
+          <div
+            :key="index"
+            class="additional-file image-container no-hover"
+            v-for="(additionalImage, index) in additionalImages"
+          >
+            <img :src="additionalImage.dataUrl" />
+          </div>
+        </div>
+      </b-form-group>
+
+      <b-form-group
+        label-size="sm"
+        label="Additional Files"
+      >
+        <div class="additional-files">
+          <div
+            :key="index"
+            v-if="additionalFile.apiRecord"
+            class="additional-file image-container no-hover"
+            v-for="(additionalFile, index) in additionalFiles"
+          >
+            <img v-if="additionalFile.apiRecord.fileType === 'image'" :src="additionalFile.apiRecord.uri" />
+            <template v-else-if="additionalFile.apiRecord.fileType === 'video'">
+              <img src="../../assets/icons/file-type-video.svg">
+              <marquee class="name" scrollamount="2">
+                {{ additionalFile.apiRecord.name }}
+              </marquee>
+            </template>
+            <template v-else>
+              <img src="../../assets/icons/file-type-document.svg">
+              <marquee class="name" scrollamount="2">
+                {{ additionalFile.apiRecord.name }}
+              </marquee>
+            </template>
+          </div>
+        </div>
+      </b-form-group>
     </template>
 
     <div class="flex-container">
@@ -174,21 +206,15 @@
                 <img v-if="additionalFile.apiRecord.fileType === 'image'" :src="additionalFile.apiRecord.uri" />
                 <template v-else-if="additionalFile.apiRecord.fileType === 'video'">
                   <img src="../../assets/icons/file-type-video.svg">
-                  <marquee
-                    class="name"
-                    scrollamount="2"
-                  >
+                  <marquee class="name" scrollamount="2">
                     {{ additionalFile.apiRecord.name }}
-                </marquee>
+                  </marquee>
                 </template>
                 <template v-else>
                   <img src="../../assets/icons/file-type-document.svg">
-                  <marquee
-                    class="name"
-                    scrollamount="2"
-                  >
+                  <marquee class="name" scrollamount="2">
                     {{ additionalFile.apiRecord.name }}
-                </marquee>
+                  </marquee>
                 </template>
               </template>
               <LoadingOverlay type="dark" size="medium" :show="additionalFile.isLoading" />
@@ -431,8 +457,8 @@ export default {
         return additionalImage.apiRecord
       })
 
-      const files = this.additionalImages.map((additionalImage) => {
-        return additionalImage.apiRecord
+      const files = this.additionalFiles.map((additionalFile) => {
+        return additionalFile.apiRecord
       })
 
       const metadataToUpload = {
@@ -539,9 +565,11 @@ export default {
   .additional-file
     width: 5rem
     height: @width
-    cursor: pointer
     position: relative
     margin: 0 .5rem .5rem 0
+
+    &:not(.no-hover)
+      cursor: pointer
 
     img
       max-height: 100%
@@ -572,8 +600,6 @@ export default {
     .name
       width: 100%
       font-size: small
-      overflow: hidden
-      text-overflow: ellipsis
 
   .add-file-button
     padding: 0

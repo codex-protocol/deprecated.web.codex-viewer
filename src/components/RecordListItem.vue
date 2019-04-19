@@ -15,9 +15,9 @@
     </small>
     <img
       v-b-tooltip.hover
-      :src="this.privacyIcon"
+      :src="privacyIcon"
       class="icon privacy-icon"
-      :title="this.privacyTooltipText"
+      :title="privacyTooltipText"
     />
     <img
       v-b-tooltip.hover
@@ -32,8 +32,8 @@
 <script>
 import Raven from 'raven-js'
 
-import isPrivateIcon from '../assets/icons/lock.svg'
-import isPublicIcon from '../assets/icons/lock-open.svg'
+import isPublicIcon from '../assets/icons/privacy-public.svg'
+import isPrivateIcon from '../assets/icons/privacy-private.svg'
 
 export default {
 
