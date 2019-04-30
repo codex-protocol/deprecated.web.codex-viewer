@@ -3,7 +3,7 @@
 
     <LoadingOverlay :show="isLoading" type="dark" />
 
-    <FullscreenImageModal :image="fullscreenImage" />
+    <FullscreenImageModal :images="allImages" :startIndex="fullscreenImageStartIndex" />
 
     <div class="row">
       <div class="col-12">
@@ -23,6 +23,7 @@
                 <img
                   class="main-image"
                   v-if="codexRecord.metadata"
+                  title="Click to View Fullscreen"
                   :src="codexRecord.metadata | getMainImageUri"
                   @click="showImageFullscreen(codexRecord.metadata.mainImage)"
                 >
@@ -39,6 +40,7 @@
                 <div class="additional-files">
                   <div
                     :key="index"
+                    title="Click to View Fullscreen"
                     class="additional-file image-container"
                     @click="showImageFullscreen(additionalImage)"
                     v-for="(additionalImage, index) in codexRecord.metadata.images"
@@ -211,7 +213,7 @@ export default {
       error: null,
       isLoading: false,
       showDetails: false,
-      fullscreenImage: null,
+      fullscreenImageStartIndex: 0,
       isHistoricalProvenancePublicIcon,
       isHistoricalProvenancePrivateIcon,
     }
@@ -241,6 +243,11 @@ export default {
         return state.activeRecord
       },
     }),
+
+    allImages() {
+      if (!this.codexRecord || !this.codexRecord.metadata) return []
+      return [this.codexRecord.metadata.mainImage].concat(this.codexRecord.metadata.images)
+    },
 
     isOwner() {
       return (
@@ -307,8 +314,17 @@ export default {
     },
 
     showImageFullscreen(image) {
-      this.fullscreenImage = image
-      this.$root.$emit('bv::show::modal', 'fullscreenImageModal')
+      this.fullscreenImageStartIndex = this.allImages.indexOf(image)
+
+      // hide any "click to view fullscreen" tooltips that may be open
+      this.$root.$emit('bv::hide::tooltip')
+
+      // delay the modal showing for one tick, so the "startIndex" prop is
+      //  updated before the "show" event fires, which prevents a flicker of the
+      //  previous image showing when the modal is shown
+      this.$nextTick(() => {
+        this.$root.$emit('bv::show::modal', 'fullscreenImageModal')
+      })
     },
   },
 }
@@ -353,11 +369,10 @@ h1
 
 .main-image-container
   width: 100%
-  max-width: 100%
   margin-top: 1rem
 
   img
-    width: 100%
+    max-width: 100%
 
     &.main-image
       cursor: pointer
@@ -392,15 +407,21 @@ h1
     position: relative
     margin: 0 .5rem .5rem 0
 
-    img
-      max-height: 100%
-
-  .additional-file
     display: flex
     flex-direction: column
+
+    img
+      opacity: .8
+      max-height: 100%
 
     .name
       width: 100%
       font-size: small
+
+    &:hover
+      background-color: rgba($color-primary, .05)
+
+      img
+        opacity: 1
 
 </style>
