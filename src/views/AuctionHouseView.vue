@@ -215,7 +215,6 @@ export default {
       totalCount: 0,
       isLoading: false,
       auctionHouse: null,
-      isMobile: is.mobile(),
       headerBackgroundImageUrls: [],
       hasInitialRequestLoaded: false,
 
