@@ -72,14 +72,28 @@
             <span>File Hashes</span>
             <span>
               <!--
-                @TODO: add ValidHashBadge for file hashes, which is a little more complicated...
-              -->
+                iterate over the API-calculated hashes (codexRecord.metadata.fileHashes)
+                and compare to the values stored in the contract (codexRecord.fileHashes)
 
+                unless metadata is private, then I guess just display what's in
+                codexRecord.fileHashes without valid-hash badges ¯\_(ツ)_/¯
+              -->
               <span
                 class="file-hash"
-                :key="index" v-for="(fileHash, index) in codexRecord.fileHashes"
+                :key="index" v-for="(fileHash, index) in (codexRecord.metadata ? codexRecord.metadata.fileHashes : codexRecord.fileHashes)"
               >
                 {{ fileHash }}
+
+                <!--
+                  @NOTE: we only show the badges if the metadata is available
+                  because it's pointless to compare values in
+                  codexRecord.fileHashes to values in itself
+                -->
+                <ValidHashBadge
+                  :hash="fileHash"
+                  v-if="codexRecord.metadata"
+                  :array="codexRecord.fileHashes"
+                />
               </span>
             </span>
           </div>

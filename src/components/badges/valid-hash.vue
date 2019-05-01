@@ -29,9 +29,13 @@ export default {
       required: true,
     },
     string: {
-      required: true,
       validator: (value) => {
         return typeof value === 'string' || value === null
+      },
+    },
+    array: {
+      validator: (value) => {
+        return Array.isArray(value)
       },
     },
   },
@@ -41,6 +45,11 @@ export default {
     ...mapState('web3', ['instance']),
 
     isValid() {
+
+      if (this.array) {
+        return this.array.includes(this.hash)
+      }
+
       if (this.string === null || this.string === '') {
         return this.hash === '0x0000000000000000000000000000000000000000000000000000000000000000'
       }
