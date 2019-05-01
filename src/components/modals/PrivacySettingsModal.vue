@@ -39,9 +39,11 @@
         v-model="isHistoricalProvenancePrivate"
       />
       <b-form-text>
-        Use this to make additional files visible only to the current owner
-        of this Codex Record, regardless of the privacy setting selected
-        above.
+        Use this to make "additional files" visible only to the current owner
+        of this Codex Record (you), regardless of the privacy setting selected
+        above. Note that this does <strong>NOT</strong> affect "additional
+        images", anyone with permissions to view this Codex Record can see those
+        images.
       </b-form-text>
     </b-form-group>
 
