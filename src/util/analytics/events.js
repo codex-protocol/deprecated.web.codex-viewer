@@ -31,6 +31,10 @@ export default {
     category: 'Codex Record',
     action: 'Metadata Create',
   },
+  'events:record-metadata-modify': {
+    category: 'Codex Record',
+    action: 'Metadata Modify',
+  },
   'events:record-transfer-approve': {
     category: 'Codex Record',
     action: 'Approve',

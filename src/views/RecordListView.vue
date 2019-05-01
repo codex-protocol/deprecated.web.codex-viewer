@@ -6,7 +6,7 @@
           <template slot="buttons">
             <b-button
               variant="primary"
-              v-b-modal.createRecordModal
+              v-b-modal.createAndModifyRecordModal
             >
               Add New Asset
             </b-button>
@@ -65,8 +65,9 @@
           </b-button>
         </div>
 
-        <CreateRecordModal />
+        <CreateAndModifyRecordModal mode="create" />
         <BulkRecordMintModal v-if="isNotSavvyUser && user.role === 'auction-house'" />
+
       </div>
     </div>
   </div>
@@ -90,8 +91,8 @@ import ClaimGiveawayCard from '../components/cards/ClaimGiveawayCard'
 import RecordSearch from '../components/RecordSearch'
 import LoadingIcon from '../components/util/LoadingIcon'
 import RecordListItem from '../components/RecordListItem'
-import CreateRecordModal from '../components/modals/CreateRecordModal'
 import BulkRecordMintModal from '../components/modals/BulkRecordMintModal'
+import CreateAndModifyRecordModal from '../components/modals/CreateAndModifyRecordModal'
 
 export default {
 
@@ -107,8 +108,8 @@ export default {
     RecordSearch,
     RecordListItem,
 
-    CreateRecordModal,
     BulkRecordMintModal,
+    CreateAndModifyRecordModal,
   },
 
   data() {

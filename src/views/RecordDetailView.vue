@@ -104,7 +104,7 @@
 
                 <section class="action-buttons">
                   <div class="owner-action-buttons" v-if="isOwner">
-                    <b-button variant="primary" v-b-modal.recordManageModal>
+                    <b-button variant="primary" v-b-modal.createAndModifyRecordModal>
                       Edit
                     </b-button>
 
@@ -116,8 +116,8 @@
                       Settings
                     </b-button>
 
-                    <RecordManageModal :codex-record="codexRecord" />
                     <ApproveTransferModal :codex-record="codexRecord" />
+                    <CreateAndModifyRecordModal mode="modify" :codex-record="codexRecord" />
                     <PrivacySettingsModal :codex-record="codexRecord" :onUpdated="onSettingsUpdate" />
                   </div>
 
@@ -187,11 +187,11 @@ import LoadingOverlay from '../components/util/LoadingOverlay'
 import RecordBlockchainDetails from '../components/RecordBlockchainDetails'
 
 import ClaimRecordModal from '../components/modals/ClaimRecordModal'
-import RecordManageModal from '../components/modals/RecordManageModal'
 import AcceptTransferModal from '../components/modals/AcceptTransferModal'
 import ApproveTransferModal from '../components/modals/ApproveTransferModal'
 import PrivacySettingsModal from '../components/modals/PrivacySettingsModal'
 import FullscreenImageModal from '../components/modals/FullscreenImageModal'
+import CreateAndModifyRecordModal from '../components/modals/CreateAndModifyRecordModal'
 
 export default {
 
@@ -201,11 +201,11 @@ export default {
     RecordBlockchainDetails,
 
     ClaimRecordModal,
-    RecordManageModal,
     AcceptTransferModal,
     ApproveTransferModal,
     PrivacySettingsModal,
     FullscreenImageModal,
+    CreateAndModifyRecordModal,
   },
 
   data() {

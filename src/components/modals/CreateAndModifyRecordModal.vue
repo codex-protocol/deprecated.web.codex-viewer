@@ -1,26 +1,30 @@
 <template>
   <MetaMaskNotificationModal
-    id="createRecordModal"
-    title="Create Record"
-    ok-title="Create"
-    cancel-variant="outline-primary"
-    :on-shown="focusModal"
-    :ok-method="createMetadata"
+    :on-show="onShow"
+    :title="modalTitle"
+    :ok-title="okTitle"
+    :validate="validate"
     :on-clear="clearModal"
     :requires-tokens="true"
-    :validate="validate"
+    :ok-method="saveMetadata"
     :ok-disabled="disableButton"
-    :checkout-cost="codxCosts.CodexRecord.mint"
-    checkout-action="Create Codex Record"
+    :checkout-cost="checkoutCost"
+    :checkout-action="checkoutAction"
+
+    id="createAndModifyRecordModal"
+    cancel-variant="outline-primary"
   >
     <template slot="checkout">
       <h3>{{ name }}</h3>
-      <div class="image-container"><img :src="mainImage.dataUrl"></div>
+      <div class="image-container"><img :src="mainImage.imageTageSource"></div>
+      <!-- this can be swapped when the email bug is fixed in the escapeHTML filter -->
       <div class="description">{{ description }}</div>
+      <!-- <div class="description" v-html="$options.filters.escapeHtml(description)"></div> -->
 
       <b-form-group
         label-size="sm"
         label="Additional Images"
+        v-if="additionalImages.length !== 0"
       >
         <div class="additional-files">
           <div
@@ -28,7 +32,7 @@
             class="additional-file image-container no-hover"
             v-for="(additionalImage, index) in additionalImages"
           >
-            <img :src="additionalImage.dataUrl" />
+            <img :src="additionalImage.imageTageSource" />
           </div>
         </div>
       </b-form-group>
@@ -36,6 +40,7 @@
       <b-form-group
         label-size="sm"
         label="Additional Files"
+        v-if="additionalFiles.length !== 0"
       >
         <div class="additional-files">
           <div
@@ -71,7 +76,7 @@
           label-for="mainImageInput"
         >
           <div class="main-image image-container">
-            <img :src="mainImage.dataUrl" />
+            <img :src="mainImage.imageTageSource" />
             <LoadingOverlay type="dark" :show="mainImage.isLoading" />
           </div>
           <b-form-file
@@ -118,6 +123,7 @@
         <b-form-group
           label-size="sm"
           label-for="isPublic"
+          v-if="mode === 'create'"
           label="Share Record Publicly"
         >
           <input
@@ -156,7 +162,7 @@
               >
                 <img src="../../assets/icons/delete.svg">
               </div>
-              <img :src="additionalImage.dataUrl" />
+              <img :src="additionalImage.imageTageSource" />
               <LoadingOverlay type="dark" size="medium" :show="additionalImage.isLoading" />
             </div>
 
@@ -242,9 +248,9 @@
 
         <b-form-group
           label-size="sm"
-          v-if="additionalFiles.length !== 0"
           label="Keep Additional Files Private"
           label-for="isHistoricalProvenancePrivate"
+          v-if="mode === 'create' && additionalFiles.length !== 0"
         >
           <input
             type="checkbox"
@@ -277,7 +283,7 @@ import additionalDataHelper from '../../util/additionalDataHelper'
 import LoadingOverlay from '../util/LoadingOverlay'
 import MetaMaskNotificationModal from './MetaMaskNotificationModal'
 
-const logger = debug('app:component:create-record-modal')
+const logger = debug('app:component:create-and-modify-record-modal')
 
 class FileClass {
 
@@ -286,13 +292,21 @@ class FileClass {
   isLoading = false
   fileObject = null
 
-  constructor(fileObject) {
+  constructor({ dataUrl, apiRecord, isLoading, fileObject } = {}) {
+    this.dataUrl = dataUrl || this.dataUrl
+    this.apiRecord = apiRecord || this.apiRecord
+    this.isLoading = isLoading || this.isLoading
     this.fileObject = fileObject || this.fileObject
+  }
+
+  get imageTageSource() {
+    return this.apiRecord ? this.apiRecord.uri : this.dataUrl
   }
 
   upload() {
 
     this.isLoading = true
+    this.apiRecord = false
 
     return File.uploadFiles(this.fileObject)
       .then((uploadedFiles) => {
@@ -335,10 +349,29 @@ export default {
     MetaMaskNotificationModal,
   },
 
+  props: {
+    mode: {
+      type: String,
+      required: true,
+      validator: (value) => {
+        return value === 'create' || value === 'modify'
+      },
+    },
+    codexRecord: {
+      type: Object,
+    },
+  },
+
   data() {
     return {
       name: null,
       description: null,
+
+      additionalFiles: [],
+      additionalImages: [],
+      mainImage: new FileClass(),
+
+      // these are only used in the "create" form
       confirmMintValues: {
         isHistoricalProvenancePrivate: true,
         // on 2019-01-31 the default state for this checkbox was made "public"
@@ -347,18 +380,62 @@ export default {
         isPrivate: false,
       },
 
-      additionalFiles: [],
-      additionalImages: [],
-      mainImage: new FileClass(),
-
+      // modal-specific stuff
+      okTitle: this.mode === 'create' ? 'Create' : 'Save',
+      modalTitle: this.mode === 'create' ? 'Create Record' : 'Modify Record',
+      checkoutAction: this.mode === 'create' ? 'Create Codex Record' : 'Modify Codex Record',
     }
   },
 
+  computed: {
+    ...mapState('auth', ['user']),
+    ...mapState('web3', ['instance']),
+    ...mapState('app', ['codxCosts']),
+
+    disableButton() {
+      return this.validate().length !== 0
+    },
+
+    isPublic: {
+      get: function getIsPublic() {
+        return !this.confirmMintValues.isPrivate
+      },
+      set: function setIsPublic(newValue) {
+        this.confirmMintValues.isPrivate = !newValue
+      },
+    },
+
+    checkoutCost() {
+      return this.mode === 'create' ? this.codxCosts.CodexRecord.mint : this.codxCosts.CodexRecord.modifyMetadataHashes
+    },
+
+  },
+
   methods: {
-    focusModal() {
+
+    onShow() {
       if (this.$refs.defaultModalFocus) {
         this.$refs.defaultModalFocus.focus()
       }
+
+      if (this.mode === 'create') {
+        return
+      }
+
+      if (!this.codexRecord || !this.codexRecord.metadata) {
+        throw new Error(`CreateAndModifyRecordModal called with mode = ${this.mode} and no codexRecord and/or metadata!`)
+      }
+
+      this.name = this.codexRecord.metadata.name
+      this.description = this.codexRecord.metadata.description
+      this.mainImage = new FileClass({ apiRecord: this.codexRecord.metadata.mainImage })
+      this.additionalFiles = this.codexRecord.metadata.files.map((apiRecord) => {
+        return new FileClass({ apiRecord })
+      })
+      this.additionalImages = this.codexRecord.metadata.images.map((apiRecord) => {
+        return new FileClass({ apiRecord })
+      })
+
     },
 
     clearModal() {
@@ -366,17 +443,18 @@ export default {
     },
 
     mainImageChanged() {
+      if (!this.mainImage.fileObject) return
       this.mainImage.upload()
       this.mainImage.setDataUrl()
     },
 
-    addAdditionalImages(files) {
+    addAdditionalImages(fileObjects) {
 
-      if (!files || files.length === 0) return
+      if (!fileObjects || fileObjects.length === 0) return
 
-      files.forEach((file) => {
+      fileObjects.forEach((fileObject) => {
 
-        const newAdditionalImage = new FileClass(file)
+        const newAdditionalImage = new FileClass({ fileObject })
 
         newAdditionalImage.setDataUrl()
         newAdditionalImage.upload()
@@ -392,13 +470,13 @@ export default {
 
     },
 
-    addAdditionalFiles(files) {
+    addAdditionalFiles(fileObjects) {
 
-      if (!files || files.length === 0) return
+      if (!fileObjects || fileObjects.length === 0) return
 
-      files.forEach((file) => {
+      fileObjects.forEach((fileObject) => {
 
-        const newAdditionalFile = new FileClass(file)
+        const newAdditionalFile = new FileClass({ fileObject })
 
         newAdditionalFile.upload()
           .then(() => {
@@ -451,7 +529,7 @@ export default {
       return errors
     },
 
-    createMetadata() {
+    saveMetadata() {
 
       const images = this.additionalImages.map((additionalImage) => {
         return additionalImage.apiRecord
@@ -461,23 +539,25 @@ export default {
         return additionalFile.apiRecord
       })
 
-      const metadataToUpload = {
+      const metadataToSave = {
         files,
         images,
         name: this.name,
         mainImage: this.mainImage.apiRecord,
         description: this.description || null,
-        confirmMintValues: this.confirmMintValues,
       }
 
-      return Record.createMetadata(metadataToUpload)
-        .then((metadata) => {
-          return this.createRecord(metadata)
-        })
-        .catch((error) => {
-          logger('Could not create Record:', error)
+      if (this.mode === 'create') {
+        metadataToSave.confirmMintValues = this.confirmMintValues
+      }
 
-          this.codexRecord = null
+      const promise = this.mode === 'create'
+        ? Record.createMetadata(metadataToSave).then(this.createRecord)
+        : Record.updateMetadata(this.codexRecord.tokenId, metadataToSave).then(this.modifyRecord)
+
+      return promise
+        .catch((error) => {
+          logger(`Could not ${this.mode} Codex Record:`, error)
 
           // @NOTE: we must throw the error here so the MetaMaskNotificationModal
           //  can catch() it too
@@ -505,25 +585,27 @@ export default {
           EventBus.$emit('events:record-metadata-create', metadata.id)
         })
     },
-  },
 
-  computed: {
-    ...mapState('auth', ['user']),
-    ...mapState('web3', ['instance']),
-    ...mapState('app', ['codxCosts']),
+    modifyRecord(pendingUpdate) {
+      const input = [
+        this.codexRecord.tokenId,
+        pendingUpdate.nameHash,
+        pendingUpdate.descriptionHash || NullDescriptionHash,
+        pendingUpdate.fileHashes,
+        additionalDataHelper.encode([
+          process.env.VUE_APP_METADATA_PROVIDER_ID, // providerId
+          this.codexRecord.metadata.id, // providerMetadataId
+          pendingUpdate.id, // providerMetadataPendingUpdateId
+        ]),
+      ]
 
-    disableButton() {
-      return this.validate().length !== 0
+      // @NOTE: we don't .catch here so that the error bubbles up to MetaMaskNotificationModal
+      return contractHelper('CodexRecord', 'modifyMetadataHashes', input, this.$store)
+        .then(() => {
+          EventBus.$emit('events:record-metadata-modify', this.codexRecord.tokenId)
+        })
     },
 
-    isPublic: {
-      get: function getIsPublic() {
-        return !this.confirmMintValues.isPrivate
-      },
-      set: function setIsPublic(newValue) {
-        this.confirmMintValues.isPrivate = !newValue
-      },
-    },
   },
 }
 </script>
@@ -543,6 +625,15 @@ export default {
 
     > div
       width: calc(50% - 1rem)
+
+.description
+  overflow-wrap: break-word
+
+  // this can be removed when the email bug is fixed in the escapeHTML filter
+  white-space: pre-wrap
+
+  &:not(:empty)
+    margin-bottom: 1rem
 
 .main-image
   height: 16rem
