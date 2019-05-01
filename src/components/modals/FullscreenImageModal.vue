@@ -15,11 +15,13 @@
           :src="images[currentIndex].uri"
         >
       </div>
-      <div class="buttons" v-if="images.length > 1">
-        <b-button variant="primary" @click.stop="previous">Previous</b-button>
-        <b-button variant="primary" @click.stop="next">Next</b-button>
-      </div>
-      <p v-if="!isMobile" class="keyboard-note">you can also use the arrow keys</p>
+      <template v-if="images.length > 1">
+        <div class="buttons">
+          <b-button variant="primary" @click.stop="previous">Previous</b-button>
+          <b-button variant="primary" @click.stop="next">Next</b-button>
+        </div>
+        <p v-if="!isMobile" class="keyboard-note">you can also use the arrow keys</p>
+      </template>
     </div>
   </b-modal>
 </template>
@@ -98,6 +100,12 @@ export default {
     align-items: center
     justify-content: center
     height: calc(100vh - 2rem - 5.5rem) // 2rem = modal padding, 5.5rem enough for the buttons and such
+
+    // if we're not showing the navigation buttons, make the image take up the
+    //  full space... all this wierd height calc() stuff is really a workaround
+    //  for firefox not displaying this flex layout like chrome & safari
+    &:only-child
+      height: 100%
 
     img
       max-width: 100%
