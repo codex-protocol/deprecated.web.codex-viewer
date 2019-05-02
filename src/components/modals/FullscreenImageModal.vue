@@ -102,7 +102,7 @@ export default {
       const delta = Math.abs(this.touchStartX - this.touchCurrentX)
 
       if (delta > 50) {
-        this.touchStartX > this.touchCurrentX ? this.next() : this.previous()
+        (this.touchStartX > this.touchCurrentX ? this.next : this.previous)()
       }
 
       this.touchStartX = null
