@@ -11,7 +11,7 @@
       <AppWarningBanner v-if="showWarningBanner" />
       <div class="app-wrapper">
         <template v-if="!hideSideBar">
-          <span class="hamburger" @click="TOGGLE_NAV">
+          <span hide-when-modal-open class="hamburger" @click="TOGGLE_NAV">
             <IconBase
               width="28"
               height="32"
@@ -321,6 +321,18 @@ body
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
   font-family: $font-family-sans-serif
+
+  // hide some pesky absolute-positioned UI elements when modals are open
+  #fc_frame
+  [hide-when-modal-open]
+    opacity: 1
+    transition: opacity ease .2s
+
+  &.modal-open
+    #fc_frame
+    [hide-when-modal-open]
+      opacity: 0
+      pointer-events: none
 
   // "visually disable" the application when the freshchat widget is open
   &.fc-widget-open

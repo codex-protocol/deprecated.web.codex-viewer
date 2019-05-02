@@ -25,6 +25,28 @@
         By making this Record public, anyone can view the name, description and images.
       </b-form-text>
     </b-form-group>
+
+    <b-form-group
+      label-size="sm"
+      label="Keep Additional Files Private"
+      label-for="isHistoricalProvenancePrivate"
+      v-if="codexRecord.metadata.files && codexRecord.metadata.files.length !== 0"
+    >
+      <input
+        type="checkbox"
+        class="toggle-checkbox"
+        id="isHistoricalProvenancePrivate"
+        v-model="isHistoricalProvenancePrivate"
+      />
+      <b-form-text>
+        Use this to make "additional files" visible only to the current owner
+        of this Codex Record (you), regardless of the privacy setting selected
+        above. Note that this does <strong>NOT</strong> affect "additional
+        images", anyone with permissions to view this Codex Record can see those
+        images.
+      </b-form-text>
+    </b-form-group>
+
     <b-form-group
       v-if="user && user.isGalleryEnabled"
       label="Include Record in Gallery"
@@ -155,6 +177,7 @@ export default {
       isInGallery: this.codexRecord.isInGallery,
       whitelistedEmails: Array.from(this.codexRecord.whitelistedEmails) || [],
       whitelistedAddresses: Array.from(this.codexRecord.whitelistedAddresses) || [],
+      isHistoricalProvenancePrivate: this.codexRecord.isHistoricalProvenancePrivate,
     }
   },
 
@@ -264,6 +287,7 @@ export default {
         isInGallery: this.isInGallery,
         whitelistedEmails: this.whitelistedEmails,
         whitelistedAddresses: this.whitelistedAddresses,
+        isHistoricalProvenancePrivate: this.isHistoricalProvenancePrivate,
       }
 
       Record.updateRecord(this.codexRecord.tokenId, dataToUpdate)
