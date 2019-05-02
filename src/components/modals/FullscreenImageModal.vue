@@ -8,7 +8,11 @@
     @click.native="modalVisible = false"
   >
     <div class="full-screen-image-container">
-      <div class="image">
+      <div class="image"
+        @touchend="onTouchEnd"
+        @touchmove="onTouchMove"
+        @touchstart="onTouchStart"
+      >
         <img
           @click.stop
           v-if="images[currentIndex]"
@@ -20,7 +24,7 @@
           <b-button variant="primary" @click.stop="previous">Previous</b-button>
           <b-button variant="primary" @click.stop="next">Next</b-button>
         </div>
-        <p v-if="!isMobile" class="keyboard-note">you can also use the arrow keys</p>
+        <p class="keyboard-note">you can also {{ isMobile ? 'swipe' : 'use the arrow keys' }}</p>
       </template>
     </div>
   </b-modal>
@@ -45,6 +49,8 @@ export default {
 
   data() {
     return {
+      touchStartX: null,
+      touchCurrentX: null,
       modalVisible: false,
       isMobile: is.mobile(),
       currentIndex: this.startIndex,
@@ -55,6 +61,7 @@ export default {
     beforeShow() {
       this.currentIndex = this.startIndex
     },
+
     onKeydown(event) {
       switch (event.code) {
         case 'ArrowLeft':
@@ -69,13 +76,37 @@ export default {
           // do nothing
       }
     },
+
     previous() {
       if (this.currentIndex === 0) this.currentIndex = this.images.length - 1
       else this.currentIndex -= 1
     },
+
     next() {
       if (this.currentIndex === this.images.length - 1) this.currentIndex = 0
       else this.currentIndex += 1
+    },
+
+    onTouchStart(event) {
+      if (!event || !event.touches || !event.touches[0]) return
+      this.touchCurrentX = event.touches[0].clientX
+      this.touchStartX = event.touches[0].clientX
+    },
+
+    onTouchMove(event) {
+      if (!event || !event.touches || !event.touches[0]) return
+      this.touchCurrentX = event.touches[0].clientX
+    },
+
+    onTouchEnd(event) {
+      const delta = Math.abs(this.touchStartX - this.touchCurrentX)
+
+      if (delta > 50) {
+        this.touchStartX > this.touchCurrentX ? this.next() : this.previous()
+      }
+
+      this.touchStartX = null
+      this.touchCurrentX = null
     },
   },
 }
