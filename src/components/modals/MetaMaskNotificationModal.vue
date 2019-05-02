@@ -9,6 +9,7 @@
     :ok-disabled="isDisabled"
     :size="modalSize"
     v-model="modalVisible"
+    @show="show"
     @shown="shown"
     @hidden="onHide"
     @ok.prevent="nextStep"
@@ -121,6 +122,7 @@ export default {
     'okDisabled',
     'okMethod',
     'size',
+    'onShow',
     'onShown',
     'onClear',
     'requiresTokens',
@@ -144,6 +146,7 @@ export default {
       preventClose: false,
       currentStep: 0,
       errors: [],
+      show: this.onShow || noOp,
       shown: this.onShown || noOp,
       disableButton: false,
     }
