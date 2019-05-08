@@ -13,19 +13,27 @@
     <small>
       #{{ codexRecord.tokenId }}
     </small>
+
     <img
       v-b-tooltip.hover
       :src="privacyIcon"
       class="icon privacy-icon"
       :title="privacyTooltipText"
-    />
+    >
     <img
+      class="icon"
       v-b-tooltip.hover
-      class="icon auction-house-icon"
       v-if="codexRecord.isOwnedByAuctionHouse"
       title="Currently owned by an Auction House"
       src="../assets/icons/auction-house-black.svg"
-    />
+    >
+    <img
+      class="icon"
+      v-b-tooltip.hover
+      src="../assets/icons/star-black.svg"
+      title="Part of a Featured Collection"
+      v-if="!codexRecord.isOwnedByAuctionHouse && codexRecord.isInFeaturedCollection"
+    >
   </b-card>
 </template>
 

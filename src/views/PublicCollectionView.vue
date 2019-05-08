@@ -1,5 +1,13 @@
 <template>
-  <div v-if="auctionHouse">
+  <div v-if="publicCollection">
+
+    <FullscreenImageModal
+      mode="records"
+      :records="records"
+      :useFullscreen="true"
+      @change="onFullscreenImageChange"
+    />
+
     <header>
       <CarouselBackground :urls="headerBackgroundImageUrls" />
       <div class="container-fluid">
@@ -7,11 +15,11 @@
           <div class="col-12 col-lg-6">
             <div class="info glass-pane">
               <div class="info-row title">
-                <img :src="auctionHouse.iconUrl">
-                <h2>{{ auctionHouse.name }}</h2>
+                <img :src="publicCollection.iconUrl || missingImage">
+                <h2>{{ publicCollection.name }}</h2>
               </div>
               <div class="info-row description">
-                <p>{{ auctionHouse.description }}</p>
+                <p>{{ publicCollection.description }}</p>
               </div>
               <div class="info-row social-links">
                 <a
@@ -25,14 +33,28 @@
               </div>
             </div>
           </div>
-          <!-- <div class="action-buttons col-12 col-lg-6">
-            <b-button variant="primary" @click="viewAsSlideshow">
-              <img src="../assets/icons/slideshow.svg"> View as Slideshow
+          <div class="action-buttons col-12 col-lg-4 offset-lg-2">
+            <b-button
+              target="_blank"
+              variant="primary"
+              v-if="publicCollection.contactLink"
+              :href="publicCollection.contactLink"
+            >
+              <img src="../assets/icons/contact.svg"> Contact Owner
             </b-button>
-            <b-button variant="outline-primary" @click="copyShareLink" ref="copy-share-link-button">
-              Copy Share Link
+            <b-button
+              variant="primary"
+              v-b-modal.fullscreenImageModal
+            >
+              <img src="../assets/icons/fullscreen.svg"> View Fullscreen
             </b-button>
-          </div> -->
+            <b-button
+              variant="primary"
+              @click="copyShareLink" ref="copy-share-link-button"
+            >
+              <img src="../assets/icons/copy.svg"> Copy Share Link
+            </b-button>
+          </div>
         </div>
       </div>
     </header>
@@ -130,8 +152,8 @@
 
             <div class="flex-column-to-row">
               <RecordSearch
-                type="auction-house"
-                :auctionHouse="auctionHouse"
+                type="public-collection"
+                :shareCode="publicCollection.shareCode"
               />
 
               <b-form class="sorting-options">
@@ -190,14 +212,17 @@
 import is from 'is_js'
 
 import EventBus from '../util/eventBus'
-import AuctionHouse from '../util/api/auction-house'
 import copyToClipboard from '../util/copyToClipboard'
+import PublicCollection from '../util/api/publicCollection'
+
+import missingImage from '../assets/images/missing-image.png'
 
 import RecordSearch from '../components/RecordSearch'
 import LoadingIcon from '../components/util/LoadingIcon'
 import RecordListItem from '../components/RecordListItem'
 import LoadingOverlay from '../components/util/LoadingOverlay'
 import CarouselBackground from '../components/CarouselBackground'
+import FullscreenImageModal from '../components/modals/FullscreenImageModal'
 
 export default {
 
@@ -207,14 +232,16 @@ export default {
     LoadingOverlay,
     RecordListItem,
     CarouselBackground,
+    FullscreenImageModal,
   },
 
   data() {
     return {
       records: [],
+      missingImage,
       totalCount: 0,
       isLoading: false,
-      auctionHouse: null,
+      publicCollection: null,
       headerBackgroundImageUrls: [],
       hasInitialRequestLoaded: false,
 
@@ -234,8 +261,9 @@ export default {
   },
 
   computed: {
-    auctionHouseShareCode() {
-      return this.$route.params.auctionHouseShareCode
+
+    shareCode() {
+      return this.$route.params.shareCode
     },
 
     // make sure "website" is always listed first in the social links
@@ -243,7 +271,7 @@ export default {
 
       const orderedSocialLinks = {}
 
-      Object.keys(this.auctionHouse.socialLinks)
+      Object.keys(this.publicCollection.socialLinks)
         .sort((key) => {
           if (key === 'website') {
             return -1
@@ -251,7 +279,7 @@ export default {
           return 0
         })
         .forEach((key) => {
-          orderedSocialLinks[key] = this.auctionHouse.socialLinks[key]
+          orderedSocialLinks[key] = this.publicCollection.socialLinks[key]
         })
 
       return orderedSocialLinks
@@ -289,8 +317,8 @@ export default {
   },
 
   created() {
-    // @TODO: Add caching for individual auction houses?
-    this.getAuctionHouse()
+    // @TODO: Add caching for individual public collections?
+    this.getPublicCollection()
   },
 
   mounted() {
@@ -303,13 +331,19 @@ export default {
 
   methods: {
 
+    onFullscreenImageChange(imageIndex) {
+      if (
+        !this.isLoading &&
+        this.records.length < this.totalCount &&
+        imageIndex >= this.records.length / 2
+      ) {
+        this.loadMore()
+      }
+    },
+
     copyShareLink() {
       copyToClipboard(window.location.href, 'Share link copied to clipboard!')
       this.$refs['copy-share-link-button'].focus()
-    },
-
-    viewAsSlideshow() {
-      // @TODO: do this
     },
 
     viewRecord(tokenId) {
@@ -321,14 +355,15 @@ export default {
       })
     },
 
-    getAuctionHouse() {
+    getPublicCollection() {
 
       this.isLoading = true
 
-      AuctionHouse.getAuctionHouse(this.auctionHouseShareCode)
-        .then(({ auctionHouse, filterOptions }) => {
-          this.auctionHouse = auctionHouse
+      PublicCollection.getPublicCollection(this.shareCode)
+        .then(({ publicCollection, filterOptions }) => {
+
           this.filterOptions = filterOptions
+          this.publicCollection = publicCollection
 
           this.filterOptions.forEach((filterOption) => {
             this.$set(filterOption, 'selectedValues', [])
@@ -356,7 +391,7 @@ export default {
       const offset = limit * this.pageNumber
       const order = this.selectedSortingOption
 
-      return AuctionHouse.getAuctionHouseRecords(this.auctionHouse.shareCode, { limit, offset, order, filters: this.filters })
+      return PublicCollection.getRecords(this.publicCollection.shareCode, { limit, offset, order, filters: this.filters })
         .then(({ totalCount, records }) => {
 
           this.records = records || []
@@ -409,7 +444,7 @@ export default {
       const offset = limit * this.pageNumber
       const order = this.selectedSortingOption
 
-      return AuctionHouse.getAuctionHouseRecords(this.auctionHouse.shareCode, { limit, offset, order, filters: this.filters })
+      return PublicCollection.getRecords(this.publicCollection.shareCode, { limit, offset, order, filters: this.filters })
         .then(({ totalCount, records }) => {
 
           const newRecords = records.filter((record) => {
@@ -488,7 +523,7 @@ header
   position: relative
   padding-bottom: 2.5rem
 
-  @media (min-width: $breakpoint-sm)
+  @media (min-width: $breakpoint-lg)
     padding-bottom: 5rem
 
   .action-buttons
@@ -503,17 +538,21 @@ header
       align-items: flex-end
       flex-direction: column
 
+    a
     button
       width: 100%
+      padding: .5rem 1rem
 
+      &+a
       &+button
         margin-top: 1rem
 
       img
         vertical-align: bottom
 
-      @media (min-width: $breakpoint-sm)
-        width: auto
+      // uncomment this to make buttons different widths with jagged edges
+      // @media (min-width: $breakpoint-sm)
+      //   width: auto
 
   .info
     border: none

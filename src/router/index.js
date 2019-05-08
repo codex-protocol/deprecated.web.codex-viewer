@@ -5,20 +5,19 @@ import store from '../store'
 import config from '../util/config'
 
 import LoginView from '../views/LoginView'
-import GalleryView from '../views/GalleryView'
 import GetCODXView from '../views/GetCODXView'
 import SettingsView from '../views/SettingsView'
 import ContactUsView from '../views/ContactUsView'
-import RecordListView from '../views/RecordListView'
+import CollectionView from '../views/CollectionView'
 import FeatureListView from '../views/FeatureListView'
-import GalleryListView from '../views/GalleryListView'
 import ManageTokensView from '../views/ManageTokensView'
 import RecordDetailView from '../views/RecordDetailView'
 import TransferListView from '../views/TransferListView'
-import AuctionHouseView from '../views/AuctionHouseView'
 import ConfirmEmailView from '../views/ConfirmEmailView'
 import ResetPasswordView from '../views/ResetPasswordView'
+import PublicCollectionView from '../views/PublicCollectionView'
 import AuctionHouseListView from '../views/AuctionHouseListView'
+import FeaturedCollectionListView from '../views/FeaturedCollectionListView'
 
 Vue.use(Router)
 
@@ -73,7 +72,7 @@ const router = new Router({
     {
       name: 'collection',
       path: '/collection',
-      component: RecordListView,
+      component: CollectionView,
     },
     {
       name: 'contact',
@@ -127,22 +126,22 @@ const router = new Router({
     },
     {
       name: 'auction-house',
-      component: AuctionHouseView,
+      component: PublicCollectionView,
+      path: '/auction-houses/:shareCode',
       meta: { allowUnauthenticatedUsers: true },
-      path: '/auction-houses/:auctionHouseShareCode',
     },
 
-    // gallery routes
+    // featured collection routes
     {
-      name: 'galleries',
-      path: '/galleries',
-      component: GalleryListView,
+      name: 'featured-collections',
+      path: '/featured-collections',
+      component: FeaturedCollectionListView,
       meta: { allowUnauthenticatedUsers: true },
     },
     {
-      name: 'gallery',
-      component: GalleryView,
-      path: '/galleries/:galleryShareCode',
+      name: 'featured-collection',
+      component: PublicCollectionView,
+      path: '/featured-collection/:shareCode',
       meta: { allowUnauthenticatedUsers: true },
     },
 
@@ -190,11 +189,11 @@ router.beforeEach((to, from, next) => {
 })
 
 // on mobile devices, if the user navigates from a page with the sidebar to a
-//  page without the sidebar (e.g. galleries > login), the blur effect would
-//  still be visible because "showNav" in the app state store would still be
-//  true because the sidebar component is destroyed before the TOGGLE_NAV call
-//  is made... so let's just always toggle showNav off when transitioning to a
-//  route without the sidenav
+//  page without the sidebar (e.g. public-collections > login), the blur effect
+//  would still be visible because "showNav" in the app state store would still
+//  be true because the sidebar component is destroyed before the TOGGLE_NAV
+//  call is made... so let's just always toggle showNav off when transitioning
+//  to a route without the sidenav
 router.afterEach((to, from) => {
   if (to.meta.hideSideBar) {
     store.dispatch('app/TOGGLE_NAV', false)

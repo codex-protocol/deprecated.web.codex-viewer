@@ -10,8 +10,8 @@
               v-if="auctionHouse.previewImages && auctionHouse.previewImages.length !== 0"
               v-for="(auctionHouse, index) in auctionHouses"
               :slideDuration="3000 + (250 * index)"
+              :key="auctionHouse.shareCode"
               :auctionHouse="auctionHouse"
-              :key="auctionHouse.id"
             />
           </b-card-group>
         </div>

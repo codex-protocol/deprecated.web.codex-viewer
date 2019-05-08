@@ -17,6 +17,13 @@
             >
               Bulk Create Assets
             </b-button>
+            <b-button
+              variant="outline-primary"
+              v-if="user && user.role === 'featured-collection' && myFeaturedCollection"
+              :to="{ name: 'featured-collection', params: { shareCode: myFeaturedCollection.shareCode } }"
+            >
+              Go to My Featured Collection Page
+            </b-button>
           </template>
           <template slot="actions" v-if="userRecords.length > 1">
             <RecordSearch
@@ -126,8 +133,8 @@ export default {
   },
 
   computed: {
-    ...mapState('app', ['giveaway']),
     ...mapState('auth', ['user', 'hideSetup']),
+    ...mapState('app', ['giveaway', 'featuredCollections']),
     ...mapState('records', ['totalRecordCount', 'paginationOptions']),
     ...mapState('records', {
       userRecords: (state) => {
@@ -135,6 +142,12 @@ export default {
       },
     }),
     ...mapGetters('auth', ['isNotSavvyUser']),
+
+    myFeaturedCollection() {
+      return this.featuredCollections.find((featuredCollection) => {
+        return this.user.address === featuredCollection.userAddress
+      })
+    },
 
     showSavvySetupCard() {
       return config.feesEnabled && !this.isNotSavvyUser && !this.hideSetup && !this.giveaway

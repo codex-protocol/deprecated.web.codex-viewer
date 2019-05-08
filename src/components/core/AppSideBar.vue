@@ -50,10 +50,9 @@ import CODXBalanceControl from '../CODXBalanceControl'
 import config from '../../util/config'
 
 import iconHome from '../../assets/icons/home.svg'
-// import starIcon from '../../assets/icons/star.svg'
+import starIcon from '../../assets/icons/star.svg'
 import logoutIcon from '../../assets/icons/logout.svg'
 import codxIcon from '../../assets/icons/codx-token.svg'
-import galleryIcon from '../../assets/icons/gallery.svg'
 import settingsIcon from '../../assets/icons/settings.svg'
 import iconTransfers from '../../assets/icons/transfers.svg'
 import iconCollection from '../../assets/icons/collection.svg'
@@ -73,7 +72,7 @@ export default {
 
   computed: {
     ...mapState('auth', ['user']),
-    ...mapState('app', ['isLoaded', 'auctionHouses']),
+    ...mapState('app', ['isLoaded', 'auctionHouses', 'featuredCollections']),
     ...mapState('records', {
       incomingTransfers: (state) => {
         return state.lists.incomingTransfers
@@ -132,10 +131,12 @@ export default {
           }),
         },
         {
-          to: '/galleries',
-          condition: true,
-          icon: galleryIcon,
-          text: 'Galleries',
+          icon: starIcon,
+          to: '/featured-collections',
+          text: 'Featured Collections',
+          condition: this.featuredCollections.some((featuredCollection) => {
+            return featuredCollection.previewImages.length !== 0
+          }),
         },
         {
           to: '/settings',

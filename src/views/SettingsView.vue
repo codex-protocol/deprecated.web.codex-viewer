@@ -107,7 +107,6 @@
                   <b-row class="list-header-row">
                     <b-col class="image">Image</b-col>
                     <b-col class="name">Asset Name</b-col>
-                    <b-col class="toggle" v-if="user && user.isGalleryEnabled">Include in Gallery</b-col>
                     <b-col class="toggle">Details Public</b-col>
                   </b-row>
                 </b-container>
@@ -170,14 +169,14 @@
             </section>
             -->
             <section>
-              <h2>Verified Users &amp; Galleries</h2>
+              <h2>Verified Users &amp; Featured Collections</h2>
               <b-button
-                v-b-modal.verifiedUserAndGalleryModal
+                v-b-modal.verifiedUserAndFeaturedCollectionModal
                 variant="outline-primary"
               >
-                Verify User and/or Create Gallery
+                Verify User and/or Create Featured Collection
               </b-button>
-              <VerifiedUserAndGalleryModal />
+              <VerifiedUserAndFeaturedCollectionModal />
             </section>
             <section>
               <h2>Auth Token</h2>
@@ -220,7 +219,7 @@ import LoadingIcon from '../components/util/LoadingIcon'
 import LoadingOverlay from '../components/util/LoadingOverlay'
 import EventEmailSettings from '../components/EventEmailSettings'
 import RecordPrivacySettingsRowItem from '../components/RecordPrivacySettingsRowItem'
-import VerifiedUserAndGalleryModal from '../components/modals/VerifiedUserAndGalleryModal'
+import VerifiedUserAndFeaturedCollectionModal from '../components/modals/VerifiedUserAndFeaturedCollectionModal'
 
 export default {
 
@@ -229,8 +228,8 @@ export default {
     LoadingIcon,
     LoadingOverlay,
     EventEmailSettings,
-    VerifiedUserAndGalleryModal,
     RecordPrivacySettingsRowItem,
+    VerifiedUserAndFeaturedCollectionModal,
   },
 
   data() {

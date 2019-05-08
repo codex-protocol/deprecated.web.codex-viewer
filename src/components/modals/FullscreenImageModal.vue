@@ -7,7 +7,7 @@
     v-model="modalVisible"
     @click.native="modalVisible = false"
   >
-    <div class="full-screen-image-container">
+    <div class="full-screen-image-container" v-if="records">
       <div class="image"
         @touchend="onTouchEnd"
         @touchmove="onTouchMove"
@@ -19,10 +19,19 @@
           :src="images[currentIndex].uri"
         >
       </div>
+      <p
+        @click.stop
+        class="record-info"
+        v-if="mode === 'records' && records[currentIndex] && records[currentIndex].metadata"
+      >
+        <b-link :to="{ name: 'record-detail', params: { recordId: records[currentIndex].tokenId } }">
+          {{ records[currentIndex].metadata.name }}
+        </b-link>
+      </p>
       <template v-if="images.length > 1">
-        <div class="buttons">
-          <b-button variant="primary" @click.stop="previous">Previous</b-button>
-          <b-button variant="primary" @click.stop="next">Next</b-button>
+        <div class="actions">
+          <b-button variant="primary" :disabled="!loop && currentIndex === 0" @click.stop="previous">Previous</b-button>
+          <b-button variant="primary" :disabled="!loop && currentIndex === images.length - 1" @click.stop="next">Next</b-button>
         </div>
         <p class="keyboard-note">you can also {{ isMobile ? 'swipe' : 'use the arrow keys' }}</p>
       </template>
@@ -34,32 +43,67 @@
 
 import is from 'is_js'
 
+import fullscreenHelper from '../../util/fullscreenHelper'
+
 export default {
 
   props: {
-    images: {
+    loop: {
+      type: Boolean,
+      default: false,
+    },
+    useFullscreen: {
+      type: Boolean,
+      default: false,
+    },
+    records: {
       type: Array,
       required: true,
     },
-    startIndex: {
-      type: Number,
-      required: true,
+    mode: {
+      type: String,
+      validator: (value) => {
+        return value === 'records' || value === 'images'
+      },
+    },
+    startImage: {
+      type: Object,
+      default: null,
     },
   },
 
   data() {
     return {
+      currentIndex: 0,
       touchStartX: null,
       touchCurrentX: null,
       modalVisible: false,
       isMobile: is.mobile(),
-      currentIndex: this.startIndex,
     }
+  },
+
+  computed: {
+    images() {
+      return this.records.flatMap((record) => {
+        if (!record.metadata) return []
+        return [record.metadata.mainImage].concat(this.mode === 'records' ? [] : record.metadata.images)
+      })
+    },
+  },
+
+  watch: {
+    modalVisible(newValue) {
+      if (!newValue) {
+        fullscreenHelper.exitFullscreen()
+      }
+    },
   },
 
   methods: {
     beforeShow() {
-      this.currentIndex = this.startIndex
+      if (this.useFullscreen) fullscreenHelper.requestFullscreen(document.getElementById('fullscreenImageModal'))
+      this.currentIndex = this.images.indexOf(this.startImage)
+      if (this.currentIndex === -1) this.currentIndex = 0
     },
 
     onKeydown(event) {
@@ -78,13 +122,25 @@ export default {
     },
 
     previous() {
-      if (this.currentIndex === 0) this.currentIndex = this.images.length - 1
-      else this.currentIndex -= 1
+      this.currentIndex -= 1
+
+      if (this.currentIndex === -1) {
+        if (this.loop) this.currentIndex = this.images.length - 1
+        else this.currentIndex = 0
+      }
+
+      this.$emit('change', this.currentIndex)
     },
 
     next() {
-      if (this.currentIndex === this.images.length - 1) this.currentIndex = 0
-      else this.currentIndex += 1
+      this.currentIndex += 1
+
+      if (this.currentIndex === this.images.length) {
+        if (this.loop) this.currentIndex = 0
+        else this.currentIndex = this.images.length - 1
+      }
+
+      this.$emit('change', this.currentIndex)
     },
 
     onTouchStart(event) {
@@ -129,6 +185,7 @@ export default {
     width: 100%
     display: flex
     align-items: center
+    flex-direction: column
     justify-content: center
     height: calc(100vh - 2rem - 5.5rem) // 2rem = modal padding, 5.5rem enough for the buttons and such
 
@@ -143,10 +200,23 @@ export default {
       max-height: 100%
       object-fit: contain
 
-  .buttons
+  .record-info
+    padding: 1em
+    flex-shrink: 0
+    min-width: 50%
+    max-width: 100%
+    max-height: 5rem
+    overflow-y: auto
+    font-weight: 700
+    text-align: center
+    margin: 1rem auto 0
+    background-color: rgba(white, .05)
+
+  .actions
     display: flex
     flex-shrink: 0
     margin-top: 1rem
+    align-items: center
 
     button + button
       margin-left: 1rem
