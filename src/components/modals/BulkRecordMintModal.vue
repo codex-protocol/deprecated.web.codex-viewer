@@ -88,12 +88,12 @@
             <img :src="metadatum.mainImageUrl">
 
             <span class="name">
-              {{ metadatum.name }}
               <img
                 @click.stop
                 src="../../assets/icons/info.svg"
                 :id="`metadata-preview-${index}-popover-trigger`"
               >
+              {{ metadatum.name }}
             </span>
 
             <b-popover
