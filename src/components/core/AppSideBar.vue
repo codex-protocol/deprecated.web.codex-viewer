@@ -110,18 +110,20 @@ export default {
           icon: codxIcon,
           text: 'ManageTokens',
         },
-        {
-          to: '/get-codx',
-          icon: codxIcon,
-          text: 'Get CODX',
-          condition: this.isNotSavvyUser || config.feesEnabled,
-        },
         // {
         //   to: '/extensions',
         //   condition: this.isAuthenticated,
         //   icon: starIcon,
         //   text: 'Extensions',
         // },
+        {
+          icon: starIcon,
+          to: '/featured-collections',
+          text: 'Featured Collections',
+          condition: this.featuredCollections.some((featuredCollection) => {
+            return featuredCollection.previewImages.length !== 0
+          }),
+        },
         {
           to: '/auction-houses',
           icon: auctionHouseIcon,
@@ -131,12 +133,10 @@ export default {
           }),
         },
         {
-          icon: starIcon,
-          to: '/featured-collections',
-          text: 'Featured Collections',
-          condition: this.featuredCollections.some((featuredCollection) => {
-            return featuredCollection.previewImages.length !== 0
-          }),
+          to: '/get-codx',
+          icon: codxIcon,
+          text: 'Get CODX',
+          condition: this.isNotSavvyUser || config.feesEnabled,
         },
         {
           to: '/settings',
