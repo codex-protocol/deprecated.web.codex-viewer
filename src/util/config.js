@@ -58,8 +58,6 @@ const targetEnv = process.env.VUE_APP_TARGET_ENV
 export default {
   showManageTokensPage: false,
   faucetDripEnabled: expectedNetworkId !== '1',
-
-  showTestApp: expectedNetworkId !== '1',
   showManualConfirm: targetEnv === 'development',
   alwaysShowAdminSettingsTab: targetEnv === 'development',
 

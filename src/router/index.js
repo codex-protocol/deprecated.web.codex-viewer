@@ -12,7 +12,6 @@ import ContactUsView from '../views/ContactUsView'
 import RecordListView from '../views/RecordListView'
 import FeatureListView from '../views/FeatureListView'
 import GalleryListView from '../views/GalleryListView'
-import OAuth2AppView from '../views/test/OAuth2AppView'
 import ManageTokensView from '../views/ManageTokensView'
 import RecordDetailView from '../views/RecordDetailView'
 import TransferListView from '../views/TransferListView'
@@ -152,13 +151,6 @@ const router = new Router({
       name: 'extensions',
       path: '/extensions',
       component: FeatureListView,
-    },
-
-    // test routes (development only)
-    {
-      name: 'test-oauth2-app',
-      path: '/test/oauth2-app',
-      component: OAuth2AppView,
     },
   ],
 })
