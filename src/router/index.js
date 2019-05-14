@@ -144,6 +144,16 @@ const router = new Router({
       path: '/featured-collections/:shareCode',
       meta: { allowUnauthenticatedUsers: true },
     },
+    {
+      name: 'galleries',
+      path: '/galleries',
+      redirect: '/featured-collections',
+    },
+    {
+      name: 'gallery',
+      path: '/galleries/:shareCode',
+      redirect: '/featured-collections/:shareCode',
+    },
 
     // other non-application routes
     {
