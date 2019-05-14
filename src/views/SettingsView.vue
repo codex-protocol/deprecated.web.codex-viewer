@@ -39,6 +39,7 @@
                 </div>
               </div>
             </section>
+
             <section v-if="isNotSavvyUser">
               <h4>{{ user.isPasswordSet ? 'Change' : 'Set' }} Password</h4>
 
@@ -90,6 +91,15 @@
                   </b-button>
                 </div>
               </b-form>
+            </section>
+
+            <section class="get-verified" v-if="user && !user.isVerified">
+              <h4>Get Verified</h4>
+              <p>
+                Are you interested in having your account verified?
+                Click the button below to learn more and start application process!
+              </p>
+              <b-button variant="primary" target="_blank" :href="verifiedUserLinks.learnMore">Learn More</b-button>
             </section>
           </b-tab>
 
@@ -234,6 +244,8 @@ export default {
   data() {
     return {
 
+      verifiedUserLinks: config.verifiedUserLinks,
+
       changePasswordForm: {
         oldPassword: null,
         newPassword: null,
@@ -353,6 +365,12 @@ export default {
 .details-table
   @media (max-width: $breakpoint-sm)
     font-size: small
+
+.get-verified
+  width: 100%
+
+  @media (min-width: $breakpoint-sm)
+    width: 50%
 
 .change-password-form
   width: 100%

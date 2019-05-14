@@ -22,7 +22,7 @@
                 Are you interested in having your collection feature here?
                 Click the button below to start the application process!
               </p>
-              <b-button variant="primary" target="_blank" :href="applyLink">Apply Here</b-button>
+              <b-button variant="primary" target="_blank" :href="verifiedUserLinks.apply">Apply Here</b-button>
             </b-card>
           </b-card-group>
 
@@ -52,6 +52,8 @@
 import is from 'is_js'
 import { mapState } from 'vuex'
 
+import config from '../util/config'
+
 import AppHeader from '../components/core/AppHeader'
 import LoadingIcon from '../components/util/LoadingIcon'
 import FeaturedCollectionListItem from '../components/FeaturedCollectionListItem'
@@ -70,7 +72,7 @@ export default {
         pageNumber: 1,
         pageSize: is.mobile() ? 4 : 15, // a page size of 15 allows for 4 rows of 4, including the "upsell card"
       },
-      applyLink: 'https://docs.google.com/forms/d/e/1FAIpQLScQ5TJch9l9suu3JbxiRsc0JWYc4znVJrafFFxpOHY6Lyfi7w/viewform',
+      verifiedUserLinks: config.verifiedUserLinks,
     }
   },
 
