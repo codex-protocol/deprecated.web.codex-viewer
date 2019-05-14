@@ -1,6 +1,7 @@
 <template>
   <b-card
     img-top
+    :style="{ order: this.order }"
     @click.prevent="viewFeaturedCollection"
     :img-src="featuredCollection.previewImages[0]"
   >
@@ -25,6 +26,10 @@ export default {
     featuredCollection: {
       type: Object,
       required: true,
+    },
+    order: {
+      type: Number,
+      default: 0,
     },
   },
 
