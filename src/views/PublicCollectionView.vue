@@ -192,7 +192,6 @@
           <div class="pagination-controls" v-if="totalCount > pageSize">
             <b-button
               size="sm"
-              class="load-more"
               @click="loadMore()"
               variant="outline-primary"
               :disabled="isLoading || records.length >= totalCount"

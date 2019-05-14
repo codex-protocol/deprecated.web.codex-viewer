@@ -120,7 +120,6 @@
               <div class="pagination-controls" v-if="totalRecordCount > paginationOptions.pageSize">
                 <b-button
                   size="sm"
-                  class="load-more"
                   @click="loadMoreRecords()"
                   variant="outline-primary"
                   :disabled="isLoadingRecords || userRecords.length >= totalRecordCount"
