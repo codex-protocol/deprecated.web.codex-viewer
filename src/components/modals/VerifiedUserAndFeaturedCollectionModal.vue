@@ -166,21 +166,6 @@
               />
             </b-form-group>
           </b-form-group>
-
-          <hr>
-
-          <b-form-group
-            label-size="sm"
-            label="Sort Order"
-            label-for="sortOrder"
-          >
-            <b-form-input
-              required
-              type="number"
-              id="sortOrder"
-              v-model="newFeaturedCollectionForm.sortOrder"
-            />
-          </b-form-group>
         </b-form>
       </b-tab>
     </b-tabs>
@@ -217,7 +202,6 @@ export default {
 
       newFeaturedCollectionForm: {
         name: null,
-        sortOrder: 10,
         shareCode: null,
         contactLink: null,
         description: null,
