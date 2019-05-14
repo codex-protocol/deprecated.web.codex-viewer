@@ -141,7 +141,7 @@ const router = new Router({
     {
       name: 'featured-collection',
       component: PublicCollectionView,
-      path: '/featured-collection/:shareCode',
+      path: '/featured-collections/:shareCode',
       meta: { allowUnauthenticatedUsers: true },
     },
 
