@@ -3,7 +3,13 @@
 
     <LoadingOverlay :show="isLoading" type="dark" />
 
-    <FullscreenImageModal :images="allImages" :startIndex="fullscreenImageStartIndex" />
+    <FullscreenImageModal
+      mode="images"
+      :loop="true"
+      :records="[codexRecord]"
+      :startImage="fullscreenImageStartImage"
+      v-if="codexRecord && codexRecord.metadata"
+    />
 
     <div class="row">
       <div class="col-12">
@@ -213,7 +219,7 @@ export default {
       error: null,
       isLoading: false,
       showDetails: false,
-      fullscreenImageStartIndex: 0,
+      fullscreenImageStartImage: null,
       isHistoricalProvenancePublicIcon,
       isHistoricalProvenancePrivateIcon,
     }
@@ -221,6 +227,7 @@ export default {
 
   mounted() {
     this.isLoading = true
+
     // This will try to pull one of the cached records, otherwise it will fetch it from the API
     this.$store.dispatch('records/FETCH_RECORD', this.recordId)
       .catch((error) => {
@@ -243,11 +250,6 @@ export default {
         return state.activeRecord
       },
     }),
-
-    allImages() {
-      if (!this.codexRecord || !this.codexRecord.metadata) return []
-      return [this.codexRecord.metadata.mainImage].concat(this.codexRecord.metadata.images)
-    },
 
     isOwner() {
       return (
@@ -314,7 +316,7 @@ export default {
     },
 
     showImageFullscreen(image) {
-      this.fullscreenImageStartIndex = this.allImages.indexOf(image)
+      this.fullscreenImageStartImage = image
 
       // hide any "click to view fullscreen" tooltips that may be open
       this.$root.$emit('bv::hide::tooltip')

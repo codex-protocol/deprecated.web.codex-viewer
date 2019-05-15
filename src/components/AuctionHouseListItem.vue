@@ -45,7 +45,7 @@ export default {
       this.$router.push({
         name: 'auction-house',
         params: {
-          auctionHouseShareCode: this.auctionHouse.shareCode,
+          shareCode: this.auctionHouse.shareCode,
         },
       })
     },

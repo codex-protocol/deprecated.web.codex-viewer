@@ -1,19 +1,28 @@
 import callApi from './callApi'
 
 export default {
-  getAuctionHouses: () => {
+  getPublicCollections: () => {
     const requestOptions = {
       method: 'get',
-      url: '/auction-houses',
+      url: '/public-collection',
     }
 
     return callApi(requestOptions)
   },
 
-  searchAuctionHouseRecords: (auctionHouseShareCode, { query, limit = 5, order = 'metadata.name' }) => {
+  getPublicCollection: (shareCode) => {
     const requestOptions = {
       method: 'get',
-      url: `/auction-house/${auctionHouseShareCode}/records`,
+      url: `/public-collection/${shareCode}`,
+    }
+
+    return callApi(requestOptions)
+  },
+
+  searchRecords: (shareCode, { query, limit = 5, order = 'metadata.name' }) => {
+    const requestOptions = {
+      method: 'get',
+      url: `/public-collection/${shareCode}/records`,
       params: {
         limit,
         order,
@@ -25,10 +34,10 @@ export default {
 
   },
 
-  getAuctionHouseRecords: (auctionHouseShareCode, { limit, order, offset, filters }) => {
+  getRecords: (shareCode, { limit, order, offset, filters }) => {
     const requestOptions = {
       method: 'get',
-      url: `/auction-house/${auctionHouseShareCode}/records`,
+      url: `/public-collection/${shareCode}/records`,
       params: {
         limit,
         order,
@@ -41,15 +50,6 @@ export default {
       .then(({ totalCount, result: records }) => {
         return { totalCount, records }
       })
-  },
-
-  getAuctionHouse: (auctionHouseShareCode) => {
-    const requestOptions = {
-      method: 'get',
-      url: `/auction-house/${auctionHouseShareCode}`,
-    }
-
-    return callApi(requestOptions)
   },
 
 }

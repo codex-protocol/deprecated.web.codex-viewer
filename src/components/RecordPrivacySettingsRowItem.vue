@@ -11,20 +11,12 @@
           {{ codexRecord.metadata.name }}
         </a>
       </b-col>
-      <b-col class="toggle" v-if="user && user.isGalleryEnabled">
-        <input
-          type="checkbox"
-          class="toggle-checkbox"
-          v-model="isInGallery"
-          @change="toggleIsInGallery"
-        />
-      </b-col>
       <b-col class="toggle">
         <input
           type="checkbox"
           class="toggle-checkbox"
           v-model="isPublic"
-          @change="toggleIsPrivate"
+          @change="updateRecord"
         />
       </b-col>
     </b-row>
@@ -48,7 +40,6 @@ export default {
   data() {
     return {
       isPrivate: this.codexRecord.isPrivate,
-      isInGallery: this.codexRecord.isInGallery,
       route: { name: 'record-detail', params: { recordId: this.codexRecord.tokenId } },
     }
   },
@@ -71,28 +62,11 @@ export default {
       this.$router.push(this.route)
     },
 
-    toggleIsPrivate() {
-      if (this.isPrivate) {
-        this.isInGallery = false
-      }
-
-      return this.updateRecord()
-    },
-
-    toggleIsInGallery() {
-      if (this.isInGallery) {
-        this.isPrivate = false
-      }
-
-      return this.updateRecord()
-    },
-
     updateRecord() {
-      this.$store.dispatch('records/UPDATE_RECORD', {
+      return this.$store.dispatch('records/UPDATE_RECORD', {
         codexRecord: this.codexRecord,
         dataToUpdate: {
           isPrivate: this.isPrivate,
-          isInGallery: this.isInGallery,
         },
       })
         .catch((error) => {
@@ -103,7 +77,6 @@ export default {
 
     reset() {
       this.isPrivate = this.codexRecord.isPrivate
-      this.isInGallery = this.codexRecord.isInGallery
     },
   },
 }
