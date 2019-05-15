@@ -61,6 +61,11 @@ export default {
   showManualConfirm: targetEnv === 'development',
   alwaysShowAdminSettingsTab: targetEnv === 'development',
 
+  verifiedUserLinks: {
+    learnMore: 'https://codexprotocol.com/verified-accounts/',
+    apply: 'https://docs.google.com/forms/d/e/1FAIpQLScQ5TJch9l9suu3JbxiRsc0JWYc4znVJrafFFxpOHY6Lyfi7w/viewform',
+  },
+
   apiUrl,
   feesEnabled,
   etherScanUrl,

@@ -39,6 +39,7 @@
                 </div>
               </div>
             </section>
+
             <section v-if="isNotSavvyUser">
               <h4>{{ user.isPasswordSet ? 'Change' : 'Set' }} Password</h4>
 
@@ -91,6 +92,15 @@
                 </div>
               </b-form>
             </section>
+
+            <section class="get-verified" v-if="user && !user.isVerified">
+              <h4>Get Verified</h4>
+              <p>
+                Are you interested in having your account verified?
+                Click the button below to learn more and start application process!
+              </p>
+              <b-button variant="primary" target="_blank" :href="verifiedUserLinks.learnMore">Learn More</b-button>
+            </section>
           </b-tab>
 
 
@@ -107,7 +117,6 @@
                   <b-row class="list-header-row">
                     <b-col class="image">Image</b-col>
                     <b-col class="name">Asset Name</b-col>
-                    <b-col class="toggle" v-if="user && user.isGalleryEnabled">Include in Gallery</b-col>
                     <b-col class="toggle">Details Public</b-col>
                   </b-row>
                 </b-container>
@@ -121,7 +130,6 @@
               <div class="pagination-controls" v-if="totalRecordCount > paginationOptions.pageSize">
                 <b-button
                   size="sm"
-                  class="load-more"
                   @click="loadMoreRecords()"
                   variant="outline-primary"
                   :disabled="isLoadingRecords || userRecords.length >= totalRecordCount"
@@ -170,14 +178,14 @@
             </section>
             -->
             <section>
-              <h2>Verified Users &amp; Galleries</h2>
+              <h2>Verified Users &amp; Featured Collections</h2>
               <b-button
-                v-b-modal.verifiedUserAndGalleryModal
+                v-b-modal.verifiedUserAndFeaturedCollectionModal
                 variant="outline-primary"
               >
-                Verify User and/or Create Gallery
+                Verify User and/or Create Featured Collection
               </b-button>
-              <VerifiedUserAndGalleryModal />
+              <VerifiedUserAndFeaturedCollectionModal />
             </section>
             <section>
               <h2>Auth Token</h2>
@@ -220,7 +228,7 @@ import LoadingIcon from '../components/util/LoadingIcon'
 import LoadingOverlay from '../components/util/LoadingOverlay'
 import EventEmailSettings from '../components/EventEmailSettings'
 import RecordPrivacySettingsRowItem from '../components/RecordPrivacySettingsRowItem'
-import VerifiedUserAndGalleryModal from '../components/modals/VerifiedUserAndGalleryModal'
+import VerifiedUserAndFeaturedCollectionModal from '../components/modals/VerifiedUserAndFeaturedCollectionModal'
 
 export default {
 
@@ -229,12 +237,14 @@ export default {
     LoadingIcon,
     LoadingOverlay,
     EventEmailSettings,
-    VerifiedUserAndGalleryModal,
     RecordPrivacySettingsRowItem,
+    VerifiedUserAndFeaturedCollectionModal,
   },
 
   data() {
     return {
+
+      verifiedUserLinks: config.verifiedUserLinks,
 
       changePasswordForm: {
         oldPassword: null,
@@ -355,6 +365,12 @@ export default {
 .details-table
   @media (max-width: $breakpoint-sm)
     font-size: small
+
+.get-verified
+  width: 100%
+
+  @media (min-width: $breakpoint-sm)
+    width: 50%
 
 .change-password-form
   width: 100%

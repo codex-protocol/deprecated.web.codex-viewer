@@ -133,7 +133,12 @@
             class="toggle-checkbox"
           />
           <b-form-text>
-            By making this Record public, anyone can view the name, description and images.
+            By making this Codex Record public, anyone can view the name, description and images.
+            <span class="public-collection-warning" v-if="user && user.role === 'featured-collection'">
+              <br>
+              <br>
+              <img src="../../assets/icons/warning.svg"> This Codex Record will be {{ isPublic ? 'public' : 'kept private' }} and {{ isPublic ? 'will' : 'will not' }} appear on your Featured Collection page.
+            </span>
           </b-form-text>
         </b-form-group>
       </div>
@@ -634,6 +639,14 @@ export default {
 
   &:not(:empty)
     margin-bottom: 1rem
+
+.public-collection-warning
+  color: rgba($color-primary, .8)
+
+  img
+    width: 1rem
+    height: @width
+    vertical-align: text-bottom
 
 .main-image
   height: 16rem

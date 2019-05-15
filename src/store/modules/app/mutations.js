@@ -71,14 +71,24 @@ export default {
     currentState.giveaway = giveaway
   },
 
-  SET_GALLERIES(currentState, galleries = []) {
-    logMutation('SET_GALLERIES', galleries)
-    currentState.galleries = galleries
-  },
+  SET_PUBLIC_COLLECTIONS(currentState, publicCollections = []) {
+    logMutation('SET_PUBLIC_COLLECTIONS', publicCollections)
 
-  SET_AUCTION_HOUSES(currentState, auctionHouses = []) {
-    logMutation('SET_GALLERIES', auctionHouses)
+    const auctionHouses = []
+    const featuredCollections = []
+
+    publicCollections.forEach((publicCollection) => {
+      switch (publicCollection.type) {
+        case 'auction-house': return auctionHouses.push(publicCollection)
+        case 'featured-collection': return featuredCollections.push(publicCollection)
+        default: return null
+      }
+    })
+
     currentState.auctionHouses = auctionHouses
+    currentState.publicCollections = publicCollections
+    currentState.featuredCollections = featuredCollections
+
   },
 
   SET_EVENT_EMAILS(currentState, eventEmails = []) {

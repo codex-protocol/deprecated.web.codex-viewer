@@ -5,7 +5,7 @@
     :class="{ 'is-loading': isLoading, 'running': isRunning && !isLoading }"
   >
     <div class="images" ref="images">
-      <img @load="imageLoaded(index)" :src="url" :key="index" v-for="(url, index) in urls">
+      <img v-on-image-loaded="imageLoaded" :src="url" :key="url" v-for="url in urls">
     </div>
   </div>
 </template>
@@ -20,6 +20,27 @@ export default {
     urls: {
       type: Array,
       required: true,
+    },
+  },
+
+  // when using @load on an img tag, vue doesn't seem to be de-registered the
+  //  event handlers when the component is destroyed... this simple directive
+  //  makes sure the event listeners are cleaned up
+  //
+  // this fixes a bug caused when the user quickly naviates away from a page
+  //  with this component on it before all the images loaded (the refs don't
+  //  exist anymore)
+  directives: {
+    onImageLoaded: {
+      bind: ($element, binding) => {
+        if (typeof binding.value !== 'function') return
+        $element.addEventListener('load', binding.value)
+
+      },
+      unbind: ($element, binding) => {
+        if (typeof binding.value !== 'function') return
+        $element.removeEventListener('load', binding.value)
+      },
     },
   },
 
@@ -110,7 +131,7 @@ export default {
       window.requestAnimationFrame(this.animationFrame)
     },
 
-    imageLoaded(index) {
+    imageLoaded() {
 
       this.numLoaded += 1
 
