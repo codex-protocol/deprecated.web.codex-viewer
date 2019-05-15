@@ -19,10 +19,14 @@
         type="checkbox"
         v-model="isPublic"
         class="toggle-checkbox"
-        @change="toggleIsPrivate"
       />
       <b-form-text>
-        By making this Record public, anyone can view the name, description and images.
+        By making this Codex Record public, anyone can view the name, description and images.
+        <span class="public-collection-warning" v-if="user && user.role === 'featured-collection'">
+          <br>
+          <br>
+          <img src="../../assets/icons/warning.svg"> This Codex Record will be {{ isPublic ? 'public' : 'kept private' }} and {{ isPublic ? 'will' : 'will not' }} appear on your Featured Collection page.
+        </span>
       </b-form-text>
     </b-form-group>
 
@@ -44,24 +48,6 @@
         above. Note that this does <strong>NOT</strong> affect "additional
         images", anyone with permissions to view this Codex Record can see those
         images.
-      </b-form-text>
-    </b-form-group>
-
-    <b-form-group
-      v-if="user && user.isGalleryEnabled"
-      label="Include Record in Gallery"
-      label-for="isInGallery"
-      label-size="sm"
-    >
-      <input
-        id="isInGallery"
-        type="checkbox"
-        v-model="isInGallery"
-        class="toggle-checkbox"
-        @change="toggleIsInGallery"
-      />
-      <b-form-text>
-        Make this Record public, and list it on your personal gallery page.
       </b-form-text>
     </b-form-group>
 
@@ -174,7 +160,6 @@ export default {
       newWhitelistedAddress: null,
       showEthereumAddressField: true,
       isPrivate: this.codexRecord.isPrivate,
-      isInGallery: this.codexRecord.isInGallery,
       whitelistedEmails: Array.from(this.codexRecord.whitelistedEmails) || [],
       whitelistedAddresses: Array.from(this.codexRecord.whitelistedAddresses) || [],
       isHistoricalProvenancePrivate: this.codexRecord.isHistoricalProvenancePrivate,
@@ -209,18 +194,6 @@ export default {
 
     onHide() {
       Object.assign(this.$data, this.$options.data.apply(this))
-    },
-
-    toggleIsPrivate() {
-      if (this.isPrivate) {
-        this.isInGallery = false
-      }
-    },
-
-    toggleIsInGallery() {
-      if (this.isInGallery) {
-        this.isPrivate = false
-      }
     },
 
     toggleWhitelistField() {
@@ -284,7 +257,6 @@ export default {
 
       const dataToUpdate = {
         isPrivate: this.isPrivate,
-        isInGallery: this.isInGallery,
         whitelistedEmails: this.whitelistedEmails,
         whitelistedAddresses: this.whitelistedAddresses,
         isHistoricalProvenancePrivate: this.isHistoricalProvenancePrivate,
@@ -338,5 +310,13 @@ export default {
     margin: 0
     float: unset
     font-size: 2rem
+
+.public-collection-warning
+  color: rgba($color-primary, .8)
+
+  img
+    width: 1rem
+    height: @width
+    vertical-align: text-bottom
 
 </style>

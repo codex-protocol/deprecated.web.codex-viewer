@@ -11,7 +11,6 @@
       <a href="https://codex-viewer.com">Mainnet</a>
       <a href="https://rinkeby.codex-viewer.com">Rinkeby</a>
       <a href="http://ropsten.codex-viewer.com">Ropsten</a>
-      <b-link to="/test/oauth2-app" v-if="showTestApp">Test OAuth2 API</b-link>
     </div>
     <div class="icons">
       <a href="https://github.com/codex-protocol/" target="_blank">
@@ -34,18 +33,9 @@
 
 import IconBase from '../icons/IconBase'
 
-import config from '../../util/config'
-
 export default {
-
   components: {
     IconBase,
-  },
-
-  data() {
-    return {
-      showTestApp: config.showTestApp,
-    }
   },
 }
 </script>

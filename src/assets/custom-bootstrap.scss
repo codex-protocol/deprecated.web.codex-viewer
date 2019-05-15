@@ -137,8 +137,7 @@ hr {
 //  size of the image
 //
 // this prevents the carousel component from showing jarring content jumps when
-//  transitioning between images with different aspect ratios, which is
-//  necessary for the gallery pages
+//  transitioning between images with different aspect ratios
 .fixed-size-carousel {
   .carousel-inner, .carousel-item, .carousel-item > img {
     max-height: 100%;

@@ -88,12 +88,11 @@ export default {
     return axios(requestOptions)
       .then((response) => {
         const bootstrapData = response.data.result
-        commit('SET_GALLERIES', bootstrapData.galleries)
         commit('SET_CODX_COSTS', bootstrapData.codxCosts)
         commit('SET_EVENT_EMAILS', bootstrapData.eventEmails)
         commit('SET_CODX_PACKAGES', bootstrapData.codxPackages)
         commit('SET_VERIFIED_USERS', bootstrapData.verifiedUsers)
-        commit('SET_AUCTION_HOUSES', bootstrapData.auctionHouses)
+        commit('SET_PUBLIC_COLLECTIONS', bootstrapData.publicCollections)
         commit('SET_REFERRAL_SURVEY_OPTIONS', bootstrapData.referralSurveyOptions)
       })
       .catch((error) => {

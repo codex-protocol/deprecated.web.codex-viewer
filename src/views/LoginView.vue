@@ -7,12 +7,12 @@
             <img class="logo" src="../assets/logos/codex/gold.svg" />
           </b-link>
           <b-button
-            v-if="galleries.length"
-            class="galleries-button"
             variant="outline-primary"
-            :to="{ name: 'galleries' }"
+            v-if="featuredCollections.length"
+            class="featured-collections-button"
+            :to="{ name: 'featured-collections' }"
           >
-            View Artist Galleries
+            View Featured Collections
           </b-button>
         </div>
 
@@ -386,7 +386,7 @@ export default {
   computed: {
     ...mapState('auth', ['user']),
     ...mapState('web3', ['providerAccount', 'instance', 'registrationError']),
-    ...mapState('app', ['apiErrorCode', 'pendingUserCode', 'postLoginDestination', 'galleries']),
+    ...mapState('app', ['apiErrorCode', 'pendingUserCode', 'postLoginDestination', 'featuredCollections']),
 
     $formContainer() {
       return this.$refs['form-container']
@@ -694,13 +694,13 @@ export default {
   .logo
     width: 10rem
 
-  .galleries-button
+  .featured-collections-button
     margin-bottom: 1rem
 
   @media (min-width: $breakpoint-sm)
     flex-direction: row
 
-    .galleries-button
+    .featured-collections-button
       margin-bottom: 0
 
 .form-container

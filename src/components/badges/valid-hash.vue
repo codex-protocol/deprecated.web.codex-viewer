@@ -3,14 +3,14 @@
     <template v-if="isValid">
       <img
         v-b-tooltip.hover
-        src="../../assets/icons/hash-valid.svg"
+        src="../../assets/icons/check.svg"
         title="This record has not been tampered with; the calculated hash matches the value on the blockchain."
       >
     </template>
     <template v-else>
       <img
         v-b-tooltip.hover
-        src="../../assets/icons/hash-invalid.svg"
+        src="../../assets/icons/warning.svg"
         title="This record may have been tampered with; the calculated hash does not match the value on the blockchain."
       >
     </template>
@@ -65,8 +65,9 @@ export default {
 
 .valid-hash-badge
   img
-    width: 1rem
+    width: 1.2em
     height: @width
-    vertical-align: text-bottom
+    margin-right: .5em
+    vertical-align: middle
 
 </style>
