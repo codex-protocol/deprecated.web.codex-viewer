@@ -49,8 +49,7 @@
 <script>
 
 import Record from '../util/api/record'
-import Gallery from '../util/api/gallery'
-import AuctionHouse from '../util/api/auction-house'
+import PublicCollection from '../util/api/publicCollection'
 import LoadingOverlay from '../components/util/LoadingOverlay'
 
 export default {
@@ -60,15 +59,11 @@ export default {
       type: String,
       required: true,
       validator: (value) => {
-        return value === 'user' || value === 'gallery' || value === 'auction-house'
+        return value === 'user' || value === 'public-collection'
       },
     },
-    gallery: {
-      type: Object,
-      default: null,
-    },
-    auctionHouse: {
-      type: Object,
+    shareCode: {
+      type: String,
       default: null,
     },
   },
@@ -186,8 +181,7 @@ export default {
       const promise = (() => {
         switch (this.type) {
           case 'user': return Record.searchUserRecords({ query })
-          case 'gallery': return Gallery.searchGalleryRecords(this.gallery.shareCode, { query })
-          case 'auction-house': return AuctionHouse.searchAuctionHouseRecords(this.auctionHouse.shareCode, { query })
+          case 'public-collection': return PublicCollection.searchRecords(this.shareCode, { query })
           default: return Promise.resolve([])
         }
       })()

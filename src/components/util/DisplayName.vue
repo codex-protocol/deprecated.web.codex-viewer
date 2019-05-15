@@ -1,20 +1,28 @@
 <template>
-  <b-link
-    v-b-tooltip.hover
-    class="display-name"
-    :title="tooltipTitle"
-    :to="destinationRoute"
-    v-if="destinationRoute"
-  >
-    {{ name }}
-  </b-link>
-  <span
-    v-else
-    v-b-tooltip.hover
-    class="display-name"
-    :title="tooltipTitle"
-  >
-    {{ name }}
+  <span>
+    <img
+      class="icon"
+      v-b-tooltip.hover
+      v-if="isUserVerified"
+      src="../../assets/icons/verified-user.svg"
+    >
+    <b-link
+      v-b-tooltip.hover
+      class="display-name"
+      :title="tooltipTitle"
+      :to="destinationRoute"
+      v-if="destinationRoute"
+    >
+      {{ name }}
+    </b-link>
+    <span
+      v-else
+      v-b-tooltip.hover
+      class="display-name"
+      :title="tooltipTitle"
+    >
+      {{ name }}
+    </span>
   </span>
 </template>
 
@@ -32,42 +40,65 @@ export default {
   },
 
   computed: {
+
     ...mapState('auth', ['user']),
-    ...mapState('app', ['auctionHouses']),
     ...mapGetters('auth', ['isNotSavvyUser']),
-    ...mapGetters('app', ['getVerifiedNameFromAddress']),
+    ...mapState('app', ['publicCollections', 'verifiedUsers']),
 
-    destinationRoute() {
+    matchedPublicCollection() {
 
-      const matchedAuctionHouse = this.auctionHouses.find((auctionHouse) => {
-        return auctionHouse.userAddress === this.address
+      const matchedPublicCollection = this.publicCollections.find((publicCollection) => {
+        return publicCollection.userAddress === this.address
       })
 
-      if (matchedAuctionHouse) {
-        return {
-          name: 'auction-house',
-          params: { auctionHouseShareCode: matchedAuctionHouse.shareCode },
-        }
+      if (matchedPublicCollection && matchedPublicCollection.type && matchedPublicCollection.shareCode) {
+        return matchedPublicCollection
       }
 
       return null
 
     },
 
+    destinationRoute() {
+
+      if (!this.matchedPublicCollection) return null
+
+      return {
+        name: this.matchedPublicCollection.type,
+        params: { shareCode: this.matchedPublicCollection.shareCode },
+      }
+
+    },
+
+    isUserVerified() {
+      return this.address !== this.verifiedName
+    },
+
     verifiedName() {
-      return this.getVerifiedNameFromAddress(this.address)
+
+      if (!this.verifiedUsers || !this.address) {
+        return this.address
+      }
+
+      const verifiedName = this.verifiedUsers[this.address.toLowerCase()]
+
+      if (!verifiedName) {
+        return this.address
+      }
+
+      return this.verifiedUsers[this.address]
     },
 
     tooltipTitle() {
 
       if (this.name === 'You') {
-        if (this.verifiedName === this.address) {
-          return this.isNotSavvyUser ? this.user.email : this.address
+        if (this.isUserVerified) {
+          return this.verifiedName
         }
-        return this.verifiedName
+        return this.isNotSavvyUser ? this.user.email : this.address
       }
 
-      if (this.name !== this.address) {
+      if (this.isUserVerified) {
         return this.address
       }
 
@@ -96,5 +127,11 @@ export default {
   display: inline-block
   vertical-align: middle
   text-overflow: ellipsis
+
+.icon
+  width: 1.2em
+  height: @width
+  margin-right: .5em
+  vertical-align: middle
 
 </style>

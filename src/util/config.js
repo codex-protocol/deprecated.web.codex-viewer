@@ -58,10 +58,13 @@ const targetEnv = process.env.VUE_APP_TARGET_ENV
 export default {
   showManageTokensPage: false,
   faucetDripEnabled: expectedNetworkId !== '1',
-
-  showTestApp: expectedNetworkId !== '1',
   showManualConfirm: targetEnv === 'development',
   alwaysShowAdminSettingsTab: targetEnv === 'development',
+
+  verifiedUserLinks: {
+    learnMore: 'https://codexprotocol.com/verified-accounts/',
+    apply: 'https://docs.google.com/forms/d/e/1FAIpQLScQ5TJch9l9suu3JbxiRsc0JWYc4znVJrafFFxpOHY6Lyfi7w/viewform',
+  },
 
   apiUrl,
   feesEnabled,
