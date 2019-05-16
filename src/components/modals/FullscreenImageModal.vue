@@ -5,7 +5,7 @@
     @keydown.native="onKeydown"
 
     v-model="modalVisible"
-    @click.native="modalVisible = false"
+    @click.native="modalVisible = useFullscreen ? modalVisible : false"
   >
     <div class="full-screen-image-container" v-if="records">
       <div class="image"
@@ -131,6 +131,9 @@ export default {
     },
 
     previous() {
+
+      if (this.images.length <= 1) return
+
       this.currentIndex -= 1
 
       if (this.currentIndex === -1) {
@@ -142,6 +145,9 @@ export default {
     },
 
     next() {
+
+      if (this.images.length <= 1) return
+
       this.currentIndex += 1
 
       if (this.currentIndex === this.images.length) {
