@@ -13,10 +13,12 @@
         @touchmove="onTouchMove"
         @touchstart="onTouchStart"
       >
+        <LoadingOverlay :show="isLoading" type="dark" />
         <img
           @click.stop
           v-if="images[currentIndex]"
           :src="images[currentIndex].uri"
+          v-on-load="() => { imageLoaded(currentIndex) }"
         >
       </div>
       <p
@@ -43,9 +45,15 @@
 
 import is from 'is_js'
 
+import LoadingOverlay from '../util/LoadingOverlay'
+
 import fullscreenHelper from '../../util/fullscreenHelper'
 
 export default {
+
+  components: {
+    LoadingOverlay,
+  },
 
   props: {
     loop: {
@@ -75,6 +83,7 @@ export default {
   data() {
     return {
       currentIndex: 0,
+      isLoading: false,
       touchStartX: null,
       touchCurrentX: null,
       modalVisible: false,
@@ -129,7 +138,7 @@ export default {
         else this.currentIndex = 0
       }
 
-      this.$emit('change', this.currentIndex)
+      this.isLoading = true
     },
 
     next() {
@@ -140,7 +149,7 @@ export default {
         else this.currentIndex = this.images.length - 1
       }
 
-      this.$emit('change', this.currentIndex)
+      this.isLoading = true
     },
 
     onTouchStart(event) {
@@ -164,6 +173,11 @@ export default {
       this.touchStartX = null
       this.touchCurrentX = null
     },
+
+    imageLoaded(index) {
+      this.isLoading = false
+      this.$emit('change', index)
+    },
   },
 }
 </script>
@@ -184,6 +198,7 @@ export default {
   .image
     width: 100%
     display: flex
+    position: relative
     align-items: center
     flex-direction: column
     justify-content: center
