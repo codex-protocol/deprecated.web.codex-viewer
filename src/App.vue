@@ -62,8 +62,10 @@ import AppWarningBanner from './components/core/AppWarningBanner'
 import IconBase from './components/icons/IconBase'
 import LoadingOverlay from './components/util/LoadingOverlay'
 import ToastContainer from './components/util/ToastContainer'
-import PartyModeActivator from './directives/PartyModeActivator'
 import ReferralSurveyModal from './components/modals/ReferralSurveyModal'
+
+import OnLoad from './directives/OnLoad'
+import PartyModeActivator from './directives/PartyModeActivator'
 
 export default {
 
@@ -81,6 +83,7 @@ export default {
   },
 
   directives: {
+    OnLoad,
     PartyModeActivator,
   },
 
