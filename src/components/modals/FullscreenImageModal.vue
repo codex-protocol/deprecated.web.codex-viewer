@@ -133,12 +133,12 @@ export default {
     previous() {
 
       if (this.images.length <= 1) return
+      if (!this.loop && this.currentIndex === 0) return
 
       this.currentIndex -= 1
 
       if (this.currentIndex === -1) {
-        if (this.loop) this.currentIndex = this.images.length - 1
-        else this.currentIndex = 0
+        this.currentIndex = this.images.length - 1
       }
 
       this.isLoading = true
@@ -147,12 +147,12 @@ export default {
     next() {
 
       if (this.images.length <= 1) return
+      if (!this.loop && this.currentIndex === this.images.length - 1) return
 
       this.currentIndex += 1
 
       if (this.currentIndex === this.images.length) {
-        if (this.loop) this.currentIndex = 0
-        else this.currentIndex = this.images.length - 1
+        this.currentIndex = 0
       }
 
       this.isLoading = true
