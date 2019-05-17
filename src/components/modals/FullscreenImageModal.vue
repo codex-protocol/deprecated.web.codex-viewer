@@ -92,11 +92,24 @@ export default {
   },
 
   computed: {
+
+    // @NOTE: this was originally way more compact using flatMap, but apparently
+    //  flat & flatMap are too "cutting-edge" for some browsers - rather than
+    //  polyfill it we'll just write this more verbosely
     images() {
-      return this.records.flatMap((record) => {
-        if (!record.metadata) return []
-        return [record.metadata.mainImage].concat(this.mode === 'records' ? [] : record.metadata.images)
+      const images = []
+
+      this.records.forEach((record) => {
+        if (!record.metadata) return
+        images.push(record.metadata.mainImage)
+        if (this.mode === 'images') {
+          record.metadata.images.forEach((image) => {
+            images.push(image)
+          })
+        }
       })
+
+      return images
     },
   },
 
@@ -133,12 +146,12 @@ export default {
     previous() {
 
       if (this.images.length <= 1) return
+      if (!this.loop && this.currentIndex === 0) return
 
       this.currentIndex -= 1
 
       if (this.currentIndex === -1) {
-        if (this.loop) this.currentIndex = this.images.length - 1
-        else this.currentIndex = 0
+        this.currentIndex = this.images.length - 1
       }
 
       this.isLoading = true
@@ -147,12 +160,12 @@ export default {
     next() {
 
       if (this.images.length <= 1) return
+      if (!this.loop && this.currentIndex === this.images.length - 1) return
 
       this.currentIndex += 1
 
       if (this.currentIndex === this.images.length) {
-        if (this.loop) this.currentIndex = 0
-        else this.currentIndex = this.images.length - 1
+        this.currentIndex = 0
       }
 
       this.isLoading = true
