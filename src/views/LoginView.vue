@@ -385,7 +385,7 @@ export default {
 
   computed: {
     ...mapState('auth', ['user']),
-    ...mapState('web3', ['providerAccount', 'instance', 'registrationError']),
+    ...mapState('web3', ['registrationError']),
     ...mapState('app', ['apiErrorCode', 'pendingUserCode', 'postLoginDestination', 'featuredCollections']),
 
     $formContainer() {
@@ -792,7 +792,6 @@ export default {
           cursor: unset
           color: $color-primary
 
-  .signup-link
   .switch-form-link
     font-weight: bold
     text-align: center
