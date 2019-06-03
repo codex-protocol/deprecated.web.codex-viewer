@@ -309,7 +309,7 @@ export default {
 @import "./assets/global.styl"
 
 html
-  font-size 16px
+  font-size: 16px
 
 html
 body
@@ -410,7 +410,7 @@ img
   flex-grow: 1
 
   // uncommenting these will cause the footer to stay positioned at the bottom
-  //  of the main content area instead of being pushed down by a tall
+  //  of the main content area instead of being pushed down by tall content
   // .main-content div
   //
   //   overflow-y: auto
