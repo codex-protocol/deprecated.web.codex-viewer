@@ -56,6 +56,12 @@
                 {{ additionalFile.apiRecord.name }}
               </marquee>
             </template>
+            <template v-else-if="additionalFile.apiRecord.fileType === 'audio'">
+              <img src="../../assets/icons/file-type-audio.svg">
+              <marquee class="name" scrollamount="2">
+                {{ additionalFile.apiRecord.name }}
+              </marquee>
+            </template>
             <template v-else>
               <img src="../../assets/icons/file-type-document.svg">
               <marquee class="name" scrollamount="2">
@@ -217,6 +223,12 @@
                 <img v-if="additionalFile.apiRecord.fileType === 'image'" :src="additionalFile.apiRecord.uri" />
                 <template v-else-if="additionalFile.apiRecord.fileType === 'video'">
                   <img src="../../assets/icons/file-type-video.svg">
+                  <marquee class="name" scrollamount="2">
+                    {{ additionalFile.apiRecord.name }}
+                  </marquee>
+                </template>
+                <template v-else-if="additionalFile.apiRecord.fileType === 'audio'">
+                  <img src="../../assets/icons/file-type-audio.svg">
                   <marquee class="name" scrollamount="2">
                     {{ additionalFile.apiRecord.name }}
                   </marquee>

@@ -82,6 +82,12 @@
                         {{ additionalFile.name }}
                       </marquee>
                     </template>
+                    <template v-else-if="additionalFile.fileType === 'audio'">
+                      <img src="../assets/icons/file-type-audio.svg">
+                      <marquee class="name" scrollamount="2">
+                        {{ additionalFile.name }}
+                      </marquee>
+                    </template>
                     <template v-else>
                       <img src="../assets/icons/file-type-document.svg">
                       <marquee class="name" scrollamount="2">
