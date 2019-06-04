@@ -17,6 +17,7 @@
       >
         <b-form-input
           required
+          type="email"
           class="mb-4"
           id="emailAddress"
           v-model="emailAddress"
@@ -57,7 +58,7 @@ export default {
     resendConfirmationEmail(emailAddress) {
 
       if (!emailAddress) {
-        this.hide()
+        this.modalVisible = false
         return
       }
 
@@ -80,6 +81,7 @@ export default {
     },
   },
 }
+
 </script>
 
 <style lang="stylus" scoped>
