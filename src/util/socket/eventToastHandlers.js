@@ -86,7 +86,7 @@ export default {
   'bulk-transaction:started': ({ bulkTransaction }) => {
     switch (bulkTransaction.type) {
       case 'record-mint':
-        showToast(`Your bulk transaction has started. ${bulkTransaction.recordMintData.pendingMetadata.length} new Codex Record${bulkTransaction.recordMintData.numCreated > 1 ? 's' : ''} should be created soon.`)
+        showToast(`Your bulk transaction has started. ${bulkTransaction.recordMintData.pendingMetadata.length} new Codex Record${bulkTransaction.recordMintData.pendingMetadata.length > 1 ? 's' : ''} should be created soon.`)
         break
 
       default:
