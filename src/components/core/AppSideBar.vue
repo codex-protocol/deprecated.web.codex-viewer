@@ -39,6 +39,7 @@
 </template>
 
 <script>
+
 import {
   mapState,
   mapGetters,
@@ -172,6 +173,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+
 @import "../../assets/variables.styl"
 
 nav

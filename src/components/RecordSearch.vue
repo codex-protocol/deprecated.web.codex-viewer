@@ -74,7 +74,6 @@ export default {
 
   data() {
     return {
-      pageNumber: 0,
       isLoading: false,
       isFocused: false,
       searchQuery: null,
