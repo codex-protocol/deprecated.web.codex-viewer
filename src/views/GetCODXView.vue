@@ -125,14 +125,12 @@ import etherscanHelper from '../util/web3/etherscanHelper'
 
 import AppHeader from '../components/core/AppHeader'
 import FaucetDripModal from '../components/modals/FaucetDripModal'
-import ApproveContractModal from '../components/modals/ApproveContractModal'
 
 export default {
 
   components: {
     AppHeader,
     FaucetDripModal,
-    ApproveContractModal,
   },
 
   data() {

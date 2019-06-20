@@ -14,8 +14,8 @@ export default () => {
     authToken: cachedAuthToken,
     creditBalance: new BigNumber(0),
     personalStakes: [],
-    registryContractApproved: false,
     stakeContractApproved: false,
+    registryContractApproved: false,
     hideSetup: !!window.localStorage.getItem('hideSetup'),
   }
 }

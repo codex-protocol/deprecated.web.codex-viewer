@@ -57,7 +57,7 @@ export default {
     requestPasswordResetEmail(email) {
 
       if (!email) {
-        this.hide()
+        this.modalVisible = false
         return null
       }
 

@@ -348,7 +348,7 @@ body
 
 // this will properly rotate images with EXIF data (i.e. photos taken on a
 //  phone) in FireFox - unfortunately it doesn't work in Chrome, so such images
-//  can't be properly rotated without significant effor ¯\_(ツ)_/¯
+//  can't be properly rotated without significant effort ¯\_(ツ)_/¯
 img
   image-orientation: from-image
 
