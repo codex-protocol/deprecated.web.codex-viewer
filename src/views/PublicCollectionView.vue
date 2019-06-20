@@ -14,10 +14,12 @@
         <div class="row">
           <div class="col-12 col-lg-6">
             <div class="info glass-pane">
-              <div class="info-row title">
+
+              <div class="info-row title" :class="[publicCollection.type]">
                 <img :src="publicCollection.iconUrl || missingImage">
                 <h2>{{ publicCollection.name }}</h2>
               </div>
+
               <div class="info-row description">
                 <p>{{ publicCollection.description }}</p>
               </div>
@@ -571,19 +573,32 @@ header
         margin-top: 1rem
 
       &.title
-        img
-          width: 5rem
-          height: @width
-          min-width: @width
-          min-height: @height
+        &.auction-house
+          flex-wrap: wrap
+          align-items: flex-start
 
-          border-radius: 50%
-          margin-bottom: 1rem
+          img
+            width: 100%
+            display: block
+            max-width: 100%
+            max-height: 20vh
+            object-fit: contain
+            margin-bottom: 1rem
 
-          @media (min-width: $breakpoint-sm)
-            margin-bottom: 0
-            margin-right: 1rem
-            align-self: flex-start
+        &:not(.auction-house)
+          img
+            width: 5rem
+            height: @width
+            min-width: @width
+            min-height: @height
+
+            border-radius: 50%
+            margin-bottom: 1rem
+
+            @media (min-width: $breakpoint-sm)
+              margin-bottom: 0
+              margin-right: 1rem
+              align-self: flex-start
 
         h2
           margin: 0
