@@ -1,3 +1,6 @@
+### 2019-08-08: This repository has been deprecated in favor of a different front-end repository which will likely not be made open-source. This repository has been archived for reference, but should not be considered up to date or useable by any means.
+
+
 # Codex Protocol | Codex Viewer
 
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)

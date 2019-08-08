@@ -17,9 +17,7 @@
     <template slot="checkout">
       <h3>{{ name }}</h3>
       <div class="image-container"><img :src="mainImage.imageTageSource"></div>
-      <!-- this can be swapped when the email bug is fixed in the escapeHTML filter -->
-      <div class="description">{{ description }}</div>
-      <!-- <div class="description" v-html="$options.filters.escapeHtml(description)"></div> -->
+      <div class="description" v-html="$options.filters.escapeHtml(description)"></div>
 
       <b-form-group
         label-size="sm"
