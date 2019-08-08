@@ -206,7 +206,6 @@ export default {
         contactLink: null,
         description: null,
         userAddress: null,
-        userVerifiedName: null,
         iconUrl: 'https://s3-us-west-2.amazonaws.com/codex.registry-production/assets/missing-image.png',
 
         socialLinks: {

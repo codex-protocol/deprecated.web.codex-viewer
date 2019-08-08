@@ -105,9 +105,7 @@
                 <section>
                   <div v-if="codexRecord.metadata">
                     <h1>{{ codexRecord.metadata.name }}</h1>
-                    <!-- this can be swapped when the email bug is fixed in the escapeHTML filter -->
-                    <div class="description">{{ codexRecord.metadata.description }}</div>
-                    <!-- <div class="description" v-html="$options.filters.escapeHtml(codexRecord.metadata.description)"></div> -->
+                    <div class="description" v-html="$options.filters.escapeHtml(codexRecord.metadata.description)"></div>
                   </div>
                   <div v-else>
                     <h1>Codex Record #{{ codexRecord.tokenId }}</h1>
@@ -153,7 +151,7 @@
                       v-if="auctionHouseLinkbackUrl"
                       :href="auctionHouseLinkbackUrl"
                     >
-                      View Asset on Auction House
+                      View Lot from Auction House
                     </b-button>
                     <b-button
                       variant="primary"
@@ -188,7 +186,6 @@
 
 import { mapState } from 'vuex'
 
-import { ZeroAddress } from '../util/constants/web3'
 import copyToClipboard from '../util/copyToClipboard'
 
 import isHistoricalProvenancePublicIcon from '../assets/icons/privacy-public-light.svg'
@@ -275,13 +272,6 @@ export default {
 
     recordId() {
       return this.$route.params.recordId
-    },
-
-    isAwaitingApproval() {
-      return (
-        this.codexRecord.approvedAddress !== null &&
-        this.codexRecord.approvedAddress !== ZeroAddress
-      )
     },
 
     auctionHouseLinkbackUrl() {
